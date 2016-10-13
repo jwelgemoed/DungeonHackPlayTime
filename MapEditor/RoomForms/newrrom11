@@ -1,0 +1,42 @@
+17
+23
+40
+10
+50
+0
+50
+1
+0 C:\projects\Projects\Fun\FunAndGamesWithSlimDX\FunAndGamesWithSlimDX\Resources\crate2_diffuse.png
+1 C:\projects\Projects\Fun\FunAndGamesWithSlimDX\FunAndGamesWithSlimDX\Resources\HELL5_1.PNG
+2 C:\projects\Projects\Fun\FunAndGamesWithSlimDX\FunAndGamesWithSlimDX\Resources\HELL5_2.PNG
+3 C:\projects\Projects\Fun\FunAndGamesWithSlimDX\FunAndGamesWithSlimDX\Resources\MWALL1_1.PNG
+4 C:\projects\Projects\Fun\FunAndGamesWithSlimDX\FunAndGamesWithSlimDX\Resources\MWALL1_2.PNG
+5 C:\projects\Projects\Fun\FunAndGamesWithSlimDX\FunAndGamesWithSlimDX\Resources\MWALL2_1.PNG
+6 C:\projects\Projects\Fun\FunAndGamesWithSlimDX\FunAndGamesWithSlimDX\Resources\MWALL3_1.PNG
+7 C:\projects\Projects\Fun\FunAndGamesWithSlimDX\FunAndGamesWithSlimDX\Resources\MWALL4_1.PNG
+8 C:\projects\Projects\Fun\FunAndGamesWithSlimDX\FunAndGamesWithSlimDX\Resources\MWALL4_2.PNG
+9 C:\projects\Projects\Fun\FunAndGamesWithSlimDX\FunAndGamesWithSlimDX\Resources\MWALL5_1.PNG
+10 C:\projects\Projects\Fun\FunAndGamesWithSlimDX\FunAndGamesWithSlimDX\Resources\PLAT2_1.PNG
+11 C:\projects\Projects\Fun\FunAndGamesWithSlimDX\FunAndGamesWithSlimDX\Resources\TOMW2_1.PNG
+12 C:\projects\Projects\Fun\FunAndGamesWithSlimDX\FunAndGamesWithSlimDX\Resources\TOMW2_2.PNG
+13 C:\projects\Projects\Fun\FunAndGamesWithSlimDX\FunAndGamesWithSlimDX\Resources\TP2_1.PNG
+14 C:\projects\Projects\Fun\FunAndGamesWithSlimDX\FunAndGamesWithSlimDX\Resources\TP2_2.PNG
+15 C:\projects\Projects\Fun\FunAndGamesWithSlimDX\FunAndGamesWithSlimDX\Resources\TP7_1.PNG
+16 C:\projects\Projects\Fun\FunAndGamesWithSlimDX\FunAndGamesWithSlimDX\Resources\W101_1.PNG
+17 C:\projects\Projects\Fun\FunAndGamesWithSlimDX\FunAndGamesWithSlimDX\Resources\W101_2.PNG
+18 C:\projects\Projects\Fun\FunAndGamesWithSlimDX\FunAndGamesWithSlimDX\Resources\W102_1.PNG
+19 C:\projects\Projects\Fun\FunAndGamesWithSlimDX\FunAndGamesWithSlimDX\Resources\W102_2.PNG
+20 C:\projects\Projects\Fun\FunAndGamesWithSlimDX\FunAndGamesWithSlimDX\Resources\W103_1.PNG
+21 C:\projects\Projects\Fun\FunAndGamesWithSlimDX\FunAndGamesWithSlimDX\Resources\W103_2.PNG
+22 C:\projects\Projects\Fun\FunAndGamesWithSlimDX\FunAndGamesWithSlimDX\Resources\W17_1.PNG
+64 304 0 64 64 0 4 False
+64 64 0 240 64 0 4 False
+240 64 0 240 160 0 4 False
+240 160 0 352 160 0 4 False
+352 160 0 352 224 0 4 False
+352 224 0 240 224 0 4 False
+240 224 0 240 320 0 4 False
+240 320 0 240 352 0 4 False
+240 352 0 64 352 0 4 False
+64 352 0 64 304 0 4 False
+0 1 1 0 0 1 2 3 4 5 6 7 8 9 10

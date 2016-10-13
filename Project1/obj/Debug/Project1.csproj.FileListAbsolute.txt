@@ -1,0 +1,6 @@
+C:\projects\Projects\Fun\FunAndGamesWithSlimDX\Project1\bin\Debug\Project1.exe.config
+C:\projects\Projects\Fun\FunAndGamesWithSlimDX\Project1\bin\Debug\Project1.exe
+C:\projects\Projects\Fun\FunAndGamesWithSlimDX\Project1\bin\Debug\Project1.pdb
+C:\projects\Projects\Fun\FunAndGamesWithSlimDX\Project1\obj\Debug\Project1.exe
+C:\projects\Projects\Fun\FunAndGamesWithSlimDX\Project1\obj\Debug\Project1.pdb
+C:\projects\Projects\Fun\FunAndGamesWithSlimDX\Project1\obj\Debug\Project1.csprojResolveAssemblyReference.cache
