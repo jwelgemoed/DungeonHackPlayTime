@@ -94,7 +94,7 @@ namespace FunAndGamesWithSlimDX.Engine
             SpriteRenderer.Initialize(Renderer.Device);
             FontRenderer.Initialize(Renderer.Device, "Arial", FontWeight.Normal, FontStyle.Normal, FontStretch.Normal, 12);
 
-            _console = new Console(null, new Vector2(1600, -250), new Vector2(400, 400), 100, Colors.White);
+            _console = new Console(null, new Vector2(Form.Width - 500, -250), new Vector2(400, 400), 100, Colors.White);
 
             ApplicationStateEngine.CurrentState = ApplicationStateEnum.Normal;
             _hasInitialized = true;
@@ -146,23 +146,23 @@ namespace FunAndGamesWithSlimDX.Engine
         /// <summary>
         /// Override point to render at.
         /// </summary>
-        protected abstract void DrawScene();
+        public abstract void DrawScene();
 
         /// <summary>
         /// Extension point : Provide custom update method that updates the scene.
         /// </summary>
-        protected abstract void UpdateScene();
+        public abstract void UpdateScene();
 
         /// <summary>
         /// Extension point : Provide custom initialize method that initializes the scene.
         /// </summary>
-        protected abstract void InitializeScene();
+        public abstract void InitializeScene();
 
         /// <summary>
         /// Returns meshes.
         /// </summary>
         /// <returns></returns>
-        protected abstract List<Mesh> GetSceneMeshes();
+        public abstract List<Mesh> GetSceneMeshes();
 
         /// <summary>
         /// Start the engine's timer.

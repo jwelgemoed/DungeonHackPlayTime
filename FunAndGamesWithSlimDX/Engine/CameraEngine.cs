@@ -1,5 +1,4 @@
 ﻿using SlimDX.Direct3D11;
-using SlimDX.DirectInput;
 using SlimDX.Multimedia;
 using SlimDX.RawInput;
 using System;
@@ -13,7 +12,6 @@ namespace FunAndGamesWithSlimDX.Engine
     {
         private float _previousMouseX;
         private float _previousMouseY;
-        private bool _start;
         private readonly Point _centerPoint;
         private readonly List<string> _shaderTechniques = new List<string>() { "LightTech", "TextureTech", "NoSpotSpotLightTech" };
         private int currentTechId = 0;
@@ -33,15 +31,11 @@ namespace FunAndGamesWithSlimDX.Engine
             SlimDX.RawInput.Device.MouseInput += MoveMouse;
 
             _centerPoint = Form.PointToScreen(new Point(Form.ClientSize.Width / 2, Form.ClientSize.Height / 2));
-
-            _start = false;
         }
 
         public void Start()
         {
             Cursor.Hide();
-
-            _start = true;
         }
 
         public void Dispose()
@@ -54,9 +48,6 @@ namespace FunAndGamesWithSlimDX.Engine
 
         protected void KeyDown(object sender, KeyEventArgs e)
         {
-            
-            _start = true;
-            
             if ((e.KeyCode == Keys.Up) || (e.KeyCode == Keys.W))
             {
                 Camera.CurrentMoveState.MoveForward = true;
@@ -125,9 +116,6 @@ namespace FunAndGamesWithSlimDX.Engine
 
         protected void KeyUp(object sender, KeyEventArgs e)
         {
-
-            _start = true;
-
             if ((e.KeyCode == Keys.Up) || (e.KeyCode == Keys.W))
             {
                 Camera.CurrentMoveState.MoveForward = false;
@@ -169,11 +157,6 @@ namespace FunAndGamesWithSlimDX.Engine
 
         protected void MoveMouse(object sender, MouseInputEventArgs e)
         {
-            if (!_start)
-            {
-                return;
-            }
-
             Camera.RelativeX = (e.X - _previousMouseX) * 0.1f;
             Camera.RelativeY = (e.Y - _previousMouseY) * 0.1f;
 
@@ -184,7 +167,7 @@ namespace FunAndGamesWithSlimDX.Engine
             Camera.Rotate(Camera.RelativeX, Camera.RelativeY);
         }
 
-        protected override void UpdateScene()
+        public override void UpdateScene()
         {
             Camera.FrameTime = (float) Timer.DeltaTime * 100;
             Camera.Move(Camera.CurrentMoveState);

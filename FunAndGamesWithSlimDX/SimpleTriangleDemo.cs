@@ -29,12 +29,12 @@ namespace FunAndGamesWithSlimDX
             _start = false;
         }
 
-        protected override List<Mesh> GetSceneMeshes()
+        public override List<Mesh> GetSceneMeshes()
         {
             return _meshes;
         }
 
-        protected override void DrawScene()
+        public override void DrawScene()
         {
             Camera.Render();
 
@@ -90,12 +90,12 @@ namespace FunAndGamesWithSlimDX
             }*/
         }
 
-        protected override void UpdateScene()
+        public override void UpdateScene()
         {
             _counter++;
         }
 
-        protected override void InitializeScene()
+        public override void InitializeScene()
         {
             base.Form.KeyDown += KeyDown;
             base.Form.MouseMove += MoveMouse;

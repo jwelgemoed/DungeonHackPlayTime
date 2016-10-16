@@ -95,6 +95,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BSP\BspNode.cs" />
+    <Compile Include="BSP\BspTreeBuilder.cs" />
+    <Compile Include="BSP\PointClassifier.cs" />
+    <Compile Include="BSP\PolygonClassifier.cs" />
     <Compile Include="DirectX\LightShader.cs" />
     <Compile Include="DirectX\Shader.cs" />
     <Compile Include="DirectX\IncludeFX.cs" />

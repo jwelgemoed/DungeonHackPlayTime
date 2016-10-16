@@ -13,7 +13,6 @@ namespace FunAndGamesWithSlimDX.Entities
     public class Mesh : IDisposable
     {
         public IShader Shader;
-        private static object _lock = new object();
 
         public SlimDX.Direct3D11.Buffer VertexBuffer
         {
@@ -49,7 +48,7 @@ namespace FunAndGamesWithSlimDX.Entities
 
         public short[] IndexData { get; set; }
 
-        public Model[] Model { get; private set; }
+        public Model[] Model { get; set; }
 
         public PrimitiveTopology MeshRenderPrimitive { get; set; }
 
@@ -71,11 +70,12 @@ namespace FunAndGamesWithSlimDX.Entities
         private BoundingBox _boundingBox;
         private Vector3 _minimumVector;
         private Vector3 _maximumVector;
-        
+        public string TextureFileName { get; set; }
 
-        public Matrix ScaleMatrix { get; set; }
-        public Matrix TranslationMatrix { get; set; }
-        public Matrix RotationMatrix { get; set; }
+        public Matrix ScaleMatrix { get; private set; }
+        public Matrix TranslationMatrix { get; private set; }
+        public Matrix RotationMatrix { get; private set; }
+        public Matrix WorldMatrix { get; private set; }
 
         public Material Material { get; set; }
 
@@ -88,6 +88,7 @@ namespace FunAndGamesWithSlimDX.Entities
             ScaleMatrix = Matrix.Identity;
             TranslationMatrix = Matrix.Identity;
             RotationMatrix = Matrix.Identity;
+            WorldMatrix = Matrix.Identity;
         }
 
         public void UpdateMesh(float time)
@@ -99,16 +100,49 @@ namespace FunAndGamesWithSlimDX.Entities
         public void SetPosition(float x, float y, float z)
         {
             TranslationMatrix = Matrix.Translation(x, y, z);
+
+            RecalculateWorldMatrix();
         }
 
         public void SetScaling(float scale)
         {
             ScaleMatrix = Matrix.Scaling(scale, scale, scale);
+
+            RecalculateWorldMatrix();
         }
 
         public void SetScaling(float scaleX, float scaleY, float scaleZ)
         {
             ScaleMatrix = Matrix.Scaling(scaleX, scaleY, scaleZ);
+
+            RecalculateWorldMatrix();
+        }
+
+        public void SetRotationMatrix(Matrix rotationMatrix)
+        {
+            RotationMatrix = rotationMatrix;
+
+            RecalculateWorldMatrix();
+        }
+
+        public void SetScaleMatrix(Matrix scaleMatrix)
+        {
+            ScaleMatrix = scaleMatrix;
+
+            RecalculateWorldMatrix();
+        }
+
+        public void SetTranslationMatrix(Matrix translationMatrix)
+        {
+            TranslationMatrix = translationMatrix;
+
+            RecalculateWorldMatrix();
+        }
+
+        private void RecalculateWorldMatrix()
+        {
+            WorldMatrix = ScaleMatrix * RotationMatrix;
+            WorldMatrix = WorldMatrix * TranslationMatrix;
         }
        
         private SlimDX.Direct3D11.Buffer GetVertexBuffer()
@@ -135,13 +169,10 @@ namespace FunAndGamesWithSlimDX.Entities
 
         public virtual void Render(Frustrum frustrum, DeviceContext context, Camera camera, ref int meshRenderedCount)
         {
-            var worldMatrix = ScaleMatrix * RotationMatrix;
-            worldMatrix = worldMatrix * TranslationMatrix;
-
             //Do player collision detection
             _boundingBox = new BoundingBox(
-                    Vector3.TransformCoordinate(_minimumVector, worldMatrix),
-                    Vector3.TransformCoordinate(_maximumVector, worldMatrix));
+                    Vector3.TransformCoordinate(_minimumVector, WorldMatrix),
+                    Vector3.TransformCoordinate(_maximumVector, WorldMatrix));
 
             if (!ConfigManager.WallClipEnabled &&
                 BoundingSphere.Intersects(camera.CameraSphere, _boundingBox))
@@ -172,15 +203,14 @@ namespace FunAndGamesWithSlimDX.Entities
             {
                 return;
             }
-
-
+            
             meshRenderedCount++;
 
             context.InputAssembler.PrimitiveTopology = MeshRenderPrimitive;
             context.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(VertexBuffer, _sizeOfVertex, 0));
             context.InputAssembler.SetIndexBuffer(IndexBuffer, Format.R16_UInt, 0);
 
-            Shader.Render(context, GetIndexCount(), worldMatrix, camera.ViewMatrix,
+            Shader.Render(context, GetIndexCount(), WorldMatrix, camera.ViewMatrix,
                             camera.ProjectionMatrix, _texture.TextureData, camera.GetPosition(), Material);
 
         }
@@ -198,6 +228,8 @@ namespace FunAndGamesWithSlimDX.Entities
 
         public void LoadTexture(string fileName)
         {
+            TextureFileName = fileName;
+
             if (_texture == null)
                 _texture = new Texture();
 
@@ -210,6 +242,8 @@ namespace FunAndGamesWithSlimDX.Entities
 
         public void LoadTextureFullPath(string filePath)
         {
+            TextureFileName = filePath;
+
             if (_texture == null)
                 _texture = new Texture();
 
@@ -263,6 +297,8 @@ namespace FunAndGamesWithSlimDX.Entities
 
             LoadVectorsFromModel();
         }
+
+        
 
         public void LoadVectorsFromModel()
         {

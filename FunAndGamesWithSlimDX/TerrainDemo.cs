@@ -19,12 +19,12 @@ namespace FunAndGamesWithSlimDX
         {
         }
 
-        protected override List<Mesh> GetSceneMeshes()
+        public override List<Mesh> GetSceneMeshes()
         {
             return _meshes;
         }
 
-        protected override void DrawScene()
+        public override void DrawScene()
         {
             Camera.Render();
 
@@ -68,7 +68,7 @@ namespace FunAndGamesWithSlimDX
             _sprite.Draw();
         }
 
-        protected override void UpdateScene()
+        public override void UpdateScene()
         {
             /*Camera.Render();
 
@@ -97,7 +97,7 @@ namespace FunAndGamesWithSlimDX
             }*/
         }
 
-        protected override void InitializeScene()
+        public override void InitializeScene()
         {
             _counter = 0;
 
@@ -129,7 +129,7 @@ namespace FunAndGamesWithSlimDX
 
             boxMesh.UpdateMeshAction = (x) =>
             {
-                boxMesh.RotationMatrix = Matrix.RotationY((float)(-x * Math.PI / 90));
+                boxMesh.SetRotationMatrix(Matrix.RotationY((float)(-x * Math.PI / 90)));
             };
 
             boxMesh.LoadModel("F-35_Lightning_II.obj-model.txt");
@@ -147,7 +147,7 @@ namespace FunAndGamesWithSlimDX
 
             boxMaya.UpdateMeshAction = (x) =>
                 {
-                    boxMaya.RotationMatrix = Matrix.RotationY((float)(x * Math.PI / 90));
+                    boxMaya.SetRotationMatrix(Matrix.RotationY((float)(x * Math.PI / 90)));
                     //boxMaya.SetPosition(2000 * (float)(Math.Cos(x * Math.PI / 90)), 1.0f, 2500.0f + (2000 * (float)Math.Sin(x * Math.PI / 90)));
                 };
 
@@ -160,6 +160,8 @@ namespace FunAndGamesWithSlimDX
             boxRoom.LoadTexture("crate2_diffuse.png");
             boxRoom.SetPosition(0.0f, 0.0f, 0.0f);
             boxRoom.SetScaling(30000);
+
+
         }
 
         public void Dispose()

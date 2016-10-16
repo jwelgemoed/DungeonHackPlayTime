@@ -1,4 +1,5 @@
-﻿using FunAndGamesWithSlimDX;
+﻿using DungeonHack.BSP;
+using FunAndGamesWithSlimDX;
 using FunAndGamesWithSlimDX.Entities;
 using Geometry;
 using log4net;
@@ -189,6 +190,11 @@ namespace MapEditor
             if (_playerStart != null)
                 demo.SetStartingPosition(_playerStart.TranslateToRealSpace(4, (float) canvasXZ.Width / 2, (float) canvasXZ.Height / 2));
 
+            BspTreeBuilder bspTreeBuilder = new BspTreeBuilder(demo.Device, demo.GetShader);
+
+            demo.InitializeScene();
+            demo.BspRootNode = bspTreeBuilder.BuildTree(demo.Meshes);
+            
             demo.Start();
             demo.Run();
         }
