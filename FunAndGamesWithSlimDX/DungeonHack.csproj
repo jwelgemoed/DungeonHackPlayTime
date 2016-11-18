@@ -95,6 +95,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BSP\BspBoundingVolumeBuilder.cs" />
     <Compile Include="BSP\BspNode.cs" />
     <Compile Include="BSP\BspTreeBuilder.cs" />
     <Compile Include="BSP\PointClassifier.cs" />
@@ -151,6 +152,7 @@
     <Compile Include="Menus\SaveWindow.Designer.cs">
       <DependentUpon>SaveWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Octree\Octree.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DirectX\Renderer.cs" />
@@ -316,6 +318,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

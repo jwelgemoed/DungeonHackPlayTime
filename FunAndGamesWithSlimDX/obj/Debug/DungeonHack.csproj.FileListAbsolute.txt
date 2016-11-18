@@ -31,7 +31,6 @@ C:\git\DungeonHackPlayTime\build\Resources\Zuccaralo.txt
 C:\git\DungeonHackPlayTime\build\Resources\Cube-Maya.txt
 C:\git\DungeonHackPlayTime\build\Resources\Cube.txt
 C:\git\DungeonHackPlayTime\build\Resources\terrain2.dds
-C:\git\DungeonHackPlayTime\DungeonHackPlayTime\FunAndGamesWithSlimDX\obj\Debug\DungeonHack.csprojResolveAssemblyReference.cache
 C:\git\DungeonHackPlayTime\DungeonHackPlayTime\FunAndGamesWithSlimDX\obj\Debug\FunAndGamesWithSlimDX.Menus.OptionsWindow.resources
 C:\git\DungeonHackPlayTime\DungeonHackPlayTime\FunAndGamesWithSlimDX\obj\Debug\FunAndGamesWithSlimDX.Menus.SaveWindow.resources
 C:\git\DungeonHackPlayTime\DungeonHackPlayTime\FunAndGamesWithSlimDX\obj\Debug\DungeonHack.csproj.GenerateResource.Cache

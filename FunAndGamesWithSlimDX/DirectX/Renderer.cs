@@ -238,7 +238,7 @@ namespace FunAndGamesWithSlimDX.DirectX
             Context = Device.ImmediateContext;
             var viewport = new Viewport(0.0f, 0.0f, Width, Height, 0.0f, 1.0f);
 
-            Context.OutputMerger.DepthStencilState = _depthStencilState;
+            Context.OutputMerger.DepthStencilState = _depthStencilState;            
             Context.OutputMerger.SetTargets(DepthStencilView, RenderTarget);
             //Context.OutputMerger.SetTargets(RenderTarget);
             Context.Rasterizer.SetViewports(viewport);

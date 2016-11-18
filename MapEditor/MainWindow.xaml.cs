@@ -191,9 +191,13 @@ namespace MapEditor
                 demo.SetStartingPosition(_playerStart.TranslateToRealSpace(4, (float) canvasXZ.Width / 2, (float) canvasXZ.Height / 2));
 
             BspTreeBuilder bspTreeBuilder = new BspTreeBuilder(demo.Device, demo.GetShader);
+            BspBoundingVolumeCalculator bspBoudingVolumeCalculator = new BspBoundingVolumeCalculator();
 
             demo.InitializeScene();
             demo.BspRootNode = bspTreeBuilder.BuildTree(demo.Meshes);
+            bspBoudingVolumeCalculator.ComputeBoundingVolumes(demo.BspRootNode);
+
+            demo.UpdateMeshes();
             
             demo.Start();
             demo.Run();
@@ -272,10 +276,11 @@ namespace MapEditor
         {
             if (e.ButtonState == MouseButtonState.Pressed && _activeEdit)
             {
+                startPoint = e.GetPosition(this);
+
                 if (!_editState)
                 {
                     _editState = true;
-                    startPoint = e.GetPosition(this);
                 }
                 else
                 {
@@ -522,7 +527,8 @@ namespace MapEditor
                 .LineSegments
                 .Where(x => sector.SideDefinitions.Contains(x.Key))
                 .OrderBy(x => x.Key)
-                .Select(x => x.Value);
+                .Select(x => x.Value)
+                .Distinct();
 
             //Create walls
             foreach (var lineSegment in lineSegments)

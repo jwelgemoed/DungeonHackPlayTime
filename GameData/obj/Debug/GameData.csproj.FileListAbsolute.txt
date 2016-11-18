@@ -45,9 +45,6 @@ C:\projects\Projects\Fun\FunAndGamesWithSlimDX\GameData\bin\Debug\nunit.framewor
 C:\projects\Projects\Fun\FunAndGamesWithSlimDX\GameData\obj\Debug\GameData.csprojResolveAssemblyReference.cache
 C:\projects\Projects\Fun\FunAndGamesWithSlimDX\GameData\obj\Debug\GameData.dll
 C:\projects\Projects\Fun\FunAndGamesWithSlimDX\GameData\obj\Debug\GameData.pdb
-C:\git\DungeonHackPlayTime\DungeonHackPlayTime\GameData\obj\Debug\GameData.csprojResolveAssemblyReference.cache
-C:\git\DungeonHackPlayTime\DungeonHackPlayTime\GameData\obj\Debug\GameData.dll
-C:\git\DungeonHackPlayTime\DungeonHackPlayTime\GameData\obj\Debug\GameData.pdb
 C:\git\DungeonHackPlayTime\DungeonHackPlayTime\GameData\bin\Debug\FX\LightHelper.fx
 C:\git\DungeonHackPlayTime\DungeonHackPlayTime\GameData\bin\Debug\Resources\MWALL4_2.PNG
 C:\git\DungeonHackPlayTime\DungeonHackPlayTime\GameData\bin\Debug\FX\Shaders\Texture.fx
@@ -92,3 +89,6 @@ C:\git\DungeonHackPlayTime\DungeonHackPlayTime\GameData\bin\Debug\DungeonHack.pd
 C:\git\DungeonHackPlayTime\DungeonHackPlayTime\GameData\bin\Debug\SlimDX.pdb
 C:\git\DungeonHackPlayTime\DungeonHackPlayTime\GameData\bin\Debug\SlimDX.xml
 C:\git\DungeonHackPlayTime\DungeonHackPlayTime\GameData\bin\Debug\nunit.framework.xml
+C:\git\DungeonHackPlayTime\DungeonHackPlayTime\GameData\obj\Debug\GameData.csprojResolveAssemblyReference.cache
+C:\git\DungeonHackPlayTime\DungeonHackPlayTime\GameData\obj\Debug\GameData.dll
+C:\git\DungeonHackPlayTime\DungeonHackPlayTime\GameData\obj\Debug\GameData.pdb

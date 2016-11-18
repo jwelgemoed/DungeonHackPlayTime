@@ -42,14 +42,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="DungeonHack.exe" size="84992">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="DungeonHack.exe" size="96256">
       <assemblyIdentity name="DungeonHack" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>2ZDk83WKCqYSEe44I6GxZHRQhU8jETtyY0NpcJUvxr4=</dsig:DigestValue>
+        <dsig:DigestValue>wqSRhvwPQX4KZDdDk8sszgOclKqF4091ISgztTDNDYo=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -146,13 +146,13 @@
       <dsig:DigestValue>woZXxh1n9Z76AeMtyIDgnlxHkqUL/2dmB7fDK4v+bXs=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="FX\ShaderEffects.fx" size="12159">
+  <file name="FX\ShaderEffects.fx" size="12160">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>DvfNOwbQxLedlnjdWZh5g7A6OQ4Js8RtTHStw0skfTM=</dsig:DigestValue>
+      <dsig:DigestValue>OFk2jlNe9lKllak32Vi7YOfmWonNLay/pnQHCgXYLK8=</dsig:DigestValue>
     </hash>
   </file>
   <file name="FX\Shaders\Texture.fx" size="1938">

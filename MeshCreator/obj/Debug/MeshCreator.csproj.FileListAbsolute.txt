@@ -7,10 +7,11 @@ C:\projects\Projects\Fun\FunAndGamesWithSlimDX\MeshCreator\bin\Debug\SlimDX.xml
 C:\projects\Projects\Fun\FunAndGamesWithSlimDX\MeshCreator\obj\Debug\MeshCreator.exe
 C:\projects\Projects\Fun\FunAndGamesWithSlimDX\MeshCreator\obj\Debug\MeshCreator.pdb
 C:\git\DungeonHackPlayTime\DungeonHackPlayTime\MeshCreator\bin\Debug\MeshCreator.exe.config
-C:\git\DungeonHackPlayTime\DungeonHackPlayTime\MeshCreator\obj\Debug\MeshCreator.exe
-C:\git\DungeonHackPlayTime\DungeonHackPlayTime\MeshCreator\obj\Debug\MeshCreator.pdb
 C:\git\DungeonHackPlayTime\DungeonHackPlayTime\MeshCreator\bin\Debug\MeshCreator.exe
 C:\git\DungeonHackPlayTime\DungeonHackPlayTime\MeshCreator\bin\Debug\MeshCreator.pdb
 C:\git\DungeonHackPlayTime\DungeonHackPlayTime\MeshCreator\bin\Debug\SlimDX.dll
 C:\git\DungeonHackPlayTime\DungeonHackPlayTime\MeshCreator\bin\Debug\SlimDX.pdb
 C:\git\DungeonHackPlayTime\DungeonHackPlayTime\MeshCreator\bin\Debug\SlimDX.xml
+C:\git\DungeonHackPlayTime\DungeonHackPlayTime\MeshCreator\obj\Debug\MeshCreator.exe
+C:\git\DungeonHackPlayTime\DungeonHackPlayTime\MeshCreator\obj\Debug\MeshCreator.pdb
+C:\git\DungeonHackPlayTime\DungeonHackPlayTime\MeshCreator\obj\Debug\MeshCreator.csprojResolveAssemblyReference.cache
