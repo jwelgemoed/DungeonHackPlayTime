@@ -23,6 +23,9 @@ namespace GameData
         public float FloorHeight { get; set; }
 
         public float CeilingHeight { get; set; }
+
+        public float XPlacement { get; set; }
+        public float YPlacement { get; set; }
         
         public Sector()
         {

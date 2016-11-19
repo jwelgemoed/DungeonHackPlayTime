@@ -7,6 +7,7 @@ using SlimDX.Direct3D11;
 using FunAndGamesWithSlimDX.DirectX;
 using FunAndGamesWithSlimDX.Lights;
 using DungeonHack.BSP;
+using System.IO;
 
 namespace MapEditor
 {
@@ -21,6 +22,8 @@ namespace MapEditor
         private PointClassifier _pointClassifier;
 
         public BspNode BspRootNode { get; set; }
+
+        private int _nodesVisited = 0;
 
         public MapDemoRunner() : base(8.0f, true)
         {
@@ -52,57 +55,97 @@ namespace MapEditor
 
         public override void DrawScene()
         {
-            var viewMatrix = Camera.ViewMatrix;
-            var projectionMatrix = Renderer.ProjectionMatrix;
-
             //Construct the frustrum
             if (ConfigManager.FrustrumCullingEnabled)
-                _frustrum.ConstructFrustrum(viewMatrix * projectionMatrix);
+                _frustrum.ConstructFrustrum(Camera.ViewMatrix * Renderer.ProjectionMatrix);
 
             //Do the light rendering
             LightEngine.RenderLights(Shader);
 
             _meshRenderedCount = 0;
 
-           /*  foreach (var mesh in Meshes)
-             {
-                 mesh.Render(_frustrum, base.Renderer.Context, Camera, ref _meshRenderedCount);
-             }
-             */
-           WalkBspTree(BspRootNode, Camera.LookAt);
+            _nodesVisited = 0;
+            DrawBspTreeBackToFront(BspRootNode, Camera.EyeAt);
         }
 
-        private void WalkBspTree(BspNode node, Vector3 position)
+        /// <summary>
+        /// BSP tree traversal inorder to draw polygons in back to front order (painter's algorithm)
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="position"></param>
+        private void DrawBspTreeBackToFront(BspNode node, Vector3 position)
+        {
+            if (node.IsLeaf)
+            {
+                return;
+            }
+                       
+            PointClassification result = _pointClassifier.ClassifyPoint(position, node.Splitter);
+
+            if (result == PointClassification.Front)
+            {
+                if (node.Back != null)
+                    DrawBspTreeBackToFront(node.Back, position);
+
+                node.Splitter.Render(_frustrum, Renderer.Context, Camera, ref _meshRenderedCount);
+
+                if (node.Front != null)
+                    DrawBspTreeBackToFront(node.Front, position);
+            }
+            else
+            {
+                if (node.Front != null)
+                    DrawBspTreeBackToFront(node.Front, position);
+
+                node.Splitter.Render(_frustrum, Renderer.Context, Camera, ref _meshRenderedCount);
+
+                if (node.Back != null)
+                    DrawBspTreeBackToFront(node.Back, position);
+            }
+        }
+
+        private void DrawBspTreeFrontToBack(BspNode node, Vector3 position)
         {
             if (node.IsLeaf)
             {
                 return;
             }
 
-            //var worldMatrix = node.Splitter.ScaleMatrix * node.Spliter.RotationMatrix;
-            //worldMatrix = worldMatrix * node.Splitter.TranslationMatrix;
+            if (node.BoundingVolume.HasValue)
+            {
+                var BoundingBox = new BoundingBox(
+                    Vector3.TransformCoordinate(node.BoundingVolume.Value.Minimum, node.Splitter.WorldMatrix),
+                    Vector3.TransformCoordinate(node.BoundingVolume.Value.Maximum, node.Splitter.WorldMatrix));
+
+                if (_frustrum.CheckBoundingBox(BoundingBox) == 0)
+                {
+                    return;
+                }
+            }
 
             PointClassification result = _pointClassifier.ClassifyPoint(position, node.Splitter);
 
-            if (result == PointClassification.Front)
+            _nodesVisited++;
+
+            if (result == PointClassification.Back)
             {
                 if (node.Back != null)
-                    WalkBspTree(node.Back, position);
+                    DrawBspTreeFrontToBack(node.Back, position);
 
                 node.Splitter.Render(_frustrum, Renderer.Context, Camera, ref _meshRenderedCount);
 
                 if (node.Front != null)
-                    WalkBspTree(node.Front, position);
+                    DrawBspTreeFrontToBack(node.Front, position);
             }
             else
             {
                 if (node.Front != null)
-                    WalkBspTree(node.Front, position);
+                    DrawBspTreeFrontToBack(node.Front, position);
 
-               // node.Splitter.Render(_frustrum, Renderer.Context, Camera, ref _meshRenderedCount);
+                node.Splitter.Render(_frustrum, Renderer.Context, Camera, ref _meshRenderedCount);
 
                 if (node.Back != null)
-                    WalkBspTree(node.Back, position);
+                    DrawBspTreeFrontToBack(node.Back, position);
             }
         }
 
@@ -175,9 +218,9 @@ namespace MapEditor
 
            LightEngine.AddSpotLight(_spotlight);
 
-            /*BspTreeBuilder builder = new BspTreeBuilder(Device, Shader);
+            BspTreeBuilder builder = new BspTreeBuilder(Device, Shader);
 
-            builder.TraverseBspTreeAndPerformAction(BspRootNode, (x) =>
+          /*  builder.TraverseBspTreeAndPerformAction(BspRootNode, (x) =>
             {
                 x.LoadVectorsFromModel();
                 x.SetPosition(0.0f, 0.0f, 0.0f);
@@ -204,7 +247,7 @@ namespace MapEditor
                                                         _console.WriteLine("I'm hit!!");
                                                     };
             }
-            
+           
          
         }
 
@@ -214,6 +257,34 @@ namespace MapEditor
                 mesh.Dispose();
 
             Shader.Dispose();
+        }
+
+        internal void UpdateMeshes()
+        {
+            BspTreeBuilder builder = new BspTreeBuilder(Device, Shader);
+
+            using (var file = new StreamWriter("c:\\temp\\meshes.txt"))
+            {
+                builder.TraverseBspTreeAndPerformAction(BspRootNode, (x) =>
+                {
+
+                    foreach(var model in x.Model)
+                    {
+                        file.WriteLine("X:{0}, Y:{1}, Y:{2}", model.x, model.y, model.z);
+                    }
+
+                    x.LoadVectorsFromModel();
+                    x.SetPosition(0.0f, 0.0f, 0.0f);
+                    x.Material = _wallMaterial;
+
+                    x.CollissionEventHandler += y =>
+                    {
+                        Camera.CollidedVertex = (Vertex)y.CollidedObject;
+                        Camera.Collided = true;
+                        _console.WriteLine("I'm hit!!");
+                    };
+                });
+            }
         }
     }
 }

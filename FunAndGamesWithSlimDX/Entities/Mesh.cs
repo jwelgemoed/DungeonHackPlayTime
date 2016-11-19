@@ -46,6 +46,8 @@ namespace FunAndGamesWithSlimDX.Entities
 
         public Vertex[] VertexData { get; set; }
 
+        public Vertex[] WorldVertexData { get; set; }
+
         public short[] IndexData { get; set; }
 
         public Model[] Model { get; set; }
@@ -67,9 +69,12 @@ namespace FunAndGamesWithSlimDX.Entities
         protected readonly int _sizeOfVertex = Vertex.SizeOf;
         private const int SizeOfShort = sizeof (uint);
         protected Texture _texture = new Texture();
-        private BoundingBox _boundingBox;
-        private Vector3 _minimumVector;
-        private Vector3 _maximumVector;
+        public BoundingBox BoundingBox { get; set; }
+
+        public BoundingSphere BoundingSphere { get; set; }
+
+        public Vector3 _minimumVector;
+        public Vector3 _maximumVector;
         public string TextureFileName { get; set; }
 
         public Matrix ScaleMatrix { get; private set; }
@@ -143,6 +148,7 @@ namespace FunAndGamesWithSlimDX.Entities
         {
             WorldMatrix = ScaleMatrix * RotationMatrix;
             WorldMatrix = WorldMatrix * TranslationMatrix;
+
         }
        
         private SlimDX.Direct3D11.Buffer GetVertexBuffer()
@@ -170,12 +176,12 @@ namespace FunAndGamesWithSlimDX.Entities
         public virtual void Render(Frustrum frustrum, DeviceContext context, Camera camera, ref int meshRenderedCount)
         {
             //Do player collision detection
-            _boundingBox = new BoundingBox(
+            BoundingBox = new BoundingBox(
                     Vector3.TransformCoordinate(_minimumVector, WorldMatrix),
                     Vector3.TransformCoordinate(_maximumVector, WorldMatrix));
 
             if (!ConfigManager.WallClipEnabled &&
-                BoundingSphere.Intersects(camera.CameraSphere, _boundingBox))
+                BoundingSphere.Intersects(camera.CameraSphere, BoundingBox))
             {
                 //Calculate vertex closest to camera
                 Vertex closestVertex = VertexData[0];
@@ -199,7 +205,7 @@ namespace FunAndGamesWithSlimDX.Entities
 
             //Frustrum culling.
             if (ConfigManager.FrustrumCullingEnabled &&
-                frustrum.CheckBoundingBox(_boundingBox) == 0)
+                frustrum.CheckBoundingBox(BoundingBox) == 0)
             {
                 return;
             }
@@ -297,8 +303,7 @@ namespace FunAndGamesWithSlimDX.Entities
 
             LoadVectorsFromModel();
         }
-
-        
+               
 
         public void LoadVectorsFromModel()
         {
@@ -352,9 +357,11 @@ namespace FunAndGamesWithSlimDX.Entities
 
             MeshRenderPrimitive = PrimitiveTopology.TriangleList;
 
-            _boundingBox = BoundingBox.FromPoints(positions);
-            _minimumVector = _boundingBox.Minimum;
-            _maximumVector = _boundingBox.Maximum;
+            BoundingBox = BoundingBox.FromPoints(positions);
+            _minimumVector = BoundingBox.Minimum;
+            _maximumVector = BoundingBox.Maximum;
+
+            BoundingSphere = BoundingSphere.FromBox(BoundingBox);
         }
 
         public void Dispose()

@@ -42,14 +42,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="DungeonHack.exe" size="84992">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="DungeonHack.exe" size="93184">
       <assemblyIdentity name="DungeonHack" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>2ZDk83WKCqYSEe44I6GxZHRQhU8jETtyY0NpcJUvxr4=</dsig:DigestValue>
+        <dsig:DigestValue>RaDpnj90R2RuJmKMr+jdVRC7dILnYB0WTGjF6ryTy3A=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

@@ -29,6 +29,7 @@ namespace DungeonHack.BSP
         public BspNode BuildTree(List<Mesh> meshList)
         {
             BspNode bspRootNode = new BspNode();
+            bspRootNode.IsRoot = true;
 
             BuildBspTree(bspRootNode, meshList);
 
@@ -75,7 +76,7 @@ namespace DungeonHack.BSP
                     case PolygonClassification.Spanning:
                         frontList.Add(testMesh);
                         backList.Add(testMesh);
-                        /* SplitMesh(testMesh, currentNode.Splitter, out frontSplit, out backSplit);
+                   /*      SplitMesh(testMesh, currentNode.Splitter, out frontSplit, out backSplit);
 
                         if (frontSplit != null)
                         {
@@ -93,7 +94,7 @@ namespace DungeonHack.BSP
                         {
                             //meshList.Remove(testMesh);
                         }
-                        */
+                     */   
                         break;
                     default:
                         break;
@@ -105,12 +106,14 @@ namespace DungeonHack.BSP
                 BspNode leafNode = new BspNode();
                 leafNode.IsLeaf = true;
                 leafNode.IsSolid = false;
+                leafNode.Parent = currentNode;
                 currentNode.Front = leafNode;
             }
             else
             {
                 BspNode newNode = new BspNode();
                 newNode.IsLeaf = false;
+                newNode.Parent = currentNode;
                 currentNode.Front = newNode;
                 BuildBspTree(newNode, frontList);
             }
@@ -120,12 +123,14 @@ namespace DungeonHack.BSP
                 BspNode leafNode = new BspNode();
                 leafNode.IsLeaf = true;
                 leafNode.IsSolid = true;
+                leafNode.Parent = currentNode;
                 currentNode.Back = leafNode;
             }
             else
             {
                 BspNode newNode = new BspNode();
                 newNode.IsLeaf = false;
+                newNode.Parent = currentNode;
                 currentNode.Back = newNode;
                 BuildBspTree(newNode, backList);
             }
@@ -258,7 +263,7 @@ namespace DungeonHack.BSP
             frontSplit.MeshRenderPrimitive = testMesh.MeshRenderPrimitive;
             frontSplit.Model = frontList.ToArray();
             frontSplit.LoadTextureFullPath(testMesh.TextureFileName);
-           
+            frontSplit.LoadVectorsFromModel();
 
             backSplit = new Mesh(_device, _shader);
             backSplit.Material = testMesh.Material;
@@ -268,6 +273,7 @@ namespace DungeonHack.BSP
             backSplit.MeshRenderPrimitive = testMesh.MeshRenderPrimitive;
             backSplit.Model = backList.ToArray();
             backSplit.LoadTextureFullPath(testMesh.TextureFileName);
+            backSplit.LoadVectorsFromModel();
 
         }
 

@@ -14,3 +14,4 @@ C:\git\DungeonHackPlayTime\DungeonHackPlayTime\MeshCreator\bin\Debug\MeshCreator
 C:\git\DungeonHackPlayTime\DungeonHackPlayTime\MeshCreator\bin\Debug\SlimDX.dll
 C:\git\DungeonHackPlayTime\DungeonHackPlayTime\MeshCreator\bin\Debug\SlimDX.pdb
 C:\git\DungeonHackPlayTime\DungeonHackPlayTime\MeshCreator\bin\Debug\SlimDX.xml
+C:\git\DungeonHackPlayTime\DungeonHackPlayTime\MeshCreator\obj\Debug\MeshCreator.csprojResolveAssemblyReference.cache
