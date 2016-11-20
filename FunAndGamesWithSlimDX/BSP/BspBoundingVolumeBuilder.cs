@@ -26,12 +26,12 @@ namespace DungeonHack.BSP
 
             if (node.Splitter != null)
             {
+                var boundingBox = new BoundingBox(
+                       Vector3.TransformCoordinate(node.Splitter._minimumVector, node.Splitter.WorldMatrix),
+                       Vector3.TransformCoordinate(node.Splitter._maximumVector, node.Splitter.WorldMatrix));
+
                 if (!volume.HasValue)
                 {
-                    var boundingBox = new BoundingBox(
-                        Vector3.TransformCoordinate(node.Splitter._minimumVector, node.Splitter.WorldMatrix),
-                        Vector3.TransformCoordinate(node.Splitter._maximumVector, node.Splitter.WorldMatrix));
-
                     if (node.BoundingVolume.HasValue)
                     {
                         node.BoundingVolume = BoundingBox.Merge(node.BoundingVolume.Value, boundingBox);
@@ -43,10 +43,6 @@ namespace DungeonHack.BSP
                 }
                 else
                 {
-                    var boundingBox = new BoundingBox(
-                        Vector3.TransformCoordinate(node.Splitter._minimumVector, node.Splitter.WorldMatrix),
-                        Vector3.TransformCoordinate(node.Splitter._maximumVector, node.Splitter.WorldMatrix));
-
                     if (node.BoundingVolume.HasValue)
                     {
                         node.BoundingVolume = BoundingBox.Merge(node.BoundingVolume.Value, BoundingBox.Merge(boundingBox, volume.Value));

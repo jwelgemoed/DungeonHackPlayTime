@@ -67,6 +67,7 @@ namespace MapEditor
             _nodesVisited = 0;
             DrawBspTreeFrontToBack(BspRootNode, Camera.EyeAt);
             //DrawBspTreeBackToFront(BspRootNode, Camera.EyeAt);
+            //base._console.WriteLine($"Number of nodes visited : {_nodesVisited}");
         }
 
         /// <summary>
@@ -82,6 +83,8 @@ namespace MapEditor
             }
                        
             PointClassification result = _pointClassifier.ClassifyPoint(position, node.Splitter);
+
+            _nodesVisited++;
 
             if (result == PointClassification.Front)
             {
