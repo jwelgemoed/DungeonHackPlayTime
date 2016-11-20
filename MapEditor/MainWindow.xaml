@@ -27,5 +27,6 @@
         <ListBox x:Name="lstRooms" HorizontalAlignment="Left" Height="222" Margin="980,151,0,0" VerticalAlignment="Top" Width="261" SelectionChanged="lstRooms_SelectionChanged"/>
         <Button x:Name="btnRotateRight" Content="Rotate Right" HorizontalAlignment="Left" Margin="1104,121,0,0" VerticalAlignment="Top" Width="75" Click="btnRotateRight_Click"/>
         <Button x:Name="btnRotateLeft" Content="Rotate Left" HorizontalAlignment="Left" Margin="1104,97,0,0" VerticalAlignment="Top" Width="75" Click="btnRotateLeft_Click"/>
+        <Button x:Name="btnShowBoundaryVolumes" Content="Show Boundary Volumes" HorizontalAlignment="Left" Margin="980,498,0,0" VerticalAlignment="Top" Width="145" Height="23" Click="btnShowBoundaryVolumes_Click"/>
     </Grid>
 </Window>

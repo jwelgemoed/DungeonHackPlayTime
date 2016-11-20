@@ -50,6 +50,20 @@ namespace DungeonHack.BSP
             TraverseBspTreeAndPerformAction(rootNode.Front, action);
         }
 
+        public void TraverseBspTreeAndPerformActionOnNode(BspNode node, Action<BspNode> action)
+        {
+            if (node.IsLeaf)
+                return;
+
+            TraverseBspTreeAndPerformActionOnNode(node.Back, action);
+
+            action.Invoke(node);
+
+            NumberOfNodesUpdated++;
+
+            TraverseBspTreeAndPerformActionOnNode(node.Front, action);
+        }
+
         private void BuildBspTree(BspNode currentNode, List<Mesh> meshList)
         {
             Mesh frontSplit;

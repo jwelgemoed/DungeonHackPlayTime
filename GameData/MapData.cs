@@ -186,7 +186,7 @@ namespace GameData
             //Add the line segments
             foreach (var lineSegment in mapData.LineSegments.Values)
             {
-                int newTextureId = GetTextureId(mapData.TextureData[lineSegment.TextureId]);
+                int newTextureId = GetTextureId(mapData.TextureData[lineSegment.TextureId == -1 ? 0 : lineSegment.TextureId]);
 
                 AddLineSegment(new LineSegment()
                 {

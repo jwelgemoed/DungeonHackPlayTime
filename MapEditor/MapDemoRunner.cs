@@ -65,7 +65,8 @@ namespace MapEditor
             _meshRenderedCount = 0;
 
             _nodesVisited = 0;
-            DrawBspTreeBackToFront(BspRootNode, Camera.EyeAt);
+            DrawBspTreeFrontToBack(BspRootNode, Camera.EyeAt);
+            //DrawBspTreeBackToFront(BspRootNode, Camera.EyeAt);
         }
 
         /// <summary>
@@ -113,10 +114,8 @@ namespace MapEditor
 
             if (node.BoundingVolume.HasValue)
             {
-                var BoundingBox = new BoundingBox(
-                    Vector3.TransformCoordinate(node.BoundingVolume.Value.Minimum, node.Splitter.WorldMatrix),
-                    Vector3.TransformCoordinate(node.BoundingVolume.Value.Maximum, node.Splitter.WorldMatrix));
-
+                var BoundingBox = new BoundingBox(node.BoundingVolume.Value.Minimum, node.BoundingVolume.Value.Maximum);
+                    
                 if (_frustrum.CheckBoundingBox(BoundingBox) == 0)
                 {
                     return;

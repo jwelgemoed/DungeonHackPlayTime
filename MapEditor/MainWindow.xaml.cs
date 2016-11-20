@@ -12,6 +12,7 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -40,8 +41,6 @@ namespace MapEditor
         private SolidColorBrush _selectedShapeBrush;
         private float _scaleRate = 1.1f;
         private float _currentScale = 1.0f;
-        private float _translatedX = 0.0f;
-        private float _translatedY = 0.0f;
         private float _midWidth;
         private float _midHeight;
         private Point _currentMousePosition;
@@ -91,8 +90,8 @@ namespace MapEditor
                 _gridBrush = new SolidColorBrush(Color.FromArgb(50, 128, 128, 0));
                 _areaBrush = new SolidColorBrush(Color.FromArgb(50, 128, 0, 0));
                 _selectedShapeBrush = new SolidColorBrush(Color.FromArgb(50, 0, 128, 0));
-                _midWidth = (float)canvasXZ.ActualWidth / 2;
-                _midHeight = (float)canvasXZ.ActualHeight / 2;
+                _midWidth = (float)960 / 2;
+                _midHeight = (float)720 / 2;
 
                 FocusManager.SetFocusedElement(canvasXZ, Keyboard.Focus(canvasXZ));
 
@@ -739,6 +738,8 @@ namespace MapEditor
             vectors[0].Y = 64.0f;
             vectors[0].Z = _midHeight - (float)(start.Y * scaleFactor);
 
+            //start.Y = _midheight - vectors[0].z / 
+
             vectors[1].X = ((float)(end.X * scaleFactor) - _midWidth);
             vectors[1].Y = 64.0f;
             vectors[1].Z = _midHeight - (float)(end.Y * scaleFactor);
@@ -857,6 +858,74 @@ namespace MapEditor
             });
 
             editorWindow.Show();
+        }
+
+        private void btnShowBoundaryVolumes_Click(object sender, RoutedEventArgs e)
+        {
+            //Task task = new Task(() =>
+            {
+
+                var meshList = new List<Mesh>();
+
+                foreach (var sector in _globalMapData.Sectors.Values)
+                {
+                    meshList.AddRange(CreateMeshes(_globalMapData, sector, 1.0f));
+                }
+
+                demo.Meshes = meshList;
+
+                BspTreeBuilder bspTreeBuilder = new BspTreeBuilder(demo.Device, demo.GetShader);
+                BspBoundingVolumeCalculator bspBoudingVolumeCalculator = new BspBoundingVolumeCalculator();
+
+                var bspRootNode = bspTreeBuilder.BuildTree(demo.Meshes);
+                bspBoudingVolumeCalculator.ComputeBoundingVolumes(bspRootNode);
+                              
+
+                Rectangle lastRectangle = null;
+
+                bspTreeBuilder.TraverseBspTreeAndPerformActionOnNode(bspRootNode, x =>
+                {
+                    if (!x.BoundingVolume.HasValue)
+                    {
+                        return;
+                    }
+
+                    if (lastRectangle != null)
+                    {
+                        canvasXZ.Children.Remove(lastRectangle);
+                    }
+
+                    SlimDX.Matrix invWorld;
+
+                    var world = x.Splitter.WorldMatrix;
+
+                    SlimDX.Matrix.Invert(ref world, out invWorld);
+
+                    var boundingBox = new BoundingBox(
+                        Vector3.TransformCoordinate(x.BoundingVolume.Value.Minimum, invWorld),
+                        Vector3.TransformCoordinate(x.BoundingVolume.Value.Maximum, invWorld));
+
+                    var rectangle = CreateAndAddRectangle(boundingBox);
+
+                    //lastRectangle = rectangle;
+                    //System.Threading.Thread.Sleep(1000);
+                });
+            };
+
+           // task.Start();
+        }
+
+        private Rectangle CreateAndAddRectangle(BoundingBox box)
+        {
+            Rectangle rectangle = new Rectangle();
+            rectangle.Height = (_midHeight - Math.Abs(box.Maximum.Z - box.Minimum.Z)) / _currentScale;
+            rectangle.Width = (Math.Abs(box.Maximum.X - box.Minimum.X) + _midWidth) / _currentScale;
+            rectangle.Stroke = new SolidColorBrush(Color.FromRgb(128, 0, 0));
+            canvasXZ.Children.Add(rectangle);
+            Canvas.SetLeft(rectangle, _midWidth);
+            Canvas.SetRight(rectangle, _midHeight);
+            
+            return rectangle;
         }
     }
 }
