@@ -218,7 +218,6 @@ namespace FunAndGamesWithSlimDX.Entities
 
             Shader.Render(context, GetIndexCount(), WorldMatrix, camera.ViewMatrix,
                             camera.ProjectionMatrix, _texture.TextureData, camera.GetPosition(), Material);
-
         }
 
         private void RaiseCollissionEvent(CollissionEventArgs p)

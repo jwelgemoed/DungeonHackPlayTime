@@ -19,6 +19,7 @@ namespace FunAndGamesWithSlimDX.Entities
         private Vector2 _size;
         private ShaderResourceView _backgroundTexture;
         private List<string> _buffer;
+        private int _bufferSize = 1000;
         private int _currentLine = 0;
         private int _windowSize = 10;
         private Color4 _consoleColor;
@@ -37,6 +38,11 @@ namespace FunAndGamesWithSlimDX.Entities
 
         public void WriteLine(string message)
         {
+            if (_buffer.Count >= _bufferSize)
+            {
+                _buffer.Clear();
+            }
+
             _buffer.Add("["+_buffer.Count + "] " + message);
             if (_buffer.Count > _windowSize)
                 _currentLine += 1;

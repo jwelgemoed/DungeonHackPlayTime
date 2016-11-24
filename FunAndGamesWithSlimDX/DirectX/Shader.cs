@@ -208,7 +208,11 @@ namespace FunAndGamesWithSlimDX.DirectX
             _projectionMatrix.SetMatrix(projectionMatrix);
 
             var s = Util.GetArray(material);
-            _material.SetRawValue(new DataStream(s, false, false), Material.Stride);
+
+            using (var dataStream = new DataStream(s, false, false))
+            {
+                _material.SetRawValue(dataStream, Material.Stride);
+            }
             
             _cameraPosition.Set(cameraPosition);
 
