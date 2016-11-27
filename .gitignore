@@ -4,3 +4,15 @@
 
 /MapEditor/obj/Debug/MapEditor_MarkupCompile.i.lref
 /.vs/DungeonHackPlayTime/v15/.suo
+/FunAndGamesWithSlimDX/obj/Debug/DungeonHack.application
+/FunAndGamesWithSlimDX/obj/Debug/DungeonHack.csproj.FileListAbsolute.txt
+*.Cache
+*.exe
+*.manifest
+*.pdb
+/FunAndGamesWithSlimDX/obj/Debug/DungeonHack.Properties.Resources.resources
+/FunAndGamesWithSlimDX/obj/Debug/FunAndGamesWithSlimDX.Menus.OptionsWindow.resources
+/FunAndGamesWithSlimDX/obj/Debug/FunAndGamesWithSlimDX.Menus.SaveWindow.resources
+/GameData/bin/Debug
+/MapEditor/bin/Debug
+/Project1/bin/Debug
