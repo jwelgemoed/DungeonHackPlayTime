@@ -8,6 +8,7 @@ using FunAndGamesWithSlimDX.DirectX;
 using FunAndGamesWithSlimDX.Lights;
 using DungeonHack.BSP;
 using System.IO;
+using System.Diagnostics;
 
 namespace MapEditor
 {
@@ -24,6 +25,8 @@ namespace MapEditor
         public BspNode BspRootNode { get; set; }
 
         private int _nodesVisited = 0;
+
+        private Stopwatch _stopwatch = new Stopwatch();
 
         public MapDemoRunner() : base(8.0f, true)
         {
@@ -63,11 +66,12 @@ namespace MapEditor
             LightEngine.RenderLights(Shader);
 
             _meshRenderedCount = 0;
+            base._stopwatch.Restart();
 
             _nodesVisited = 0;
+
             DrawBspTreeFrontToBack(BspRootNode, Camera.EyeAt);
             //DrawBspTreeBackToFront(BspRootNode, Camera.EyeAt);
-            //base._console.WriteLine($"Number of nodes visited : {_nodesVisited}");
         }
 
         /// <summary>
@@ -112,6 +116,11 @@ namespace MapEditor
         {
             if (node.IsLeaf)
             {
+                /*foreach (var mesh in node.ConvexPolygonSet)
+                {
+                    mesh.Render(_frustrum, Renderer.Context, Camera, ref _meshRenderedCount);
+                }*/
+
                 return;
             }
 
@@ -218,23 +227,7 @@ namespace MapEditor
                 new Vector3(1.0f, 1.0f, 1.0f)
             );
 
-           LightEngine.AddSpotLight(_spotlight);
-
-            BspTreeBuilder builder = new BspTreeBuilder(Device, Shader);
-
-          /*  builder.TraverseBspTreeAndPerformAction(BspRootNode, (x) =>
-            {
-                x.LoadVectorsFromModel();
-                x.SetPosition(0.0f, 0.0f, 0.0f);
-                x.Material = _wallMaterial;
-
-                x.CollissionEventHandler += y =>
-                {
-                    Camera.CollidedVertex = (Vertex)y.CollidedObject;
-                    Camera.Collided = true;
-                    _console.WriteLine("I'm hit!!");
-                };
-            });*/
+            LightEngine.AddSpotLight(_spotlight);
 
             foreach (var mesh in Meshes)
             {
@@ -248,8 +241,10 @@ namespace MapEditor
                                                         Camera.Collided = true;
                                                         _console.WriteLine("I'm hit!!");
                                                     };
+
+                mesh.TransformToWorld();
             }
-           
+            
          
         }
 

@@ -20,16 +20,18 @@ namespace DungeonHack.BSP
             int behind = 0;
             int onPlane = 0;
             float result;
-            Model model = plane.Model[0];
-            Vector3 vector = new Vector3(model.x, model.y, model.z);
-            vector = Vector3.TransformCoordinate(vector, plane.WorldMatrix);
-            Vector3 normal = new Vector3(model.nx, model.ny, model.nz);
-            normal = Vector3.Normalize(Vector3.TransformCoordinate(normal,plane.WorldMatrix));
+            Vertex vertex = plane.VertexData[0];
+
+            Vector3 vector = new Vector3(vertex.Position.X, vertex.Position.Y, vertex.Position.Z);
+            //vector = Vector3.TransformCoordinate(vector, plane.WorldMatrix);
+
+            Vector3 normal = new Vector3(vertex.Normal.X, vertex.Normal.Y, vertex.Normal.Z);
+            //normal = Vector3.Normalize(Vector3.TransformCoordinate(normal,plane.WorldMatrix));
             int numberOfVertices = mesh.Model.Length;
-            foreach (var modelMesh in mesh.Model)
+            foreach (var vertexMesh in mesh.VertexData)
             {
-                Vector3 vector2 = new Vector3(modelMesh.x, modelMesh.y, modelMesh.z);
-                vector2 = Vector3.TransformCoordinate(vector2, mesh.WorldMatrix);
+                Vector3 vector2 = new Vector3(vertexMesh.Position.X, vertexMesh.Position.Y, vertexMesh.Position.Z);
+                //vector2 = Vector3.TransformCoordinate(vector2, mesh.WorldMatrix);
                 Vector3 direction = vector - vector2;
 
                 result = Vector3.Dot(direction, normal);

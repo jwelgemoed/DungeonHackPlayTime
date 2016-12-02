@@ -252,8 +252,8 @@ PixelInputType LightVertexShader(VertexInputType input)
 	input.position.w = 1.0f;
 
 	// Calculate the position of the vertex against the world, view, and projection matrices.
-	output.position = mul(input.position, worldMatrix);
-	output.position = mul(output.position, viewMatrix);
+	//output.position = mul(input.position, worldMatrix);
+	output.position = mul(input.position, viewMatrix);
 	output.position = mul(output.position, projectionMatrix);
 
 	// Store the input color for the pixel shader to use.
@@ -263,7 +263,8 @@ PixelInputType LightVertexShader(VertexInputType input)
 	output.normal = normalize(output.normal);
 
 	// Calculate the position of the vertex in the world.
-	output.worldPosition = mul(input.position, worldMatrix);
+	//output.worldPosition = mul(input.position, worldMatrix);
+	output.worldPosition = input.position;
 
 	// Determine the viewing direction based on the position of the camera and the position of the vertex in the world.
 	output.viewDirection = cameraPosition.xyz - output.worldPosition.xyz;
@@ -385,8 +386,8 @@ PixelInputType TextureVertexShader(VertexInputType input)
 	input.position.w = 1.0f;
 
 	// Calculate the position of the vertex against the world, view, and projection matrices.
-	output.position = mul(input.position, worldMatrix);
-	output.position = mul(output.position, viewMatrix);
+	//output.position = mul(input.position, worldMatrix);
+	output.position = mul(input.position, viewMatrix);
 	output.position = mul(output.position, projectionMatrix);
 
 	// Store the input color for the pixel shader to use.

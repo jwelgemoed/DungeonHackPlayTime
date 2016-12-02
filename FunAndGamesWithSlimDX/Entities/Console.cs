@@ -41,6 +41,7 @@ namespace FunAndGamesWithSlimDX.Entities
             if (_buffer.Count >= _bufferSize)
             {
                 _buffer.Clear();
+                _currentLine = 0;
             }
 
             _buffer.Add("["+_buffer.Count + "] " + message);

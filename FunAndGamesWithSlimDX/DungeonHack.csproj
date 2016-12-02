@@ -95,7 +95,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BSP\BspBoundingVolumeBuilder.cs" />
+    <Compile Include="BSP\BspBoundingVolumeCalculator.cs" />
     <Compile Include="BSP\BspNode.cs" />
     <Compile Include="BSP\BspTreeBuilder.cs" />
     <Compile Include="BSP\PointClassifier.cs" />

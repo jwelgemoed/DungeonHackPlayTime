@@ -21,12 +21,12 @@ namespace DungeonHack.BSP
         public PointClassification ClassifyPoint(Vector3 position, Mesh plane)
         {
             float result;
-            Model model = plane.Model[0];
-            Vector3 vector = new Vector3(model.x, model.y, model.z);
-            vector = Vector3.TransformCoordinate(vector, plane.WorldMatrix);
+            Vertex vertex = plane.VertexData[0];
+            Vector3 vector = new Vector3(vertex.Position.X, vertex.Position.Y, vertex.Position.Z);
+            //vector = Vector3.TransformCoordinate(vector, plane.WorldMatrix);
             Vector3 direction = vector - position;
-            Vector3 normal = new Vector3(model.nx, model.ny, model.nz);
-            normal = Vector3.Normalize(Vector3.TransformCoordinate(normal, plane.WorldMatrix));
+            Vector3 normal = new Vector3(vertex.Normal.X, vertex.Normal.Y, vertex.Normal.Z);
+            //normal = Vector3.Normalize(Vector3.TransformCoordinate(normal, plane.WorldMatrix));
             result = Vector3.Dot(direction, normal);
 
             if (result < -0.001)

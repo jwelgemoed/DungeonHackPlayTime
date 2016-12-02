@@ -46,8 +46,6 @@ namespace FunAndGamesWithSlimDX.Entities
 
         public Vertex[] VertexData { get; set; }
 
-        public Vertex[] WorldVertexData { get; set; }
-
         public short[] IndexData { get; set; }
 
         public Model[] Model { get; set; }
@@ -148,7 +146,6 @@ namespace FunAndGamesWithSlimDX.Entities
         {
             WorldMatrix = ScaleMatrix * RotationMatrix;
             WorldMatrix = WorldMatrix * TranslationMatrix;
-
         }
        
         private SlimDX.Direct3D11.Buffer GetVertexBuffer()
@@ -173,12 +170,39 @@ namespace FunAndGamesWithSlimDX.Entities
                                                            CpuAccessFlags.None, ResourceOptionFlags.None, 0);
         }
 
+        public void TransformToWorld()
+        {
+            RecalculateWorldMatrix();
+
+            for (int i=0; i< VertexData.Length; i++)
+            {
+                var vertex = Vector3.TransformCoordinate(
+                    new Vector3(VertexData[i].Position.X, VertexData[i].Position.Y, VertexData[i].Position.Z)
+                    , WorldMatrix);
+
+                VertexData[i].Position = new Vector4(vertex.X, vertex.Y, vertex.Z, 1.0f);
+
+                var normal = Vector3.TransformNormal(
+                    new Vector3(VertexData[i].Normal.X, VertexData[i].Normal.Y, VertexData[i].Normal.Z)
+                    , WorldMatrix);
+
+                VertexData[i].Normal = normal;
+            }
+
+            _minimumVector = Vector3.TransformCoordinate(_minimumVector, WorldMatrix);
+            _maximumVector = Vector3.TransformCoordinate(_maximumVector, WorldMatrix);
+
+            BoundingBox = new BoundingBox(_minimumVector, _maximumVector);
+
+        }
+
         public virtual void Render(Frustrum frustrum, DeviceContext context, Camera camera, ref int meshRenderedCount)
         {
             //Do player collision detection
-            BoundingBox = new BoundingBox(
-                    Vector3.TransformCoordinate(_minimumVector, WorldMatrix),
-                    Vector3.TransformCoordinate(_maximumVector, WorldMatrix));
+            //BoundingBox = new BoundingBox(
+            //        Vector3.TransformCoordinate(_minimumVector, WorldMatrix),
+            //        Vector3.TransformCoordinate(_maximumVector, WorldMatrix));
+                        
 
             if (!ConfigManager.WallClipEnabled &&
                 BoundingSphere.Intersects(camera.CameraSphere, BoundingBox))

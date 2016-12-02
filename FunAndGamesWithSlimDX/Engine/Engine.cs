@@ -8,6 +8,7 @@ using SlimDX.DirectWrite;
 using SlimDX.DXGI;
 using SlimDX.Windows;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace FunAndGamesWithSlimDX.Engine
@@ -31,6 +32,11 @@ namespace FunAndGamesWithSlimDX.Engine
         static private int _frameCount = 0;
         static private float _timeElapsedForStats = 0.0f;
         static private float _timeElapsedForDisplay = 0.0f;
+
+        private long _updateTime;
+        private long _drawTime;
+
+        protected Stopwatch _stopwatch = new Stopwatch();
 
         public event MouseEventHandler OnMouseUp;
 
@@ -110,7 +116,7 @@ namespace FunAndGamesWithSlimDX.Engine
             Timer.Start();
 
             MessagePump.Run(Form, MainLoop);
-
+            
             Timer.Stop();
 
             Shutdown();
@@ -130,11 +136,14 @@ namespace FunAndGamesWithSlimDX.Engine
                     Renderer.Context.ClearRenderTargetView(Renderer.RenderTarget, Colors.Black);
                     Renderer.Context.ClearDepthStencilView(Renderer.DepthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
                     UpdateScene();
+                    _stopwatch.Restart();
                     DrawScene();
                     DisplayConsoleInformation();
                     FontRenderer.FinalizeDraw();
                     SpriteRenderer.FinalizeDraw();
                     Renderer.SwapChain.Present(0, PresentFlags.None);
+                    _updateTime = _stopwatch.ElapsedTicks;
+                    _stopwatch.Stop();
                     break;
 
                 case ApplicationStateEnum.OpenSettings:
@@ -207,13 +216,20 @@ namespace FunAndGamesWithSlimDX.Engine
                 Form.Text = $"FPS : {_frameRateStats.FramesPerSecond} Game Time : {(int)Timer.TotalTime()}";
                 _console.WriteLine(Form.Text);
                 _console.WriteLine("Mesh rendered : " + _meshRenderedCount + " from " + GetSceneMeshes().Count);
+
                 var cameraPosition = Camera.GetPosition();
                 _console.WriteLine($"Camera Position: X: {cameraPosition.X}, Y: {cameraPosition.Y}, Z: {cameraPosition.Z}");
+
                 var lookat = Vector3.Normalize(Camera.LookAt);
-                _console.WriteLine($"Camera Lookat: X : {lookat.X}, Y: {lookat.Y}, Z: {lookat.Z}");
+
+
+                // _console.WriteLine($"Camera Lookat: X : {lookat.X}, Y: {lookat.Y}, Z: {lookat.Z}");
 
                 var meshPosition = GetSceneMeshes()[0].VertexData[0].Position;
-                _console.WriteLine($"Mesh 0 Position: X: {meshPosition.X}, Y:{meshPosition.Y}, Z: {meshPosition.Z}");
+                //_console.WriteLine($"Mesh 0 Position: X: {meshPosition.X}, Y:{meshPosition.Y}, Z: {meshPosition.Z}");
+
+                _console.WriteLine($"Update time in ticks: {_updateTime}");
+                _console.WriteLine($"Draw time in ticks: {_drawTime}");
             }
             _console.Draw();
         }

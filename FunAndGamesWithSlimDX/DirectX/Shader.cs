@@ -161,13 +161,24 @@ namespace FunAndGamesWithSlimDX.DirectX
             var d = Util.GetArray(directionalLight);
             //Array.Copy(d, 0, _diretionalLightArray, 0, Directional.Stride);
 
-            _gDirLight.SetRawValue(new DataStream(d, false, false), DirectionalLight.Stride);
+            using (var buffer = new DataStream(d, false, false))
+            {
+                _gDirLight.SetRawValue(buffer, DirectionalLight.Stride);
+            }
 
             var p = Util.GetArray(pointLight);
-            _gPointLight.SetRawValue(new DataStream(p, false, false), PointLight.Stride);
+
+            using (var buffer = new DataStream(p, false, false))
+            {
+                _gPointLight.SetRawValue(buffer, PointLight.Stride);
+            }
 
             var s = Util.GetArray(spotLight);
-            _gSpotLight.SetRawValue(new DataStream(s, false, false), Spotlight.Stride);
+
+            using (var buffer = new DataStream(s, false, false))
+            {
+                _gSpotLight.SetRawValue(buffer, Spotlight.Stride);
+            }
         }
 
         private void RenderShader(DeviceContext context, int indexCount)

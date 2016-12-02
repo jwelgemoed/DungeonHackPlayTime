@@ -193,6 +193,7 @@ namespace MapEditor
             BspBoundingVolumeCalculator bspBoudingVolumeCalculator = new BspBoundingVolumeCalculator();
 
             demo.InitializeScene();
+
             demo.BspRootNode = bspTreeBuilder.BuildTree(demo.Meshes);
             bspBoudingVolumeCalculator.ComputeBoundingVolumes(demo.BspRootNode);
 

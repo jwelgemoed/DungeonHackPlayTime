@@ -26,9 +26,7 @@ namespace DungeonHack.BSP
 
             if (node.Splitter != null)
             {
-                var boundingBox = new BoundingBox(
-                       Vector3.TransformCoordinate(node.Splitter._minimumVector, node.Splitter.WorldMatrix),
-                       Vector3.TransformCoordinate(node.Splitter._maximumVector, node.Splitter.WorldMatrix));
+                var boundingBox = node.Splitter.BoundingBox;
 
                 if (!volume.HasValue)
                 {

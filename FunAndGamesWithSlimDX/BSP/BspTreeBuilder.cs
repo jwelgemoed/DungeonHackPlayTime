@@ -121,6 +121,7 @@ namespace DungeonHack.BSP
                 leafNode.IsLeaf = true;
                 leafNode.IsSolid = false;
                 leafNode.Parent = currentNode;
+                leafNode.ConvexPolygonSet = meshList;
                 currentNode.Front = leafNode;
             }
             else
@@ -138,6 +139,7 @@ namespace DungeonHack.BSP
                 leafNode.IsLeaf = true;
                 leafNode.IsSolid = true;
                 leafNode.Parent = currentNode;
+                leafNode.ConvexPolygonSet = meshList;
                 currentNode.Back = leafNode;
             }
             else
