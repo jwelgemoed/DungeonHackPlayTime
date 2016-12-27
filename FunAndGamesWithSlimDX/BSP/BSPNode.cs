@@ -8,6 +8,8 @@ namespace DungeonHack.BSP
     {
         public Mesh Splitter { get; set; }
 
+        public Plane PartitionPlane { get; set; }
+
         public IEnumerable<Mesh> ConvexPolygonSet { get; set; }
 
         public BoundingBox? BoundingVolume { get; set; }

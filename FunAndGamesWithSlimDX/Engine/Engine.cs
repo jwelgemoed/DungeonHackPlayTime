@@ -1,6 +1,5 @@
 ﻿using FunAndGamesWithSlimDX.DirectX;
 using FunAndGamesWithSlimDX.Entities;
-using FunAndGamesWithSlimDX.FX;
 using FunAndGamesWithSlimDX.Menus;
 using SlimDX;
 using SlimDX.Direct3D11;

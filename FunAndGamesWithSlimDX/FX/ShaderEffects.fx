@@ -220,6 +220,7 @@ cbuffer cbPerObject
 	matrix viewMatrix;
 	matrix projectionMatrix;
 	Material material;
+	float4 sectorColor;
 };
 
 Texture2D shaderTexture;
@@ -408,6 +409,17 @@ textureColor = shaderTexture.Sample(SampleType, input.tex);
 return textureColor;
 }
 
+float4 TintedTexturePixelShader(PixelInputType input) : SV_TARGET
+{
+	float4 textureColor;
+
+	textureColor = shaderTexture.Sample(SampleType, input.tex);
+
+	textureColor = textureColor * sectorColor;
+
+	return textureColor;
+}
+
 technique11 LightTech
 {
 	pass P0
@@ -435,5 +447,15 @@ technique11 TextureTech
 		SetGeometryShader(NULL);
 		SetVertexShader(CompileShader(vs_5_0, TextureVertexShader()));
 		SetPixelShader(CompileShader(ps_5_0, TexturePixelShader()));
+	}
+}
+
+technique11 TintedTextureTech
+{
+	pass P0
+	{
+		SetGeometryShader(NULL);
+		SetVertexShader(CompileShader(vs_5_0, TextureVertexShader()));
+		SetPixelShader(CompileShader(ps_5_0, TintedTexturePixelShader()));
 	}
 }

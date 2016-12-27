@@ -14,8 +14,8 @@ namespace MapEditor
 
         void EditAction(Point startPoint, float currentScale);
 
-        void EditAction(Point startPoint, float currentScale, GameData.MapData mapData);
-
+        GameData.MapData EditAction(Point startPoint);
+        
         List<Tuple<Shape, Mesh>> GetMeshList();
 
         void MoveAction(Point currentMousePosition, Point startPoint, float currentScale, bool snapToGrid, bool snapToClosestPoint);

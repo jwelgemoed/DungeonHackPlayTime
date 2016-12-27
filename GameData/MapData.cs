@@ -234,5 +234,68 @@ namespace GameData
                 });
             }
         }
+
+        public MapData CreateCopy()
+        {
+            MapData mapData = new MapData();
+
+            foreach (var texture in _textureData)
+            {
+                mapData.TextureData.Add(texture.Key, texture.Value);
+            }
+
+            foreach (var thing in _things)
+            {
+                mapData.Things.Add(thing.Key,
+                    new Thing
+                    {
+                        Id = thing.Value.Id,
+                        Name = thing.Value.Name,
+                        Position = thing.Value.Position,
+                        Type = thing.Value.Type
+                    });
+            }
+
+            foreach (var lineSegment in _lineSegments)
+            {
+                mapData.LineSegments.Add(lineSegment.Key,
+                    new LineSegment
+                    {
+                        Id = lineSegment.Value.Id,
+                        CeilingHeight = lineSegment.Value.CeilingHeight,
+                        FloorHeight = lineSegment.Value.FloorHeight,
+                        TextureId = lineSegment.Value.TextureId,
+                        Start = lineSegment.Value.Start,
+                        End = lineSegment.Value.End,
+                        IsSolid = lineSegment.Value.IsSolid
+                    });
+            }
+
+            foreach (var sector in _sectors)
+            {
+                var newsector = 
+                    new Sector
+                    {
+                        CeilingHeight = sector.Value.CeilingHeight,
+                        CeilingTextureId = sector.Value.CeilingTextureId,
+                        Effect = sector.Value.Effect,
+                        FloorHeight = sector.Value.FloorHeight,
+                        FloorTextureId = sector.Value.FloorTextureId,
+                        Id = sector.Value.Id,
+                        XPlacement = sector.Value.XPlacement,
+                        YPlacement = sector.Value.YPlacement,
+                        SideDefinitions = new List<int>()
+                    };
+
+                foreach (var sideDef in sector.Value.SideDefinitions)
+                {
+                    newsector.SideDefinitions.Add(sideDef);
+                }
+
+                mapData.Sectors.Add(sector.Key, newsector);
+            }
+
+            return mapData;
+        }
     }
 }

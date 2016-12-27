@@ -60,7 +60,7 @@ namespace FunAndGamesWithSlimDX
                 if (doUpdate)
                     x.UpdateMesh(rotation);
 
-                x.Render(_frustrum, base.Renderer.Context, Camera, ref _meshRenderedCount);
+                x.Render(_frustrum, base.Renderer.Context, Camera, ref _meshRenderedCount, null);
             });
 
 

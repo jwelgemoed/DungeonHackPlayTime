@@ -1,12 +1,15 @@
 ﻿using DungeonHack.BSP;
+using DungeonHack.Bspv2;
 using FunAndGamesWithSlimDX;
 using FunAndGamesWithSlimDX.Entities;
+using GameData;
 using Geometry;
 using log4net;
 using Poly2Tri;
 using SlimDX;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Configuration;
 using System.IO;
@@ -29,9 +32,7 @@ namespace MapEditor
     {
         private Point startPoint;
         private bool _editState = false;
-        private List<Mesh> areaList = new List<Mesh>();
         private List<Line> gridLines = new List<Line>();
-        private List<System.Windows.Shapes.Polygon> areasList = new List<System.Windows.Shapes.Polygon>();
         private MapDemoRunner demo;
         private int _gridSize = 8;
         private bool _snapToGrid = true;
@@ -45,7 +46,6 @@ namespace MapEditor
         private float _midHeight;
         private Point _currentMousePosition;
         private GridPlayer _playerStart;
-        private Mesh _selectedMesh;
         private bool _activeEdit = false;
         private WallSegmentEditor _wallSegmentEditor;
         private FloorSegmentEditor _floorSegmentEditor;
@@ -56,10 +56,9 @@ namespace MapEditor
         private RoomSegmentEditor _roomSegmentEditor;
         private RotateTransform _rotateTransform;
         private GameData.MapData _globalMapData;
+        private GlobalMapData _globalMaps;
 
         private ILog _logger = LogManager.GetLogger("application-logger");
-
-        private Shape _selectedShape;
 
         public List<Line> SelectedRoom { get; set; }
 
@@ -105,6 +104,7 @@ namespace MapEditor
                 _currentEditor = _roomSegmentEditor;
 
                 _globalMapData = new GameData.MapData();
+                _globalMaps = new GlobalMapData();
 
                 this.KeyDown += canvasXZ_PreviewKeyDown;
             }
@@ -179,9 +179,12 @@ namespace MapEditor
         {
             var meshList = new List<Mesh>();
 
-            foreach (var sector in _globalMapData.Sectors.Values)
+            foreach (var map in _globalMaps.GetMapData())
             {
-                meshList.AddRange(CreateMeshes(_globalMapData, sector, 1.0f));
+                foreach (var sector in map.Sectors.Values)
+                {
+                    meshList.AddRange(CreateMeshes(map, sector, 1.0f));
+                }
             }
 
             demo.Meshes = meshList;
@@ -190,12 +193,25 @@ namespace MapEditor
                 demo.SetStartingPosition(_playerStart.TranslateToRealSpace(4, (float) canvasXZ.Width / 2, (float) canvasXZ.Height / 2));
 
             BspTreeBuilder bspTreeBuilder = new BspTreeBuilder(demo.Device, demo.GetShader);
+            BspCompiler bspCompiler = new BspCompiler();
             BspBoundingVolumeCalculator bspBoudingVolumeCalculator = new BspBoundingVolumeCalculator();
 
             demo.InitializeScene();
 
-            demo.BspRootNode = bspTreeBuilder.BuildTree(demo.Meshes);
+            demo.BspRootNode = bspTreeBuilder.BuildTree(new Collection<Mesh>(demo.Meshes));
             bspBoudingVolumeCalculator.ComputeBoundingVolumes(demo.BspRootNode);
+
+            BspSector.DetermineSectors(demo.BspRootNode);
+
+            Dictionary<int, Color4> colorList = new Dictionary<int, Color4>();
+            Random random = new Random((int)DateTime.Now.Ticks);
+
+            for (int i=0; i< BspSector.NumberOfSectors; i++)
+            {
+                colorList.Add(i, new Color4((float) random.NextDouble(), (float) random.NextDouble(), (float) random.NextDouble()));
+            }
+
+            demo.ColorList = colorList;
 
             demo.UpdateMeshes();
             
@@ -285,7 +301,7 @@ namespace MapEditor
                 else
                 {
                     _editState = false;
-                    _currentEditor.EditAction(startPoint, _currentScale, _globalMapData);
+                    _globalMaps.AddMapData(_currentEditor.EditAction(startPoint));
                 }
             }
 
@@ -536,7 +552,7 @@ namespace MapEditor
             //    if (!lineSegment.IsSolid)
             //        continue;
 
-                meshList.Add(CreateMesh(lineSegment, currentScale));
+                meshList.Add(CreateMesh(lineSegment, currentScale, mapdata));
             }
 
             //Create floor
@@ -578,12 +594,12 @@ namespace MapEditor
                 });
             }
 
-            meshList.AddRange(CreateMesh(triangles, 0, 64.0f, sector.FloorTextureId, sector.CeilingTextureId, lowerBound, upperBound));
+            meshList.AddRange(CreateMesh(triangles, 0, 64.0f, sector.FloorTextureId, sector.CeilingTextureId, lowerBound, upperBound, mapdata));
 
             return meshList;
         }
 
-        private List<Mesh> CreateMesh(List<GameData.Vertex> triangles, float floorHeight, float ceilingHeight, int floorTextureId, int ceilingTextureId, Vector2 lowerBound, Vector2 upperBound)
+        private List<Mesh> CreateMesh(List<GameData.Vertex> triangles, float floorHeight, float ceilingHeight, int floorTextureId, int ceilingTextureId, Vector2 lowerBound, Vector2 upperBound, MapData mapData)
         {
             List<Mesh> meshes = new List<Mesh>();
 
@@ -625,10 +641,10 @@ namespace MapEditor
                     0, 1, 2
                 };
 
-                var image = new BitmapImage(new Uri(_globalMapData.TextureData[floorTextureId]));
+                var image = new BitmapImage(new Uri(mapData.TextureData[floorTextureId]));
                 float imageWidth = image.PixelWidth / 16.0f; //grid size
 
-                Vector3 normal = Vector3.Cross(vectors[1] - vectors[0], vectors[2] - vectors[1]);
+                Vector3 normal = Vector3.Cross(vectors[1] - vectors[0], vectors[2] - vectors[0]);
                 normal = Vector3.Normalize(normal);
 
                 model[0].x = vectors[0].X;
@@ -660,7 +676,7 @@ namespace MapEditor
 
                 floorMesh.LoadVectorsFromModel(model, faceIndex);
                 floorMesh.SetScaling(4, 1, 4);
-                floorMesh.LoadTextureFullPath(_globalMapData.TextureData[floorTextureId]);
+                floorMesh.LoadTextureFullPath(mapData.TextureData[floorTextureId]);
 
                 meshes.Add(floorMesh);
 
@@ -676,7 +692,7 @@ namespace MapEditor
                     2, 1, 0
                 };
 
-                normal = Vector3.Cross(vectors[1] - vectors[0], vectors[2] - vectors[1]);
+                normal = Vector3.Cross(vectors[1] - vectors[0], vectors[2] - vectors[0]);
                 normal = Vector3.Normalize(normal);
 
                 model[0].x = vectors[faceIndex[0]].X;
@@ -708,7 +724,7 @@ namespace MapEditor
 
                 ceilingMesh.LoadVectorsFromModel(model, faceIndex);
                 ceilingMesh.SetScaling(4, 1, 4);
-                ceilingMesh.LoadTextureFullPath(_globalMapData.TextureData[ceilingTextureId]);
+                ceilingMesh.LoadTextureFullPath(mapData.TextureData[ceilingTextureId]);
 
                 meshes.Add(ceilingMesh);
             }
@@ -716,7 +732,7 @@ namespace MapEditor
             return meshes;
         }
 
-        private Mesh CreateMesh(GameData.LineSegment lineSegment, float currentScale)
+        private Mesh CreateMesh(GameData.LineSegment lineSegment, float currentScale, MapData mapData)
         {
             if (lineSegment == null)
                 throw new ArgumentException(nameof(GameData.LineSegment));
@@ -755,7 +771,7 @@ namespace MapEditor
 
             float maxTX;
 
-            var image = new BitmapImage(new Uri(_globalMapData.TextureData[lineSegment.TextureId]));
+            var image = new BitmapImage(new Uri(mapData.TextureData[lineSegment.TextureId]));
             float imageWidth = image.PixelWidth / 8.0f; //grid size
 
             if (start.X == end.X)
@@ -786,7 +802,7 @@ namespace MapEditor
                 0, 1, 2, 0, 2, 3
             };
 
-            Vector3 normal = Vector3.Cross(vectors[1] - vectors[0], vectors[2] - vectors[1]);
+            Vector3 normal = Vector3.Cross(vectors[1] - vectors[0], vectors[2] - vectors[0]);
             normal = Vector3.Normalize(normal);
 
             model[0].x = vectors[0].X;
@@ -845,7 +861,7 @@ namespace MapEditor
 
             roomMesh.LoadVectorsFromModel(model, faceIndex);
             roomMesh.SetScaling(4, 1, 4);
-            roomMesh.LoadTextureFullPath(_globalMapData.TextureData[lineSegment.TextureId]);
+            roomMesh.LoadTextureFullPath(mapData.TextureData[lineSegment.TextureId]);
 
             return roomMesh;
         }
@@ -878,7 +894,7 @@ namespace MapEditor
                 BspTreeBuilder bspTreeBuilder = new BspTreeBuilder(demo.Device, demo.GetShader);
                 BspBoundingVolumeCalculator bspBoudingVolumeCalculator = new BspBoundingVolumeCalculator();
 
-                var bspRootNode = bspTreeBuilder.BuildTree(demo.Meshes);
+                var bspRootNode = bspTreeBuilder.BuildTree(new Collection<Mesh>(demo.Meshes));
                 bspBoudingVolumeCalculator.ComputeBoundingVolumes(bspRootNode);
                               
 

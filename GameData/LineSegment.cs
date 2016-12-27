@@ -20,7 +20,7 @@ namespace GameData
 
         public LineSegment()
         {
-            Id = Count + 1;
+            //Id = Count + 1;
             Count++;
         }
 

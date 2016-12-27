@@ -1,4 +1,6 @@
-﻿using FunAndGamesWithSlimDX.DirectX;
+﻿using DungeonHack;
+using DungeonHack.BSP;
+using FunAndGamesWithSlimDX.DirectX;
 using FunAndGamesWithSlimDX.Engine;
 using SlimDX;
 using SlimDX.Direct3D11;
@@ -64,6 +66,7 @@ namespace FunAndGamesWithSlimDX.Entities
         private readonly Device _device;
         private SlimDX.Direct3D11.Buffer _vertexBuffer;
         private SlimDX.Direct3D11.Buffer _indexBuffer;
+        public Plane Plane { get; private set; }
         protected readonly int _sizeOfVertex = Vertex.SizeOf;
         private const int SizeOfShort = sizeof (uint);
         protected Texture _texture = new Texture();
@@ -196,7 +199,7 @@ namespace FunAndGamesWithSlimDX.Entities
 
         }
 
-        public virtual void Render(Frustrum frustrum, DeviceContext context, Camera camera, ref int meshRenderedCount)
+        public virtual void Render(Frustrum frustrum, DeviceContext context, Camera camera, ref int meshRenderedCount, Color4? sectorColor)
         {
             //Do player collision detection
             //BoundingBox = new BoundingBox(
@@ -240,8 +243,16 @@ namespace FunAndGamesWithSlimDX.Entities
             context.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(VertexBuffer, _sizeOfVertex, 0));
             context.InputAssembler.SetIndexBuffer(IndexBuffer, Format.R16_UInt, 0);
 
-            Shader.Render(context, GetIndexCount(), WorldMatrix, camera.ViewMatrix,
-                            camera.ProjectionMatrix, _texture.TextureData, camera.GetPosition(), Material);
+            if (sectorColor.HasValue)
+            {
+                Shader.Render(context, GetIndexCount(), WorldMatrix, camera.ViewMatrix,
+                                camera.ProjectionMatrix, _texture.TextureData, camera.GetPosition(), Material, sectorColor.Value);
+            }
+            else
+            {
+                Shader.Render(context, GetIndexCount(), WorldMatrix, camera.ViewMatrix,
+                                camera.ProjectionMatrix, _texture.TextureData, camera.GetPosition(), Material);
+            }
         }
 
         private void RaiseCollissionEvent(CollissionEventArgs p)
@@ -345,7 +356,12 @@ namespace FunAndGamesWithSlimDX.Entities
                 Model = new Model[model.Length];
                 model.CopyTo(Model, 0);
             }
-            
+
+            if (Model == null)
+            {
+                return;
+            }          
+              
             VertexData = new Vertex[Model.Length];
 
             if (indexes == null)
@@ -385,6 +401,31 @@ namespace FunAndGamesWithSlimDX.Entities
             _maximumVector = BoundingBox.Maximum;
 
             BoundingSphere = BoundingSphere.FromBox(BoundingBox);
+
+            Plane = new Plane(VertexData[0].Position.ToVector3(), VertexData[0].Normal);
+        }
+
+        public void LoadVectors()
+        {
+            IndexData = new short[VertexData.Length];
+            
+            Vector3[] positions = new Vector3[VertexData.Length];
+
+            for (int i = 0; i < VertexData.Length; i++)
+            {
+                positions[i] = VertexData[i].Position.ToVector3();
+
+                IndexData[i] = (short)i;
+            }
+
+            MeshRenderPrimitive = PrimitiveTopology.TriangleList;
+
+            BoundingBox = BoundingBox.FromPoints(positions);
+            _minimumVector = BoundingBox.Minimum;
+            _maximumVector = BoundingBox.Maximum;
+
+            BoundingSphere = BoundingSphere.FromBox(BoundingBox);
+            Plane = new Plane(VertexData[0].Position.ToVector3(), VertexData[0].Normal);
         }
 
         public void Dispose()

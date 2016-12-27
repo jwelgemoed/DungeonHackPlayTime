@@ -213,5 +213,10 @@ namespace MapEditor
         {
             throw new NotImplementedException();
         }
+
+        public MapData EditAction(Point startPoint)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
