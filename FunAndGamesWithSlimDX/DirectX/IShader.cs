@@ -13,11 +13,21 @@ namespace FunAndGamesWithSlimDX.DirectX
         void SetSelectedShaderEffect(Device device, string technique);
 
         void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix,
-                          Matrix projectionMatrix, ShaderResourceView texture, Vector3 cameraPosition, Material material);
+                                    Matrix projectionMatrix);
 
         void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix,
-                           Matrix projectionMatrix, ShaderResourceView texture, Vector3 cameraPosition, Material material,
-                           Color4 sectorColor);
+                    Matrix projectionMatrix, ShaderResourceView texture);
+
+        void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix,
+                    Matrix projectionMatrix, ShaderResourceView texture, Color4 diffuseColor,
+                    Vector3 lightDirection);
+
+        void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix,
+                           Matrix projectionMatrix, ShaderResourceView texture, Vector3 cameraPosition, Material material);
+
+        void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix,
+                    Matrix projectionMatrix, ShaderResourceView texture, Color4 diffuseColor, Color4 ambientColor,
+                    Vector3 lightDirection, Vector3 cameraPosition);
 
         void RenderLights(DirectionalLight directionalLight, PointLight pointLight, Spotlight spotLight);
     }

@@ -9,7 +9,9 @@ using FunAndGamesWithSlimDX.Lights;
 using DungeonHack.BSP;
 using System.IO;
 using System.Diagnostics;
-using DungeonHack.Bspv2;
+using DungeonHack;
+using DungeonHack.DataDictionaries;
+using System.Configuration;
 
 namespace MapEditor
 {
@@ -22,8 +24,7 @@ namespace MapEditor
         private DirectionalLight _directionalLight;
         private Spotlight _spotlight;
         private PointClassifier _pointClassifier;
-        private BspCompilerHelper _bspCompilerHelper = new BspCompilerHelper();
-        public Dictionary<int, Color4> ColorList { get; set; }
+        private MeshRenderer _meshRenderer;
 
         public BspNode BspRootNode { get; set; }
 
@@ -89,29 +90,16 @@ namespace MapEditor
                 return;
             }
                        
-            var result = _pointClassifier.ClassifyPoint(position, node.Splitter);
+            PointClassification result = _pointClassifier.ClassifyPoint(position, node.Splitter);
 
             _nodesVisited++;
 
-            Color4? sectorColor = null;
-
-            if (currentTechId == 2)
-            {
-                int? sectorId = BspSector.FindSector(node.Splitter);
-
-                if (sectorId.HasValue)
-                {
-                    int sectorVal = sectorId.Value % 255;
-                    sectorColor = new Color4(sectorVal, sectorVal, sectorVal);
-                }
-            }
-
-            if (result == DungeonHack.BSP.PointClassification.Front)
+            if (result == PointClassification.Front)
             {
                 if (node.Back != null)
                     DrawBspTreeBackToFront(node.Back, position);
 
-                node.Splitter.Render(_frustrum, Renderer.Context, Camera, ref _meshRenderedCount, sectorColor);
+              //  node.Splitter.Render(_frustrum, Renderer.Context, Camera, ref _meshRenderedCount);
 
                 if (node.Front != null)
                     DrawBspTreeBackToFront(node.Front, position);
@@ -121,7 +109,7 @@ namespace MapEditor
                 if (node.Front != null)
                     DrawBspTreeBackToFront(node.Front, position);
 
-                node.Splitter.Render(_frustrum, Renderer.Context, Camera, ref _meshRenderedCount, sectorColor);
+//                node.Splitter.Render(_frustrum, Renderer.Context, Camera, ref _meshRenderedCount);
 
                 if (node.Back != null)
                     DrawBspTreeBackToFront(node.Back, position);
@@ -130,13 +118,13 @@ namespace MapEditor
 
         private void DrawBspTreeFrontToBack(BspNode node, Vector3 position)
         {
-
             if (node.IsLeaf)
             {
-            /*    foreach (var mesh in node.ConvexPolygonSet)
+                /*foreach (var mesh in node.ConvexPolygonSet)
                 {
-            //        mesh.Render(_frustrum, Renderer.Context, Camera, ref _meshRenderedCount);
+                    mesh.Render(_frustrum, Renderer.Context, Camera, ref _meshRenderedCount);
                 }*/
+
                 return;
             }
 
@@ -150,30 +138,16 @@ namespace MapEditor
                 }
             }
 
-            var result = _pointClassifier.ClassifyPoint(position, node.Splitter);
+            PointClassification result = _pointClassifier.ClassifyPoint(position, node.Splitter);
 
             _nodesVisited++;
 
-            Color4? sectorColor = null;
-
-            if (currentTechId == 2)
-            {
-                int? sectorId = BspSector.FindSector(node.Splitter);
-
-                if (sectorId.HasValue)
-                {
-                    int sectorVal = sectorId.Value;
-                    sectorColor = ColorList[sectorVal];
-                    //_console.WriteLine($"Sector Id: {sectorVal}");
-                }
-            }
-
-            if (result == DungeonHack.BSP.PointClassification.Back)
+            if (result == PointClassification.Back)
             {
                 if (node.Back != null)
                     DrawBspTreeFrontToBack(node.Back, position);
 
-                node.Splitter.Render(_frustrum, Renderer.Context, Camera, ref _meshRenderedCount, sectorColor);
+                _meshRenderer.Render(_frustrum, node.Splitter, ref _meshRenderedCount);
 
                 if (node.Front != null)
                     DrawBspTreeFrontToBack(node.Front, position);
@@ -183,7 +157,7 @@ namespace MapEditor
                 if (node.Front != null)
                     DrawBspTreeFrontToBack(node.Front, position);
 
-                node.Splitter.Render(_frustrum, Renderer.Context, Camera, ref _meshRenderedCount, sectorColor);
+                _meshRenderer.Render(_frustrum, node.Splitter, ref _meshRenderedCount);
 
                 if (node.Back != null)
                     DrawBspTreeFrontToBack(node.Back, position);
@@ -222,6 +196,14 @@ namespace MapEditor
 
         public override void InitializeScene()
         {
+            var textureDictionary = new TextureDictionary(base.Renderer.Device);
+            textureDictionary.AddAllTextureFromPath(ConfigurationManager.AppSettings["ResourcePath"]);
+
+            var materialDictionary = new MaterialDictionary();
+            materialDictionary.AddMaterial(_wallMaterial);
+
+            _meshRenderer = new MeshRenderer(materialDictionary, textureDictionary, base.Renderer.Context, Camera, Shader);
+
             if (_startingPosition == null)
                 Camera.SetPosition(0, 0, 0);
 
@@ -258,24 +240,6 @@ namespace MapEditor
             );
 
             LightEngine.AddSpotLight(_spotlight);
-
-            foreach (var mesh in Meshes)
-            {
-                mesh.LoadVectorsFromModel();
-                mesh.SetPosition(0.0f, 0.0f, 0.0f);
-                mesh.Material = _wallMaterial;
-
-                mesh.CollissionEventHandler += x => 
-                                                    {
-                                                        Camera.CollidedVertex = (Vertex) x.CollidedObject;
-                                                        Camera.Collided = true;
-                                                        _console.WriteLine("I'm hit!!");
-                                                    };
-
-                mesh.TransformToWorld();
-            }
-            
-         
         }
 
         public void Dispose()
@@ -284,34 +248,6 @@ namespace MapEditor
                 mesh.Dispose();
 
             Shader.Dispose();
-        }
-
-        internal void UpdateMeshes()
-        {
-            BspTreeBuilder builder = new BspTreeBuilder(Device, Shader);
-
-            using (var file = new StreamWriter("c:\\temp\\meshes.txt"))
-            {
-                builder.TraverseBspTreeAndPerformAction(BspRootNode, (x) =>
-                {
-
-                    foreach(var vertex in x.VertexData)
-                    {
-                        file.WriteLine("X:{0}, Y:{1}, Y:{2}", vertex.Position.X, vertex.Position.Y, vertex.Position.Z);
-                    }
-
-                    x.LoadVectorsFromModel();
-                    x.SetPosition(0.0f, 0.0f, 0.0f);
-                    x.Material = _wallMaterial;
-
-                    x.CollissionEventHandler += y =>
-                    {
-                        Camera.CollidedVertex = (Vertex)y.CollidedObject;
-                        Camera.Collided = true;
-                        _console.WriteLine("I'm hit!!");
-                    };
-                });
-            }
         }
     }
 }

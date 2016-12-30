@@ -1,15 +1,13 @@
 ﻿using DungeonHack.BSP;
-using DungeonHack.Bspv2;
+using DungeonHack.Builders;
 using FunAndGamesWithSlimDX;
 using FunAndGamesWithSlimDX.Entities;
-using GameData;
 using Geometry;
 using log4net;
 using Poly2Tri;
 using SlimDX;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Configuration;
 using System.IO;
@@ -32,7 +30,9 @@ namespace MapEditor
     {
         private Point startPoint;
         private bool _editState = false;
+        private List<Mesh> areaList = new List<Mesh>();
         private List<Line> gridLines = new List<Line>();
+        private List<System.Windows.Shapes.Polygon> areasList = new List<System.Windows.Shapes.Polygon>();
         private MapDemoRunner demo;
         private int _gridSize = 8;
         private bool _snapToGrid = true;
@@ -46,6 +46,7 @@ namespace MapEditor
         private float _midHeight;
         private Point _currentMousePosition;
         private GridPlayer _playerStart;
+        private Mesh _selectedMesh;
         private bool _activeEdit = false;
         private WallSegmentEditor _wallSegmentEditor;
         private FloorSegmentEditor _floorSegmentEditor;
@@ -56,9 +57,10 @@ namespace MapEditor
         private RoomSegmentEditor _roomSegmentEditor;
         private RotateTransform _rotateTransform;
         private GameData.MapData _globalMapData;
-        private GlobalMapData _globalMaps;
 
         private ILog _logger = LogManager.GetLogger("application-logger");
+
+        private Shape _selectedShape;
 
         public List<Line> SelectedRoom { get; set; }
 
@@ -104,7 +106,6 @@ namespace MapEditor
                 _currentEditor = _roomSegmentEditor;
 
                 _globalMapData = new GameData.MapData();
-                _globalMaps = new GlobalMapData();
 
                 this.KeyDown += canvasXZ_PreviewKeyDown;
             }
@@ -168,23 +169,15 @@ namespace MapEditor
 
         private void btnDemo_Click(object sender, RoutedEventArgs e)
         {
-            TerrainDemo demo = new TerrainDemo();
-
-            demo.Run();
-
-            demo.Dispose();
         }
 
         private void btnRunMap_Click(object sender, RoutedEventArgs e)
         {
             var meshList = new List<Mesh>();
 
-            foreach (var map in _globalMaps.GetMapData())
+            foreach (var sector in _globalMapData.Sectors.Values)
             {
-                foreach (var sector in map.Sectors.Values)
-                {
-                    meshList.AddRange(CreateMeshes(map, sector, 1.0f));
-                }
+                meshList.AddRange(CreateMeshes(_globalMapData, sector, 1.0f));
             }
 
             demo.Meshes = meshList;
@@ -193,28 +186,13 @@ namespace MapEditor
                 demo.SetStartingPosition(_playerStart.TranslateToRealSpace(4, (float) canvasXZ.Width / 2, (float) canvasXZ.Height / 2));
 
             BspTreeBuilder bspTreeBuilder = new BspTreeBuilder(demo.Device, demo.GetShader);
-            BspCompiler bspCompiler = new BspCompiler();
             BspBoundingVolumeCalculator bspBoudingVolumeCalculator = new BspBoundingVolumeCalculator();
 
             demo.InitializeScene();
 
-            demo.BspRootNode = bspTreeBuilder.BuildTree(new Collection<Mesh>(demo.Meshes));
+            demo.BspRootNode = bspTreeBuilder.BuildTree(demo.Meshes);
             bspBoudingVolumeCalculator.ComputeBoundingVolumes(demo.BspRootNode);
 
-            BspSector.DetermineSectors(demo.BspRootNode);
-
-            Dictionary<int, Color4> colorList = new Dictionary<int, Color4>();
-            Random random = new Random((int)DateTime.Now.Ticks);
-
-            for (int i=0; i< BspSector.NumberOfSectors; i++)
-            {
-                colorList.Add(i, new Color4((float) random.NextDouble(), (float) random.NextDouble(), (float) random.NextDouble()));
-            }
-
-            demo.ColorList = colorList;
-
-            demo.UpdateMeshes();
-            
             demo.Start();
             demo.Run();
         }
@@ -301,7 +279,7 @@ namespace MapEditor
                 else
                 {
                     _editState = false;
-                    _globalMaps.AddMapData(_currentEditor.EditAction(startPoint));
+                    _currentEditor.EditAction(startPoint, _currentScale, _globalMapData);
                 }
             }
 
@@ -552,7 +530,7 @@ namespace MapEditor
             //    if (!lineSegment.IsSolid)
             //        continue;
 
-                meshList.Add(CreateMesh(lineSegment, currentScale, mapdata));
+                meshList.Add(CreateMesh(lineSegment, currentScale));
             }
 
             //Create floor
@@ -594,137 +572,152 @@ namespace MapEditor
                 });
             }
 
-            meshList.AddRange(CreateMesh(triangles, 0, 64.0f, sector.FloorTextureId, sector.CeilingTextureId, lowerBound, upperBound, mapdata));
+            meshList.AddRange(CreateMesh(triangles, 0, 64.0f, sector.FloorTextureId, sector.CeilingTextureId, lowerBound, upperBound));
 
             return meshList;
         }
 
-        private List<Mesh> CreateMesh(List<GameData.Vertex> triangles, float floorHeight, float ceilingHeight, int floorTextureId, int ceilingTextureId, Vector2 lowerBound, Vector2 upperBound, MapData mapData)
+        private List<Mesh> CreateMesh(List<GameData.Vertex> triangles, float floorHeight, float ceilingHeight, int floorTextureId, int ceilingTextureId, Vector2 lowerBound, Vector2 upperBound)
         {
             List<Mesh> meshes = new List<Mesh>();
+            MeshBuilder meshBuilder = new MeshBuilder(demo.Device, demo.GetShader);
 
             int numberOfTriangles = triangles.Count / 3;
 
             for (int i = 0; i < numberOfTriangles; i++)
             {
-                Mesh floorMesh = new Mesh(demo.Device, demo.GetShader);
                 float scaleFactor = _currentScale;
 
-                Model[] model = new Model[3];
-                Vector3[] vectors = new Vector3[3];
+                Model[] modelFloor = new Model[3];
+                Vector3[] vectorsFloor = new Vector3[3];
 
-                vectors[0].X = (triangles[i * 3].X * scaleFactor) - _midWidth;
-                vectors[0].Y = floorHeight;
-                vectors[0].Z = _midHeight - (triangles[i * 3].Y * scaleFactor);
+                vectorsFloor[0].X = (triangles[i * 3].X * scaleFactor) - _midWidth;
+                vectorsFloor[0].Y = floorHeight;
+                vectorsFloor[0].Z = _midHeight - (triangles[i * 3].Y * scaleFactor);
 
-                vectors[1].X = (triangles[(i * 3) + 1].X * scaleFactor) - _midWidth;
-                vectors[1].Y = floorHeight;
-                vectors[1].Z = _midHeight - (triangles[(i * 3) + 1].Y * scaleFactor);
+                vectorsFloor[1].X = (triangles[(i * 3) + 1].X * scaleFactor) - _midWidth;
+                vectorsFloor[1].Y = floorHeight;
+                vectorsFloor[1].Z = _midHeight - (triangles[(i * 3) + 1].Y * scaleFactor);
 
-                vectors[2].X = (triangles[(i * 3) + 2].X * scaleFactor) - _midWidth;
-                vectors[2].Y = floorHeight;
-                vectors[2].Z = _midHeight - (triangles[(i * 3) + 2].Y * scaleFactor);
+                vectorsFloor[2].X = (triangles[(i * 3) + 2].X * scaleFactor) - _midWidth;
+                vectorsFloor[2].Y = floorHeight;
+                vectorsFloor[2].Z = _midHeight - (triangles[(i * 3) + 2].Y * scaleFactor);
 
                 Vector2 boundingBoxSize = (upperBound - lowerBound)/16;
 
                 Vector2 relativeP1 = new Vector2();
-                relativeP1.X = vectors[0].X - lowerBound.X;
-                relativeP1.Y = vectors[0].Z - lowerBound.Y;
+                relativeP1.X = vectorsFloor[0].X - lowerBound.X;
+                relativeP1.Y = vectorsFloor[0].Z - lowerBound.Y;
                 Vector2 relativeP2 = new Vector2();
-                relativeP2.X = vectors[1].X - lowerBound.X;
-                relativeP2.Y = vectors[1].Z - lowerBound.Y;
+                relativeP2.X = vectorsFloor[1].X - lowerBound.X;
+                relativeP2.Y = vectorsFloor[1].Z - lowerBound.Y;
                 Vector2 relativeP3 = new Vector2();
-                relativeP3.X = vectors[2].X - lowerBound.X;
-                relativeP3.Y = vectors[2].Z - lowerBound.Y;
+                relativeP3.X = vectorsFloor[2].X - lowerBound.X;
+                relativeP3.Y = vectorsFloor[2].Z - lowerBound.Y;
 
                 short[] faceIndex = new short[3] {
                     0, 1, 2
                 };
 
-                var image = new BitmapImage(new Uri(mapData.TextureData[floorTextureId]));
+                var image = new BitmapImage(new Uri(_globalMapData.TextureData[floorTextureId]));
                 float imageWidth = image.PixelWidth / 16.0f; //grid size
 
-                Vector3 normal = Vector3.Cross(vectors[1] - vectors[0], vectors[2] - vectors[0]);
+                Vector3 normal = Vector3.Cross(vectorsFloor[2] - vectorsFloor[1], vectorsFloor[1] - vectorsFloor[0]);
                 normal = Vector3.Normalize(normal);
 
-                model[0].x = vectors[0].X;
-                model[0].y = vectors[0].Y;
-                model[0].z = vectors[0].Z;
-                model[0].nx = normal.X;
-                model[0].ny = normal.Y;
-                model[0].nz = normal.Z;
-                model[0].tx = relativeP1.X / boundingBoxSize.X;
-                model[0].ty = relativeP1.Y / boundingBoxSize.Y;
+                modelFloor[0].x = vectorsFloor[0].X;
+                modelFloor[0].y = vectorsFloor[0].Y;
+                modelFloor[0].z = vectorsFloor[0].Z;
+                modelFloor[0].nx = normal.X;
+                modelFloor[0].ny = normal.Y;
+                modelFloor[0].nz = normal.Z;
+                modelFloor[0].tx = relativeP1.X / boundingBoxSize.X;
+                modelFloor[0].ty = relativeP1.Y / boundingBoxSize.Y;
 
-                model[1].x = vectors[1].X;
-                model[1].y = vectors[1].Y;
-                model[1].z = vectors[1].Z;
-                model[1].nx = normal.X;
-                model[1].ny = normal.Y;
-                model[1].nz = normal.Z;
-                model[1].tx = relativeP2.X / boundingBoxSize.X;//vectors[1].X;//4.0f; length divided by texture width
-                model[1].ty = relativeP2.Y / boundingBoxSize.Y;
+                modelFloor[1].x = vectorsFloor[1].X;
+                modelFloor[1].y = vectorsFloor[1].Y;
+                modelFloor[1].z = vectorsFloor[1].Z;
+                modelFloor[1].nx = normal.X;
+                modelFloor[1].ny = normal.Y;
+                modelFloor[1].nz = normal.Z;
+                modelFloor[1].tx = relativeP2.X / boundingBoxSize.X;//vectors[1].X;//4.0f; length divided by texture width
+                modelFloor[1].ty = relativeP2.Y / boundingBoxSize.Y;
 
-                model[2].x = vectors[2].X;
-                model[2].y = vectors[2].Y;
-                model[2].z = vectors[2].Z;
-                model[2].nx = normal.X;
-                model[2].ny = normal.Y;
-                model[2].nz = normal.Z;
-                model[2].tx = relativeP3.X / boundingBoxSize.X;//vectors[2].X;//4.0f;
-                model[2].ty = relativeP3.Y / boundingBoxSize.Y;
+                modelFloor[2].x = vectorsFloor[2].X;
+                modelFloor[2].y = vectorsFloor[2].Y;
+                modelFloor[2].z = vectorsFloor[2].Z;
+                modelFloor[2].nx = normal.X;
+                modelFloor[2].ny = normal.Y;
+                modelFloor[2].nz = normal.Z;
+                modelFloor[2].tx = relativeP3.X / boundingBoxSize.X;//vectors[2].X;//4.0f;
+                modelFloor[2].ty = relativeP3.Y / boundingBoxSize.Y;
 
-                floorMesh.LoadVectorsFromModel(model, faceIndex);
-                floorMesh.SetScaling(4, 1, 4);
-                floorMesh.LoadTextureFullPath(mapData.TextureData[floorTextureId]);
+                var floorMesh = meshBuilder
+                                  .New()
+                                  .SetModel(modelFloor)
+                                  .SetScaling(4, 1, 4)
+                                  .SetTextureIndex(floorTextureId)
+                                  .SetMaterialIndex(0)
+                                  .Build();
 
                 meshes.Add(floorMesh);
 
-                Mesh ceilingMesh = new Mesh(demo.Device, demo.GetShader);
+                Model[] modelCeiling = new Model[3];
+                Vector3[] vectorsCeiling = new Vector3[3];
 
-                vectors[0].Y = ceilingHeight;
+                vectorsCeiling[0].X = (triangles[i * 3].X * scaleFactor) - _midWidth;
+                vectorsCeiling[0].Y = ceilingHeight;
+                vectorsCeiling[0].Z = _midHeight - (triangles[i * 3].Y * scaleFactor);
 
-                vectors[1].Y = ceilingHeight;
+                vectorsCeiling[1].X = (triangles[(i * 3) + 1].X * scaleFactor) - _midWidth;
+                vectorsCeiling[1].Y = ceilingHeight;
+                vectorsCeiling[1].Z = _midHeight - (triangles[(i * 3) + 1].Y * scaleFactor);
 
-                vectors[2].Y = ceilingHeight;
+                vectorsCeiling[2].X = (triangles[(i * 3) + 2].X * scaleFactor) - _midWidth;
+                vectorsCeiling[2].Y = ceilingHeight;
+                vectorsCeiling[2].Z = _midHeight - (triangles[(i * 3) + 2].Y * scaleFactor);
 
                 faceIndex = new short[3] {
                     2, 1, 0
                 };
 
-                normal = Vector3.Cross(vectors[1] - vectors[0], vectors[2] - vectors[0]);
+                normal = Vector3.Cross(vectorsCeiling[2] - vectorsCeiling[1], vectorsCeiling[1] - vectorsCeiling[0]);
                 normal = Vector3.Normalize(normal);
 
-                model[0].x = vectors[faceIndex[0]].X;
-                model[0].y = vectors[faceIndex[0]].Y;
-                model[0].z = vectors[faceIndex[0]].Z;
-                model[0].nx = normal.X;
-                model[0].ny = normal.Y;
-                model[0].nz = normal.Z;
-                model[0].tx = relativeP3.X / boundingBoxSize.X;
-                model[0].ty = relativeP3.Y / boundingBoxSize.Y;
+                modelCeiling[0].x = vectorsCeiling[faceIndex[0]].X;
+                modelCeiling[0].y = vectorsCeiling[faceIndex[0]].Y;
+                modelCeiling[0].z = vectorsCeiling[faceIndex[0]].Z;
+                modelCeiling[0].nx = normal.X;
+                modelCeiling[0].ny = normal.Y;
+                modelCeiling[0].nz = normal.Z;
+                modelCeiling[0].tx = relativeP3.X / boundingBoxSize.X;
+                modelCeiling[0].ty = relativeP3.Y / boundingBoxSize.Y;
 
-                model[1].x = vectors[faceIndex[1]].X;
-                model[1].y = vectors[faceIndex[1]].Y;
-                model[1].z = vectors[faceIndex[1]].Z;
-                model[1].nx = normal.X;
-                model[1].ny = normal.Y;
-                model[1].nz = normal.Z;
-                model[1].tx = relativeP2.X / boundingBoxSize.X;//vectors[1].X;//4.0f; length divided by texture width
-                model[1].ty = relativeP2.Y / boundingBoxSize.Y;
+                modelCeiling[1].x = vectorsCeiling[faceIndex[1]].X;
+                modelCeiling[1].y = vectorsCeiling[faceIndex[1]].Y;
+                modelCeiling[1].z = vectorsCeiling[faceIndex[1]].Z;
+                modelCeiling[1].nx = normal.X;
+                modelCeiling[1].ny = normal.Y;
+                modelCeiling[1].nz = normal.Z;
+                modelCeiling[1].tx = relativeP2.X / boundingBoxSize.X;//vectors[1].X;//4.0f; length divided by texture width
+                modelCeiling[1].ty = relativeP2.Y / boundingBoxSize.Y;
 
-                model[2].x = vectors[faceIndex[2]].X;
-                model[2].y = vectors[faceIndex[2]].Y;
-                model[2].z = vectors[faceIndex[2]].Z;
-                model[2].nx = normal.X;
-                model[2].ny = normal.Y;
-                model[2].nz = normal.Z;
-                model[2].tx = relativeP1.X / boundingBoxSize.X;//vectors[2].X;//4.0f;
-                model[2].ty = relativeP1.Y / boundingBoxSize.Y;
+                modelCeiling[2].x = vectorsCeiling[faceIndex[2]].X;
+                modelCeiling[2].y = vectorsCeiling[faceIndex[2]].Y;
+                modelCeiling[2].z = vectorsCeiling[faceIndex[2]].Z;
+                modelCeiling[2].nx = normal.X;
+                modelCeiling[2].ny = normal.Y;
+                modelCeiling[2].nz = normal.Z;
+                modelCeiling[2].tx = relativeP1.X / boundingBoxSize.X;//vectors[2].X;//4.0f;
+                modelCeiling[2].ty = relativeP1.Y / boundingBoxSize.Y;
 
-                ceilingMesh.LoadVectorsFromModel(model, faceIndex);
-                ceilingMesh.SetScaling(4, 1, 4);
-                ceilingMesh.LoadTextureFullPath(mapData.TextureData[ceilingTextureId]);
+                var ceilingMesh = meshBuilder
+                                    .New()
+                                    .SetModel(modelCeiling)
+                                    .SetScaling(4, 1, 4)
+                                    .SetTextureIndex(ceilingTextureId)
+                                    .SetMaterialIndex(0)
+                                    .Build();
 
                 meshes.Add(ceilingMesh);
             }
@@ -732,7 +725,7 @@ namespace MapEditor
             return meshes;
         }
 
-        private Mesh CreateMesh(GameData.LineSegment lineSegment, float currentScale, MapData mapData)
+        private Mesh CreateMesh(GameData.LineSegment lineSegment, float currentScale)
         {
             if (lineSegment == null)
                 throw new ArgumentException(nameof(GameData.LineSegment));
@@ -740,7 +733,6 @@ namespace MapEditor
           //  if (!lineSegment.IsSolid)
            //     return null;
 
-            Mesh roomMesh = new Mesh(demo.Device, demo.GetShader);
             float scaleFactor = currentScale;
 
             var start = lineSegment.Start;
@@ -771,7 +763,7 @@ namespace MapEditor
 
             float maxTX;
 
-            var image = new BitmapImage(new Uri(mapData.TextureData[lineSegment.TextureId]));
+            var image = new BitmapImage(new Uri(_globalMapData.TextureData[lineSegment.TextureId]));
             float imageWidth = image.PixelWidth / 8.0f; //grid size
 
             if (start.X == end.X)
@@ -802,7 +794,7 @@ namespace MapEditor
                 0, 1, 2, 0, 2, 3
             };
 
-            Vector3 normal = Vector3.Cross(vectors[1] - vectors[0], vectors[2] - vectors[0]);
+            Vector3 normal = Vector3.Cross(vectors[1] - vectors[0], vectors[2] - vectors[1]);
             normal = Vector3.Normalize(normal);
 
             model[0].x = vectors[0].X;
@@ -859,9 +851,15 @@ namespace MapEditor
             model[5].tx = 0.0f;
             model[5].ty = maxTY;
 
-            roomMesh.LoadVectorsFromModel(model, faceIndex);
-            roomMesh.SetScaling(4, 1, 4);
-            roomMesh.LoadTextureFullPath(mapData.TextureData[lineSegment.TextureId]);
+            MeshBuilder meshBuilder = new MeshBuilder(demo.Device, demo.GetShader);
+
+            var roomMesh = meshBuilder
+                            .New()
+                            .SetModel(model)
+                            .SetTextureIndex(lineSegment.TextureId)
+                            .SetMaterialIndex(0)
+                            .SetScaling(4, 1, 4)
+                            .Build();
 
             return roomMesh;
         }
@@ -894,7 +892,7 @@ namespace MapEditor
                 BspTreeBuilder bspTreeBuilder = new BspTreeBuilder(demo.Device, demo.GetShader);
                 BspBoundingVolumeCalculator bspBoudingVolumeCalculator = new BspBoundingVolumeCalculator();
 
-                var bspRootNode = bspTreeBuilder.BuildTree(new Collection<Mesh>(demo.Meshes));
+                var bspRootNode = bspTreeBuilder.BuildTree(demo.Meshes);
                 bspBoudingVolumeCalculator.ComputeBoundingVolumes(bspRootNode);
                               
 

@@ -159,8 +159,7 @@ namespace GameData
                 {
                     Start = start,
                     End = end,
-                    TextureId = textureId,
-                    Id = i
+                    TextureId = textureId
                 });
             }
         }

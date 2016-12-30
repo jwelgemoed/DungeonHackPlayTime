@@ -1,5 +1,6 @@
 ﻿using FunAndGamesWithSlimDX.DirectX;
 using FunAndGamesWithSlimDX.Entities;
+using FunAndGamesWithSlimDX.FX;
 using FunAndGamesWithSlimDX.Menus;
 using SlimDX;
 using SlimDX.Direct3D11;
@@ -220,12 +221,10 @@ namespace FunAndGamesWithSlimDX.Engine
                 _console.WriteLine($"Camera Position: X: {cameraPosition.X}, Y: {cameraPosition.Y}, Z: {cameraPosition.Z}");
 
                 var lookat = Vector3.Normalize(Camera.LookAt);
-
-
-                // _console.WriteLine($"Camera Lookat: X : {lookat.X}, Y: {lookat.Y}, Z: {lookat.Z}");
+                 _console.WriteLine($"Camera Lookat: X : {lookat.X}, Y: {lookat.Y}, Z: {lookat.Z}");
 
                 var meshPosition = GetSceneMeshes()[0].VertexData[0].Position;
-                //_console.WriteLine($"Mesh 0 Position: X: {meshPosition.X}, Y:{meshPosition.Y}, Z: {meshPosition.Z}");
+                _console.WriteLine($"Mesh 0 Position: X: {meshPosition.X}, Y:{meshPosition.Y}, Z: {meshPosition.Z}");
 
                 _console.WriteLine($"Update time in ticks: {_updateTime}");
                 _console.WriteLine($"Draw time in ticks: {_drawTime}");

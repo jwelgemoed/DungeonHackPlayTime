@@ -14,6 +14,7 @@ using System.IO;
 using System.Text;
 using System.Runtime.Serialization.Formatters.Binary;
 using GameData;
+using DungeonHack.Builders;
 
 namespace MapEditor
 {
@@ -190,9 +191,6 @@ namespace MapEditor
 
             for (int i = 0; i < 6; i++)
             {
-                var roomMesh = new Mesh(_device, _shader);
-                roomMesh.SetPosition(startX * scaleFactor, 0.0f, startY * scaleFactor);
-
                 normal = Vector3.Cross(vectors[(i * 4) + 1] - vectors[i * 4], vectors[(i * 4) + 2] - vectors[(i * 4) + 1]);
                 normal = Vector3.Normalize(normal);
 
@@ -232,8 +230,15 @@ namespace MapEditor
                     }
                 }
 
-                roomMesh.LoadVectorsFromModel(model, faceIndex2);
-                roomMesh.SetScaling(1, 1, 1);
+                MeshBuilder meshBuilder = new MeshBuilder(_device, _shader);
+
+                var roomMesh = meshBuilder
+                                .New()
+                                .SetModel(model)
+                                .SetPosition(startX * scaleFactor, 0.0f, startY * scaleFactor)
+                                .SetScaling(1, 1, 1)
+                                .Build();
+
                 _meshList.Add(roomMesh);
             }
         }
@@ -456,11 +461,6 @@ namespace MapEditor
         }
 
         public void EditAction(Point startPoint, float currentScale, MapData mapData)
-        {
-            throw new NotImplementedException();
-        }
-
-        public MapData EditAction(Point startPoint)
         {
             throw new NotImplementedException();
         }

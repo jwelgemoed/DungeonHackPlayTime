@@ -1,4 +1,5 @@
-﻿using FunAndGamesWithSlimDX.DirectX;
+﻿using DungeonHack.Entities;
+using FunAndGamesWithSlimDX.DirectX;
 using FunAndGamesWithSlimDX.Engine;
 using FunAndGamesWithSlimDX.Entities;
 using SlimDX;
@@ -19,9 +20,9 @@ namespace FunAndGamesWithSlimDX
         {
         }
 
-        public override List<Mesh> GetSceneMeshes()
+        public override List<Polygon> GetScenePolygons()
         {
-            return _meshes;
+            throw new NotImplementedException();
         }
 
         public override void DrawScene()

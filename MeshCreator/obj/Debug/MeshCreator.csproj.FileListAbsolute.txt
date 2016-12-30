@@ -6,3 +6,11 @@ C:\projects\Projects\Fun\FunAndGamesWithSlimDX\MeshCreator\bin\Debug\SlimDX.pdb
 C:\projects\Projects\Fun\FunAndGamesWithSlimDX\MeshCreator\bin\Debug\SlimDX.xml
 C:\projects\Projects\Fun\FunAndGamesWithSlimDX\MeshCreator\obj\Debug\MeshCreator.exe
 C:\projects\Projects\Fun\FunAndGamesWithSlimDX\MeshCreator\obj\Debug\MeshCreator.pdb
+C:\temp\DungeonHackPlayTime-master\MeshCreator\bin\Debug\MeshCreator.exe.config
+C:\temp\DungeonHackPlayTime-master\MeshCreator\bin\Debug\MeshCreator.exe
+C:\temp\DungeonHackPlayTime-master\MeshCreator\bin\Debug\MeshCreator.pdb
+C:\temp\DungeonHackPlayTime-master\MeshCreator\bin\Debug\SlimDX.dll
+C:\temp\DungeonHackPlayTime-master\MeshCreator\bin\Debug\SlimDX.pdb
+C:\temp\DungeonHackPlayTime-master\MeshCreator\bin\Debug\SlimDX.xml
+C:\temp\DungeonHackPlayTime-master\MeshCreator\obj\Debug\MeshCreator.exe
+C:\temp\DungeonHackPlayTime-master\MeshCreator\obj\Debug\MeshCreator.pdb

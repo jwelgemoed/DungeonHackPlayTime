@@ -13,8 +13,8 @@ namespace FunAndGamesWithSlimDX.Engine
         private float _previousMouseX;
         private float _previousMouseY;
         private readonly Point _centerPoint;
-        private readonly List<string> _shaderTechniques = new List<string>() { "LightTech", "TextureTech", "TintedTextureTech", "NoSpotSpotLightTech" };
-        protected int currentTechId = 0;
+        private readonly List<string> _shaderTechniques = new List<string>() { "LightTech", "TextureTech", "NoSpotSpotLightTech" };
+        private int currentTechId = 0;
         private bool _flashLightOn = true;
 
         public CameraEngine(float cameraHeight, bool restrictMovementPlaneXZ)

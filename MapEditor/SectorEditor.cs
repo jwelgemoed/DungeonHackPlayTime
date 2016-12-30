@@ -17,6 +17,7 @@ using System.Windows.Markup;
 using System.Xml;
 using System.Configuration;
 using GameData;
+using DungeonHack.Builders;
 
 namespace MapEditor
 {
@@ -359,7 +360,6 @@ namespace MapEditor
             if (line == null)
                 throw new ArgumentException("Parameter shape not a line!");
 
-            Mesh roomMesh = new Mesh(_device, _shader);
             float scaleFactor = currentScale;
 
             var scaleTransform = line.LayoutTransform as ScaleTransform;
@@ -369,8 +369,6 @@ namespace MapEditor
             {
                 scaleFactor = (float)scaleTransform.ScaleX;
             }
-
-            roomMesh.SetPosition((float)startPoint.X * scaleFactor, 0.0f, (float)startPoint.Y * scaleFactor);
 
             Model[] model = new Model[6];
             Vector3[] vectors = new Vector3[4];
@@ -454,8 +452,15 @@ namespace MapEditor
             model[5].tx = 0.0f;
             model[5].ty = 1.0f;
 
-            roomMesh.LoadVectorsFromModel(model, faceIndex);
-            roomMesh.SetScaling(1, 1, 1);
+            MeshBuilder meshBuilder = new MeshBuilder(_device, _shader);
+
+            var roomMesh = meshBuilder
+                           .New()
+                           .SetPosition((float)startPoint.X * scaleFactor, 0.0f, (float)startPoint.Y * scaleFactor)
+                           .SetModel(model)
+                           .SetScaling(1, 1, 1)
+                           .Build();
+
             meshList.Add(new Tuple<Shape, Mesh>(line, roomMesh));
 
             CreateNormalLine(line, normal);
@@ -492,8 +497,6 @@ namespace MapEditor
 
         public Mesh CreateMesh(GameData.LineSegment lineSeg)
         {
-            Mesh roomMesh = new Mesh(_device, _shader);
-
             Model[] model = new Model[6];
             Vector3[] vectors = new Vector3[4];
 
@@ -579,9 +582,13 @@ namespace MapEditor
             model[5].tx = 0.0f;
             model[5].ty = 1.0f;
 
-            roomMesh.LoadVectorsFromModel(model, faceIndex);
-            roomMesh.SetScaling(1, 1, 1);
-            roomMesh.LoadTexture(MapData.TextureData[lineSeg.TextureId]);
+            var meshBuilder = new MeshBuilder(_device, _shader);
+            var roomMesh = meshBuilder
+                            .New()
+                            .SetModel(model)
+                            .SetScaling(1, 1, 1)
+                            .SetTextureIndex(lineSeg.TextureId)
+                            .Build();
 
             return roomMesh;
         }

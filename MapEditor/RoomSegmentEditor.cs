@@ -37,7 +37,7 @@ namespace MapEditor
             _roomLines = roomLineSegments;
         }
 
-        public MapData EditAction(Point startPoint, float currentScale)
+        public void EditAction(Point startPoint, float currentScale, MapData globalMapData)
         {
             _mapData.UpdateStartPosition(new GameData.Vertex()
             {
@@ -45,10 +45,10 @@ namespace MapEditor
                 Y = (float)startPoint.Y
             });
 
+            globalMapData.AddMapData(_mapData);
+
             _lineSegmentList.Clear();
             _tempLineList.Clear();
-
-            return _mapData.CreateCopy();
         }
 
        
@@ -198,21 +198,8 @@ namespace MapEditor
             throw new NotImplementedException();
         }
        
-        public MapData EditAction(Point startPoint)
-        {
-            _mapData.UpdateStartPosition(new GameData.Vertex()
-            {
-                X = (float)startPoint.X,
-                Y = (float)startPoint.Y
-            });
-
-            _lineSegmentList.Clear();
-            _tempLineList.Clear();
-
-            return _mapData.CreateCopy();
-        }
-
-        void ISegmentEditor.EditAction(Point startPoint, float currentScale)
+       
+        public void EditAction(Point startPoint, float currentScale)
         {
             throw new NotImplementedException();
         }

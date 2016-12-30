@@ -1,0 +1,242 @@
+﻿using FunAndGamesWithSlimDX.DirectX;
+using FunAndGamesWithSlimDX.Engine;
+using FunAndGamesWithSlimDX.Entities;
+using SlimDX;
+using SlimDX.Direct3D11;
+using System;
+using System.IO;
+
+namespace DungeonHack.Builders
+{
+    public class MeshBuilder
+    {
+        private Mesh _mesh;
+        private readonly Device _device;
+        private readonly IShader _shader;
+
+        public MeshBuilder(Device device, IShader shader)
+        {
+            _device = device;
+            _shader = shader;
+        }
+
+        public MeshBuilder New()
+        {
+            _mesh = new Mesh(_device, _shader);
+
+            return this;
+        }
+
+        public Mesh Build()
+        {
+            LoadVectorsFromModel(null, null);
+            TransformToWorld();
+            _mesh.VertexBuffer = GetVertexBuffer();
+            _mesh.IndexBuffer = GetIndexBuffer();
+            return _mesh;
+        }
+
+        public MeshBuilder SetPosition(float x, float y, float z)
+        {
+            _mesh.TranslationMatrix = Matrix.Translation(x, y, z);
+            return this;
+        }
+
+        public MeshBuilder SetScaling(float scale)
+        {
+            _mesh.ScaleMatrix = Matrix.Scaling(scale, scale, scale);
+            return this;
+        }
+
+        public MeshBuilder SetScaling(float scaleX, float scaleY, float scaleZ)
+        {
+            _mesh.ScaleMatrix = Matrix.Scaling(scaleX, scaleY, scaleZ);
+            return this;
+        }
+
+        public MeshBuilder SetRotationMatrix(Matrix rotationMatrix)
+        {
+            _mesh.RotationMatrix = rotationMatrix;
+            return this;
+        }
+
+        public MeshBuilder SetScaleMatrix(Matrix scaleMatrix)
+        {
+            _mesh.ScaleMatrix = scaleMatrix;
+            return this;
+        }
+
+        public MeshBuilder SetTranslationMatrix(Matrix translationMatrix)
+        {
+            _mesh.TranslationMatrix = translationMatrix;
+            return this;
+        }
+
+        public MeshBuilder SetTextureIndex(int textureIndex)
+        {
+            _mesh.TextureIndex = textureIndex;
+            return this;
+        }
+
+        public MeshBuilder SetMaterialIndex(int materialIndex)
+        {
+            _mesh.MaterialIndex = materialIndex;
+            return this;
+        }
+
+        public MeshBuilder SetModel(Model[] model)
+        {
+            _mesh.Model = model;
+            return this;
+        }
+
+        public MeshBuilder CreateFromModel(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName))
+                throw new ArgumentException("Param cannot be empty", "fileName");
+
+            var basePath = ConfigManager.ResourcePath;
+
+            var fileNamePath = basePath + @"\Resources\" + fileName;
+
+            using (var inputStream = new StreamReader(fileNamePath))
+            {
+                string inputLine = "";
+
+                while (!inputLine.Contains("Vertex Count"))
+                {
+                    inputLine = inputStream.ReadLine();
+                }
+
+                int vertexCount = int.Parse(inputLine.Substring(inputLine.IndexOf(":") + 1).Trim());
+
+                _mesh.Model = new Model[vertexCount];
+
+                while (!inputLine.Contains("Data"))
+                {
+                    inputLine = inputStream.ReadLine();
+                }
+
+                for (int i = 0; i < vertexCount; i++)
+                {
+                    inputLine = inputStream.ReadLine();
+
+                    var data = inputLine.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    _mesh.Model[i].x = float.Parse(data[0].Trim());
+                    _mesh.Model[i].y = float.Parse(data[1].Trim());
+                    _mesh.Model[i].z = float.Parse(data[2].Trim());
+                    _mesh.Model[i].tx = float.Parse(data[3].Trim());
+                    _mesh.Model[i].ty = float.Parse(data[4].Trim());
+                    _mesh.Model[i].nx = float.Parse(data[5].Trim());
+                    _mesh.Model[i].ny = float.Parse(data[6].Trim());
+                    _mesh.Model[i].nz = float.Parse(data[7].Trim());
+
+                }
+            }
+
+            LoadVectorsFromModel(null, null);
+
+            return this;
+        }
+
+        private SlimDX.Direct3D11.Buffer GetVertexBuffer()
+        {
+            var vertices = new DataStream(Vertex.SizeOf * _mesh.VertexData.Length, true, true);
+            vertices.WriteRange(_mesh.VertexData);
+            vertices.Position = 0;
+
+            return new SlimDX.Direct3D11.Buffer(_device, vertices, Vertex.SizeOf * _mesh.VertexData.Length
+                    , ResourceUsage.Default, BindFlags.VertexBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, Vertex.SizeOf);
+        }
+
+        private SlimDX.Direct3D11.Buffer GetIndexBuffer()
+        {
+            var indexStream = new DataStream(sizeof(uint) * _mesh.IndexData.Length, true, true);
+            indexStream.WriteRange(_mesh.IndexData);
+            indexStream.Position = 0;
+
+            return new SlimDX.Direct3D11.Buffer(_device, indexStream, sizeof(uint) * _mesh.IndexData.Length,
+                                                           ResourceUsage.Default, BindFlags.IndexBuffer,
+                                                           CpuAccessFlags.None, ResourceOptionFlags.None, 0);
+        }
+
+        private void RecalculateWorldMatrix()
+        {
+            _mesh.WorldMatrix = _mesh.ScaleMatrix * _mesh.RotationMatrix;
+            _mesh.WorldMatrix = _mesh.WorldMatrix * _mesh.TranslationMatrix;
+        }
+
+        private void TransformToWorld()
+        {
+            RecalculateWorldMatrix();
+
+            for (int i = 0; i < _mesh.VertexData.Length; i++)
+            {
+                var vertex = Vector3.TransformCoordinate(
+                    new Vector3(_mesh.VertexData[i].Position.X, _mesh.VertexData[i].Position.Y, _mesh.VertexData[i].Position.Z)
+                    , _mesh.WorldMatrix);
+
+                _mesh.VertexData[i].Position = new Vector4(vertex.X, vertex.Y, vertex.Z, 1.0f);
+
+                var normal = Vector3.TransformNormal(
+                    new Vector3(_mesh.VertexData[i].Normal.X, _mesh.VertexData[i].Normal.Y, _mesh.VertexData[i].Normal.Z)
+                    , _mesh.WorldMatrix);
+
+                _mesh.VertexData[i].Normal = normal;
+            }
+
+            var minimumVector = Vector3.TransformCoordinate(_mesh.BoundingBox.Minimum, _mesh.WorldMatrix);
+            var maximumVector = Vector3.TransformCoordinate(_mesh.BoundingBox.Maximum, _mesh.WorldMatrix);
+
+            _mesh.BoundingBox = new BoundingBox(minimumVector, maximumVector);
+
+        }
+
+        private void LoadVectorsFromModel(Model[] model, short[] indexes)
+        {
+            if (model != null)
+            {
+                _mesh.Model = new Model[model.Length];
+                model.CopyTo(_mesh.Model, 0);
+            }
+
+            _mesh.VertexData = new Vertex[_mesh.Model.Length];
+
+            if (indexes == null)
+                _mesh.IndexData = new short[_mesh.Model.Length];
+            else
+                _mesh.IndexData = new short[indexes.Length];
+
+            Vector3[] positions = new Vector3[_mesh.VertexData.Length];
+
+            for (int i = 0; i < _mesh.Model.Length; i++)
+            {
+                _mesh.VertexData[i] = new Vertex()
+                {
+                    Position = new Vector4(_mesh.Model[i].x, _mesh.Model[i].y, _mesh.Model[i].z, 1.0f),
+                    Texture = new Vector2(_mesh.Model[i].tx, _mesh.Model[i].ty),
+                    Normal = new Vector3(_mesh.Model[i].nx, _mesh.Model[i].ny, _mesh.Model[i].nz)
+                };
+
+                positions[i] = new Vector3(_mesh.Model[i].x, _mesh.Model[i].y, _mesh.Model[i].z);
+
+                if (indexes == null)
+                    _mesh.IndexData[i] = (short)i;
+            }
+
+            if (indexes != null)
+            {
+                for (int i = 0; i < indexes.Length; i++)
+                {
+                    _mesh.IndexData[i] = (short)indexes[i];
+                }
+            }
+
+            _mesh.MeshRenderPrimitive = PrimitiveTopology.TriangleList;
+
+            _mesh.BoundingBox = BoundingBox.FromPoints(positions);
+        }
+
+    }
+}

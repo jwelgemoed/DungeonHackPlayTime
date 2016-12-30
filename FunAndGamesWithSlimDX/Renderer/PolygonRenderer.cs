@@ -21,6 +21,8 @@ namespace DungeonHack
 
         private TextureDictionary _textureDictionary;
         private MaterialDictionary _materialDictionary;
+
+        public int MeshRenderedCount { get; private set; }
         
         public PolygonRenderer SetDeviceContext(DeviceContext deviceContext)
         {
@@ -90,6 +92,8 @@ namespace DungeonHack
                             _textureDictionary.GetTexture(polygon.TextureIndex).TextureData,
                             _camera.GetPosition(),
                             _materialDictionary.GetMaterial(polygon.MaterialIndex));
+
+            MeshRenderedCount++;
         }
     }
 }

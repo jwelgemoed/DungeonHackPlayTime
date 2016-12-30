@@ -9,7 +9,7 @@ using Device = SlimDX.Direct3D11.Device;
 
 namespace FunAndGamesWithSlimDX.DirectX
 {
-    public class Shader : IShader
+    public class Shader : IShader, IDisposable
     {
         private Device _device;
         private InputLayout _layout;
@@ -22,6 +22,7 @@ namespace FunAndGamesWithSlimDX.DirectX
         private EffectVariable _gDirLight;
         private EffectVariable _gPointLight;
         private EffectVariable _gSpotLight;
+
         private EffectVariable _material;
 
         private SamplerState _samplerState;
@@ -33,7 +34,6 @@ namespace FunAndGamesWithSlimDX.DirectX
         private EffectMatrixVariable _projectionMatrix;
 
         private EffectVectorVariable _cameraPosition;
-        private EffectVectorVariable _sectorColor;
 
         private EffectResourceVariable _shaderTexture;
         private EffectSamplerVariable _sampleType;
@@ -98,7 +98,6 @@ namespace FunAndGamesWithSlimDX.DirectX
             _worldMatrix = _cbPerObject.GetMemberByName("worldMatrix").AsMatrix();
             _viewMatrix = _cbPerObject.GetMemberByName("viewMatrix").AsMatrix();
             _projectionMatrix = _cbPerObject.GetMemberByName("projectionMatrix").AsMatrix();
-            _sectorColor = _cbPerObject.GetMemberByName("sectorColor").AsVector();
 
             _gDirLight = _cbPerFrame.GetMemberByName("gDirLight");
             _gPointLight = _cbPerFrame.GetMemberByName("gPointLight");
@@ -111,25 +110,48 @@ namespace FunAndGamesWithSlimDX.DirectX
             _shaderTexture = _fx.GetVariableByName("shaderTexture").AsResource();
             _sampleType = _fx.GetVariableByName("SampleType").AsSampler();
         }
+
         
         public void SetSelectedShaderEffect(Device device, string technique)
         {
             Initialize(device, technique);
         }
 
-        public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix,
-                           Matrix projectionMatrix, ShaderResourceView texture, Vector3 cameraPosition, Material material)
+        public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix projectionMatrix)
         {
-            SetShaderParameters(context, worldMatrix, viewMatrix, projectionMatrix, texture, cameraPosition, material, null);
+            throw new NotImplementedException();
+        }
+
+        public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix projectionMatrix,
+                           ShaderResourceView texture, Material material)
+        {
+            SetShaderParameters(context, worldMatrix, viewMatrix, projectionMatrix, texture);
 
             RenderShader(context, indexCount);
         }
 
         public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix,
-                           Matrix projectionMatrix, ShaderResourceView texture, Vector3 cameraPosition, Material material,
-                           Color4 sectorColor)
+                           Matrix projectionMatrix, ShaderResourceView texture, Color4 diffuseColor,
+                                         Vector3 lightDirection, Vector3 cameraPosition)
         {
-            SetShaderParameters(context, worldMatrix, viewMatrix, projectionMatrix, texture, cameraPosition, material, sectorColor);
+            SetShaderParameters(context, worldMatrix, viewMatrix, projectionMatrix, texture, diffuseColor, Colors.White, lightDirection, cameraPosition, new Material());
+
+            RenderShader(context, indexCount);
+        }
+
+        public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix,
+                           Matrix projectionMatrix, ShaderResourceView texture, Color4 diffuseColor,
+                                         Vector3 lightDirection)
+        {
+            SetShaderParameters(context, worldMatrix, viewMatrix, projectionMatrix, texture, diffuseColor, Colors.White, lightDirection, new Vector3(1, 1, 1), new Material());
+
+            RenderShader(context, indexCount);
+        }
+
+        public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix,
+                           Matrix projectionMatrix, ShaderResourceView texture, Vector3 cameraPosition, Material material)
+        {
+            SetShaderParameters(context, worldMatrix, viewMatrix, projectionMatrix, texture, null, null, null, cameraPosition, material);
 
             RenderShader(context, indexCount);
         }
@@ -176,16 +198,25 @@ namespace FunAndGamesWithSlimDX.DirectX
         }
 
         private void SetShaderParameters(DeviceContext context, Matrix worldMatrix, Matrix viewMatrix,
-                                         Matrix projectionMatrix, ShaderResourceView texture, 
-                                         Vector3 cameraPosition, Material material,
-                                         Color4? sectorColor)
+                                         Matrix projectionMatrix, ShaderResourceView texture)
         {
             _worldMatrix.SetMatrix(worldMatrix);
             _viewMatrix.SetMatrix(viewMatrix);
             _projectionMatrix.SetMatrix(projectionMatrix);
 
-            if (sectorColor.HasValue)
-                _sectorColor.Set(sectorColor.Value);
+            _shaderTexture.SetResource(texture);
+            _sampleType.SetSamplerState(0, _samplerState);
+
+            context.PixelShader.SetShaderResource(texture, 0);
+        }
+
+        private void SetShaderParameters(DeviceContext context, Matrix worldMatrix, Matrix viewMatrix,
+                                         Matrix projectionMatrix, ShaderResourceView texture, Color4? diffuseColor, Color4? ambientColor,
+                                         Vector3? lightDirection, Vector3 cameraPosition, Material material)
+        {
+            _worldMatrix.SetMatrix(worldMatrix);
+            _viewMatrix.SetMatrix(viewMatrix);
+            _projectionMatrix.SetMatrix(projectionMatrix);
 
             var s = Util.GetArray(material);
 
@@ -208,6 +239,16 @@ namespace FunAndGamesWithSlimDX.DirectX
             _fx.Dispose();
             _layout.Dispose();
             _samplerState.Dispose();
+        }
+
+        public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix projectionMatrix, ShaderResourceView texture, Color4 diffuseColor, Color4 ambientColor, Vector3 lightDirection, Vector3 cameraPosition)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix projectionMatrix, ShaderResourceView texture)
+        {
+            throw new NotImplementedException();
         }
     }
 }

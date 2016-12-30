@@ -12,6 +12,7 @@ using SlimDX.Direct3D11;
 using FunAndGamesWithSlimDX.DirectX;
 using SlimDX;
 using GameData;
+using DungeonHack.Builders;
 
 namespace MapEditor
 {
@@ -193,9 +194,6 @@ namespace MapEditor
 
             for (int i = 0; i < 6; i++)
             {
-                var roomMesh = new Mesh(_device, _shader);
-                roomMesh.SetPosition((float)startPoint.X * scaleFactor, 0.0f, (float)startPoint.Y * scaleFactor);
-
                 normal = Vector3.Cross(vectors[(i * 4) + 1] - vectors[i * 4], vectors[(i * 4) + 2] - vectors[(i * 4) + 1]);
                 normal = Vector3.Normalize(normal);
 
@@ -229,8 +227,14 @@ namespace MapEditor
                     }
                 }
 
-                roomMesh.LoadVectorsFromModel(model, faceIndex2);
-                roomMesh.SetScaling(1, 1, 1);
+                MeshBuilder meshBuilder = new MeshBuilder(_device, _shader);
+                var roomMesh = meshBuilder
+                                .New()
+                                .SetModel(model)
+                                .SetPosition((float)startPoint.X * scaleFactor, 0.0f, (float)startPoint.Y * scaleFactor)
+                                .SetScaling(1, 1, 1)
+                                .Build();
+
                 _meshList.Add(new Tuple<Shape, Mesh>(rect, roomMesh));
             }
         }
@@ -291,11 +295,6 @@ namespace MapEditor
         }
 
         public void EditAction(Point startPoint, float currentScale, MapData mapData)
-        {
-            throw new NotImplementedException();
-        }
-
-        public MapData EditAction(Point startPoint)
         {
             throw new NotImplementedException();
         }

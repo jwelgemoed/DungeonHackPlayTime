@@ -51,7 +51,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GlobalMapData.cs" />
     <Compile Include="MapData.cs" />
     <Compile Include="LineSegment.cs" />
     <Compile Include="MapSaver.cs" />

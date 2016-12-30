@@ -17,6 +17,7 @@ using System.Windows.Markup;
 using System.Xml;
 using System.Configuration;
 using GameData;
+using DungeonHack.Builders;
 
 namespace MapEditor
 {
@@ -272,7 +273,6 @@ namespace MapEditor
             if (line == null)
                 throw new ArgumentException("Parameter shape not a line!");
 
-            Mesh roomMesh = new Mesh(_device, _shader);
             float scaleFactor = currentScale;
 
             var scaleTransform = line.LayoutTransform as ScaleTransform;
@@ -282,8 +282,6 @@ namespace MapEditor
             {
                 scaleFactor = (float)scaleTransform.ScaleX;
             }
-
-            roomMesh.SetPosition((float)startPoint.X * scaleFactor, 0.0f, (float)startPoint.Y * scaleFactor);
 
             Model[] model = new Model[6];
             Vector3[] vectors = new Vector3[4];
@@ -367,8 +365,13 @@ namespace MapEditor
             model[5].tx = 0.0f;
             model[5].ty = 1.0f;
 
-            roomMesh.LoadVectorsFromModel(model, faceIndex);
-            roomMesh.SetScaling(1, 1, 1);
+            MeshBuilder meshBuilder = new MeshBuilder(_device, _shader);
+            var roomMesh = meshBuilder
+                            .New()
+                            .SetPosition((float)startPoint.X * scaleFactor, 0.0f, (float)startPoint.Y * scaleFactor)
+                            .SetModel(model)
+                            .SetScaling(1, 1, 1)
+                            .Build();
             meshList.Add(new Tuple<Shape, Mesh>(line, roomMesh));
 
             CreateNormalLine(line, normal);
@@ -403,102 +406,6 @@ namespace MapEditor
             _canvas.Children.Add(normalLine);
         }
 
-        public Mesh CreateMesh(GameData.LineSegment lineSeg)
-        {
-            Mesh roomMesh = new Mesh(_device, _shader);
-
-            Model[] model = new Model[6];
-            Vector3[] vectors = new Vector3[4];
-
-            GameData.Vertex start = lineSeg.Start;
-            GameData.Vertex end = lineSeg.End; 
-
-            vectors[0].X = ((float)(start.X) - _midWidth);
-            vectors[0].Y = 64.0f;
-            vectors[0].Z = _midHeight - (float)(start.Y);
-
-            vectors[1].X = ((float)(end.X) - _midWidth);
-            vectors[1].Y = 64.0f;
-            vectors[1].Z = _midHeight - (float)(end.Y);
-
-            vectors[2].X = ((float)(end.X) - _midWidth);
-            vectors[2].Y = 0.0f;
-            vectors[2].Z = _midHeight - (float)(end.Y);
-
-            vectors[3].X = ((float)(start.X) - _midWidth);
-            vectors[3].Y = 0.0f;
-            vectors[3].Z = _midHeight - (float)(start.Y);
-
-
-            //Indexes for the above square
-            short[] faceIndex = new short[6] {
-                0, 1, 2, 0, 2,3
-            };
-
-            Vector3 normal = Vector3.Cross(vectors[1] - vectors[0], vectors[2] - vectors[1]);
-            normal = Vector3.Normalize(normal);
-
-            model[0].x = vectors[0].X;
-            model[0].y = vectors[0].Y;
-            model[0].z = vectors[0].Z;
-            model[0].nx = normal.X;
-            model[0].ny = normal.Y;
-            model[0].nz = normal.Z;
-            model[0].tx = 0.0f;
-            model[0].ty = 0.0f;
-
-            model[1].x = vectors[1].X;
-            model[1].y = vectors[1].Y;
-            model[1].z = vectors[1].Z;
-            model[1].nx = normal.X;
-            model[1].ny = normal.Y;
-            model[1].nz = normal.Z;
-            model[1].tx = vectors[1].X / 64;//4.0f; length divided by texture width
-            model[1].ty = 0.0f;
-
-            model[2].x = vectors[2].X;
-            model[2].y = vectors[2].Y;
-            model[2].z = vectors[2].Z;
-            model[2].nx = normal.X;
-            model[2].ny = normal.Y;
-            model[2].nz = normal.Z;
-            model[2].tx = vectors[2].X / 64;//4.0f;
-            model[2].ty = 1.0f;
-
-            model[3].x = vectors[0].X;
-            model[3].y = vectors[0].Y;
-            model[3].z = vectors[0].Z;
-            model[3].nx = normal.X;
-            model[3].ny = normal.Y;
-            model[3].nz = normal.Z;
-            model[3].tx = 0.0f;
-            model[3].ty = 0.0f;
-
-            model[4].x = vectors[2].X;
-            model[4].y = vectors[2].Y;
-            model[4].z = vectors[2].Z;
-            model[4].nx = normal.X;
-            model[4].ny = normal.Y;
-            model[4].nz = normal.Z;
-            model[4].tx = vectors[2].X / 64;//4.0f;
-            model[4].ty = 1.0f;
-
-            model[5].x = vectors[3].X;
-            model[5].y = vectors[3].Y;
-            model[5].z = vectors[3].Z;
-            model[5].nx = normal.X;
-            model[5].ny = normal.Y;
-            model[5].nz = normal.Z;
-            model[5].tx = 0.0f;
-            model[5].ty = 1.0f;
-
-            roomMesh.LoadVectorsFromModel(model, faceIndex);
-            roomMesh.SetScaling(1, 1, 1);
-            roomMesh.LoadTexture(MapData.TextureData[lineSeg.TextureId]);
-
-            return roomMesh;
-        }
-
         public void SaveLines(string fileName)
         {
             if (string.IsNullOrEmpty(fileName))
@@ -507,27 +414,6 @@ namespace MapEditor
             GameData.MapSaver mapSaver = new GameData.MapSaver(MapData);
 
             mapSaver.SaveData(fileName);
-        }
-
-        public List<Line> GetPreviewLines(string fileName)
-        {
-            return LoadLines(fileName);
-        }
-
-        public List<Line> GetEditorLines(string fileName)
-        {
-            return LoadLines(fileName, false);
-        }
-
-        public List<GameData.LineSegment> LoadLineSegments(string fileName)
-        {
-            MapData = new MapData();
-
-            var mapSaver = new MapSaver(MapData);
-
-            mapSaver.LoadData(System.IO.Path.Combine(ConfigurationManager.AppSettings["BaseSavePath"], fileName));
-
-            return MapData.LineSegments.Values.Select(x => x).ToList();
         }
 
         public List<Line> LoadLines(string fileName, bool applyInternalTransform = true, Transform transform = null)
@@ -576,11 +462,6 @@ namespace MapEditor
         }
 
         public void EditAction(Point startPoint, float currentScale, MapData mapData)
-        {
-            throw new NotImplementedException();
-        }
-
-        public MapData EditAction(Point startPoint)
         {
             throw new NotImplementedException();
         }
