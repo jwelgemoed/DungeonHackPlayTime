@@ -2,6 +2,7 @@
 using DungeonHack.Builders;
 using FunAndGamesWithSlimDX;
 using FunAndGamesWithSlimDX.Entities;
+using GameData;
 using Geometry;
 using log4net;
 using Poly2Tri;
@@ -56,13 +57,15 @@ namespace MapEditor
         private RectangleSegment _selectedRectangleSegment;
         private RoomSegmentEditor _roomSegmentEditor;
         private RotateTransform _rotateTransform;
-        private GameData.MapData _globalMapData;
+        private GlobalMapData _globalMapData;
 
         private ILog _logger = LogManager.GetLogger("application-logger");
 
         private Shape _selectedShape;
 
         public List<Line> SelectedRoom { get; set; }
+
+        private const float EPSILON = 0.0001f;
 
         public RectangleSegment SelectedRectangleSegment {
             get
@@ -105,7 +108,7 @@ namespace MapEditor
 
                 _currentEditor = _roomSegmentEditor;
 
-                _globalMapData = new GameData.MapData();
+                _globalMapData = new GlobalMapData();
 
                 this.KeyDown += canvasXZ_PreviewKeyDown;
             }
@@ -175,9 +178,12 @@ namespace MapEditor
         {
             var meshList = new List<Mesh>();
 
-            foreach (var sector in _globalMapData.Sectors.Values)
+            foreach (var map in _globalMapData.GetMaps())
             {
-                meshList.AddRange(CreateMeshes(_globalMapData, sector, 1.0f));
+                foreach (var sector in map.Sectors.Values)
+                {
+                    meshList.AddRange(CreateMeshes(map, sector, 1.0f));
+                }
             }
 
             demo.Meshes = meshList;
@@ -619,7 +625,7 @@ namespace MapEditor
                     0, 1, 2
                 };
 
-                var image = new BitmapImage(new Uri(_globalMapData.TextureData[floorTextureId]));
+                var image = new BitmapImage(new Uri(_globalMapData.GetMaps().First().TextureData[floorTextureId]));
                 float imageWidth = image.PixelWidth / 16.0f; //grid size
 
                 Vector3 normal = Vector3.Cross(vectorsFloor[2] - vectorsFloor[1], vectorsFloor[1] - vectorsFloor[0]);
@@ -658,6 +664,7 @@ namespace MapEditor
                                   .SetScaling(4, 1, 4)
                                   .SetTextureIndex(floorTextureId)
                                   .SetMaterialIndex(0)
+                                  .WithTransformToWorld()
                                   .Build();
 
                 meshes.Add(floorMesh);
@@ -717,6 +724,7 @@ namespace MapEditor
                                     .SetScaling(4, 1, 4)
                                     .SetTextureIndex(ceilingTextureId)
                                     .SetMaterialIndex(0)
+                                    .WithTransformToWorld()
                                     .Build();
 
                 meshes.Add(ceilingMesh);
@@ -763,14 +771,14 @@ namespace MapEditor
 
             float maxTX;
 
-            var image = new BitmapImage(new Uri(_globalMapData.TextureData[lineSegment.TextureId]));
+            var image = new BitmapImage(new Uri(_globalMapData.GetMaps().First().TextureData[lineSegment.TextureId]));
             float imageWidth = image.PixelWidth / 8.0f; //grid size
 
-            if (start.X == end.X)
+            if (Math.Abs(start.X - end.X) < EPSILON)
             {
                 maxTX = (float)Math.Round(Math.Abs(end.Y - start.Y) / imageWidth);
             }
-            else if (start.Y == end.Y)
+            else if (Math.Abs(start.Y - end.Y) < EPSILON)
             {
                 maxTX = (float)Math.Round(Math.Abs(end.X - start.X) / imageWidth);
             }
@@ -782,7 +790,7 @@ namespace MapEditor
                 maxTX = (float)Math.Round(Math.Sqrt((sideA * sideA) + (sideB * sideB)) / imageWidth);
             }
 
-            if (maxTX == 0)
+            if (maxTX < EPSILON)
             {
                 maxTX = 1.0f;
             }
@@ -859,6 +867,7 @@ namespace MapEditor
                             .SetTextureIndex(lineSegment.TextureId)
                             .SetMaterialIndex(0)
                             .SetScaling(4, 1, 4)
+                            .WithTransformToWorld()
                             .Build();
 
             return roomMesh;
@@ -882,9 +891,12 @@ namespace MapEditor
 
                 var meshList = new List<Mesh>();
 
-                foreach (var sector in _globalMapData.Sectors.Values)
+                foreach (var map in _globalMapData.GetMaps())
                 {
-                    meshList.AddRange(CreateMeshes(_globalMapData, sector, 1.0f));
+                    foreach (var sector in map.Sectors.Values)
+                    {
+                        meshList.AddRange(CreateMeshes(map, sector, 1.0f));
+                    }
                 }
 
                 demo.Meshes = meshList;

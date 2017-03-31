@@ -9,11 +9,11 @@ namespace DungeonHack
 {
     public class MeshRenderer
     {
-        private MaterialDictionary _materialDictionary;
-        private TextureDictionary _textureDictionary;
-        private DeviceContext _deviceContext;
-        private Camera _camera;
-        private IShader _shader;
+        private readonly MaterialDictionary _materialDictionary;
+        private readonly TextureDictionary _textureDictionary;
+        private readonly DeviceContext _deviceContext;
+        private readonly Camera _camera;
+        private readonly IShader _shader;
 
         public MeshRenderer(MaterialDictionary materialDictionary, 
                             TextureDictionary textureDictionary,
@@ -28,7 +28,7 @@ namespace DungeonHack
             _shader = shader;
         }
 
-        public virtual void Render(Frustrum frustrum, Mesh mesh, ref int meshRenderedCount)
+        public void Render(Frustrum frustrum, Mesh mesh, ref int meshRenderedCount)
         {
             //Frustrum culling.
             if (ConfigManager.FrustrumCullingEnabled &&

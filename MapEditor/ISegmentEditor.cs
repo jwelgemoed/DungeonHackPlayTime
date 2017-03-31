@@ -1,4 +1,5 @@
 ﻿using FunAndGamesWithSlimDX.Entities;
+using GameData;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -14,7 +15,7 @@ namespace MapEditor
 
         void EditAction(Point startPoint, float currentScale);
 
-        void EditAction(Point startPoint, float currentScale, GameData.MapData mapData);
+        void EditAction(Point startPoint, float currentScale, GlobalMapData mapData);
 
         List<Tuple<Shape, Mesh>> GetMeshList();
 

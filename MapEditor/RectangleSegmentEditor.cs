@@ -237,6 +237,7 @@ namespace MapEditor
                                 .SetModel(model)
                                 .SetPosition(startX * scaleFactor, 0.0f, startY * scaleFactor)
                                 .SetScaling(1, 1, 1)
+                                .WithTransformToWorld()
                                 .Build();
 
                 _meshList.Add(roomMesh);
@@ -460,7 +461,7 @@ namespace MapEditor
             throw new NotImplementedException();
         }
 
-        public void EditAction(Point startPoint, float currentScale, MapData mapData)
+        public void EditAction(Point startPoint, float currentScale, GlobalMapData mapData)
         {
             throw new NotImplementedException();
         }

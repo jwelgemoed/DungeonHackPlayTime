@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-C:\projects\Projects\Fun\FunAndGamesWithSlimDX\MapEditor\obj\Release\
+C:\git\DungeonHackPlayTime\MapEditor\obj\Release\
 MapEditor
 none
 false
 TRACE
-C:\projects\Projects\Fun\FunAndGamesWithSlimDX\MapEditor\App.xaml
+C:\git\DungeonHackPlayTime\MapEditor\App.xaml
 3-861058503
 
 27-1648388389
-18479178860
+19765804779
 RoomEditWindow.xaml;MainWindow.xaml;MapEditorWindow.xaml;
 
 True

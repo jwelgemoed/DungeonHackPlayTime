@@ -5,6 +5,7 @@ using SlimDX;
 using SlimDX.Direct3D11;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace DungeonHack.Builders
 {
@@ -13,6 +14,7 @@ namespace DungeonHack.Builders
         private Mesh _mesh;
         private readonly Device _device;
         private readonly IShader _shader;
+        private bool _withTransformToWorld;
 
         public MeshBuilder(Device device, IShader shader)
         {
@@ -30,7 +32,10 @@ namespace DungeonHack.Builders
         public Mesh Build()
         {
             LoadVectorsFromModel(null, null);
-            TransformToWorld();
+            if (_withTransformToWorld)
+            {
+                TransformToWorld();
+            }
             _mesh.VertexBuffer = GetVertexBuffer();
             _mesh.IndexBuffer = GetIndexBuffer();
             return _mesh;
@@ -90,6 +95,12 @@ namespace DungeonHack.Builders
             return this;
         }
 
+        public MeshBuilder SetVertexData(Vertex[] vertexData)
+        {
+            _mesh.VertexData = vertexData;
+            return this;
+        }
+        
         public MeshBuilder CreateFromModel(string fileName)
         {
             if (string.IsNullOrEmpty(fileName))
@@ -136,6 +147,13 @@ namespace DungeonHack.Builders
             }
 
             LoadVectorsFromModel(null, null);
+
+            return this;
+        }
+
+        public MeshBuilder WithTransformToWorld()
+        {
+            _withTransformToWorld = true;
 
             return this;
         }
@@ -195,19 +213,14 @@ namespace DungeonHack.Builders
 
         private void LoadVectorsFromModel(Model[] model, short[] indexes)
         {
-            if (model != null)
+            if (_mesh.VertexData != null)
             {
-                _mesh.Model = new Model[model.Length];
-                model.CopyTo(_mesh.Model, 0);
+                SetIndexAndBoundingBoxDataFromVertexData();
+                return;
             }
 
             _mesh.VertexData = new Vertex[_mesh.Model.Length];
-
-            if (indexes == null)
-                _mesh.IndexData = new short[_mesh.Model.Length];
-            else
-                _mesh.IndexData = new short[indexes.Length];
-
+            _mesh.IndexData = new short[_mesh.Model.Length];
             Vector3[] positions = new Vector3[_mesh.VertexData.Length];
 
             for (int i = 0; i < _mesh.Model.Length; i++)
@@ -225,18 +238,25 @@ namespace DungeonHack.Builders
                     _mesh.IndexData[i] = (short)i;
             }
 
-            if (indexes != null)
-            {
-                for (int i = 0; i < indexes.Length; i++)
-                {
-                    _mesh.IndexData[i] = (short)indexes[i];
-                }
-            }
-
-            _mesh.MeshRenderPrimitive = PrimitiveTopology.TriangleList;
-
             _mesh.BoundingBox = BoundingBox.FromPoints(positions);
         }
 
+        private void SetIndexAndBoundingBoxDataFromVertexData()
+        {
+            if (_mesh.VertexData == null)
+                return;
+
+            var positions = _mesh.VertexData
+                            .Select(x => new Vector3(x.Position.X, x.Position.Y, x.Position.Z));
+
+            _mesh.BoundingBox = BoundingBox.FromPoints(positions.ToArray());
+
+            _mesh.IndexData = new short[_mesh.VertexData.Length];
+
+            for (short i=0; i< _mesh.IndexData.Length; i++)
+            {
+                _mesh.IndexData[i] = i;
+            }
+        }
     }
 }

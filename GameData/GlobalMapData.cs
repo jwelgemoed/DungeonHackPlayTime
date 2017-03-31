@@ -4,21 +4,16 @@ namespace GameData
 {
     public class GlobalMapData
     {
-        private readonly List<MapData> _data;
-        
-        public GlobalMapData()
+        private readonly IList<MapData> _maps = new List<MapData>();
+
+        public void AddMap(MapData map)
         {
-            _data = new List<GameData.MapData>();
+            _maps.Add(map);
         }
 
-        public void AddMapData(MapData mapData)
+        public IEnumerable<MapData> GetMaps()
         {
-            _data.Add(mapData);
-        }
-
-        public IEnumerable<MapData> GetMapData()
-        {
-            return _data;
+            return _maps;
         }
     }
 }

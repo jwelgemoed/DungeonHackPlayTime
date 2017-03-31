@@ -37,7 +37,7 @@ namespace MapEditor
             _roomLines = roomLineSegments;
         }
 
-        public void EditAction(Point startPoint, float currentScale, MapData globalMapData)
+        public void EditAction(Point startPoint, float currentScale, GlobalMapData globalMapData)
         {
             _mapData.UpdateStartPosition(new GameData.Vertex()
             {
@@ -45,7 +45,7 @@ namespace MapEditor
                 Y = (float)startPoint.Y
             });
 
-            globalMapData.AddMapData(_mapData);
+            globalMapData.AddMap(_mapData);
 
             _lineSegmentList.Clear();
             _tempLineList.Clear();
@@ -131,6 +131,7 @@ namespace MapEditor
             _mapData = new MapData();
 
             var mapSaver = new MapSaver(_mapData);
+            GameData.LineSegment.Count = 0;
 
             mapSaver.LoadData(System.IO.Path.Combine(ConfigurationManager.AppSettings["BaseSavePath"], fileName));
 
@@ -155,6 +156,7 @@ namespace MapEditor
             _mapData = new MapData();
 
             var mapSaver = new MapSaver(_mapData);
+            GameData.LineSegment.Count = 0;
 
             mapSaver.LoadData(System.IO.Path.Combine(ConfigurationManager.AppSettings["BaseSavePath"], fileName));
 

@@ -58,7 +58,7 @@ namespace MapEditor
             }
 
             Model[] model = new Model[6];
-            Vector3[] vectors = new Vector3[4];
+            FunAndGamesWithSlimDX.Entities.Vertex[] vertexes = new FunAndGamesWithSlimDX.Entities.Vertex[4];
 
             float left = (float)Canvas.GetLeft(rect);
             float top = (float)Canvas.GetTop(rect);
@@ -69,78 +69,87 @@ namespace MapEditor
             float y1 = top;
             float y2 = top + height;
 
-            vectors[0].X = ((x1 * scaleFactor) - _midWidth);
-            vectors[0].Y = 0.0f;
-            vectors[0].Z = _midHeight - (y1 * scaleFactor);
+            vertexes[0].Position.X = ((x1 * scaleFactor) - _midWidth);
+            vertexes[0].Position.Y = 0.0f;
+            vertexes[0].Position.Z = _midHeight - (y1 * scaleFactor);
+            vertexes[0].Position.W = 1.0f;
 
-            vectors[1].X = ((x2 * scaleFactor) - _midWidth);
-            vectors[1].Y = 0.0f;
-            vectors[1].Z = _midHeight - (y1 * scaleFactor);
+            vertexes[1].Position.X = ((x2 * scaleFactor) - _midWidth);
+            vertexes[1].Position.Y = 0.0f;
+            vertexes[1].Position.Z = _midHeight - (y1 * scaleFactor);
+            vertexes[1].Position.W = 1.0f;
 
-            vectors[2].X = ((x2 * scaleFactor) - _midWidth);
-            vectors[2].Y = 0.0f;
-            vectors[2].Z = _midHeight - (y2 * scaleFactor);
+            vertexes[2].Position.X = ((x2 * scaleFactor) - _midWidth);
+            vertexes[2].Position.Y = 0.0f;
+            vertexes[2].Position.Z = _midHeight - (y2 * scaleFactor);
+            vertexes[2].Position.W = 1.0f;
 
-            vectors[3].X = ((x1 * scaleFactor) - _midWidth);
-            vectors[3].Y = 0.0f;
-            vectors[3].Z = _midHeight - (y2 * scaleFactor);
+            vertexes[3].Position.X = ((x1 * scaleFactor) - _midWidth);
+            vertexes[3].Position.Y = 0.0f;
+            vertexes[3].Position.Z = _midHeight - (y2 * scaleFactor);
+            vertexes[3].Position.W = 1.0f;
 
             //Indexes for the above square
             short[] faceIndex = new short[6] {
                 0, 1, 2, 0, 2, 3
             };
 
-            Vector3 normal = Vector3.Cross(vectors[0], vectors[1]);
+            Vector3 normal = Vector3.Cross(new Vector3(vertexes[0].Position.X, vertexes[0].Position.Y, vertexes[0].Position.Z)
+                , new Vector3(vertexes[1].Position.X, vertexes[1].Position.Y, vertexes[1].Position.Z));
+
             normal = Vector3.Normalize(normal);
 
-            model[0].x = vectors[0].X;
-            model[0].y = vectors[0].Y;
-            model[0].z = vectors[0].Z;
+            FunAndGamesWithSlimDX.Entities.Vertex vertex = new FunAndGamesWithSlimDX.Entities.Vertex();
+
+            model[0].x = vertexes[0].Position.X;
+            model[0].y = vertexes[0].Position.Y;
+            model[0].z = vertexes[0].Position.Z;
             model[0].nx = normal.X;
             model[0].ny = normal.Y;
             model[0].nz = normal.Z;
             model[0].tx = 0.0f;
             model[0].ty = 0.0f;
 
-            model[1].x = vectors[1].X;
-            model[1].y = vectors[1].Y;
-            model[1].z = vectors[1].Z;
+            model[1].x = vertexes[1].Position.X;
+            model[1].y = vertexes[1].Position.Y;
+            model[1].z = vertexes[1].Position.Z;
             model[1].nx = normal.X;
             model[1].ny = normal.Y;
             model[1].nz = normal.Z;
-            model[1].tx = vectors[1].X / 64;//4.0f; length divided by texture width
+            model[1].tx = vertexes[1].Position.X / 64;//4.0f; length divided by texture width
             model[1].ty = 0.0f;
 
-            model[2].x = vectors[2].X;
-            model[2].y = vectors[2].Y;
-            model[2].z = vectors[2].Z;
+            model[2].x = vertexes[2].Position.X;
+            model[2].y = vertexes[2].Position.Y;
+            model[2].z = vertexes[2].Position.Z;
             model[2].nx = normal.X;
             model[2].ny = normal.Y;
             model[2].nz = normal.Z;
-            model[2].tx = vectors[2].X / 64;//4.0f;
+            model[2].tx = vertexes[2].Position.X / 64;//4.0f;
             model[2].ty = 1.0f;
 
-            model[3].x = vectors[0].X;
-            model[3].y = vectors[0].Y;
-            model[3].z = vectors[0].Z;
+            model[3].x = vertexes[0].Position.X;
+            model[3].y = vertexes[0].Position.Y;
+            model[3].z = vertexes[0].Position.Z;
+
             model[3].nx = normal.X;
             model[3].ny = normal.Y;
             model[3].nz = normal.Z;
             model[3].tx = 0.0f;
             model[3].ty = 0.0f;
 
-            model[4].x = vectors[2].X;
-            model[4].y = vectors[2].Y;
-            model[4].z = vectors[2].Z;
+            model[4].x = vertexes[2].Position.X;
+            model[4].y = vertexes[2].Position.Y;
+            model[4].z = vertexes[2].Position.Z;
             model[4].nx = normal.X;
             model[4].ny = normal.Y;
             model[4].nz = normal.Z;
-            model[4].tx = vectors[2].X / 64;//4.0f;
+            model[4].tx = vertexes[2].Position.X / 64;//4.0f;
             model[4].ty = 1.0f;
 
-            model[5].x = vectors[3].X;
-            model[5].y = vectors[3].Y;
-            model[5].z = vectors[3].Z;
+            model[5].x = vertexes[3].Position.X;
+            model[5].y = vertexes[3].Position.Y;
+            model[5].z = vertexes[3].Position.Z;
             model[5].nx = normal.X;
             model[5].ny = normal.Y;
             model[5].nz = normal.Z;
@@ -153,6 +162,7 @@ namespace MapEditor
                             .SetPosition((float)startPoint.X * scaleFactor, 0.0f, (float)startPoint.Y * scaleFactor)
                             .SetScaling(1, 1, 1)
                             .SetModel(model)
+                            .WithTransformToWorld()
                             .Build();
 
             _meshList.Add(new Tuple<Shape, Mesh>(rect, roomMesh));
@@ -213,7 +223,7 @@ namespace MapEditor
             throw new NotImplementedException();
         }
 
-        public void EditAction(Point startPoint, float currentScale, MapData mapData)
+        public void EditAction(Point startPoint, float currentScale, GlobalMapData mapData)
         {
             throw new NotImplementedException();
         }

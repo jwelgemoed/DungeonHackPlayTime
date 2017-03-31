@@ -33,7 +33,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="ResourcePath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">C:\git\DungeonHackPlayTime\DungeonHackPlayTime\MapEditor\bin\Debug\</Value>
+      <Value Profile="(Default)">C:\git\DungeonHackPlayTime\DungeonHackPlayTime\MapEditor\bin\Debug</Value>
     </Setting>
     <Setting Name="WallClip" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">True</Value>

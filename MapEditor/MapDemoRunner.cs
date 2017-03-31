@@ -120,11 +120,6 @@ namespace MapEditor
         {
             if (node.IsLeaf)
             {
-                /*foreach (var mesh in node.ConvexPolygonSet)
-                {
-                    mesh.Render(_frustrum, Renderer.Context, Camera, ref _meshRenderedCount);
-                }*/
-
                 return;
             }
 

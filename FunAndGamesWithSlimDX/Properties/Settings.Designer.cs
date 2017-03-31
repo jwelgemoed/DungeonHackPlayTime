@@ -115,7 +115,7 @@ namespace DungeonHack.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\git\\DungeonHackPlayTime\\DungeonHackPlayTime\\MapEditor\\bin\\Debug\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\git\\DungeonHackPlayTime\\MapEditor\\bin\\Debug")]
         public string ResourcePath {
             get {
                 return ((string)(this["ResourcePath"]));

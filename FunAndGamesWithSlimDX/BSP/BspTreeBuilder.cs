@@ -75,8 +75,10 @@ namespace DungeonHack.BSP
 
             currentNode.Splitter = SelectBestSplitter(meshList);
 
-            foreach (var testMesh in meshList)
+            for (int i=0; i<meshList.Count;i++)
             {
+                var testMesh = meshList[i];
+
                 if (testMesh == currentNode.Splitter)
                     continue;
 
@@ -91,25 +93,25 @@ namespace DungeonHack.BSP
                     case PolygonClassification.Spanning:
                         frontList.Add(testMesh);
                         backList.Add(testMesh);
-                   /*      SplitMesh(testMesh, currentNode.Splitter, out frontSplit, out backSplit);
+                       /* SplitMesh(testMesh, currentNode.Splitter, out frontSplit, out backSplit);
 
                         if (frontSplit != null)
                         {
                             frontList.Add(frontSplit);
-                            //meshList.Insert(meshList.IndexOf(testMesh), frontSplit);
+                            meshList.Insert(meshList.IndexOf(testMesh), frontSplit);
                         }
 
                         if (backSplit != null)
                         {
                             backList.Add(backSplit);
-                           // meshList.Insert(meshList.IndexOf(testMesh), backSplit);
+                            meshList.Insert(meshList.IndexOf(testMesh), backSplit);
                         }
 
                         if (frontSplit != null || backSplit != null)
                         {
-                            //meshList.Remove(testMesh);
-                        }
-                     */   
+                            meshList.Remove(testMesh);
+                        }*/
+                      
                         break;
                     default:
                         break;
@@ -155,19 +157,20 @@ namespace DungeonHack.BSP
 
         private void SplitMesh(Mesh testMesh, Mesh splitter, out Mesh frontSplit, out Mesh backSplit)
         {
-            List<Model> frontList = new List<Model>();
-            List<Model> backList = new List<Model>();
-            Model firstModel, pointA, pointB;
-            Vector3 planeNormal, intersectPoint, pointOnPlane;
+            List<Vertex> frontList = new List<Vertex>();
+            List<Vertex> backList = new List<Vertex>();
+            Vertex firstModel, pointA, pointB;
+            Vector3 planeNormal, intersectPoint;
+            Vertex pointOnPlane;
             int frontcounter, backcounter, loop, currentVertex;
             float percent;
 
-            pointOnPlane = new Vector3(splitter.Model[0].x, splitter.Model[0].y, splitter.Model[0].z);
+            pointOnPlane = splitter.VertexData[0];
 
-            firstModel = testMesh.Model[0];
+            firstModel = testMesh.VertexData[0];
 
             switch (_pointClassifier.ClassifyPoint(
-                    new Vector3(firstModel.x, firstModel.y, firstModel.z), 
+                    new Vector3(firstModel.Position.X, firstModel.Position.Y, firstModel.Position.Z), 
                     splitter))
             {
                 case PointClassification.Front:
@@ -184,9 +187,9 @@ namespace DungeonHack.BSP
                     break;
             }
 
-            for (int i=1; i<testMesh.Model.Length+1; i++)
+            for (int i=1; i<testMesh.VertexData.Length+1; i++)
             {
-                if (i == testMesh.Model.Length)
+                if (i == testMesh.VertexData.Length)
                 {
                     currentVertex = 0;
                 }
@@ -195,41 +198,37 @@ namespace DungeonHack.BSP
                     currentVertex = i;
                 }
 
-                pointA = testMesh.Model[i - 1];
-                pointB = testMesh.Model[currentVertex];
+                pointA = testMesh.VertexData[i - 1];
+                pointB = testMesh.VertexData[currentVertex];
 
-                planeNormal = new Vector3(splitter.Model[0].nx, splitter.Model[0].ny, splitter.Model[0].nz);
+                planeNormal = splitter.VertexData[0].Normal;
 
-                var pointClassification = _pointClassifier.ClassifyPoint(new Vector3(pointB.x, pointB.y, pointB.z), splitter);
+                var pointClassification = _pointClassifier.ClassifyPoint(
+                    new Vector3(pointB.Position.X, pointB.Position.Y, pointB.Position.Z), splitter);
 
                 if (pointClassification == PointClassification.OnPlane)
                 {
-                    backList.Add(testMesh.Model[currentVertex]);
-                    frontList.Add(testMesh.Model[currentVertex]);
+                    backList.Add(testMesh.VertexData[currentVertex]);
+                    frontList.Add(testMesh.VertexData[currentVertex]);
                 }
                 else
                 {
-                    if (GetIntersect(new Vector3(pointA.x, pointA.y, pointA.z),
-                                     new Vector3(pointB.x, pointB.y, pointB.z),
-                                     pointOnPlane,
+                    if (GetIntersect(new Vector3(pointA.Position.X, pointA.Position.Y, pointA.Position.Z),
+                                     new Vector3(pointB.Position.X, pointB.Position.Y, pointB.Position.Z),
+                                     new Vector3(pointOnPlane.Position.X, pointOnPlane.Position.Y, pointOnPlane.Position.Z),
                                      planeNormal,
                                      out intersectPoint,
                                      out percent))
                     {
                         float deltax, deltay, texx, texy;
-                        deltax = testMesh.Model[currentVertex].tx - testMesh.Model[i - 1].tx;
-                        deltay = testMesh.Model[currentVertex].ty - testMesh.Model[i - 1].ty;
-                        texx = testMesh.Model[i - 1].tx + (deltax * percent);
-                        texy = testMesh.Model[i - 1].ty + (deltay * percent);
-                        Model copy = new Model();
-                        copy.x = intersectPoint.X;
-                        copy.y = intersectPoint.Y;
-                        copy.z = intersectPoint.Z;
-                        copy.tx = texx;
-                        copy.ty = texy;
-                        copy.nx = planeNormal.X;
-                        copy.ny = planeNormal.Y;
-                        copy.nz = planeNormal.Z;
+                        deltax = testMesh.VertexData[currentVertex].Texture.X - testMesh.VertexData[i - 1].Texture.X;
+                        deltay = testMesh.VertexData[currentVertex].Texture.Y - testMesh.VertexData[i - 1].Texture.Y;
+                        texx = testMesh.VertexData[i - 1].Texture.X + (deltax * percent);
+                        texy = testMesh.VertexData[i - 1].Texture.Y + (deltay * percent);
+                        Vertex copy = new Vertex();
+                        copy.Position = new Vector4(intersectPoint.X, intersectPoint.Y, intersectPoint.Z, 1.0f);
+                        copy.Texture = new Vector2(texx, texy);
+                        copy.Normal = new Vector3(planeNormal.X, planeNormal.Y, planeNormal.Z);
 
                         if (pointClassification == PointClassification.Front)
                         {
@@ -238,7 +237,7 @@ namespace DungeonHack.BSP
 
                             if (currentVertex != 0)
                             {
-                                frontList.Add(testMesh.Model[currentVertex]);
+                                frontList.Add(testMesh.VertexData[currentVertex]);
                             }
                         }
                         else if (pointClassification == PointClassification.Back)
@@ -248,7 +247,7 @@ namespace DungeonHack.BSP
 
                             if (currentVertex != 0)
                             {
-                                backList.Add(testMesh.Model[currentVertex]);
+                                backList.Add(testMesh.VertexData[currentVertex]);
                             }
                         }
                     }
@@ -257,14 +256,14 @@ namespace DungeonHack.BSP
                     {
                         if (currentVertex != 0)
                         {
-                            frontList.Add(testMesh.Model[currentVertex]);
+                            frontList.Add(testMesh.VertexData[currentVertex]);
                         }
                     }
                     else if (pointClassification == PointClassification.Back)
                     {
                         if (currentVertex != 0)
                         {
-                            backList.Add(testMesh.Model[currentVertex]);
+                            backList.Add(testMesh.VertexData[currentVertex]);
                         }
                     }
                 }
@@ -277,7 +276,7 @@ namespace DungeonHack.BSP
                         .SetTranslationMatrix(testMesh.TranslationMatrix)
                         .SetRotationMatrix(testMesh.RotationMatrix)
                         .SetScaleMatrix(testMesh.ScaleMatrix)
-                        .SetModel(frontList.ToArray())
+                        .SetVertexData(frontList.ToArray())
                         .SetTextureIndex(testMesh.TextureIndex)
                         .SetMaterialIndex(testMesh.MaterialIndex)
                         .Build();
@@ -287,7 +286,7 @@ namespace DungeonHack.BSP
                         .SetTranslationMatrix(testMesh.TranslationMatrix)
                         .SetRotationMatrix(testMesh.RotationMatrix)
                         .SetScaleMatrix(testMesh.ScaleMatrix)
-                        .SetModel(backList.ToArray())
+                        .SetVertexData(backList.ToArray())
                         .SetTextureIndex(testMesh.TextureIndex)
                         .SetMaterialIndex(testMesh.MaterialIndex)
                         .Build();

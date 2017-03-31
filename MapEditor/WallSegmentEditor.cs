@@ -1,5 +1,4 @@
 ﻿using SlimDX;
-using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,23 +10,12 @@ using System;
 using SlimDX.Direct3D11;
 using System.Windows.Input;
 using FunAndGamesWithSlimDX.DirectX;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
-using System.Windows.Markup;
-using System.Xml;
 using System.Configuration;
 using GameData;
 using DungeonHack.Builders;
 
 namespace MapEditor
 {
-    public class WallSegment
-    {
-        private List<Mesh> _meshList;
-
-
-    }
-
     public class LineDef
     {
         public Line Line { get; set; }
@@ -371,6 +359,7 @@ namespace MapEditor
                             .SetPosition((float)startPoint.X * scaleFactor, 0.0f, (float)startPoint.Y * scaleFactor)
                             .SetModel(model)
                             .SetScaling(1, 1, 1)
+                            .WithTransformToWorld()
                             .Build();
             meshList.Add(new Tuple<Shape, Mesh>(line, roomMesh));
 
@@ -461,7 +450,7 @@ namespace MapEditor
             throw new NotImplementedException();
         }
 
-        public void EditAction(Point startPoint, float currentScale, MapData mapData)
+        public void EditAction(Point startPoint, float currentScale, GlobalMapData mapData)
         {
             throw new NotImplementedException();
         }

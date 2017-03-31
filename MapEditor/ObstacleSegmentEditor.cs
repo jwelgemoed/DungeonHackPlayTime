@@ -233,6 +233,7 @@ namespace MapEditor
                                 .SetModel(model)
                                 .SetPosition((float)startPoint.X * scaleFactor, 0.0f, (float)startPoint.Y * scaleFactor)
                                 .SetScaling(1, 1, 1)
+                                .WithTransformToWorld()
                                 .Build();
 
                 _meshList.Add(new Tuple<Shape, Mesh>(rect, roomMesh));
@@ -294,7 +295,7 @@ namespace MapEditor
             throw new NotImplementedException();
         }
 
-        public void EditAction(Point startPoint, float currentScale, MapData mapData)
+        public void EditAction(Point startPoint, float currentScale, GlobalMapData mapData)
         {
             throw new NotImplementedException();
         }

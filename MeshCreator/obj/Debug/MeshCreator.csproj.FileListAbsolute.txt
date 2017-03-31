@@ -14,3 +14,11 @@ C:\temp\DungeonHackPlayTime-master\MeshCreator\bin\Debug\SlimDX.pdb
 C:\temp\DungeonHackPlayTime-master\MeshCreator\bin\Debug\SlimDX.xml
 C:\temp\DungeonHackPlayTime-master\MeshCreator\obj\Debug\MeshCreator.exe
 C:\temp\DungeonHackPlayTime-master\MeshCreator\obj\Debug\MeshCreator.pdb
+C:\git\DungeonHackPlayTime\MeshCreator\bin\Debug\MeshCreator.exe.config
+C:\git\DungeonHackPlayTime\MeshCreator\bin\Debug\MeshCreator.exe
+C:\git\DungeonHackPlayTime\MeshCreator\bin\Debug\MeshCreator.pdb
+C:\git\DungeonHackPlayTime\MeshCreator\bin\Debug\SlimDX.dll
+C:\git\DungeonHackPlayTime\MeshCreator\bin\Debug\SlimDX.pdb
+C:\git\DungeonHackPlayTime\MeshCreator\bin\Debug\SlimDX.xml
+C:\git\DungeonHackPlayTime\MeshCreator\obj\Debug\MeshCreator.exe
+C:\git\DungeonHackPlayTime\MeshCreator\obj\Debug\MeshCreator.pdb

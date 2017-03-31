@@ -459,6 +459,7 @@ namespace MapEditor
                            .SetPosition((float)startPoint.X * scaleFactor, 0.0f, (float)startPoint.Y * scaleFactor)
                            .SetModel(model)
                            .SetScaling(1, 1, 1)
+                           .WithTransformToWorld()
                            .Build();
 
             meshList.Add(new Tuple<Shape, Mesh>(line, roomMesh));
@@ -588,6 +589,7 @@ namespace MapEditor
                             .SetModel(model)
                             .SetScaling(1, 1, 1)
                             .SetTextureIndex(lineSeg.TextureId)
+                            .WithTransformToWorld()
                             .Build();
 
             return roomMesh;
