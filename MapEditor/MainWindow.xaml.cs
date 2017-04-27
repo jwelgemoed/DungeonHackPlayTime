@@ -31,9 +31,7 @@ namespace MapEditor
     {
         private Point startPoint;
         private bool _editState = false;
-        private List<Mesh> areaList = new List<Mesh>();
         private List<Line> gridLines = new List<Line>();
-        private List<System.Windows.Shapes.Polygon> areasList = new List<System.Windows.Shapes.Polygon>();
         private MapDemoRunner demo;
         private int _gridSize = 8;
         private bool _snapToGrid = true;
@@ -47,39 +45,23 @@ namespace MapEditor
         private float _midHeight;
         private Point _currentMousePosition;
         private GridPlayer _playerStart;
-        private Mesh _selectedMesh;
         private bool _activeEdit = false;
         private WallSegmentEditor _wallSegmentEditor;
         private FloorSegmentEditor _floorSegmentEditor;
         private RectangleSegmentEditor _rectangleSegmentEditor;
         private ObstacleSegmentEditor _obstacleSegmentEditor;
         private ISegmentEditor _currentEditor;
-        private RectangleSegment _selectedRectangleSegment;
         private RoomSegmentEditor _roomSegmentEditor;
         private RotateTransform _rotateTransform;
         private GlobalMapData _globalMapData;
 
         private ILog _logger = LogManager.GetLogger("application-logger");
 
-        private Shape _selectedShape;
-
         public List<Line> SelectedRoom { get; set; }
 
         private const float EPSILON = 0.0001f;
 
-        public RectangleSegment SelectedRectangleSegment {
-            get
-            {
-                return _selectedRectangleSegment;
-            }
-            set
-            {
-                if (value != _selectedRectangleSegment)
-                {
-                    _selectedRectangleSegment = value;
-                }
-            }
-        }
+        public RectangleSegment SelectedRectangleSegment { get; set; }
 
         public MainWindow()
         {
@@ -110,7 +92,7 @@ namespace MapEditor
 
                 _globalMapData = new GlobalMapData();
 
-                this.KeyDown += canvasXZ_PreviewKeyDown;
+                KeyDown += canvasXZ_PreviewKeyDown;
             }
             catch (Exception ex)
             {
@@ -189,7 +171,7 @@ namespace MapEditor
             demo.Meshes = meshList;
 
             if (_playerStart != null)
-                demo.SetStartingPosition(_playerStart.TranslateToRealSpace(4, (float) canvasXZ.Width / 2, (float) canvasXZ.Height / 2));
+                demo.SetStartingPosition(_playerStart.TranslateToRealSpace(1, (float) canvasXZ.Width / 2, (float) canvasXZ.Height / 2));
 
             BspTreeBuilder bspTreeBuilder = new BspTreeBuilder(demo.Device, demo.GetShader);
             BspBoundingVolumeCalculator bspBoudingVolumeCalculator = new BspBoundingVolumeCalculator();

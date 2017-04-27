@@ -94,33 +94,6 @@ namespace FunAndGamesWithSlimDX.Engine
                 return _projectionMatrix.Value;
             }
         }
-
-        public Matrix WorldMatrix
-        {
-            get
-            {
-                if (!_worldMatrix.HasValue)
-                {
-                    _worldMatrix = Matrix.Identity;
-                }
-
-                return _worldMatrix.Value;
-            }
-        }
-
-        public Matrix OrthoMatrix
-        {
-            get
-            {
-                if (!_orthMatrix.HasValue)
-                {
-                    _orthMatrix = Matrix.OrthoLH(Renderer.Width, Renderer.Height, Renderer.ScreenNear, Renderer.ScreenFar);
-                }
-
-                return _orthMatrix.Value;
-            }
-        }
-
         public Camera()
         {
             _up = new Vector3(0, 1, 0);
@@ -517,10 +490,6 @@ namespace FunAndGamesWithSlimDX.Engine
 
         public void Render()
         {
-            //Rotate(RelativeX, RelativeY);
-            //Move(CurrentMoveState);
-
-            //Update boundingbox sphere of camera;
             CameraSphere = BoundingSphere.FromPoints(new Vector3[] { _eyeAt });
 
             CameraSphere.Radius = 5.0f;

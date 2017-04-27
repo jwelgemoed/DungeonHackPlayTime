@@ -30,8 +30,6 @@ namespace MapEditor
 
         private int _nodesVisited = 0;
 
-        private Stopwatch _stopwatch = new Stopwatch();
-
         public MapDemoRunner() : base(8.0f, true)
         {
             _pointClassifier = new PointClassifier();

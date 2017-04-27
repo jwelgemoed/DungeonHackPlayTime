@@ -86,16 +86,17 @@ namespace FunAndGamesWithSlimDX.Engine
             }
             else if (e.KeyCode == Keys.F)
             {
+                _flashLightOn = !_flashLightOn;
+
                 if (_flashLightOn)
                 {
-                    _flashLightOn = false;
                     Shader.SetSelectedShaderEffect(Renderer.Device, "NoSpotSpotLightTech");
                 }
                 else
                 {
-                    _flashLightOn = true;
                     Shader.SetSelectedShaderEffect(Renderer.Device, "LightTech");
                 }
+                
             }
             else if (e.KeyCode == Keys.CapsLock)
             {

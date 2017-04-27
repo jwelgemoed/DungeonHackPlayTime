@@ -93,7 +93,7 @@ namespace DungeonHack.BSP
                     case PolygonClassification.Spanning:
                         frontList.Add(testMesh);
                         backList.Add(testMesh);
-                       /* SplitMesh(testMesh, currentNode.Splitter, out frontSplit, out backSplit);
+                        SplitMesh(testMesh, currentNode.Splitter, out frontSplit, out backSplit);
 
                         if (frontSplit != null)
                         {
@@ -110,7 +110,7 @@ namespace DungeonHack.BSP
                         if (frontSplit != null || backSplit != null)
                         {
                             meshList.Remove(testMesh);
-                        }*/
+                        }
                       
                         break;
                     default:
@@ -335,15 +335,15 @@ namespace DungeonHack.BSP
 
             foreach (var splitter in meshList)
             {
-                long score = 0;
-                long splits = 0;
-                long backfaces = 0;
-                long frontfaces = 0;
-
                 foreach (var mesh in meshList)
                 {
                     if (mesh == splitter)
                         continue;
+
+                    long score = 0;
+                    long splits = 0;
+                    long backfaces = 0;
+                    long frontfaces = 0;
 
                     var polyClassification = _polyClassifier.ClassifyPolygon(splitter, mesh);
 
