@@ -91,8 +91,6 @@ namespace DungeonHack.BSP
                         backList.Add(testMesh);
                         break;
                     case PolygonClassification.Spanning:
-                        frontList.Add(testMesh);
-                        backList.Add(testMesh);
                         SplitMesh(testMesh, currentNode.Splitter, out frontSplit, out backSplit);
 
                         if (frontSplit != null)
@@ -124,7 +122,6 @@ namespace DungeonHack.BSP
                 leafNode.IsLeaf = true;
                 leafNode.IsSolid = false;
                 leafNode.Parent = currentNode;
-                leafNode.ConvexPolygonSet = meshList;
                 currentNode.Front = leafNode;
             }
             else
@@ -142,7 +139,6 @@ namespace DungeonHack.BSP
                 leafNode.IsLeaf = true;
                 leafNode.IsSolid = true;
                 leafNode.Parent = currentNode;
-                leafNode.ConvexPolygonSet = meshList;
                 currentNode.Back = leafNode;
             }
             else
@@ -155,33 +151,33 @@ namespace DungeonHack.BSP
             }
         }
 
-        private void SplitMesh(Mesh testMesh, Mesh splitter, out Mesh frontSplit, out Mesh backSplit)
+        private void SplitMesh(Mesh testMesh, Mesh plane, out Mesh frontSplit, out Mesh backSplit)
         {
             List<Vertex> frontList = new List<Vertex>();
             List<Vertex> backList = new List<Vertex>();
-            Vertex firstModel, pointA, pointB;
+            Vertex firstVertex, pointA, pointB;
             Vector3 planeNormal, intersectPoint;
             Vertex pointOnPlane;
             int frontcounter, backcounter, loop, currentVertex;
             float percent;
 
-            pointOnPlane = splitter.VertexData[0];
+            pointOnPlane = plane.VertexData[0];
 
-            firstModel = testMesh.VertexData[0];
+            firstVertex = testMesh.VertexData[0];
 
-            switch (_pointClassifier.ClassifyPoint(
-                    new Vector3(firstModel.Position.X, firstModel.Position.Y, firstModel.Position.Z), 
-                    splitter))
+             switch (_pointClassifier.ClassifyPoint(
+                    new Vector3(firstVertex.Position.X, firstVertex.Position.Y, firstVertex.Position.Z), 
+                    plane))
             {
                 case PointClassification.Front:
-                    frontList.Add(firstModel);
+                    frontList.Add(firstVertex);
                     break;
                 case PointClassification.Back:
-                    backList.Add(firstModel);
+                    backList.Add(firstVertex);
                     break;
                 case PointClassification.OnPlane:
-                    backList.Add(firstModel);
-                    frontList.Add(firstModel);
+                    backList.Add(firstVertex);
+                    frontList.Add(firstVertex);
                     break;
                 default:
                     break;
@@ -201,10 +197,10 @@ namespace DungeonHack.BSP
                 pointA = testMesh.VertexData[i - 1];
                 pointB = testMesh.VertexData[currentVertex];
 
-                planeNormal = splitter.VertexData[0].Normal;
+                planeNormal = plane.VertexData[0].Normal;
 
                 var pointClassification = _pointClassifier.ClassifyPoint(
-                    new Vector3(pointB.Position.X, pointB.Position.Y, pointB.Position.Z), splitter);
+                    new Vector3(pointB.Position.X, pointB.Position.Y, pointB.Position.Z), plane);
 
                 if (pointClassification == PointClassification.OnPlane)
                 {
@@ -230,7 +226,7 @@ namespace DungeonHack.BSP
                         copy.Texture = new Vector2(texx, texy);
                         copy.Normal = new Vector3(planeNormal.X, planeNormal.Y, planeNormal.Z);
 
-                        if (pointClassification == PointClassification.Front)
+                        if (pointClassification ==  PointClassification.Front)
                         {
                             backList.Add(copy);
                             frontList.Add(copy);
@@ -251,22 +247,66 @@ namespace DungeonHack.BSP
                             }
                         }
                     }
-
-                    if (pointClassification == PointClassification.Front)
+                    else
                     {
-                        if (currentVertex != 0)
+                        if (pointClassification == PointClassification.Front)
                         {
-                            frontList.Add(testMesh.VertexData[currentVertex]);
+                            if (currentVertex != 0)
+                            {
+                                frontList.Add(testMesh.VertexData[currentVertex]);
+                            }
                         }
-                    }
-                    else if (pointClassification == PointClassification.Back)
-                    {
-                        if (currentVertex != 0)
+                        else if (pointClassification == PointClassification.Back)
                         {
-                            backList.Add(testMesh.VertexData[currentVertex]);
+                            if (currentVertex != 0)
+                            {
+                                backList.Add(testMesh.VertexData[currentVertex]);
+                            }
                         }
                     }
                 }
+            }
+
+            short v0 = 0, v1 = 0, v2 = 0;
+            int numberOfFrontIndexes = (frontList.Count - 2) * 3;
+            int numberOfBackIndexes = (backList.Count - 2) * 3;
+            short[] indexListFront = new short[numberOfFrontIndexes]; 
+            short[] indexListBack = new short[numberOfBackIndexes];
+
+            for (int i = 0; i < numberOfFrontIndexes / 3; i++)
+            {
+                if (i == 0)
+                {
+                    v0 = 0;
+                    v1 = 1;
+                    v2 = 2;
+                }
+                else
+                {
+                    v1 = v2;
+                    v2++;
+                }
+                indexListFront[i * 3] = v0;
+                indexListFront[(i * 3) + 1] = v1;
+                indexListFront[(i * 3) + 2] = v2;
+            }
+
+            for (int i = 0; i < numberOfBackIndexes / 3; i++)
+            {
+                if (i == 0)
+                {
+                    v0 = 0;
+                    v1 = 1;
+                    v2 = 2;
+                }
+                else
+                {
+                    v1 = v2;
+                    v2++;
+                }
+                indexListBack[i * 3] = v0;
+                indexListBack[(i * 3) + 1] = v1;
+                indexListBack[(i * 3) + 2] = v2;
             }
 
             MeshBuilder meshBuilder = new MeshBuilder(_device, _shader);
@@ -277,6 +317,7 @@ namespace DungeonHack.BSP
                         .SetRotationMatrix(testMesh.RotationMatrix)
                         .SetScaleMatrix(testMesh.ScaleMatrix)
                         .SetVertexData(frontList.ToArray())
+                        .SetIndexData(indexListFront)
                         .SetTextureIndex(testMesh.TextureIndex)
                         .SetMaterialIndex(testMesh.MaterialIndex)
                         .Build();
@@ -287,6 +328,7 @@ namespace DungeonHack.BSP
                         .SetRotationMatrix(testMesh.RotationMatrix)
                         .SetScaleMatrix(testMesh.ScaleMatrix)
                         .SetVertexData(backList.ToArray())
+                        .SetIndexData(indexListBack)
                         .SetTextureIndex(testMesh.TextureIndex)
                         .SetMaterialIndex(testMesh.MaterialIndex)
                         .Build();

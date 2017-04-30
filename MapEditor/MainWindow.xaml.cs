@@ -561,7 +561,7 @@ namespace MapEditor
             }
 
             meshList.AddRange(CreateMesh(triangles, 0, 64.0f, sector.FloorTextureId, sector.CeilingTextureId, lowerBound, upperBound));
-
+            
             return meshList;
         }
 

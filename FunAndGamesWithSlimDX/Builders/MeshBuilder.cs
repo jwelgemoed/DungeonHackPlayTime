@@ -95,6 +95,12 @@ namespace DungeonHack.Builders
             return this;
         }
 
+        public MeshBuilder SetIndexData(short[] indexData)
+        {
+            _mesh.IndexData = indexData;
+            return this;
+        }
+
         public MeshBuilder SetVertexData(Vertex[] vertexData)
         {
             _mesh.VertexData = vertexData;
@@ -250,6 +256,11 @@ namespace DungeonHack.Builders
                             .Select(x => new Vector3(x.Position.X, x.Position.Y, x.Position.Z));
 
             _mesh.BoundingBox = BoundingBox.FromPoints(positions.ToArray());
+
+            if (_mesh.IndexData != null)
+            {
+                return;
+            }
 
             _mesh.IndexData = new short[_mesh.VertexData.Length];
 
