@@ -101,8 +101,13 @@
     <Compile Include="BSP\BspBoundingVolumeCalculator.cs" />
     <Compile Include="BSP\BspNode.cs" />
     <Compile Include="BSP\BspTreeBuilder.cs" />
+    <Compile Include="BSP\LeafBsp\Leaf.cs" />
+    <Compile Include="BSP\LeafBsp\LeafBspTreeBuilder.cs" />
+    <Compile Include="BSP\LeafBsp\Node.cs" />
     <Compile Include="BSP\PointClassifier.cs" />
     <Compile Include="BSP\PolygonClassifier.cs" />
+    <Compile Include="BSP\PolygonSplitter.cs" />
+    <Compile Include="BSP\SplitterSelector.cs" />
     <Compile Include="Builders\MeshBuilder.cs" />
     <Compile Include="DirectX\LightShader.cs" />
     <Compile Include="DirectX\Shader.cs" />
@@ -118,6 +123,7 @@
     <Compile Include="Entities\Console.cs" />
     <Compile Include="Entities\EditorEnum.cs" />
     <Compile Include="Entities\Material.cs" />
+    <Compile Include="Entities\Plane.cs" />
     <Compile Include="Entities\Sprite.cs" />
     <Compile Include="Engine\ApplicationStateEngine.cs" />
     <Compile Include="Engine\Camera.cs" />

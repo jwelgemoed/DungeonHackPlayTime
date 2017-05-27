@@ -1,10 +1,4 @@
-﻿using FunAndGamesWithSlimDX.Entities;
-using SlimDX;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SlimDX;
 
 namespace DungeonHack.BSP
 {
@@ -18,16 +12,11 @@ namespace DungeonHack.BSP
     public class PointClassifier
     {
 
-        public PointClassification ClassifyPoint(Vector3 position, Mesh plane)
+        public PointClassification ClassifyPoint(Vector3 position, Vector3 pointOnPlane, Vector3 planeNormal)
         {
             float result;
-            Vertex vertex = plane.VertexData[0];
-            Vector3 vector = new Vector3(vertex.Position.X, vertex.Position.Y, vertex.Position.Z);
-            //vector = Vector3.TransformCoordinate(vector, plane.WorldMatrix);
-            Vector3 direction = vector - position;
-            Vector3 normal = new Vector3(vertex.Normal.X, vertex.Normal.Y, vertex.Normal.Z);
-            //normal = Vector3.Normalize(Vector3.TransformCoordinate(normal, plane.WorldMatrix));
-            result = Vector3.Dot(direction, normal);
+            Vector3 direction = pointOnPlane - position;
+            result = Vector3.Dot(direction, planeNormal);
 
             if (result < -0.001)
             {

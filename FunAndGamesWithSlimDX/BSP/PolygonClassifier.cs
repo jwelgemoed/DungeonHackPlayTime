@@ -1,5 +1,6 @@
 ﻿using FunAndGamesWithSlimDX.Entities;
 using SlimDX;
+using Plane = DungeonHack.Entities.Plane;
 
 namespace DungeonHack.BSP
 {
@@ -13,18 +14,32 @@ namespace DungeonHack.BSP
 
     public class PolygonClassifier
     {
-    
-       public PolygonClassification ClassifyPolygon(Mesh plane, Mesh mesh)
+
+        public PolygonClassification ClassifyPolygon(Mesh plane, Mesh mesh)
+        {
+            return ClassifyPolygon(
+                new Plane {
+                    PointOnPlane = new Vector3(
+                                        plane.VertexData[0].Position.X, 
+                                        plane.VertexData[0].Position.Y, 
+                                        plane.VertexData[0].Position.Z),
+                    Normal = plane.Normal
+                },
+                mesh);
+        }
+        
+            
+       public PolygonClassification ClassifyPolygon(Plane plane, Mesh mesh)
         {
             int inFront = 0;
             int behind = 0;
             int onPlane = 0;
             float result;
-            Vertex vertex = plane.VertexData[0];
 
-            Vector3 vector = new Vector3(vertex.Position.X, vertex.Position.Y, vertex.Position.Z);
+            Vector3 vector = plane.PointOnPlane;
 
-            Vector3 normal = new Vector3(vertex.Normal.X, vertex.Normal.Y, vertex.Normal.Z);
+            Vector3 normal = plane.Normal;
+
             int numberOfVertices = mesh.VertexData.Length;
             foreach (var vertexMesh in mesh.VertexData)
             {

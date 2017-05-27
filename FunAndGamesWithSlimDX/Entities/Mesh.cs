@@ -17,6 +17,8 @@ namespace FunAndGamesWithSlimDX.Entities
 
         public Model[] Model { get; set; }
 
+        public Vector3 Normal { get { return VertexData[0].Normal; } }
+
         public BoundingBox BoundingBox { get; set; }
 
         public int TextureIndex { get; set; }
@@ -26,6 +28,8 @@ namespace FunAndGamesWithSlimDX.Entities
         public Matrix TranslationMatrix { get; set; }
         public Matrix RotationMatrix { get; set; }
         public Matrix WorldMatrix { get; set; }
+
+        public bool HasBeenUsedAsSplitPlane { get; set; }
 
         public Mesh(Device device, IShader shader)
         {
