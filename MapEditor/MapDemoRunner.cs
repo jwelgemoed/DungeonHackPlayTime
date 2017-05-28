@@ -88,7 +88,11 @@ namespace MapEditor
                 return;
             }
                        
-            PointClassification result = _pointClassifier.ClassifyPoint(position, node.Splitter);
+            PointClassification result = _pointClassifier.ClassifyPoint(position, 
+                                            new Vector3(node.Splitter.VertexData[0].Position.X,
+                                                        node.Splitter.VertexData[0].Position.Y,
+                                                        node.Splitter.VertexData[0].Position.Z), 
+                                            node.Splitter.Normal);
 
             _nodesVisited++;
 
@@ -131,7 +135,11 @@ namespace MapEditor
                 }
             }
 
-            PointClassification result = _pointClassifier.ClassifyPoint(position, node.Splitter);
+            PointClassification result = _pointClassifier.ClassifyPoint(position, 
+                                            new Vector3(node.Splitter.VertexData[0].Position.X,
+                                                        node.Splitter.VertexData[0].Position.Y,
+                                                        node.Splitter.VertexData[0].Position.Z), 
+                                            node.Splitter.Normal);
 
             _nodesVisited++;
 

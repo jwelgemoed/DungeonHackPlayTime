@@ -3,16 +3,17 @@ using SlimDX;
 using SlimDX.Direct3D11;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Plane = DungeonHack.Entities.Plane;
 
 namespace DungeonHack.BSP.LeafBsp
 {
     public class LeafBspTreeBuilder
     {
-        public int NumberOfPolygons { get; set; }
-        public int NumberOfNodes { get; set; }
-        public int NumberOfLeafs { get; set; }
-        public int NumberOfPlanes { get; set; } 
+        public int NumberOfMeshes { get { return MeshArray.Count; } }
+        public int NumberOfNodes { get { return NodeArray.Count; } }
+        public int NumberOfLeafs { get { return LeafArray.Count; } }
+        public int NumberOfPlanes { get { return PlaneArray.Count; } } 
         public int NumberOfPortals { get; set; }
 
         private List<Mesh> MeshArray = new List<Mesh>();
@@ -25,12 +26,14 @@ namespace DungeonHack.BSP.LeafBsp
         private readonly PolygonClassifier _polygonClassifier;
         private readonly PolygonSplitter _polygonSplitter;
         private readonly SplitterSelector _splitterSelector;
+        private readonly BoundingBoxCalculator _boundingBoxCalculator;
 
         public LeafBspTreeBuilder(Device device, FunAndGamesWithSlimDX.DirectX.IShader shader)
         {
             _polygonClassifier = new PolygonClassifier();
             _polygonSplitter = new PolygonSplitter(new PointClassifier(), device, shader);
             _splitterSelector = new SplitterSelector(_polygonClassifier);
+            _boundingBoxCalculator = new BoundingBoxCalculator();
         }
 
         public void BuildTree(int node, List<Mesh> meshes)
@@ -86,7 +89,55 @@ namespace DungeonHack.BSP.LeafBsp
                         break;
                 }
             }
-           
+
+            NodeArray[node].BoundingBox = _boundingBoxCalculator
+                                                .CalculateBoundingBox(NodeArray[node].BoundingBox, _frontList);
+
+            BoundingBox leafBox = NodeArray[node].BoundingBox;
+
+            NodeArray[node].BoundingBox = _boundingBoxCalculator
+                                        .CalculateBoundingBox(NodeArray[node].BoundingBox, _backList);
+                       
+            if (_frontList.Count(x => x.HasBeenUsedAsSplitPlane) == _frontList.Count)
+            {
+                Leaf newLeaf = new Leaf();
+                newLeaf.StartPolygon = NumberOfMeshes;
+                
+                LeafArray.Add(newLeaf);
+
+                _frontList.ForEach(x => MeshArray.Add(x));
+
+                newLeaf.EndPolygon = NumberOfMeshes;
+                newLeaf.BoundingBox = leafBox;
+                NodeArray[node].Front = NumberOfLeafs;
+                NodeArray[node].IsLeaf = true;
+
+                LeafArray.Add(newLeaf);
+            }
+            else
+            {
+                NodeArray[node].IsLeaf = false;
+                NodeArray[node].Front = NumberOfNodes + 1;
+
+                Node newNode = new Node();
+                NodeArray.Add(newNode);
+
+                BuildTree(NumberOfNodes, _frontList);
+            }
+
+            if (_backList.Count == 0)
+            {
+                NodeArray[node].Back = -1;
+            }
+            else
+            {
+                NodeArray[node].Back = NumberOfNodes + 1;
+
+                Node newNode = new Node();
+                NodeArray.Add(newNode);
+
+                BuildTree(NumberOfNodes, _backList);
+            }
         }
 
 
@@ -100,12 +151,14 @@ namespace DungeonHack.BSP.LeafBsp
 
             if (frontSplit != null)
             {
+                frontSplit.HasBeenUsedAsSplitPlane = testMesh.HasBeenUsedAsSplitPlane;
                 frontList.Add(frontSplit);
                 meshList.Insert(meshList.IndexOf(testMesh), frontSplit);
             }
 
             if (backSplit != null)
             {
+                backSplit.HasBeenUsedAsSplitPlane = testMesh.HasBeenUsedAsSplitPlane;
                 backList.Add(backSplit);
                 meshList.Insert(meshList.IndexOf(testMesh), backSplit);
             }
