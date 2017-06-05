@@ -17,7 +17,7 @@ namespace DungeonHack.BSP
         public BspTreeBuilder(Device device, FunAndGamesWithSlimDX.DirectX.IShader shader)
         {
             _polyClassifier = new PolygonClassifier();
-            _splitterSelector = new SplitterSelector(_polyClassifier);
+            _splitterSelector = new SplitterSelector(_polyClassifier, 8);
             _polygonSplitter = new PolygonSplitter(new PointClassifier(), device, shader);
         }
 
@@ -77,6 +77,7 @@ namespace DungeonHack.BSP
 
                 switch (_polyClassifier.ClassifyPolygon(currentNode.Splitter, testMesh))
                 {
+                    case PolygonClassification.OnPlane:
                     case PolygonClassification.Front:
                         frontList.Add(testMesh);
                         break;

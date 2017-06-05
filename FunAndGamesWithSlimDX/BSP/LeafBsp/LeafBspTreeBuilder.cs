@@ -32,7 +32,7 @@ namespace DungeonHack.BSP.LeafBsp
         {
             _polygonClassifier = new PolygonClassifier();
             _polygonSplitter = new PolygonSplitter(new PointClassifier(), device, shader);
-            _splitterSelector = new SplitterSelector(_polygonClassifier);
+            _splitterSelector = new SplitterSelector(_polygonClassifier, 3);
             _boundingBoxCalculator = new BoundingBoxCalculator();
         }
 

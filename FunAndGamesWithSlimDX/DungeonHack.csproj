@@ -101,6 +101,7 @@
     <Compile Include="BSP\BoundingBoxCalculator.cs" />
     <Compile Include="BSP\BspBoundingVolumeCalculator.cs" />
     <Compile Include="BSP\BspNode.cs" />
+    <Compile Include="BSP\BspRenderer.cs" />
     <Compile Include="BSP\BspTreeBuilder.cs" />
     <Compile Include="BSP\LeafBsp\Leaf.cs" />
     <Compile Include="BSP\LeafBsp\LeafBspTreeBuilder.cs" />

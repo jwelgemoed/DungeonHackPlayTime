@@ -23,8 +23,7 @@ namespace MapEditor
         private PointLight _pointLight;
         private DirectionalLight _directionalLight;
         private Spotlight _spotlight;
-        private PointClassifier _pointClassifier;
-        private MeshRenderer _meshRenderer;
+        private BspRenderer _bspRenderer;
 
         public BspNode BspRootNode { get; set; }
 
@@ -32,8 +31,6 @@ namespace MapEditor
 
         public MapDemoRunner() : base(8.0f, true)
         {
-            _pointClassifier = new PointClassifier();
-
             _wallMaterial = new Material()
             {
                 Ambient = new Color4(0.651f, 0.5f, 0.392f),
@@ -72,97 +69,8 @@ namespace MapEditor
 
             _nodesVisited = 0;
 
-            DrawBspTreeFrontToBack(BspRootNode, Camera.EyeAt);
+            _bspRenderer.DrawBspTreeFrontToBack(BspRootNode, Camera.EyeAt, _frustrum, ref _meshRenderedCount);
             //DrawBspTreeBackToFront(BspRootNode, Camera.EyeAt);
-        }
-
-        /// <summary>
-        /// BSP tree traversal inorder to draw polygons in back to front order (painter's algorithm)
-        /// </summary>
-        /// <param name="node"></param>
-        /// <param name="position"></param>
-        private void DrawBspTreeBackToFront(BspNode node, Vector3 position)
-        {
-            if (node.IsLeaf)
-            {
-                return;
-            }
-                       
-            PointClassification result = _pointClassifier.ClassifyPoint(position, 
-                                            new Vector3(node.Splitter.VertexData[0].Position.X,
-                                                        node.Splitter.VertexData[0].Position.Y,
-                                                        node.Splitter.VertexData[0].Position.Z), 
-                                            node.Splitter.Normal);
-
-            _nodesVisited++;
-
-            if (result == PointClassification.Front)
-            {
-                if (node.Back != null)
-                    DrawBspTreeBackToFront(node.Back, position);
-
-              //  node.Splitter.Render(_frustrum, Renderer.Context, Camera, ref _meshRenderedCount);
-
-                if (node.Front != null)
-                    DrawBspTreeBackToFront(node.Front, position);
-            }
-            else
-            {
-                if (node.Front != null)
-                    DrawBspTreeBackToFront(node.Front, position);
-
-//                node.Splitter.Render(_frustrum, Renderer.Context, Camera, ref _meshRenderedCount);
-
-                if (node.Back != null)
-                    DrawBspTreeBackToFront(node.Back, position);
-            }
-        }
-
-        private void DrawBspTreeFrontToBack(BspNode node, Vector3 position)
-        {
-            if (node.IsLeaf)
-            {
-                return;
-            }
-
-            if (node.BoundingVolume.HasValue)
-            {
-                var BoundingBox = new BoundingBox(node.BoundingVolume.Value.Minimum, node.BoundingVolume.Value.Maximum);
-                    
-                if (_frustrum.CheckBoundingBox(BoundingBox) == 0)
-                {
-                    return;
-                }
-            }
-
-            PointClassification result = _pointClassifier.ClassifyPoint(position, 
-                                            new Vector3(node.Splitter.VertexData[0].Position.X,
-                                                        node.Splitter.VertexData[0].Position.Y,
-                                                        node.Splitter.VertexData[0].Position.Z), 
-                                            node.Splitter.Normal);
-
-            _nodesVisited++;
-
-            if (result == PointClassification.Back)
-            {
-                if (node.Back != null)
-                    DrawBspTreeFrontToBack(node.Back, position);
-
-                _meshRenderer.Render(_frustrum, node.Splitter, ref _meshRenderedCount);
-
-                if (node.Front != null)
-                    DrawBspTreeFrontToBack(node.Front, position);
-            }
-            else
-            {
-                if (node.Front != null)
-                    DrawBspTreeFrontToBack(node.Front, position);
-
-                _meshRenderer.Render(_frustrum, node.Splitter, ref _meshRenderedCount);
-
-                if (node.Back != null)
-                    DrawBspTreeFrontToBack(node.Back, position);
-            }
         }
 
         public override void UpdateScene()
@@ -203,7 +111,9 @@ namespace MapEditor
             var materialDictionary = new MaterialDictionary();
             materialDictionary.AddMaterial(_wallMaterial);
 
-            _meshRenderer = new MeshRenderer(materialDictionary, textureDictionary, base.Renderer.Context, Camera, Shader);
+            var meshRenderer = new MeshRenderer(materialDictionary, textureDictionary, base.Renderer.Context, Camera, Shader);
+
+            _bspRenderer = new BspRenderer(meshRenderer, new PointClassifier());
 
             if (_startingPosition == null)
                 Camera.SetPosition(0, 0, 0);

@@ -66,7 +66,7 @@ namespace DungeonHack.BSP
 
             if (onPlane == numberOfVertices)
             {
-                return PolygonClassification.Front;
+                return PolygonClassification.OnPlane;
             }
             if (behind == numberOfVertices)
             {
