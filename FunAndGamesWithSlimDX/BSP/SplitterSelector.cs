@@ -10,7 +10,7 @@ namespace DungeonHack.BSP
     public class SplitterSelector
     {
         private readonly PolygonClassifier _polyClassifier;
-        private int _splitweight;
+        private readonly int _splitweight;
 
         public SplitterSelector(PolygonClassifier polyClassifier, int splitweight)
         {
@@ -25,15 +25,15 @@ namespace DungeonHack.BSP
 
             foreach (var splitter in meshList.Where(x => !x.HasBeenUsedAsSplitPlane))
             {
+                long score = 0;
+                long splits = 0;
+                long backfaces = 0;
+                long frontfaces = 0;
+
                 foreach (var mesh in meshList)
                 {
                     if (mesh == splitter)
                         continue;
-
-                    long score = 0;
-                    long splits = 0;
-                    long backfaces = 0;
-                    long frontfaces = 0;
 
                     var polyClassification = _polyClassifier.ClassifyPolygon(splitter, mesh);
 
@@ -50,15 +50,16 @@ namespace DungeonHack.BSP
                             splits++;
                             break;
                     }
-
-                    score = Math.Abs(frontfaces - backfaces) + (splits * 8);
-
-                    if (score < bestScore)
-                    {
-                        bestScore = score;
-                        selectedMesh = splitter;
-                    }
                 }
+
+                score = Math.Abs(frontfaces - backfaces) + (splits * _splitweight);
+
+                if (score < bestScore)
+                {
+                    bestScore = score;
+                    selectedMesh = splitter;
+                }
+
             }
 
             var plane = new Plane()
@@ -74,7 +75,7 @@ namespace DungeonHack.BSP
 
             planeArray.Add(plane);
             
-            return planeArray.IndexOf(plane);
+            return planeArray.Count - 1;
         }
 
         public Mesh SelectBestSplitter(IEnumerable<Mesh> meshList)

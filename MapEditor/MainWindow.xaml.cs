@@ -1,4 +1,5 @@
 ﻿using DungeonHack.BSP;
+using DungeonHack.BSP.LeafBsp;
 using DungeonHack.Builders;
 using FunAndGamesWithSlimDX;
 using FunAndGamesWithSlimDX.Entities;
@@ -175,9 +176,11 @@ namespace MapEditor
 
             BspTreeBuilder bspTreeBuilder = new BspTreeBuilder(demo.Device, demo.GetShader);
             BspBoundingVolumeCalculator bspBoudingVolumeCalculator = new BspBoundingVolumeCalculator();
+            LeafBspTreeBuilder leafTreeBuilder = new LeafBspTreeBuilder(demo.Device, demo.GetShader);
 
             demo.InitializeScene();
 
+            leafTreeBuilder.BuildTree(0, demo.Meshes);
             demo.BspRootNode = bspTreeBuilder.BuildTree(demo.Meshes);
             bspBoudingVolumeCalculator.ComputeBoundingVolumes(demo.BspRootNode);
 

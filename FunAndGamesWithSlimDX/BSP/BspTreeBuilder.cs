@@ -13,6 +13,8 @@ namespace DungeonHack.BSP
         private readonly PolygonSplitter _polygonSplitter;
 
         public int NumberOfNodesUpdated { get; private set; }
+
+        private int _recursionDepth = 0;
         
         public BspTreeBuilder(Device device, FunAndGamesWithSlimDX.DirectX.IShader shader)
         {
@@ -61,6 +63,7 @@ namespace DungeonHack.BSP
 
         private void BuildBspTree(BspNode currentNode, List<Mesh> meshList)
         {
+            _recursionDepth++;
             Mesh frontSplit;
             Mesh backSplit;
             List<Mesh> frontList = new List<Mesh>();

@@ -9,11 +9,11 @@ namespace DungeonHack.BSP.LeafBsp
 {
     public class Leaf
     {
-        public long StartPolygon { get; set; }
-        public long EndPolygon { get; set; }
-        public long[] PortalIndexList { get; set; }
-        public long NumberOfPortals { get; set; }
-        public long PVSIndex { get; set; }
+        public int StartPolygon { get; set; }
+        public int EndPolygon { get; set; }
+        public int[] PortalIndexList { get; set; }
+        public int NumberOfPortals { get; set; }
+        public int PVSIndex { get; set; }
         public BoundingBox BoundingBox { get; set; }
     }
 }

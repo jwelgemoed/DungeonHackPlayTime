@@ -10,16 +10,16 @@ namespace DungeonHack.BSP.LeafBsp
 {
     public class LeafBspTreeBuilder
     {
-        public int NumberOfMeshes { get { return MeshArray.Count; } }
-        public int NumberOfNodes { get { return NodeArray.Count; } }
-        public int NumberOfLeafs { get { return LeafArray.Count; } }
-        public int NumberOfPlanes { get { return PlaneArray.Count; } } 
+        public int NumberOfMeshes { get { return MeshArray.Count - 1; } }
+        public int NumberOfNodes { get { return NodeArray.Count - 1; } }
+        public int NumberOfLeafs { get { return LeafArray.Count - 1; } }
+        public int NumberOfPlanes { get { return PlaneArray.Count - 1; } } 
         public int NumberOfPortals { get; set; }
 
         private List<Mesh> MeshArray = new List<Mesh>();
         private List<Node> NodeArray = new List<Node>();
         private List<Leaf> LeafArray = new List<Leaf>();
-        private List<Plane> PlaneArray;
+        private List<Plane> PlaneArray = new List<Plane>();
         //public Portal[] PortalArray;
         private List<byte> pvsData = new List<byte>();
 
@@ -28,16 +28,22 @@ namespace DungeonHack.BSP.LeafBsp
         private readonly SplitterSelector _splitterSelector;
         private readonly BoundingBoxCalculator _boundingBoxCalculator;
 
+        private int _recursionDepth = 0;
+
         public LeafBspTreeBuilder(Device device, FunAndGamesWithSlimDX.DirectX.IShader shader)
         {
             _polygonClassifier = new PolygonClassifier();
             _polygonSplitter = new PolygonSplitter(new PointClassifier(), device, shader);
             _splitterSelector = new SplitterSelector(_polygonClassifier, 3);
             _boundingBoxCalculator = new BoundingBoxCalculator();
+
+            Node newNode = new Node();
+            NodeArray.Add(newNode);
         }
 
         public void BuildTree(int node, List<Mesh> meshes)
         {
+            _recursionDepth++;
             List<Mesh> _meshTest;
             List<Mesh> _frontList = new List<Mesh>();
             List<Mesh> _backList = new List<Mesh>();
@@ -53,8 +59,10 @@ namespace DungeonHack.BSP.LeafBsp
                                         new Vector3(-40000, -40000, -40000),
                                         new Vector3(40000, 40000, 40000));
 
-            foreach (var mesh in meshes)
+            for (int i = 0; i < meshes.Count; i++)
             {
+                var mesh = meshes[i];
+
                 switch (_polygonClassifier.ClassifyPolygon(PlaneArray[NodeArray[node].Plane], mesh))
                 {
                     case PolygonClassification.OnPlane:
@@ -117,7 +125,7 @@ namespace DungeonHack.BSP.LeafBsp
             else
             {
                 NodeArray[node].IsLeaf = false;
-                NodeArray[node].Front = NumberOfNodes + 1;
+                NodeArray[node].Front = NumberOfNodes;
 
                 Node newNode = new Node();
                 NodeArray.Add(newNode);
@@ -131,7 +139,7 @@ namespace DungeonHack.BSP.LeafBsp
             }
             else
             {
-                NodeArray[node].Back = NumberOfNodes + 1;
+                NodeArray[node].Back = NumberOfNodes;
 
                 Node newNode = new Node();
                 NodeArray.Add(newNode);

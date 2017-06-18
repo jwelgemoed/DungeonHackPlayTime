@@ -12,6 +12,11 @@ namespace DungeonHack.BSP
     public class PointClassifier
     {
 
+        public PointClassification ClassifyPoint(Vector3 position, Entities.Plane plane)
+        {
+            return ClassifyPoint(position, plane.PointOnPlane, plane.Normal);
+        }
+
         public PointClassification ClassifyPoint(Vector3 position, Vector3 pointOnPlane, Vector3 planeNormal)
         {
             float result;
