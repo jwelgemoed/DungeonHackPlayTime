@@ -7,7 +7,7 @@ using SlimDX.DXGI;
 
 namespace DungeonHack
 {
-    public class MeshRenderer
+    public class PolygonRenderer
     {
         private readonly MaterialDictionary _materialDictionary;
         private readonly TextureDictionary _textureDictionary;
@@ -15,7 +15,7 @@ namespace DungeonHack
         private readonly Camera _camera;
         private readonly IShader _shader;
 
-        public MeshRenderer(MaterialDictionary materialDictionary, 
+        public PolygonRenderer(MaterialDictionary materialDictionary, 
                             TextureDictionary textureDictionary,
                             DeviceContext deviceContext,
                             Camera camera,
@@ -28,29 +28,29 @@ namespace DungeonHack
             _shader = shader;
         }
 
-        public void Render(Frustrum frustrum, Polygon mesh, ref int meshRenderedCount)
+        public void Render(Frustrum frustrum, Polygon polygon, ref int polygonRenderedCount)
         {
             //Frustrum culling.
             if (ConfigManager.FrustrumCullingEnabled &&
-                frustrum.CheckBoundingBox(mesh.BoundingBox) == 0)
+                frustrum.CheckBoundingBox(polygon.BoundingBox) == 0)
             {
                 return;
             }
 
-            meshRenderedCount++;
+            polygonRenderedCount++;
 
             _deviceContext.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
-            _deviceContext.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(mesh.VertexBuffer, Vertex.SizeOf, 0));
-            _deviceContext.InputAssembler.SetIndexBuffer(mesh.IndexBuffer, Format.R16_UInt, 0);
+            _deviceContext.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(polygon.VertexBuffer, Vertex.SizeOf, 0));
+            _deviceContext.InputAssembler.SetIndexBuffer(polygon.IndexBuffer, Format.R16_UInt, 0);
 
             _shader.Render(_deviceContext, 
-                            mesh.IndexData.Length, 
-                            mesh.WorldMatrix, 
+                            polygon.IndexData.Length, 
+                            polygon.WorldMatrix, 
                             _camera.ViewMatrix,
                             _camera.ProjectionMatrix, 
-                            _textureDictionary.GetTexture(mesh.TextureIndex).TextureData, 
+                            _textureDictionary.GetTexture(polygon.TextureIndex).TextureData, 
                             _camera.GetPosition(), 
-                            _materialDictionary.GetMaterial(mesh.MaterialIndex));
+                            _materialDictionary.GetMaterial(polygon.MaterialIndex));
         }
     }
 }

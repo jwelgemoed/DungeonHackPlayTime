@@ -111,7 +111,7 @@ namespace MapEditor
             var materialDictionary = new MaterialDictionary();
             materialDictionary.AddMaterial(_wallMaterial);
 
-            var meshRenderer = new MeshRenderer(materialDictionary, textureDictionary, base.Renderer.Context, Camera, Shader);
+            var meshRenderer = new PolygonRenderer(materialDictionary, textureDictionary, base.Renderer.Context, Camera, Shader);
 
             _bspRenderer = new BspRenderer(meshRenderer, new PointClassifier());
 

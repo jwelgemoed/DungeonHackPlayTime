@@ -5,12 +5,12 @@ namespace DungeonHack.BSP
 {
     public class BspRenderer
     {
-        private readonly MeshRenderer _meshRenderer;
+        private readonly PolygonRenderer _meshRenderer;
         private readonly PointClassifier _pointClassifier;
 
         public int NodesVisited { get; private set; }
 
-        public BspRenderer(MeshRenderer meshRenderer, PointClassifier pointClassifier)
+        public BspRenderer(PolygonRenderer meshRenderer, PointClassifier pointClassifier)
         {
             _meshRenderer = meshRenderer;
             _pointClassifier = pointClassifier;
