@@ -17,7 +17,7 @@ namespace MapEditor
 {
     public class MapDemoRunner : CameraEngine, IDisposable
     {
-        public List<Mesh> Meshes;
+        public List<Polygon> Meshes;
         private Vector3 _startingPosition;
         private Material _wallMaterial;
         private PointLight _pointLight;
@@ -92,7 +92,7 @@ namespace MapEditor
 
         }
 
-        public override List<Mesh> GetSceneMeshes()
+        public override List<Polygon> GetSceneMeshes()
         {
             return Meshes;
         }

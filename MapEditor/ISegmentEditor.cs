@@ -17,7 +17,7 @@ namespace MapEditor
 
         void EditAction(Point startPoint, float currentScale, GlobalMapData mapData);
 
-        List<Tuple<Shape, Mesh>> GetMeshList();
+        List<Tuple<Shape, FunAndGamesWithSlimDX.Entities.Polygon>> GetMeshList();
 
         void MoveAction(Point currentMousePosition, Point startPoint, float currentScale, bool snapToGrid, bool snapToClosestPoint);
     }

@@ -42,7 +42,7 @@ namespace MapEditor
         private Brush _lineBrush;
         private Brush _selectedLineBrush;
         private List<Tuple<Line, GameData.LineSegment>> lineList = new List<Tuple<Line, GameData.LineSegment>>();
-        private List<Tuple<Shape, Mesh>> meshList = new List<Tuple<Shape, Mesh>>();
+        private List<Tuple<Shape, FunAndGamesWithSlimDX.Entities.Polygon>> meshList = new List<Tuple<Shape, FunAndGamesWithSlimDX.Entities.Polygon>>();
         private Device _device;
         private IShader _shader;
         private float _midWidth;
@@ -94,7 +94,7 @@ namespace MapEditor
             MapData = new MapData();
         }
 
-        public List<Tuple<Shape, Mesh>> GetMeshList()
+        public List<Tuple<Shape, FunAndGamesWithSlimDX.Entities.Polygon>> GetMeshList()
         {
             return meshList;
         }
@@ -361,7 +361,7 @@ namespace MapEditor
                             .SetScaling(1, 1, 1)
                             .WithTransformToWorld()
                             .Build();
-            meshList.Add(new Tuple<Shape, Mesh>(line, roomMesh));
+            meshList.Add(new Tuple<Shape, FunAndGamesWithSlimDX.Entities.Polygon>(line, roomMesh));
 
             CreateNormalLine(line, normal);
         }

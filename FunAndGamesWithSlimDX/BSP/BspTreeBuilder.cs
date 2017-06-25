@@ -23,7 +23,7 @@ namespace DungeonHack.BSP
             _polygonSplitter = new PolygonSplitter(new PointClassifier(), device, shader);
         }
 
-        public BspNode BuildTree(List<Mesh> meshList)
+        public BspNode BuildTree(List<Polygon> meshList)
         {
             BspNode bspRootNode = new BspNode();
             bspRootNode.IsRoot = true;
@@ -33,7 +33,7 @@ namespace DungeonHack.BSP
             return bspRootNode;
         }
 
-        public void TraverseBspTreeAndPerformAction(BspNode rootNode, Action<Mesh> action)
+        public void TraverseBspTreeAndPerformAction(BspNode rootNode, Action<Polygon> action)
         {
             if (rootNode.Splitter == null)
                 return;
@@ -61,13 +61,13 @@ namespace DungeonHack.BSP
             TraverseBspTreeAndPerformActionOnNode(node.Front, action);
         }
 
-        private void BuildBspTree(BspNode currentNode, List<Mesh> meshList)
+        private void BuildBspTree(BspNode currentNode, List<Polygon> meshList)
         {
             _recursionDepth++;
-            Mesh frontSplit;
-            Mesh backSplit;
-            List<Mesh> frontList = new List<Mesh>();
-            List<Mesh> backList = new List<Mesh>();
+            Polygon frontSplit;
+            Polygon backSplit;
+            List<Polygon> frontList = new List<Polygon>();
+            List<Polygon> backList = new List<Polygon>();
 
             currentNode.Splitter = _splitterSelector.SelectBestSplitter(meshList);
 
@@ -82,10 +82,10 @@ namespace DungeonHack.BSP
                 {
                     case PolygonClassification.OnPlane:
                     case PolygonClassification.Front:
-                        frontList.Add(testMesh);
+                        frontList.Insert(0, testMesh);
                         break;
                     case PolygonClassification.Back:
-                        backList.Add(testMesh);
+                        backList.Insert(0, testMesh);
                         break;
                     case PolygonClassification.Spanning:
                         HandleSpanningPolygon(currentNode, 
@@ -137,19 +137,19 @@ namespace DungeonHack.BSP
             }
         }
 
-        private void HandleSpanningPolygon(BspNode currentNode, List<Mesh> meshList, out Mesh frontSplit, out Mesh backSplit, List<Mesh> frontList, List<Mesh> backList, Mesh testMesh)
+        private void HandleSpanningPolygon(BspNode currentNode, List<Polygon> meshList, out Polygon frontSplit, out Polygon backSplit, List<Polygon> frontList, List<Polygon> backList, Polygon testMesh)
         {
             _polygonSplitter.SplitMesh(testMesh, currentNode.Splitter, out frontSplit, out backSplit);
 
             if (frontSplit != null)
             {
-                frontList.Add(frontSplit);
+                frontList.Insert(0, frontSplit);
                 meshList.Insert(meshList.IndexOf(testMesh), frontSplit);
             }
 
             if (backSplit != null)
             {
-                backList.Add(backSplit);
+                backList.Insert(0, backSplit);
                 meshList.Insert(meshList.IndexOf(testMesh), backSplit);
             }
 

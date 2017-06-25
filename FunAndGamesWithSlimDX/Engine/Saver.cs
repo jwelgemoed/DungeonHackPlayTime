@@ -12,7 +12,7 @@ namespace FunAndGamesWithSlimDX.Engine
     {
         private static BinaryFormatter binFormatter = new BinaryFormatter();
 
-        public static void SaveScene(string fileName, List<Mesh> scene)
+        public static void SaveScene(string fileName, List<Polygon> scene)
         {
             using (var saveFile = File.Create(fileName, 0))
             {
@@ -20,11 +20,11 @@ namespace FunAndGamesWithSlimDX.Engine
             }
         }
 
-        public static List<Mesh> LoadScene(string fileName)
+        public static List<Polygon> LoadScene(string fileName)
         {
             using (var saveFile = File.OpenRead(fileName))
             {
-                return (List<Mesh>)binFormatter.Deserialize(saveFile);
+                return (List<Polygon>)binFormatter.Deserialize(saveFile);
             }
         }
     }

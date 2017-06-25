@@ -110,9 +110,11 @@
     <Compile Include="BSP\BspTreeBuilder.cs" />
     <Compile Include="BSP\LeafBsp\Leaf.cs" />
     <Compile Include="BSP\LeafBsp\LeafBspTreeBuilder.cs" />
+    <Compile Include="BSP\LeafBsp\LeafStackItem.cs" />
     <Compile Include="BSP\LeafBsp\LeafTreeData.cs" />
     <Compile Include="BSP\LeafBsp\LeafTreeRenderer.cs" />
     <Compile Include="BSP\LeafBsp\Node.cs" />
+    <Compile Include="BSP\LeafBsp\Portal.cs" />
     <Compile Include="BSP\PointClassifier.cs" />
     <Compile Include="BSP\PolygonClassifier.cs" />
     <Compile Include="BSP\PolygonSplitter.cs" />
@@ -159,7 +161,7 @@
     <Compile Include="Menus\OptionsWindow.Designer.cs">
       <DependentUpon>OptionsWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Entities\Mesh.cs" />
+    <Compile Include="Entities\Polygon2.cs" />
     <Compile Include="Menus\SaveWindow.cs">
       <SubType>Form</SubType>
     </Compile>

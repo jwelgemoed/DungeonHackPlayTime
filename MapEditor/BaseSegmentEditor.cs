@@ -10,19 +10,19 @@ namespace MapEditor
 {
     public abstract class BaseSegmentEditor
     {
-        protected List<Tuple<GameData.LineSegment, Mesh>> _meshList;
+        protected List<Tuple<GameData.LineSegment, Polygon>> _meshList;
         protected GameData.MapData _mapData;
         protected float _midWidth;
         protected float _midHeight;
 
         public BaseSegmentEditor(float midWidth, float midHeight)
         {
-            _meshList = new List<Tuple<GameData.LineSegment, Mesh>>();
+            _meshList = new List<Tuple<GameData.LineSegment, Polygon>>();
             _midWidth = midWidth;
             _midHeight = midHeight;
         }
 
-        public List<Tuple<GameData.LineSegment, Mesh>> GetMeshList()
+        public List<Tuple<GameData.LineSegment, Polygon>> GetMeshList()
         {
             return _meshList;
         }

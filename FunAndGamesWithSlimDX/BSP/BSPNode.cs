@@ -6,9 +6,9 @@ namespace DungeonHack.BSP
 {
     public class BspNode
     {
-        public Mesh Splitter { get; set; }
+        public Polygon Splitter { get; set; }
 
-        public IEnumerable<Mesh> ConvexPolygonSet { get; set; }
+        public IEnumerable<Polygon> ConvexPolygonSet { get; set; }
 
         public BoundingBox? BoundingVolume { get; set; }
 

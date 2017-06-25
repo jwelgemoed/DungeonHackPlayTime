@@ -15,7 +15,7 @@ namespace DungeonHack.BSP
     public class PolygonClassifier
     {
 
-        public PolygonClassification ClassifyPolygon(Mesh plane, Mesh mesh)
+        public PolygonClassification ClassifyPolygon(Polygon plane, Polygon mesh)
         {
             return ClassifyPolygon(
                 new Plane {
@@ -29,7 +29,7 @@ namespace DungeonHack.BSP
         }
         
             
-       public PolygonClassification ClassifyPolygon(Plane plane, Mesh mesh)
+       public PolygonClassification ClassifyPolygon(Plane plane, Polygon mesh)
         {
             int inFront = 0;
             int behind = 0;

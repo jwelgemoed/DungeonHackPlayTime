@@ -195,7 +195,7 @@ namespace MapEditor
             throw new NotImplementedException();
         }
 
-        List<Tuple<Shape, Mesh>> ISegmentEditor.GetMeshList()
+        List<Tuple<Shape, FunAndGamesWithSlimDX.Entities.Polygon>> ISegmentEditor.GetMeshList()
         {
             throw new NotImplementedException();
         }

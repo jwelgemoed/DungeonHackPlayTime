@@ -31,7 +31,7 @@ namespace MapEditor
         private Brush _sectorBrush;
         private List<Tuple<Line, GameData.LineSegment>> lineList = new List<Tuple<Line, GameData.LineSegment>>();
         private List<Tuple<Line, GameData.LineSegment>> currentSectorLineList = new List<Tuple<Line, GameData.LineSegment>>();
-        private List<Tuple<Shape, Mesh>> meshList = new List<Tuple<Shape, Mesh>>();
+        private List<Tuple<Shape, FunAndGamesWithSlimDX.Entities.Polygon>> meshList = new List<Tuple<Shape, FunAndGamesWithSlimDX.Entities.Polygon>>();
         private Device _device;
         private IShader _shader;
         private float _midWidth;
@@ -100,7 +100,7 @@ namespace MapEditor
             MapData = new MapData();
         }
 
-        public List<Tuple<Shape, Mesh>> GetMeshList()
+        public List<Tuple<Shape, FunAndGamesWithSlimDX.Entities.Polygon>> GetMeshList()
         {
             return meshList;
         }
@@ -462,7 +462,7 @@ namespace MapEditor
                            .WithTransformToWorld()
                            .Build();
 
-            meshList.Add(new Tuple<Shape, Mesh>(line, roomMesh));
+            meshList.Add(new Tuple<Shape, FunAndGamesWithSlimDX.Entities.Polygon>(line, roomMesh));
 
             CreateNormalLine(line, normal);
         }
@@ -496,7 +496,7 @@ namespace MapEditor
             _canvas.Children.Add(normalLine);
         }
 
-        public Mesh CreateMesh(GameData.LineSegment lineSeg)
+        public FunAndGamesWithSlimDX.Entities.Polygon CreateMesh(GameData.LineSegment lineSeg)
         {
             Model[] model = new Model[6];
             Vector3[] vectors = new Vector3[4];

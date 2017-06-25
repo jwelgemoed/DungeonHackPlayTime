@@ -31,7 +31,7 @@ namespace MapEditor
         private Rectangle _lastRectangle;
         private List<Rectangle> _rectangleList = new List<Rectangle>();
 
-        private List<Tuple<Shape, Mesh>> _meshList = new List<Tuple<Shape, Mesh>>();
+        private List<Tuple<Shape, FunAndGamesWithSlimDX.Entities.Polygon>> _meshList = new List<Tuple<Shape, FunAndGamesWithSlimDX.Entities.Polygon>>();
 
         public ObstacleSegmentEditor(Canvas canvase, Device device, IShader shader, float midWidth, float midHeight, float gridSize)
         {
@@ -236,7 +236,7 @@ namespace MapEditor
                                 .WithTransformToWorld()
                                 .Build();
 
-                _meshList.Add(new Tuple<Shape, Mesh>(rect, roomMesh));
+                _meshList.Add(new Tuple<Shape, FunAndGamesWithSlimDX.Entities.Polygon>(rect, roomMesh));
             }
         }
 
@@ -247,7 +247,7 @@ namespace MapEditor
             _tempRectangle = null;
         }
 
-        public List<Tuple<Shape, Mesh>> GetMeshList()
+        public List<Tuple<Shape, FunAndGamesWithSlimDX.Entities.Polygon>> GetMeshList()
         {
             return _meshList;
         }

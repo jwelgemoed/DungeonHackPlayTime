@@ -28,7 +28,7 @@ namespace DungeonHack
             _shader = shader;
         }
 
-        public void Render(Frustrum frustrum, Mesh mesh, ref int meshRenderedCount)
+        public void Render(Frustrum frustrum, Polygon mesh, ref int meshRenderedCount)
         {
             //Frustrum culling.
             if (ConfigManager.FrustrumCullingEnabled &&

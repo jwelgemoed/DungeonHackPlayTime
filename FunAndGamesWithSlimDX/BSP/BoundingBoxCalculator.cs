@@ -6,7 +6,7 @@ namespace DungeonHack.BSP
 {
     public class BoundingBoxCalculator
     {
-        public BoundingBox CalculateBoundingBox(BoundingBox boundingBox, IList<Mesh> meshes)
+        public BoundingBox CalculateBoundingBox(BoundingBox boundingBox, IList<Polygon> meshes)
         {
             BoundingBox startBox = boundingBox;
 

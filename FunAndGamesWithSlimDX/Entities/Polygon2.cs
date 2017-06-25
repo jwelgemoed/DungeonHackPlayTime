@@ -6,7 +6,7 @@ using Device = SlimDX.Direct3D11.Device;
 
 namespace FunAndGamesWithSlimDX.Entities
 {
-    public class Mesh : IDisposable
+    public class Polygon : IDisposable
     {
         public Buffer VertexBuffer { get; set; }
         public Buffer IndexBuffer { get; set; }
@@ -31,7 +31,7 @@ namespace FunAndGamesWithSlimDX.Entities
 
         public bool HasBeenUsedAsSplitPlane { get; set; }
 
-        public Mesh(Device device, IShader shader)
+        public Polygon(Device device, IShader shader)
         {
             ScaleMatrix = Matrix.Identity;
             TranslationMatrix = Matrix.Identity;

@@ -11,7 +11,7 @@ namespace DungeonHack.BSP.LeafBsp
 {
     public class LeafTreeRenderer
     {
-        private List<Mesh> _meshArray ;
+        private List<Polygon> _meshArray ;
         private List<Node> _nodeArray ;
         private List<Leaf> _leafArray ;
         private List<Entities.Plane> _planeArray;
@@ -19,7 +19,7 @@ namespace DungeonHack.BSP.LeafBsp
         private List<byte> _pvsData;
         private PointClassifier _pointClassifier;
 
-        public LeafTreeRenderer(List<Mesh> meshArray, List<Node> nodeArray, List<Leaf> leafArray, List<Entities.Plane> planeArray,
+        public LeafTreeRenderer(List<Polygon> meshArray, List<Node> nodeArray, List<Leaf> leafArray, List<Entities.Plane> planeArray,
                                 List<byte> pvsData, PointClassifier pointClassifier)
         {
             _meshArray = meshArray;
@@ -70,7 +70,7 @@ namespace DungeonHack.BSP.LeafBsp
 
         private void DrawTree(int leaf)
         {
-            Mesh currentMesh;
+            Polygon currentMesh;
             int i;
             int pvsoffset = _leafArray[leaf].PVSIndex;
             byte pvspointer = _pvsData[pvsoffset];

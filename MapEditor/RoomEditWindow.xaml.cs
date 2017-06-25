@@ -24,7 +24,7 @@ namespace MapEditor
     {
         private Point startPoint;
         private bool _editState = false;
-        private List<Mesh> areaList = new List<Mesh>();
+        private List<FunAndGamesWithSlimDX.Entities.Polygon> areaList = new List<FunAndGamesWithSlimDX.Entities.Polygon>();
         private List<Line> gridLines = new List<Line>();
         private List<System.Windows.Shapes.Polygon> areasList = new List<System.Windows.Shapes.Polygon>();
         private MapDemoRunner demo;

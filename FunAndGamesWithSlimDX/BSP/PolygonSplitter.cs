@@ -21,7 +21,7 @@ namespace DungeonHack.BSP
             _shader = shader;
         }
 
-        public void SplitMesh(Mesh testMesh, Mesh plane, out Mesh frontSplit, out Mesh backSplit)
+        public void SplitMesh(Polygon testMesh, Polygon plane, out Polygon frontSplit, out Polygon backSplit)
         {
             Vector3 pointOnPlane = new Vector3(plane.VertexData[0].Position.X, 
                                                 plane.VertexData[0].Position.Y, 
@@ -30,7 +30,7 @@ namespace DungeonHack.BSP
             SplitMesh(testMesh, pointOnPlane, plane.VertexData[0].Normal, out frontSplit, out backSplit);
         }
 
-        public void SplitMesh(Mesh testMesh, Vector3 pointOnPlane, Vector3 planeNormal, out Mesh frontSplit, out Mesh backSplit)
+        public void SplitMesh(Polygon testMesh, Vector3 pointOnPlane, Vector3 planeNormal, out Polygon frontSplit, out Polygon backSplit)
         {
             List<Vertex> frontList = new List<Vertex>();
             List<Vertex> backList = new List<Vertex>();

@@ -20,7 +20,7 @@ namespace MapEditor
 {
     public class RectangleSegment
     {
-        private List<Mesh> _meshList = new List<Mesh>();
+        private List<FunAndGamesWithSlimDX.Entities.Polygon> _meshList = new List<FunAndGamesWithSlimDX.Entities.Polygon>();
         private Device _device;
         private IShader _shader;
 
@@ -42,7 +42,7 @@ namespace MapEditor
             TextureRepeat = 4.0f;
         }
 
-        public List<Mesh> Meshes
+        public List<FunAndGamesWithSlimDX.Entities.Polygon> Meshes
         {
             get
             {
@@ -252,7 +252,7 @@ namespace MapEditor
         /// |--------------x--------------x---------|     = Mesh with cutting points
         /// |--------------|              |---------|     = Cut mesh - original mesh has been replaced by 2 new meshes
         /// </summary>
-        public void CutMesh(Mesh mesh, float x1, float y1, float x2, float y2)
+        public void CutMesh(FunAndGamesWithSlimDX.Entities.Polygon mesh, float x1, float y1, float x2, float y2)
         {
             if (mesh == null)
                 throw new ArgumentNullException("mesh");
@@ -393,15 +393,15 @@ namespace MapEditor
             _tempRectangle = null;
         }
 
-        public List<Tuple<Shape, Mesh>> GetMeshList()
+        public List<Tuple<Shape, FunAndGamesWithSlimDX.Entities.Polygon>> GetMeshList()
         {
             //TODO: Change this
-            List<Tuple<Shape, Mesh>> meshList = new List<Tuple<Shape, Mesh>>();
+            List<Tuple<Shape, FunAndGamesWithSlimDX.Entities.Polygon>> meshList = new List<Tuple<Shape, FunAndGamesWithSlimDX.Entities.Polygon>>();
 
             foreach (var room in _roomList)
             {
                 //Roogsegment list is projected back onto old meshlist for backwards compatibility.
-                meshList.AddRange(room.Item2.Meshes.Select(x => new Tuple<Shape, Mesh>(room.Item1, x)));
+                meshList.AddRange(room.Item2.Meshes.Select(x => new Tuple<Shape, FunAndGamesWithSlimDX.Entities.Polygon>(room.Item1, x)));
             }
 
             return meshList;

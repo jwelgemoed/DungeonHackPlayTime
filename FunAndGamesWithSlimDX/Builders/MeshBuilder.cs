@@ -11,7 +11,7 @@ namespace DungeonHack.Builders
 {
     public class MeshBuilder
     {
-        private Mesh _mesh;
+        private Polygon _mesh;
         private readonly Device _device;
         private readonly IShader _shader;
         private bool _withTransformToWorld;
@@ -24,12 +24,12 @@ namespace DungeonHack.Builders
 
         public MeshBuilder New()
         {
-            _mesh = new Mesh(_device, _shader);
+            _mesh = new Polygon(_device, _shader);
 
             return this;
         }
 
-        public Mesh Build()
+        public Polygon Build()
         {
             LoadVectorsFromModel(null, null);
             if (_withTransformToWorld)

@@ -171,7 +171,7 @@ namespace FunAndGamesWithSlimDX.Engine
         /// Returns meshes.
         /// </summary>
         /// <returns></returns>
-        public abstract List<Mesh> GetSceneMeshes();
+        public abstract List<Polygon> GetSceneMeshes();
 
         /// <summary>
         /// Start the engine's timer.

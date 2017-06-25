@@ -159,7 +159,7 @@ namespace MapEditor
 
         private void btnRunMap_Click(object sender, RoutedEventArgs e)
         {
-            var meshList = new List<Mesh>();
+            var meshList = new List<FunAndGamesWithSlimDX.Entities.Polygon>();
 
             foreach (var map in _globalMapData.GetMaps())
             {
@@ -504,9 +504,9 @@ namespace MapEditor
             }
         }
 
-        private IEnumerable<Mesh> CreateMeshes(GameData.MapData mapdata, GameData.Sector sector, float currentScale)
+        private IEnumerable<FunAndGamesWithSlimDX.Entities.Polygon> CreateMeshes(GameData.MapData mapdata, GameData.Sector sector, float currentScale)
         {
-            List<Mesh> meshList = new List<Mesh>();
+            List<FunAndGamesWithSlimDX.Entities.Polygon> meshList = new List<FunAndGamesWithSlimDX.Entities.Polygon>();
 
             var lineSegments = mapdata
                 .LineSegments
@@ -568,9 +568,9 @@ namespace MapEditor
             return meshList;
         }
 
-        private List<Mesh> CreateMesh(List<GameData.Vertex> triangles, float floorHeight, float ceilingHeight, int floorTextureId, int ceilingTextureId, Vector2 lowerBound, Vector2 upperBound)
+        private List<FunAndGamesWithSlimDX.Entities.Polygon> CreateMesh(List<GameData.Vertex> triangles, float floorHeight, float ceilingHeight, int floorTextureId, int ceilingTextureId, Vector2 lowerBound, Vector2 upperBound)
         {
-            List<Mesh> meshes = new List<Mesh>();
+            List<FunAndGamesWithSlimDX.Entities.Polygon> meshes = new List<FunAndGamesWithSlimDX.Entities.Polygon>();
             MeshBuilder meshBuilder = new MeshBuilder(demo.Device, demo.GetShader);
 
             int numberOfTriangles = triangles.Count / 3;
@@ -718,7 +718,7 @@ namespace MapEditor
             return meshes;
         }
 
-        private Mesh CreateMesh(GameData.LineSegment lineSegment, float currentScale)
+        private FunAndGamesWithSlimDX.Entities.Polygon CreateMesh(GameData.LineSegment lineSegment, float currentScale)
         {
             if (lineSegment == null)
                 throw new ArgumentException(nameof(GameData.LineSegment));
@@ -874,7 +874,7 @@ namespace MapEditor
             //Task task = new Task(() =>
             {
 
-                var meshList = new List<Mesh>();
+                var meshList = new List<FunAndGamesWithSlimDX.Entities.Polygon>();
 
                 foreach (var map in _globalMapData.GetMaps())
                 {

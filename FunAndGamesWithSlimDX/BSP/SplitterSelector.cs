@@ -18,10 +18,10 @@ namespace DungeonHack.BSP
             _splitweight = splitweight;
         }
 
-        public int SelectBestSplitterPlane(IEnumerable<Mesh> meshList, List<Plane> planeArray)
+        public int SelectBestSplitterPlane(IEnumerable<Polygon> meshList, List<Plane> planeArray)
         {
             long bestScore = 100000000;
-            Mesh selectedMesh = meshList.First();
+            Polygon selectedMesh = meshList.First();
 
             foreach (var splitter in meshList.Where(x => !x.HasBeenUsedAsSplitPlane))
             {
@@ -78,10 +78,10 @@ namespace DungeonHack.BSP
             return planeArray.Count - 1;
         }
 
-        public Mesh SelectBestSplitter(IEnumerable<Mesh> meshList)
+        public Polygon SelectBestSplitter(IEnumerable<Polygon> meshList)
         {
             long bestScore = 100000000;
-            Mesh selectedMesh = meshList.First();
+            Polygon selectedMesh = meshList.First();
 
             foreach (var splitter in meshList)
             {
