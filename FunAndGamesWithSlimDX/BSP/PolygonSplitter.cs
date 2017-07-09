@@ -184,7 +184,7 @@ namespace DungeonHack.BSP
                 indexListBack[(i * 3) + 2] = v2;
             }
 
-            MeshBuilder meshBuilder = new MeshBuilder(_device, _shader);
+            PolygonBuilder meshBuilder = new PolygonBuilder(_device, _shader);
 
             frontSplit = meshBuilder
                         .New()

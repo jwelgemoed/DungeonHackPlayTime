@@ -4,25 +4,26 @@ using FunAndGamesWithSlimDX.Entities;
 using SlimDX;
 using SlimDX.Direct3D11;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
 namespace DungeonHack.Builders
 {
-    public class MeshBuilder
+    public class PolygonBuilder
     {
-        private Polygon _mesh;
-        private readonly Device _device;
-        private readonly IShader _shader;
+        protected Polygon _mesh;
+        protected readonly Device _device;
+        protected readonly IShader _shader;
         private bool _withTransformToWorld;
 
-        public MeshBuilder(Device device, IShader shader)
+        public PolygonBuilder(Device device, IShader shader)
         {
             _device = device;
             _shader = shader;
         }
 
-        public MeshBuilder New()
+        public PolygonBuilder New()
         {
             _mesh = new Polygon(_device, _shader);
 
@@ -41,73 +42,73 @@ namespace DungeonHack.Builders
             return _mesh;
         }
 
-        public MeshBuilder SetPosition(float x, float y, float z)
+        public PolygonBuilder SetPosition(float x, float y, float z)
         {
             _mesh.TranslationMatrix = Matrix.Translation(x, y, z);
             return this;
         }
 
-        public MeshBuilder SetScaling(float scale)
+        public PolygonBuilder SetScaling(float scale)
         {
             _mesh.ScaleMatrix = Matrix.Scaling(scale, scale, scale);
             return this;
         }
 
-        public MeshBuilder SetScaling(float scaleX, float scaleY, float scaleZ)
+        public PolygonBuilder SetScaling(float scaleX, float scaleY, float scaleZ)
         {
             _mesh.ScaleMatrix = Matrix.Scaling(scaleX, scaleY, scaleZ);
             return this;
         }
 
-        public MeshBuilder SetRotationMatrix(Matrix rotationMatrix)
+        public PolygonBuilder SetRotationMatrix(Matrix rotationMatrix)
         {
             _mesh.RotationMatrix = rotationMatrix;
             return this;
         }
 
-        public MeshBuilder SetScaleMatrix(Matrix scaleMatrix)
+        public PolygonBuilder SetScaleMatrix(Matrix scaleMatrix)
         {
             _mesh.ScaleMatrix = scaleMatrix;
             return this;
         }
 
-        public MeshBuilder SetTranslationMatrix(Matrix translationMatrix)
+        public PolygonBuilder SetTranslationMatrix(Matrix translationMatrix)
         {
             _mesh.TranslationMatrix = translationMatrix;
             return this;
         }
 
-        public MeshBuilder SetTextureIndex(int textureIndex)
+        public PolygonBuilder SetTextureIndex(int textureIndex)
         {
             _mesh.TextureIndex = textureIndex;
             return this;
         }
 
-        public MeshBuilder SetMaterialIndex(int materialIndex)
+        public PolygonBuilder SetMaterialIndex(int materialIndex)
         {
             _mesh.MaterialIndex = materialIndex;
             return this;
         }
 
-        public MeshBuilder SetModel(Model[] model)
+        public PolygonBuilder SetModel(Model[] model)
         {
             _mesh.Model = model;
             return this;
         }
 
-        public MeshBuilder SetIndexData(short[] indexData)
+        public PolygonBuilder SetIndexData(short[] indexData)
         {
             _mesh.IndexData = indexData;
             return this;
         }
 
-        public MeshBuilder SetVertexData(Vertex[] vertexData)
+        public PolygonBuilder SetVertexData(Vertex[] vertexData)
         {
             _mesh.VertexData = vertexData;
             return this;
         }
         
-        public MeshBuilder CreateFromModel(string fileName)
+        public PolygonBuilder CreateFromModel(string fileName)
         {
             if (string.IsNullOrEmpty(fileName))
                 throw new ArgumentException("Param cannot be empty", "fileName");
@@ -157,7 +158,7 @@ namespace DungeonHack.Builders
             return this;
         }
 
-        public MeshBuilder WithTransformToWorld()
+        public PolygonBuilder WithTransformToWorld()
         {
             _withTransformToWorld = true;
 
@@ -217,7 +218,7 @@ namespace DungeonHack.Builders
 
         }
 
-        private void LoadVectorsFromModel(Model[] model, short[] indexes)
+        protected void LoadVectorsFromModel(Model[] model, short[] indexes)
         {
             if (_mesh.VertexData != null)
             {

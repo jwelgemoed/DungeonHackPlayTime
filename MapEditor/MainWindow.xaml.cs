@@ -571,7 +571,7 @@ namespace MapEditor
         private List<FunAndGamesWithSlimDX.Entities.Polygon> CreateMesh(List<GameData.Vertex> triangles, float floorHeight, float ceilingHeight, int floorTextureId, int ceilingTextureId, Vector2 lowerBound, Vector2 upperBound)
         {
             List<FunAndGamesWithSlimDX.Entities.Polygon> meshes = new List<FunAndGamesWithSlimDX.Entities.Polygon>();
-            MeshBuilder meshBuilder = new MeshBuilder(demo.Device, demo.GetShader);
+            PolygonBuilder meshBuilder = new PolygonBuilder(demo.Device, demo.GetShader);
 
             int numberOfTriangles = triangles.Count / 3;
 
@@ -844,7 +844,7 @@ namespace MapEditor
             model[5].tx = 0.0f;
             model[5].ty = maxTY;
 
-            MeshBuilder meshBuilder = new MeshBuilder(demo.Device, demo.GetShader);
+            PolygonBuilder meshBuilder = new PolygonBuilder(demo.Device, demo.GetShader);
 
             var roomMesh = meshBuilder
                             .New()

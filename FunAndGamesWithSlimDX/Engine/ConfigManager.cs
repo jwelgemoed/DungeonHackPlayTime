@@ -108,5 +108,10 @@ namespace FunAndGamesWithSlimDX.Engine
         {
             get { return Settings.Default.MaxDownAcceleration; }
         }
+
+        public static bool Topdown
+        {
+            get { return Settings.Default.Topdown; }
+        }
     }
 }

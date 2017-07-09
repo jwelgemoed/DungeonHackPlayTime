@@ -153,6 +153,14 @@ namespace FunAndGamesWithSlimDX.Engine
             {
                 Camera.CurrentMoveState.ResetPosition = false;
             }
+            else if (e.KeyCode == Keys.PageDown)
+            {
+                Camera.DecreaseTopdownviewHeight();
+            }
+            else if (e.KeyCode == Keys.PageUp)
+            {
+                Camera.IncreaseTopdownviewHeight();
+            }
 
         }
 
@@ -165,6 +173,7 @@ namespace FunAndGamesWithSlimDX.Engine
             _previousMouseY = -e.Y;
             Cursor.Position = _centerPoint;
 
+            //Player.Rotate();
             Camera.Rotate(Camera.RelativeX, Camera.RelativeY);
         }
 

@@ -230,7 +230,7 @@ namespace MapEditor
                     }
                 }
 
-                MeshBuilder meshBuilder = new MeshBuilder(_device, _shader);
+                PolygonBuilder meshBuilder = new PolygonBuilder(_device, _shader);
 
                 var roomMesh = meshBuilder
                                 .New()

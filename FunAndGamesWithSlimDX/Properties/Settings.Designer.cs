@@ -211,5 +211,14 @@ namespace DungeonHack.Properties {
                 return ((float)(this["MaxDownAcceleration"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Topdown {
+            get {
+                return ((bool)(this["Topdown"]));
+            }
+        }
     }
 }

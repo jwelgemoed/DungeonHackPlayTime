@@ -10,12 +10,8 @@ namespace FunAndGamesWithSlimDX.Engine
         private Vector3 _eyeAt;
         private Vector3 _lookAt;
         private Vector3 _up;
-        private Vector3 _right;
-        private Vector3 _forward;
         private Vector3 _startingEyeAt;
-        private Matrix? _worldMatrix;
         private Matrix? _projectionMatrix;
-        private Matrix? _orthMatrix;
 
         public float Height { get; set; }
         public float RelativeX { get; set; }
@@ -27,6 +23,17 @@ namespace FunAndGamesWithSlimDX.Engine
             get
             {
                 return _eyeAt;
+            }
+        }
+
+        public Vector3 TopdownEyePosition
+        {
+            get
+            {
+                var eyepos = _eyeAt;
+                eyepos.Y += _topdownHeight;
+
+                return eyepos;
             }
         }
 
@@ -63,16 +70,20 @@ namespace FunAndGamesWithSlimDX.Engine
         private readonly float _maxUpAcceleration;
         private readonly float _downAcceleration;
         private readonly float _maxDownAcceleration;
+        private readonly bool _topdown;
 
         public float RotationSpeed { get; set; }
 
         public Matrix ViewMatrix { get; set; }
+
+        public Matrix FirstPersonViewMatrix { get; set; }
 
         public BoundingSphere CameraSphere;
 
         private bool _initialPosition = true;
 
         private Vertex _collidedVertex;
+        private float _topdownHeight;
 
         public float FrameTime { get; set; }
 
@@ -97,8 +108,6 @@ namespace FunAndGamesWithSlimDX.Engine
         public Camera()
         {
             _up = new Vector3(0, 1, 0);
-            _right = new Vector3(1, 0, 0);
-            _forward = new Vector3(0, 0, 1); 
             _lookAt = new Vector3(0, 0, 1);
             Speed = 2.0f;
             RotationSpeed = 45;
@@ -113,6 +122,8 @@ namespace FunAndGamesWithSlimDX.Engine
             _maxUpAcceleration = ConfigManager.MaxUpAcceleration;
             _downAcceleration = ConfigManager.DownAcceleration;
             _maxDownAcceleration = ConfigManager.MaxDownAcceleration;
+            _topdown = ConfigManager.Topdown;
+            _topdownHeight = 1750.0f;
         }
 
         public void SetPosition(float x, float y, float z)
@@ -476,16 +487,58 @@ namespace FunAndGamesWithSlimDX.Engine
 
         public void Rotate(float relativeX, float relativeY)
         {
-            var direction = Vector3.Normalize(_lookAt - _eyeAt);
-            var rotAxis = Vector3.Cross(direction, _up);
+            if (_topdown)
+                TopdownRotate(relativeX, relativeY);
+            else
+                FreeLookRotate(relativeX, relativeY);
+        }
+
+        private void FreeLookRotate(float relativeX, float relativeY)
+        {
+            Vector3 direction = Vector3.Normalize(_lookAt - _eyeAt);
+            Vector3 rotAxis = Vector3.Cross(direction, _up);
+            Matrix matRotAxis;
+            Matrix matRotY;
             rotAxis = Vector3.Normalize(rotAxis);
 
-            var matRotAxis = Matrix.RotationAxis(rotAxis, relativeY/-RotationSpeed);
-            var matRotY = Matrix.RotationY(relativeX/RotationSpeed);
-            
-            direction = Vector3.TransformCoordinate(direction, matRotAxis*matRotY);
-            _up = Vector3.TransformCoordinate(_up, matRotAxis*matRotY);
+            matRotY = Matrix.RotationY(relativeX / RotationSpeed);
+
+            matRotAxis = Matrix.RotationAxis(rotAxis, relativeY / -RotationSpeed);
+            direction = Vector3.TransformCoordinate(direction, matRotAxis * matRotY);
+            _up = Vector3.TransformCoordinate(_up, matRotAxis * matRotY);
+           
             _lookAt = direction + _eyeAt;
+        }
+
+        private void TopdownRotate(float relativeX, float relativeY)
+        {
+            Vector3 direction = Vector3.Normalize(_lookAt - _eyeAt);
+            Vector3 rotAxis = Vector3.Cross(direction, _up);
+            Matrix matRotAxis;
+            Matrix matRotY;
+            rotAxis = Vector3.Normalize(rotAxis);
+
+            matRotY = Matrix.RotationY(relativeX / RotationSpeed);
+
+            matRotAxis = Matrix.RotationAxis(rotAxis, relativeY / -RotationSpeed);
+            direction = Vector3.TransformCoordinate(direction, matRotAxis * matRotY);
+            _up = Vector3.TransformCoordinate(_up, matRotAxis * matRotY);
+            
+            _lookAt = direction + _eyeAt;
+            _lookAt.Y = Height * 2;
+        }
+
+        public void DecreaseTopdownviewHeight()
+        {
+            _topdownHeight -= 50.0f;
+
+            if (_topdownHeight <= 50.0f)
+                _topdownHeight = 50.0f;
+        }
+
+        public void IncreaseTopdownviewHeight()
+        {
+            _topdownHeight += 50.0f;
         }
 
         public void Render()
@@ -494,7 +547,15 @@ namespace FunAndGamesWithSlimDX.Engine
 
             CameraSphere.Radius = 5.0f;
 
-            ViewMatrix = Matrix.LookAtLH(_eyeAt, _lookAt, _up);
+            if (_topdown)
+            {
+                ViewMatrix = Matrix.LookAtLH(TopdownEyePosition, _eyeAt, _up);
+                FirstPersonViewMatrix = Matrix.LookAtLH(_eyeAt, _lookAt, _up);
+            }
+            else
+            {
+                ViewMatrix = FirstPersonViewMatrix = Matrix.LookAtLH(_eyeAt, _lookAt, _up);
+            }
         }
     }
 

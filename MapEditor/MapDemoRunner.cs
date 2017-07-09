@@ -59,7 +59,7 @@ namespace MapEditor
         {
             //Construct the frustrum
             if (ConfigManager.FrustrumCullingEnabled)
-                _frustrum.ConstructFrustrum(Camera.ViewMatrix * Renderer.ProjectionMatrix);
+                _frustrum.ConstructFrustrum(Camera.FirstPersonViewMatrix * Renderer.ProjectionMatrix);
 
             //Do the light rendering
             LightEngine.RenderLights(Shader);

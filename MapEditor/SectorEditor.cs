@@ -452,7 +452,7 @@ namespace MapEditor
             model[5].tx = 0.0f;
             model[5].ty = 1.0f;
 
-            MeshBuilder meshBuilder = new MeshBuilder(_device, _shader);
+            PolygonBuilder meshBuilder = new PolygonBuilder(_device, _shader);
 
             var roomMesh = meshBuilder
                            .New()
@@ -583,7 +583,7 @@ namespace MapEditor
             model[5].tx = 0.0f;
             model[5].ty = 1.0f;
 
-            var meshBuilder = new MeshBuilder(_device, _shader);
+            var meshBuilder = new PolygonBuilder(_device, _shader);
             var roomMesh = meshBuilder
                             .New()
                             .SetModel(model)

@@ -115,11 +115,13 @@
     <Compile Include="BSP\LeafBsp\LeafTreeRenderer.cs" />
     <Compile Include="BSP\LeafBsp\Node.cs" />
     <Compile Include="BSP\LeafBsp\Portal.cs" />
+    <Compile Include="BSP\LeafBsp\PortalGenerator.cs" />
     <Compile Include="BSP\PointClassifier.cs" />
     <Compile Include="BSP\PolygonClassifier.cs" />
     <Compile Include="BSP\PolygonSplitter.cs" />
     <Compile Include="BSP\SplitterSelector.cs" />
     <Compile Include="Builders\MeshBuilder.cs" />
+    <Compile Include="Builders\PortalBuilder.cs" />
     <Compile Include="DirectX\LightShader.cs" />
     <Compile Include="DirectX\Shader.cs" />
     <Compile Include="DirectX\IncludeFX.cs" />
@@ -130,6 +132,9 @@
     <Compile Include="Engine\FontRenderer.cs" />
     <Compile Include="Engine\Frustrum.cs" />
     <Compile Include="Engine\Input.cs" />
+    <Compile Include="Engine\RenderPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Engine\SpriteRenderer.cs" />
     <Compile Include="Entities\Console.cs" />
     <Compile Include="Entities\EditorEnum.cs" />
@@ -161,7 +166,7 @@
     <Compile Include="Menus\OptionsWindow.Designer.cs">
       <DependentUpon>OptionsWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Entities\Polygon2.cs" />
+    <Compile Include="Entities\Polygon.cs" />
     <Compile Include="Menus\SaveWindow.cs">
       <SubType>Form</SubType>
     </Compile>
