@@ -17,6 +17,7 @@ namespace DungeonHack.BSP.LeafBsp
         private readonly List<Entities.Plane> _planeArray;
         private readonly PortalBuilder _portalBuilder;
         private readonly PolygonClassifier _polyClassifier;
+        private readonly PortalSplitter _splitter;
 
         public PortalGenerator(List<Node> nodeArray, List<Entities.Plane> planeArray, Device device, IShader shader)
         {
@@ -24,6 +25,13 @@ namespace DungeonHack.BSP.LeafBsp
             _planeArray = planeArray;
             _portalBuilder = new PortalBuilder(device, shader);
             _polyClassifier = new PolygonClassifier();
+            _splitter = new PortalSplitter(new PointClassifier(), device, shader);
+        }
+
+        public void BuildPortals()
+        {
+            int stackPointer = 0;
+
         }
 
         public Portal CalculateInitialPortal(int node)
@@ -83,11 +91,11 @@ namespace DungeonHack.BSP.LeafBsp
 
         public List<Portal> ClipPortal(int node, Portal portal)
         {
-            List<Portal> portalList = null;
             List<Portal> frontPortalList = new List<Portal>();
-            List<Portal> backPortalList;
-            List<Portal> frontSplit;
-            List<Portal> backSplit;
+            List<Portal> backPortalList = new List<Portal>();
+            List<Portal> portalList = new List<Portal>();
+            Portal frontSplit;
+            Portal backSplit;
 
             switch (_polyClassifier.ClassifyPolygon(_planeArray[_nodeArray[node].Plane], (Polygon)portal))
             {
@@ -117,20 +125,73 @@ namespace DungeonHack.BSP.LeafBsp
 
                     foreach (var fp in frontPortalList)
                     {
-
+                        backPortalList.AddRange(ClipPortal(_nodeArray[node].Back, fp));
                     }
 
-                    break;
+                    portalList.AddRange(backPortalList);
+
+                    return portalList;
                 case PolygonClassification.Front:
-                    break;
+                    if (!_nodeArray[node].IsLeaf)
+                    {
+                        portalList.AddRange(ClipPortal(_nodeArray[node].Front, portal));
+                        return portalList;
+                    }
+
+                    portal.LeafOwnerArray[portal.NumberOfLeafs] = _nodeArray[node].Front;
+                    portal.NumberOfLeafs++;
+                    portal.Next = null;
+                    portal.Previous = null;
+
+                    return new List<Portal> { portal };
                 case PolygonClassification.Back:
-                    break;
+                    if (_nodeArray[node].Back != -1)
+                    {
+                        portalList.AddRange(ClipPortal(_nodeArray[node].Back, portal));
+                        return portalList;
+                    }
+                    else
+                    {
+                        Delete(portal);
+                        return null;
+                    }
                 case PolygonClassification.Spanning:
-                    break;
-            }
 
+                    _splitter.Split(portal, _planeArray[_nodeArray[node].Plane].PointOnPlane
+                        , _planeArray[_nodeArray[node].Plane].Normal, out frontSplit, out backSplit);
+                    Delete(portal);
+                    if (!_nodeArray[node].IsLeaf)
+                    {
+                        frontPortalList.AddRange(ClipPortal(_nodeArray[node].Front, frontSplit));
+                    }
+                    else
+                    {
+                        frontSplit.LeafOwnerArray[frontSplit.NumberOfLeafs] = _nodeArray[node].Front;
+                        frontSplit.NumberOfLeafs++;
+                        frontPortalList.Add(frontSplit);
+                    }
 
-            return null;
+                    if (_nodeArray[node].Back != -1)
+                    {
+                        backPortalList.AddRange(ClipPortal(_nodeArray[node].Back, backSplit));
+                    }
+                    else
+                    {
+                        Delete(backSplit);
+                    }
+
+                    frontPortalList.AddRange(backPortalList);
+
+                    return frontPortalList;
+
+                default:
+                    return null;
+            }            
+        }
+
+        private void Delete(Portal portal)
+        {
+            portal.Deleted = true;
         }
     }
 }

@@ -23,5 +23,7 @@ namespace DungeonHack.BSP.LeafBsp
         public Portal Next { get; set; }
 
         public Portal Previous { get; set; }
+
+        public bool Deleted { get; set; }
     }
 }

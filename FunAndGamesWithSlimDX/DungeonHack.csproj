@@ -119,6 +119,7 @@
     <Compile Include="BSP\PointClassifier.cs" />
     <Compile Include="BSP\PolygonClassifier.cs" />
     <Compile Include="BSP\PolygonSplitter.cs" />
+    <Compile Include="BSP\PortalSplitter.cs" />
     <Compile Include="BSP\SplitterSelector.cs" />
     <Compile Include="Builders\MeshBuilder.cs" />
     <Compile Include="Builders\PortalBuilder.cs" />

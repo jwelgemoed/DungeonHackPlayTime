@@ -68,5 +68,14 @@
     <Setting Name="Topdown" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="TopdownInZoomAcceleration" Type="System.Single" Scope="Application">
+      <Value Profile="(Default)">0.05</Value>
+    </Setting>
+    <Setting Name="TopdownOutZoomAcceleration" Type="System.Single" Scope="Application">
+      <Value Profile="(Default)">0.05</Value>
+    </Setting>
+    <Setting Name="TopdownMaxZoomAcceleration" Type="System.Single" Scope="Application">
+      <Value Profile="(Default)">0.9</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

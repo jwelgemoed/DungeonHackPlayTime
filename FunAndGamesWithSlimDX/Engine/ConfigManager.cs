@@ -113,5 +113,20 @@ namespace FunAndGamesWithSlimDX.Engine
         {
             get { return Settings.Default.Topdown; }
         }
+
+        public static float ZoomInAcceleration
+        {
+            get { return Settings.Default.TopdownInZoomAcceleration; }
+        }
+
+        public static float ZoomOutAcceleration
+        {
+            get { return Settings.Default.TopdownOutZoomAcceleration; }
+        }
+
+        public static float MaxZoomAcceleration
+        {
+            get { return Settings.Default.TopdownMaxZoomAcceleration; }
+        }
     }
 }

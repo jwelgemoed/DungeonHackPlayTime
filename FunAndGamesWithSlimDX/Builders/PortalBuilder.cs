@@ -51,6 +51,41 @@ namespace DungeonHack.Builders
             return this;
         }
 
+        public new PortalBuilder SetTranslationMatrix(Matrix translationMatrix)
+        {
+            return (PortalBuilder)base.SetTranslationMatrix(translationMatrix);
+        }
+
+        public new PortalBuilder SetRotationMatrix(Matrix rotationMatrix)
+        {
+            return (PortalBuilder)base.SetRotationMatrix(rotationMatrix);
+        }
+
+        public new PortalBuilder SetScaleMatrix(Matrix scaleMatrix)
+        {
+            return (PortalBuilder)base.SetScaleMatrix(scaleMatrix);
+        }
+
+        public new PortalBuilder SetVertexData(Vertex[] vertexData)
+        {
+            return (PortalBuilder)base.SetVertexData(vertexData);
+        }
+
+        public new PortalBuilder SetIndexData(short[] indexData)
+        {
+            return (PortalBuilder)base.SetIndexData(indexData);
+        }
+
+        public new PortalBuilder SetTextureIndex(int textureIndex)
+        {
+            return (PortalBuilder)base.SetTextureIndex(textureIndex);
+        }
+
+        public new PortalBuilder SetMaterialIndex(int materialIndex)
+        {
+            return (PortalBuilder)base.SetMaterialIndex(materialIndex);
+        }
+
         public new Portal Build()
         {
             return (Portal)base.Build();

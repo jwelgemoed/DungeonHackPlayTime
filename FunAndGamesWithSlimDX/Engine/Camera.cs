@@ -32,7 +32,7 @@ namespace FunAndGamesWithSlimDX.Engine
             {
                 var eyepos = _eyeAt;
                 eyepos.Y += _topdownHeight;
-
+                
                 return eyepos;
             }
         }
@@ -71,6 +71,9 @@ namespace FunAndGamesWithSlimDX.Engine
         private readonly float _downAcceleration;
         private readonly float _maxDownAcceleration;
         private readonly bool _topdown;
+        private readonly float _zoomInAcceleration;
+        private readonly float _zoomOutAcceleration;
+        private readonly float _maxZoomAcceleration;
 
         public float RotationSpeed { get; set; }
 
@@ -123,6 +126,9 @@ namespace FunAndGamesWithSlimDX.Engine
             _downAcceleration = ConfigManager.DownAcceleration;
             _maxDownAcceleration = ConfigManager.MaxDownAcceleration;
             _topdown = ConfigManager.Topdown;
+            _zoomInAcceleration = ConfigManager.ZoomInAcceleration;
+            _zoomOutAcceleration = ConfigManager.ZoomOutAcceleration;
+            _maxZoomAcceleration = ConfigManager.MaxZoomAcceleration;
             _topdownHeight = 1750.0f;
         }
 
@@ -530,7 +536,7 @@ namespace FunAndGamesWithSlimDX.Engine
 
         public void DecreaseTopdownviewHeight()
         {
-            _topdownHeight -= 50.0f;
+             _topdownHeight -= 50.0f;
 
             if (_topdownHeight <= 50.0f)
                 _topdownHeight = 50.0f;

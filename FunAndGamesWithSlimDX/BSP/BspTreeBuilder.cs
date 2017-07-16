@@ -139,7 +139,7 @@ namespace DungeonHack.BSP
 
         private void HandleSpanningPolygon(BspNode currentNode, List<Polygon> meshList, out Polygon frontSplit, out Polygon backSplit, List<Polygon> frontList, List<Polygon> backList, Polygon testMesh)
         {
-            _polygonSplitter.SplitMesh(testMesh, currentNode.Splitter, out frontSplit, out backSplit);
+            _polygonSplitter.Split(testMesh, currentNode.Splitter, out frontSplit, out backSplit);
 
             if (frontSplit != null)
             {

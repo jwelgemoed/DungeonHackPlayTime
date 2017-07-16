@@ -220,5 +220,32 @@ namespace DungeonHack.Properties {
                 return ((bool)(this["Topdown"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.05")]
+        public float TopdownInZoomAcceleration {
+            get {
+                return ((float)(this["TopdownInZoomAcceleration"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.05")]
+        public float TopdownOutZoomAcceleration {
+            get {
+                return ((float)(this["TopdownOutZoomAcceleration"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.9")]
+        public float TopdownMaxZoomAcceleration {
+            get {
+                return ((float)(this["TopdownMaxZoomAcceleration"]));
+            }
+        }
     }
 }

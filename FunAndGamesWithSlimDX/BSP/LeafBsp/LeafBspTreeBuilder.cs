@@ -165,7 +165,7 @@ namespace DungeonHack.BSP.LeafBsp
 
         private void HandleSpanningPolygon(Node currentNode, List<Polygon> meshList, out Polygon frontSplit, out Polygon backSplit, List<Polygon> frontList, List<Polygon> backList, Polygon testMesh)
         {
-            _polygonSplitter.SplitMesh(testMesh, 
+            _polygonSplitter.Split(testMesh, 
                                         PlaneArray[currentNode.Plane].PointOnPlane, 
                                         PlaneArray[currentNode.Plane].Normal, 
                                         out frontSplit, 

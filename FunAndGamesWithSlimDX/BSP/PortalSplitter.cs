@@ -1,38 +1,28 @@
-﻿using DungeonHack.Builders;
-using FunAndGamesWithSlimDX.DirectX;
-using FunAndGamesWithSlimDX.Entities;
-using SlimDX;
-using SlimDX.Direct3D11;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using FunAndGamesWithSlimDX.DirectX;
+using SlimDX.Direct3D11;
+using FunAndGamesWithSlimDX.Entities;
+using DungeonHack.BSP.LeafBsp;
+using SlimDX;
+using DungeonHack.Builders;
 
 namespace DungeonHack.BSP
 {
-    public class PolygonSplitter
+    public class PortalSplitter : PolygonSplitter
     {
-        protected readonly PointClassifier _pointClassifier;
-        private readonly PolygonBuilder _polygonBuilder;
-        private readonly Device _device;
-        private readonly IShader _shader;
+        private readonly PortalBuilder _portalBuilder;
 
-        public PolygonSplitter(PointClassifier pointClassifier, Device device, IShader shader)
+        public PortalSplitter(PointClassifier pointClassifier, Device device, IShader shader) 
+            : base(pointClassifier, device, shader)
         {
-            _pointClassifier = pointClassifier;
-            _device = device;
-            _shader = shader;
-            _polygonBuilder = new PolygonBuilder(device, shader);
+            _portalBuilder = new PortalBuilder(device, shader);
         }
 
-        public void Split(Polygon testMesh, Polygon plane, out Polygon frontSplit, out Polygon backSplit)
-        {
-            Vector3 pointOnPlane = new Vector3(plane.VertexData[0].Position.X, 
-                                                plane.VertexData[0].Position.Y, 
-                                                plane.VertexData[0].Position.Z);
-
-            Split(testMesh, pointOnPlane, plane.VertexData[0].Normal, out frontSplit, out backSplit);
-        }
-
-        public void Split(Polygon testMesh, Vector3 pointOnPlane, Vector3 planeNormal, out Polygon frontSplit, out Polygon backSplit)
+        public void Split(Portal testMesh, Vector3 pointOnPlane, Vector3 planeNormal, out Portal frontSplit, out Portal backSplit)
         {
             List<Vertex> frontList = new List<Vertex>();
             List<Vertex> backList = new List<Vertex>();
@@ -186,7 +176,7 @@ namespace DungeonHack.BSP
                 indexListBack[(i * 3) + 2] = v2;
             }
 
-            frontSplit = _polygonBuilder
+            frontSplit = _portalBuilder
                         .New()
                         .SetTranslationMatrix(testMesh.TranslationMatrix)
                         .SetRotationMatrix(testMesh.RotationMatrix)
@@ -197,7 +187,7 @@ namespace DungeonHack.BSP
                         .SetMaterialIndex(testMesh.MaterialIndex)
                         .Build();
 
-            backSplit = _polygonBuilder
+            backSplit = _portalBuilder
                         .New()
                         .SetTranslationMatrix(testMesh.TranslationMatrix)
                         .SetRotationMatrix(testMesh.RotationMatrix)
@@ -207,42 +197,6 @@ namespace DungeonHack.BSP
                         .SetTextureIndex(testMesh.TextureIndex)
                         .SetMaterialIndex(testMesh.MaterialIndex)
                         .Build();
-        }
-
-        protected bool GetIntersect(Vector3 lineStart,
-                                    Vector3 lineEnd,
-                                    Vector3 vertex,
-                                    Vector3 normal,
-                                    out Vector3 intersection,
-                                    out float percentage)
-        {
-            intersection = default(Vector3);
-            percentage = 0;
-            Vector3 direction, l1;
-            float linelength, distFromPlane;
-
-            direction = lineEnd - lineStart;
-
-            linelength = Vector3.Dot(direction, normal);
-
-            if (Math.Abs(linelength) < 0.0001)
-            {
-                return false;
-            }
-
-            l1 = vertex - lineStart;
-
-            distFromPlane = Vector3.Dot(l1, normal);
-            percentage = distFromPlane / linelength;
-
-            if ((percentage < 0.0f) || (percentage > 1.0f))
-            {
-                return false;
-            }
-
-            intersection = lineStart + (direction * percentage);
-
-            return true;
         }
     }
 }

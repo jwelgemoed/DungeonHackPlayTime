@@ -40,3 +40,4 @@ C:\git\DungeonHackPlayTime\FunAndGamesWithSlimDX\obj\Release\DungeonHack.Propert
 C:\git\DungeonHackPlayTime\FunAndGamesWithSlimDX\obj\Release\DungeonHack.csproj.GenerateResource.Cache
 C:\git\DungeonHackPlayTime\FunAndGamesWithSlimDX\obj\Release\DungeonHack.dll
 C:\git\DungeonHackPlayTime\FunAndGamesWithSlimDX\obj\Release\DungeonHack.pdb
+C:\git\DungeonHackPlayTime\FunAndGamesWithSlimDX\obj\Release\DungeonHack.csprojResolveAssemblyReference.cache
