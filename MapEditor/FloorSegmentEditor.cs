@@ -225,7 +225,8 @@ namespace MapEditor
 
         public void EditAction(Point startPoint, float currentScale, GlobalMapData mapData)
         {
-            throw new NotImplementedException();
+            CreateMesh(_tempRectangle, startPoint, currentScale);
+            _tempRectangle = null;
         }
     }
 }

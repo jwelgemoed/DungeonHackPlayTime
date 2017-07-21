@@ -112,6 +112,10 @@ namespace FunAndGamesWithSlimDX.Engine
                     Shader.SetSelectedShaderEffect(Renderer.Device, _shaderTechniques[currentTechId]);
                 }
             }
+            else if (e.KeyCode == Keys.F2)
+            {
+                Camera.ToggleTopDownView();
+            }
 
         }
 

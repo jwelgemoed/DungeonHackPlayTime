@@ -70,7 +70,7 @@ namespace FunAndGamesWithSlimDX.Engine
         private readonly float _maxUpAcceleration;
         private readonly float _downAcceleration;
         private readonly float _maxDownAcceleration;
-        private readonly bool _topdown;
+        private bool _topdown;
         private readonly float _zoomInAcceleration;
         private readonly float _zoomOutAcceleration;
         private readonly float _maxZoomAcceleration;
@@ -130,6 +130,11 @@ namespace FunAndGamesWithSlimDX.Engine
             _zoomOutAcceleration = ConfigManager.ZoomOutAcceleration;
             _maxZoomAcceleration = ConfigManager.MaxZoomAcceleration;
             _topdownHeight = 1750.0f;
+        }
+
+        internal void ToggleTopDownView()
+        {
+            _topdown = !_topdown;
         }
 
         public void SetPosition(float x, float y, float z)
