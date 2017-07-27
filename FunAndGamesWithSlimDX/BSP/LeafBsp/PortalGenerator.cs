@@ -18,10 +18,13 @@ namespace DungeonHack.BSP.LeafBsp
         private readonly PortalBuilder _portalBuilder;
         private readonly PolygonClassifier _polyClassifier;
         private readonly PortalSplitter _splitter;
+        private List<Portal> PortalArray;
+        private int NumberOfNodes;
 
         public PortalGenerator(List<Node> nodeArray, List<Entities.Plane> planeArray, Device device, IShader shader)
         {
             _nodeArray = nodeArray;
+            NumberOfNodes = _nodeArray.Count - 1;
             _planeArray = planeArray;
             _portalBuilder = new PortalBuilder(device, shader);
             _polyClassifier = new PolygonClassifier();
@@ -31,6 +34,38 @@ namespace DungeonHack.BSP.LeafBsp
         public void BuildPortals()
         {
             int stackPointer = 0;
+            PortalStackItem[] nodeStack = new PortalStackItem[(NumberOfNodes+1)];
+            int portalIndex = 0;
+
+            nodeStack[stackPointer].Node = 0;
+            nodeStack[stackPointer].JumpBackPoint = 0;
+
+        START:
+
+            Portal initialPortal = CalculateInitialPortal(nodeStack[stackPointer].Node);
+            List<Portal> portalList = ClipPortal(0, initialPortal);
+
+            for (int i = 0; i > portalList.Count; i++)
+            {
+                if (portalList[i].NumberOfLeafs != 2)
+                {
+                    portalList.Remove(portalList[i]);
+                }
+                else if (IsDuplicatePortal(portalList[i], out portalIndex))
+                {
+                    portalList.Remove(portalList[i]);
+                }
+                else
+                {
+                    PortalArray[portalIndex] = portalList[i];
+                    if (portalIndex == NumberOfPortals)
+                    {
+
+                    }
+                }
+            }
+
+            
 
         }
 
@@ -192,6 +227,11 @@ namespace DungeonHack.BSP.LeafBsp
         private void Delete(Portal portal)
         {
             portal.Deleted = true;
+        }
+
+        private bool IsDuplicatePortal(Portal x, out int portalIndex)
+        {
+            throw new NotImplementedException();
         }
     }
 }
