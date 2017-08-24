@@ -15,17 +15,21 @@ namespace DungeonHack.BSP.LeafBsp
     {
         private readonly List<Node> _nodeArray;
         private readonly List<Entities.Plane> _planeArray;
+        private readonly List<Leaf> _leafArray;
         private readonly PortalBuilder _portalBuilder;
         private readonly PolygonClassifier _polyClassifier;
         private readonly PortalSplitter _splitter;
         private List<Portal> PortalArray;
         private int NumberOfNodes;
 
-        public PortalGenerator(List<Node> nodeArray, List<Entities.Plane> planeArray, Device device, IShader shader)
+        private int NumberOfPortals { get { return PortalArray.Count; } }
+
+        public PortalGenerator(List<Node> nodeArray, List<Entities.Plane> planeArray, List<Leaf> leafArray, Device device, IShader shader)
         {
             _nodeArray = nodeArray;
             NumberOfNodes = _nodeArray.Count - 1;
             _planeArray = planeArray;
+            _leafArray = leafArray;
             _portalBuilder = new PortalBuilder(device, shader);
             _polyClassifier = new PolygonClassifier();
             _splitter = new PortalSplitter(new PointClassifier(), device, shader);
@@ -56,16 +60,50 @@ namespace DungeonHack.BSP.LeafBsp
                     portalList.Remove(portalList[i]);
                 }
                 else
-                {
+                {                      
                     PortalArray[portalIndex] = portalList[i];
                     if (portalIndex == NumberOfPortals)
                     {
-
+                        for (int j = 0; i < portalList[i].NumberOfLeafs; j++)
+                        {
+                            int index = portalList[i].LeafOwnerArray[j];
+                            _leafArray[index].PortalIndexList[_leafArray[index].NumberOfPortals] = NumberOfPortals;
+                            _leafArray[index].NumberOfPortals++;
+                        }
                     }
                 }
             }
 
-            
+            if (!_nodeArray[nodeStack[stackPointer].Node].IsLeaf)
+            {
+                nodeStack[stackPointer + 1].Node = _nodeArray[nodeStack[stackPointer].Node].Front;
+                nodeStack[stackPointer + 1].JumpBackPoint = 1;
+                stackPointer++;
+                goto START;
+            }
+
+            BACK:
+            if (_nodeArray[nodeStack[stackPointer].Node].Back != -1)
+            {
+                nodeStack[stackPointer + 1].Node = _nodeArray[nodeStack[stackPointer].Node].Back;
+                nodeStack[stackPointer + 1].JumpBackPoint = 2;
+                stackPointer++;
+                goto START;
+            }
+
+            END:
+            stackPointer--;
+            if (stackPointer > -1)
+            {
+                if (nodeStack[stackPointer].JumpBackPoint == 1)
+                {
+                    goto BACK;
+                }
+                else if (nodeStack[stackPointer].JumpBackPoint == 2)
+                {
+                    goto END;
+                }
+            }
 
         }
 

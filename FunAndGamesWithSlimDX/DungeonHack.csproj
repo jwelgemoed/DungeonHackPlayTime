@@ -116,6 +116,7 @@
     <Compile Include="BSP\LeafBsp\Node.cs" />
     <Compile Include="BSP\LeafBsp\Portal.cs" />
     <Compile Include="BSP\LeafBsp\PortalGenerator.cs" />
+    <Compile Include="BSP\LeafBsp\PortalStackItem.cs" />
     <Compile Include="BSP\PointClassifier.cs" />
     <Compile Include="BSP\PolygonClassifier.cs" />
     <Compile Include="BSP\PolygonSplitter.cs" />
