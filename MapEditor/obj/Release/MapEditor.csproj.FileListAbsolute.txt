@@ -68,3 +68,5 @@ C:\git\DungeonHackPlayTime\MapEditor\obj\Release\MapEditor.Properties.Resources.
 C:\git\DungeonHackPlayTime\MapEditor\obj\Release\MapEditor.csproj.GenerateResource.Cache
 C:\git\DungeonHackPlayTime\MapEditor\obj\Release\MapEditor.exe
 C:\git\DungeonHackPlayTime\MapEditor\obj\Release\MapEditor.pdb
+C:\git\DungeonHackPlayTime\MapEditor\bin\Release\AssimpNet.dll
+C:\git\DungeonHackPlayTime\MapEditor\bin\Release\AssimpNet.xml

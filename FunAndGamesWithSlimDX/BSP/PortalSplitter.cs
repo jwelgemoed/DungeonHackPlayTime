@@ -22,6 +22,11 @@ namespace DungeonHack.BSP
             _portalBuilder = new PortalBuilder(device, shader);
         }
 
+        public void Split(Portal testMesh, Entities.Plane plane, out Portal frontSplit, out Portal backSplit)
+        {
+            Split(testMesh, plane.PointOnPlane, plane.Normal, out frontSplit, out backSplit);
+        }
+
         public void Split(Portal testMesh, Vector3 pointOnPlane, Vector3 planeNormal, out Portal frontSplit, out Portal backSplit)
         {
             List<Vertex> frontList = new List<Vertex>();

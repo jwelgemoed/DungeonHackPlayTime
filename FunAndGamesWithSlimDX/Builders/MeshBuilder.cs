@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Assimp;
 
 namespace DungeonHack.Builders
 {
@@ -105,6 +106,37 @@ namespace DungeonHack.Builders
         public PolygonBuilder SetVertexData(Vertex[] vertexData)
         {
             _mesh.VertexData = vertexData;
+            return this;
+        }
+
+
+        public PolygonBuilder LoadFromMesh(Mesh mesh)
+        {
+            if (!mesh.HasVertices)
+            {
+                throw new ArgumentException("No vertices in mesh!");
+            }
+
+            _mesh.IndexData = mesh.GetShortIndices();
+            int index = 0;
+
+            foreach (var vector in mesh.Vertices)
+            {
+                Vertex vertex = new Vertex();
+                vertex.Position = new Vector4(vector.X, vector.Y, vector.Z, 1.0f);
+                vertex.Normal = new Vector3(mesh.Normals[index].X, mesh.Normals[index].Y, mesh.Normals[index].Z);
+
+                //Can only handle 1 channel at the moment
+                if (mesh.HasTextureCoords(0))
+                {
+                    vertex.Texture = new Vector2(mesh.TextureCoordinateChannels[0][index].X,
+                                                 mesh.TextureCoordinateChannels[0][index].Y);
+
+                }
+
+                index++;
+            }
+            
             return this;
         }
         

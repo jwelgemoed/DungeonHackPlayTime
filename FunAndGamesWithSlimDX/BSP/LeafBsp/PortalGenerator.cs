@@ -6,8 +6,6 @@ using SlimDX.Direct3D11;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DungeonHack.BSP.LeafBsp
 {
@@ -267,9 +265,45 @@ namespace DungeonHack.BSP.LeafBsp
             portal.Deleted = true;
         }
 
-        private bool IsDuplicatePortal(Portal x, out int portalIndex)
+        private bool IsDuplicatePortal(Portal checkPortal, out int portalIndex)
         {
-            throw new NotImplementedException();
+            int checkPortalLeaf1 = checkPortal.LeafOwnerArray[0];
+            int checkPortalLeaf2 = checkPortal.LeafOwnerArray[1];
+            int PALeaf1 = 0;
+            int PALeaf2 = 0;
+
+            for (int i=0; i<NumberOfPortals; i++)
+            {
+                PALeaf1 = PortalArray[i].LeafOwnerArray[0];
+                PALeaf2 = PortalArray[i].LeafOwnerArray[1];
+
+                if ((checkPortalLeaf1 == PALeaf1 && checkPortalLeaf2 == PALeaf2) ||
+                        (checkPortalLeaf1 == PALeaf2 && checkPortalLeaf2 == PALeaf1))
+                {
+                    var min1 = checkPortal.VertexData.Select(x => new Vector3(x.Position.X, x.Position.Y, x.Position.Z)).Min();
+                    var max1 = checkPortal.VertexData.Select(x => new Vector3(x.Position.X, x.Position.Y, x.Position.Z)).Max();
+                    var min2 = PortalArray[i].VertexData.Select(x => new Vector3(x.Position.X, x.Position.Y, x.Position.Z)).Min();
+                    var max2 = PortalArray[i].VertexData.Select(x => new Vector3(x.Position.X, x.Position.Y, x.Position.Z)).Max();
+
+                    float newSize = (max1 - min1).Length();
+                    float oldSize = (max2 - min2).Length();
+
+                    if (Math.Abs(newSize) > Math.Abs(oldSize))
+                    {
+                        PortalArray.RemoveAt(i);
+                        portalIndex = i;
+                        return false;
+                    }
+                    else
+                    {
+                        portalIndex = -1;
+                        return true;
+                    }
+
+                }
+            }
+            portalIndex = NumberOfPortals;
+            return false;
         }
     }
 }

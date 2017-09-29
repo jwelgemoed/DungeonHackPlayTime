@@ -19,7 +19,8 @@
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
     <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>bd30227e</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -44,6 +45,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AssimpNet, Version=3.3.2.0, Culture=neutral, PublicKeyToken=3edc10cb77b1bca2, processorArchitecture=MSIL">
+      <HintPath>..\..\..\nugetrepositories\AssimpNet.3.3.2\lib\net45\AssimpNet.dll</HintPath>
+    </Reference>
     <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\nugetrepositories\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
       <Private>True</Private>
@@ -171,7 +175,9 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Win2D.0.0.14\build\native\Win2D.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Win2D.0.0.14\build\native\Win2D.targets'))" />
     <Error Condition="!Exists('..\packages\Win2D.0.0.14\build\native\Win2D.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Win2D.0.0.14\build\native\Win2D.props'))" />
+    <Error Condition="!Exists('..\..\..\nugetrepositories\AssimpNet.3.3.2\build\AssimpNet.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\nugetrepositories\AssimpNet.3.3.2\build\AssimpNet.targets'))" />
   </Target>
+  <Import Project="..\..\..\nugetrepositories\AssimpNet.3.3.2\build\AssimpNet.targets" Condition="Exists('..\..\..\nugetrepositories\AssimpNet.3.3.2\build\AssimpNet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

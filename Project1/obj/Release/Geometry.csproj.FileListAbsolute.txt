@@ -39,3 +39,5 @@ C:\git\DungeonHackPlayTime\Project1\bin\Release\GameData.pdb
 C:\git\DungeonHackPlayTime\Project1\obj\Release\Geometry.csprojResolveAssemblyReference.cache
 C:\git\DungeonHackPlayTime\Project1\obj\Release\Geometry.dll
 C:\git\DungeonHackPlayTime\Project1\obj\Release\Geometry.pdb
+C:\git\DungeonHackPlayTime\Project1\bin\Release\AssimpNet.dll
+C:\git\DungeonHackPlayTime\Project1\bin\Release\AssimpNet.xml
