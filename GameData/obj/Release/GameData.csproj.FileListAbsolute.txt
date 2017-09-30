@@ -48,3 +48,5 @@ C:\git\DungeonHackPlayTime\GameData\obj\Release\GameData.dll
 C:\git\DungeonHackPlayTime\GameData\obj\Release\GameData.pdb
 C:\git\DungeonHackPlayTime\GameData\bin\Release\AssimpNet.dll
 C:\git\DungeonHackPlayTime\GameData\bin\Release\AssimpNet.xml
+C:\git\DungeonHackPlayTime\GameData\bin\Release\AutoMapper.dll
+C:\git\DungeonHackPlayTime\GameData\bin\Release\AutoMapper.xml

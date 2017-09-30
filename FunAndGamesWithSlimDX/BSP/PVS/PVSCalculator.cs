@@ -22,6 +22,7 @@ namespace DungeonHack.BSP.PVS
         private readonly PointClassifier _pointClassifier;
         private readonly PortalSplitter _splitter;
         private List<Portal> PortalArray;
+        private Byte[] PVSData;
         private int _bytesPerSet;
 
         private int NumberOfLeafs { get { return _leafArray.Count; } }
@@ -36,6 +37,8 @@ namespace DungeonHack.BSP.PVS
             _pointClassifier = new PointClassifier();
 
             _bytesPerSet = (NumberOfLeafs + 7) >> 3;
+
+            PVSData = new Byte[NumberOfLeafs];
         }
 
 
@@ -78,9 +81,39 @@ namespace DungeonHack.BSP.PVS
             return pvsMasterWriterPointer;
         }
 
-        private int CompressLeafSet(byte[] leafPvs, int pvsMasterWriterPointer)
+        private int CompressLeafSet(byte[] visArray, int writePos)
         {
-            throw new NotImplementedException();
+            int j, rep;
+            byte dest = PVSData[writePos];
+            byte dest_p = dest;
+            int currentPos = writePos;
+
+            for (int i = 0; i < _bytesPerSet; i++)
+            {
+                currentPos++;
+                PVSData[currentPos] = visArray[i];
+                if (visArray[i] > 0)
+                    continue;
+
+                rep = 1;
+                for (i++; i < _bytesPerSet; i++)
+                {
+                    if ((visArray[i] | rep) == 255)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        rep++;
+                    }
+                }
+
+                currentPos++;
+                PVSData[currentPos] = (byte) rep;
+                i--;
+            }
+
+            return currentPos - writePos;
         }
 
         private void RecursePvs(int sourceLeaf, Portal srcPortal, Portal targetPortal, int targetLeaf, byte[] leafPvs)
