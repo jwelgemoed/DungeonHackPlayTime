@@ -180,7 +180,11 @@ namespace MapEditor
 
             demo.InitializeScene();
 
-            leafTreeBuilder.BuildTree(0, demo.Meshes);
+            var leafTreeMasterData = leafTreeBuilder.BuildTree(0, demo.Meshes);
+            var portalGenerator = new PortalGenerator(leafTreeMasterData, demo.Device, demo.GetShader);
+
+            portalGenerator.BuildPortals();
+
             demo.BspRootNode = bspTreeBuilder.BuildTree(demo.Meshes);
             bspBoudingVolumeCalculator.ComputeBoundingVolumes(demo.BspRootNode);
 

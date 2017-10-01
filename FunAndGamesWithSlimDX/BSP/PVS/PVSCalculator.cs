@@ -4,57 +4,43 @@ using FunAndGamesWithSlimDX.DirectX;
 using SlimDX.Direct3D11;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FunAndGamesWithSlimDX.Entities;
 using SlimDX;
 
 namespace DungeonHack.BSP.PVS
 {
     public class PVSCalculator
     {
-        private readonly List<Node> _nodeArray;
-        private readonly List<Entities.Plane> _planeArray;
-        private readonly List<Leaf> _leafArray;
         private readonly PortalBuilder _portalBuilder;
         private readonly PolygonClassifier _polyClassifier;
         private readonly PointClassifier _pointClassifier;
         private readonly PortalSplitter _splitter;
-        private List<Portal> PortalArray;
-        private Byte[] PVSData;
+        private LeafBspMasterData _masterData;
         private int _bytesPerSet;
 
-        private int NumberOfLeafs { get { return _leafArray.Count; } }
-
-        public PVSCalculator(List<Node> nodeArray, List<Entities.Plane> planeArray, List<Leaf> leafArray, Device device, IShader shader)
+        public PVSCalculator(LeafBspMasterData masterData, Device device, IShader shader)
         {
-            _nodeArray = nodeArray;
-            _planeArray = planeArray;
-            _leafArray = leafArray;
+            _masterData = masterData;
             _polyClassifier = new PolygonClassifier();
             _splitter = new PortalSplitter(new PointClassifier(), device, shader);
             _pointClassifier = new PointClassifier();
 
-            _bytesPerSet = (NumberOfLeafs + 7) >> 3;
+            _bytesPerSet = (_masterData.NumberOfLeaves + 7) >> 3;
 
-            PVSData = new Byte[NumberOfLeafs];
+            _masterData.PVSData = new Byte[_masterData.NumberOfLeaves];
         }
-
-
 
         public long CalculatePVS()
         {
             byte[] leafPvs = new byte[_bytesPerSet];
             int pvsMasterWriterPointer = 0;
-            for (int leaf=0; leaf<NumberOfLeafs;leaf++)
+            for (int leaf=0; leaf<_masterData.NumberOfLeaves;leaf++)
             {
-                _leafArray[leaf].PVSIndex = pvsMasterWriterPointer;
+                _masterData.LeafArray[leaf].PVSIndex = pvsMasterWriterPointer;
                 SetPvsBit(leafPvs, leaf);
 
-                for (int spi=0; spi<_leafArray[leaf].NumberOfPortals; spi++)
+                for (int spi=0; spi<_masterData.LeafArray[leaf].NumberOfPortals; spi++)
                 {
-                    Portal sourcePortal = PortalArray[_leafArray[leaf].PortalIndexList[spi]];
+                    Portal sourcePortal = _masterData.PortalArray[_masterData.LeafArray[leaf].PortalIndexList[spi]];
                     int targetLeaf = sourcePortal.LeafOwnerArray[0];
                     if (targetLeaf == leaf)
                     {
@@ -62,9 +48,9 @@ namespace DungeonHack.BSP.PVS
                     }
                     SetPvsBit(leafPvs, targetLeaf);
 
-                    for (int dpi=0; dpi<_leafArray[targetLeaf].NumberOfPortals; dpi++)
+                    for (int dpi=0; dpi<_masterData.LeafArray[targetLeaf].NumberOfPortals; dpi++)
                     {
-                        Portal targetPortal = PortalArray[_leafArray[targetLeaf].PortalIndexList[dpi]];
+                        Portal targetPortal = _masterData.PortalArray[_masterData.LeafArray[targetLeaf].PortalIndexList[dpi]];
 
                         if ((sourcePortal != targetPortal) &&
                                 (_polyClassifier.ClassifyPolygon(GetPortalPlane(sourcePortal), targetPortal) 
@@ -84,14 +70,14 @@ namespace DungeonHack.BSP.PVS
         private int CompressLeafSet(byte[] visArray, int writePos)
         {
             int j, rep;
-            byte dest = PVSData[writePos];
+            byte dest = _masterData.PVSData[writePos];
             byte dest_p = dest;
             int currentPos = writePos;
 
             for (int i = 0; i < _bytesPerSet; i++)
             {
                 currentPos++;
-                PVSData[currentPos] = visArray[i];
+                _masterData.PVSData[currentPos] = visArray[i];
                 if (visArray[i] > 0)
                     continue;
 
@@ -109,7 +95,7 @@ namespace DungeonHack.BSP.PVS
                 }
 
                 currentPos++;
-                PVSData[currentPos] = (byte) rep;
+                _masterData.PVSData[currentPos] = (byte) rep;
                 i--;
             }
 
@@ -127,21 +113,21 @@ namespace DungeonHack.BSP.PVS
 
             SetPvsBit(leafPvs, generatorLeaf);
 
-            Vector3 sourceLeafCenter = (_leafArray[sourceLeaf].BoundingBox.Maximum + _leafArray[sourceLeaf].BoundingBox.Minimum) / 2;
-            Vector3 targetLeafCenter = (_leafArray[targetLeaf].BoundingBox.Maximum + _leafArray[targetLeaf].BoundingBox.Minimum) / 2;
+            Vector3 sourceLeafCenter = (_masterData.LeafArray[sourceLeaf].BoundingBox.Maximum + _masterData.LeafArray[sourceLeaf].BoundingBox.Minimum) / 2;
+            Vector3 targetLeafCenter = (_masterData.LeafArray[targetLeaf].BoundingBox.Maximum + _masterData.LeafArray[targetLeaf].BoundingBox.Minimum) / 2;
 
             var sourceLeafLocation = _pointClassifier.ClassifyPoint(sourceLeafCenter, GetPortalPlane(srcPortal));
             var targetLeafLocation = _pointClassifier.ClassifyPoint(targetLeafCenter, GetPortalPlane(targetPortal));
 
-            for (int gpi = 0; gpi < _leafArray[generatorLeaf].NumberOfPortals; gpi++)
+            for (int gpi = 0; gpi < _masterData.LeafArray[generatorLeaf].NumberOfPortals; gpi++)
             {
-                if (PortalArray[_leafArray[generatorLeaf].PortalIndexList[gpi]] == targetPortal)
+                if (_masterData.PortalArray[_masterData.LeafArray[generatorLeaf].PortalIndexList[gpi]] == targetPortal)
                 {
                     continue;
                 }
 
                 Portal sourcePortal = srcPortal.Copy();
-                Portal generatorPortal = PortalArray[_leafArray[generatorLeaf].PortalIndexList[gpi]].Copy();
+                Portal generatorPortal = _masterData.PortalArray[_masterData.LeafArray[generatorLeaf].PortalIndexList[gpi]].Copy();
 
                 var generatorLocation = _polyClassifier.ClassifyPolygon(GetPortalPlane(sourcePortal), generatorPortal);
 

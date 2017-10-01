@@ -121,3 +121,5 @@ C:\git\DungeonHackPlayTime\Project1\bin\Debug\GameData.pdb
 C:\git\DungeonHackPlayTime\Project1\obj\Debug\Geometry.csprojResolveAssemblyReference.cache
 C:\git\DungeonHackPlayTime\Project1\obj\Debug\Geometry.dll
 C:\git\DungeonHackPlayTime\Project1\obj\Debug\Geometry.pdb
+C:\git\DungeonHackPlayTime\Project1\bin\Debug\AssimpNet.dll
+C:\git\DungeonHackPlayTime\Project1\bin\Debug\AssimpNet.xml

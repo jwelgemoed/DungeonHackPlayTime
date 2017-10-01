@@ -20,6 +20,7 @@ namespace DungeonHack.BSP.LeafBsp
         {
             _device = device;
             _shader = shader;
+            LeafOwnerArray = new int[2];
         }
 
         public int NumberOfLeafs { get; set; }

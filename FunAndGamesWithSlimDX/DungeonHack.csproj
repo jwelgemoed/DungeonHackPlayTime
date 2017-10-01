@@ -115,10 +115,10 @@
     <Compile Include="BSP\BspNode.cs" />
     <Compile Include="BSP\BspRenderer.cs" />
     <Compile Include="BSP\BspTreeBuilder.cs" />
+    <Compile Include="BSP\LeafBspMasterData.cs" />
     <Compile Include="BSP\LeafBsp\Leaf.cs" />
     <Compile Include="BSP\LeafBsp\LeafBspTreeBuilder.cs" />
     <Compile Include="BSP\LeafBsp\LeafStackItem.cs" />
-    <Compile Include="BSP\LeafBsp\LeafTreeData.cs" />
     <Compile Include="BSP\LeafBsp\LeafTreeRenderer.cs" />
     <Compile Include="BSP\LeafBsp\Node.cs" />
     <Compile Include="BSP\LeafBsp\Portal.cs" />

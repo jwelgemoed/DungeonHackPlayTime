@@ -10,23 +10,11 @@ namespace DungeonHack.BSP.LeafBsp
 {
     public class LeafBspTreeBuilder
     {
-        public int NumberOfMeshes { get { return MeshArray.Count - 1; } }
-        public int NumberOfNodes { get { return NodeArray.Count - 1; } }
-        public int NumberOfLeafs { get { return LeafArray.Count - 1; } }
-        public int NumberOfPlanes { get { return PlaneArray.Count - 1; } } 
-        public int NumberOfPortals { get; set; }
-
-        private List<Polygon> MeshArray = new List<Polygon>();
-        private List<Node> NodeArray = new List<Node>();
-        private List<Leaf> LeafArray = new List<Leaf>();
-        private List<Plane> PlaneArray = new List<Plane>();
-        //public Portal[] PortalArray;
-        private List<byte> pvsData = new List<byte>();
-
         private readonly PolygonClassifier _polygonClassifier;
         private readonly PolygonSplitter _polygonSplitter;
         private readonly SplitterSelector _splitterSelector;
         private readonly BoundingBoxCalculator _boundingBoxCalculator;
+        private LeafBspMasterData _masterData;
 
         private int _recursionDepth = 0;
 
@@ -36,12 +24,13 @@ namespace DungeonHack.BSP.LeafBsp
             _polygonSplitter = new PolygonSplitter(new PointClassifier(), device, shader);
             _splitterSelector = new SplitterSelector(_polygonClassifier, 3);
             _boundingBoxCalculator = new BoundingBoxCalculator();
+            _masterData = new LeafBspMasterData();
 
             Node newNode = new Node();
-            NodeArray.Add(newNode);
+            _masterData.NodeArray.Add(newNode);
         }
 
-        public void BuildTree(int currentNode, List<Polygon> currentMeshes)
+        public LeafBspMasterData BuildTree(int currentNode, List<Polygon> currentMeshes)
         {
             Stack<LeafStackItem> _leafTreeStack = new Stack<LeafStackItem>();
             _leafTreeStack.Push(new LeafStackItem(currentNode, currentMeshes));
@@ -49,7 +38,11 @@ namespace DungeonHack.BSP.LeafBsp
             while (_leafTreeStack.Count > 0)
             {
                 var item = _leafTreeStack.Pop();
-                var node = item.NumberOfNodes;
+                var node = item.NumberOfNodes - 1;
+                if (node < 0)
+                {
+                    node = 0;
+                }
                 var meshes = item.Meshes;
 
                 if (meshes.Count == 0)
@@ -68,18 +61,18 @@ namespace DungeonHack.BSP.LeafBsp
                     continue;
                 }
 
-                NodeArray[node].Plane = _splitterSelector.SelectBestSplitterPlane(meshes, PlaneArray);
+                _masterData.NodeArray[node].Plane = _splitterSelector.SelectBestSplitterPlane(meshes, _masterData.PlaneArray);
 
-                NodeArray[node].BoundingBox = new BoundingBox();
+                _masterData.NodeArray[node].BoundingBox = new BoundingBox();
 
                 for (int i = 0; i < meshes.Count; i++)
                 {
                     var mesh = meshes[i];
 
-                    switch (_polygonClassifier.ClassifyPolygon(PlaneArray[NodeArray[node].Plane], mesh))
+                    switch (_polygonClassifier.ClassifyPolygon(_masterData.PlaneArray[_masterData.NodeArray[node].Plane], mesh))
                     {
                         case PolygonClassification.OnPlane:
-                            a = PlaneArray[NodeArray[node].Plane].Normal;
+                            a = _masterData.PlaneArray[_masterData.NodeArray[node].Plane].Normal;
                             b = mesh.Normal;
                             result = Math.Abs((a.X - b.X) + (a.Y - b.Y) + (a.Z - b.Z));
                             if (result < 0.1)
@@ -98,7 +91,7 @@ namespace DungeonHack.BSP.LeafBsp
                             _backList.Insert(0, mesh);
                             break;
                         case PolygonClassification.Spanning:
-                            HandleSpanningPolygon(NodeArray[node],
+                            HandleSpanningPolygon(_masterData.NodeArray[node],
                                                     meshes,
                                                     out _frontSplit,
                                                     out _backSplit,
@@ -111,63 +104,65 @@ namespace DungeonHack.BSP.LeafBsp
                     }
                 }
 
-                NodeArray[node].BoundingBox = _boundingBoxCalculator
-                                                    .CalculateBoundingBox(NodeArray[node].BoundingBox, _frontList);
+                _masterData.NodeArray[node].BoundingBox = _boundingBoxCalculator
+                                                    .CalculateBoundingBox(_masterData.NodeArray[node].BoundingBox, _frontList);
 
-                BoundingBox leafBox = NodeArray[node].BoundingBox;
+                BoundingBox leafBox = _masterData.NodeArray[node].BoundingBox;
 
-                NodeArray[node].BoundingBox = _boundingBoxCalculator
-                                            .CalculateBoundingBox(NodeArray[node].BoundingBox, _backList);
+                _masterData.NodeArray[node].BoundingBox = _boundingBoxCalculator
+                                            .CalculateBoundingBox(_masterData.NodeArray[node].BoundingBox, _backList);
 
                 if (!_frontList.Any(x => !x.HasBeenUsedAsSplitPlane) & _frontList.Count > 0)
                 {
                     Leaf newLeaf = new Leaf();
-                    newLeaf.StartPolygon = NumberOfMeshes;
+                    newLeaf.StartPolygon = _masterData.NumberOfPolygons;
 
-                    LeafArray.Add(newLeaf);
+                    _masterData.LeafArray.Add(newLeaf);
 
-                    _frontList.ForEach(x => MeshArray.Add(x));
+                    _frontList.ForEach(x => _masterData.PolygonArray.Add(x));
 
-                    newLeaf.EndPolygon = NumberOfMeshes;
+                    newLeaf.EndPolygon = _masterData.NumberOfPolygons;
                     newLeaf.BoundingBox = leafBox;
-                    NodeArray[node].Front = NumberOfLeafs;
-                    NodeArray[node].IsLeaf = true;
+                    _masterData.NodeArray[node].Front = _masterData.NumberOfLeaves;
+                    _masterData.NodeArray[node].IsLeaf = true;
 
-                    LeafArray.Add(newLeaf);
+                    _masterData.LeafArray.Add(newLeaf);
                 }
                 else if (_frontList.Any())
                 {
-                    NodeArray[node].IsLeaf = false;
-                    NodeArray[node].Front = NumberOfNodes+1;
+                    _masterData.NodeArray[node].IsLeaf = false;
+                    _masterData.NodeArray[node].Front = _masterData.NumberOfNodes+1;
 
                     Node newNode = new Node();
-                    NodeArray.Add(newNode);
+                    _masterData.NodeArray.Add(newNode);
 
-                    _leafTreeStack.Push(new LeafStackItem(NumberOfNodes, _frontList));
+                    _leafTreeStack.Push(new LeafStackItem(_masterData.NumberOfNodes, _frontList));
                 }
 
                 if (_backList.Count == 0)
                 {
-                    NodeArray[node].Back = -1;
+                    _masterData.NodeArray[node].Back = -1;
                 }
                 else
                 {
-                    NodeArray[node].Back = NumberOfNodes+1;
+                    _masterData.NodeArray[node].Back = _masterData.NumberOfNodes+1;
 
                     Node newNode = new Node();
-                    NodeArray.Add(newNode);
+                    _masterData.NodeArray.Add(newNode);
 
-                    _leafTreeStack.Push(new LeafStackItem(NumberOfNodes, _backList));
+                    _leafTreeStack.Push(new LeafStackItem(_masterData.NumberOfNodes, _backList));
                 }
             }
+
+            return _masterData;
         }
 
 
         private void HandleSpanningPolygon(Node currentNode, List<Polygon> meshList, out Polygon frontSplit, out Polygon backSplit, List<Polygon> frontList, List<Polygon> backList, Polygon testMesh)
         {
             _polygonSplitter.Split(testMesh, 
-                                        PlaneArray[currentNode.Plane].PointOnPlane, 
-                                        PlaneArray[currentNode.Plane].Normal, 
+                                        _masterData.PlaneArray[currentNode.Plane].PointOnPlane, 
+                                        _masterData.PlaneArray[currentNode.Plane].Normal, 
                                         out frontSplit, 
                                         out backSplit);
 

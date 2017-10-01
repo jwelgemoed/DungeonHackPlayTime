@@ -1,39 +1,20 @@
-﻿using DungeonHack.DataDictionaries;
-using DungeonHack.Entities;
-using FunAndGamesWithSlimDX.DirectX;
-using FunAndGamesWithSlimDX.Engine;
+﻿using FunAndGamesWithSlimDX.Engine;
 using FunAndGamesWithSlimDX.Entities;
 using SlimDX;
-using SlimDX.Direct3D11;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DungeonHack.BSP.LeafBsp
 {
     public class LeafTreeRenderer
     {
-        private List<Polygon> _polygonArray ;
-        private List<Node> _nodeArray ;
-        private List<Leaf> _leafArray ;
-        private List<Entities.Plane> _planeArray;
-        //public Portal[] PortalArray;
-        private List<byte> _pvsData;
         private PointClassifier _pointClassifier;
         private PolygonRenderer _polyRenderer;
 
-        private int NumberOfLeafs { get { return _leafArray.Count; } }
+        private LeafBspMasterData _masterData;
 
-        public LeafTreeRenderer(List<Polygon> polygonArray, List<Node> nodeArray, List<Leaf> leafArray, List<Entities.Plane> planeArray,
-                                List<byte> pvsData, PointClassifier pointClassifier, PolygonRenderer polyRenderer)
+        public LeafTreeRenderer(LeafBspMasterData masterData, PointClassifier pointClassifier, PolygonRenderer polyRenderer)
         {
-            _polygonArray = polygonArray;
-            _nodeArray = nodeArray;
-            _leafArray = leafArray;
-            _planeArray = planeArray;
-            _pvsData = pvsData;
+            _masterData = masterData;
             _pointClassifier = pointClassifier;
             _polyRenderer = polyRenderer;
         }
@@ -47,29 +28,29 @@ namespace DungeonHack.BSP.LeafBsp
 
             while (!found)
             {
-                switch(_pointClassifier.ClassifyPoint(position, _planeArray[_nodeArray[node].Plane]))
+                switch(_pointClassifier.ClassifyPoint(position, _masterData.PlaneArray[_masterData.NodeArray[node].Plane]))
                 {
                     case PointClassification.OnPlane:
                     case PointClassification.Front:
-                        if (_nodeArray[node].IsLeaf)
+                        if (_masterData.NodeArray[node].IsLeaf)
                         {
-                            leaf = _nodeArray[node].Front;
+                            leaf = _masterData.NodeArray[node].Front;
                             DrawTree(leaf, frustrum, ref polycounter);
                             found = true;
                         }
                         else
                         {
-                            node = _nodeArray[node].Front;
+                            node = _masterData.NodeArray[node].Front;
                         }
                         break;
                     case PointClassification.Back:
-                        if (_nodeArray[node].Back == -1)
+                        if (_masterData.NodeArray[node].Back == -1)
                         {
                             found = true;
                         }
                         else
                         {
-                            node = _nodeArray[node].Back;
+                            node = _masterData.NodeArray[node].Back;
                         }
                         break;
 
@@ -79,12 +60,11 @@ namespace DungeonHack.BSP.LeafBsp
 
         private void DrawTree(int leaf, Frustrum frustrum, ref int counter)
         {
-            Polygon currentPoly;
-            int pvsoffset = _leafArray[leaf].PVSIndex;
-            byte pvspointer = _pvsData[pvsoffset];
+            int pvsoffset = _masterData.LeafArray[leaf].PVSIndex;
+            byte pvspointer = _masterData.PVSData[pvsoffset];
             int currentleaf = 0;
 
-            while (currentleaf < NumberOfLeafs)
+            while (currentleaf < _masterData.NumberOfLeaves)
             {
                 if (pvspointer != 0)
                 {
@@ -94,10 +74,15 @@ namespace DungeonHack.BSP.LeafBsp
                         Byte pvs = pvspointer;
                         if ((pvs & mask) != 0)
                         {
-                            //Render
-                            for (int j = _leafArray[currentleaf].StartPolygon; j < _leafArray[currentleaf].EndPolygon; j++)
+                            if (ConfigManager.FrustrumCullingEnabled &&
+                                frustrum.CheckBoundingBox(_masterData.LeafArray[currentleaf].BoundingBox) == 0)
                             {
-                                _polyRenderer.Render(frustrum, _polygonArray[j], ref counter);
+                                continue;
+                            }
+
+                            for (int j = _masterData.LeafArray[currentleaf].StartPolygon; j < _masterData.LeafArray[currentleaf].EndPolygon; j++)
+                            {
+                                _polyRenderer.Render(frustrum, _masterData.PolygonArray[j], ref counter);
                             }
                         }
                         currentleaf++;
@@ -113,12 +98,6 @@ namespace DungeonHack.BSP.LeafBsp
                 }
             }
 
-        }
-
-        
-        private bool LeafInFrustrum(int leaf, Frustrum frustrum)
-        {
-            return frustrum.CheckBoundingBox(_leafArray[leaf].BoundingBox) > 0;
         }
     }
 }
