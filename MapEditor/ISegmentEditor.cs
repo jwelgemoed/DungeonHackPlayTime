@@ -1,4 +1,4 @@
-﻿using FunAndGamesWithSlimDX.Entities;
+﻿using FunAndGamesWithSharpDX.Entities;
 using GameData;
 using System;
 using System.Collections.Generic;
@@ -17,7 +17,7 @@ namespace MapEditor
 
         void EditAction(Point startPoint, float currentScale, GlobalMapData mapData);
 
-        List<Tuple<Shape, FunAndGamesWithSlimDX.Entities.Polygon>> GetMeshList();
+        List<Tuple<Shape, FunAndGamesWithSharpDX.Entities.Polygon>> GetMeshList();
 
         void MoveAction(Point currentMousePosition, Point startPoint, float currentScale, bool snapToGrid, bool snapToClosestPoint);
     }

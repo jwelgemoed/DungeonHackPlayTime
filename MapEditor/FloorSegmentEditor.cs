@@ -1,7 +1,7 @@
-﻿using FunAndGamesWithSlimDX.DirectX;
-using FunAndGamesWithSlimDX.Entities;
-using SlimDX;
-using SlimDX.Direct3D11;
+﻿using FunAndGamesWithSharpDX.DirectX;
+using FunAndGamesWithSharpDX.Entities;
+using SharpDX;
+using SharpDX.Direct3D11;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -10,6 +10,8 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using GameData;
 using DungeonHack.Builders;
+using Rectangle = System.Windows.Shapes.Rectangle;
+using Point = System.Windows.Point;
 
 namespace MapEditor
 {
@@ -17,7 +19,7 @@ namespace MapEditor
     {
         private readonly Canvas _canvas;
         private readonly Device _device;
-        private readonly IShader _shader;
+        private readonly Shader _shader;
         private readonly float _midWidth;
         private readonly float _midHeight;
         private readonly float _gridSize;
@@ -27,12 +29,12 @@ namespace MapEditor
         private Rectangle _lastRectangle;
         private readonly List<Rectangle> _rectangleList = new List<Rectangle>();
 
-        private readonly List<Tuple<Shape, FunAndGamesWithSlimDX.Entities.Polygon>> _meshList = new List<Tuple<Shape, FunAndGamesWithSlimDX.Entities.Polygon>>();
+        private readonly List<Tuple<Shape, FunAndGamesWithSharpDX.Entities.Polygon>> _meshList = new List<Tuple<Shape, FunAndGamesWithSharpDX.Entities.Polygon>>();
 
-        public FloorSegmentEditor(Canvas canvase, Device device, IShader shader, float midWidth, float midHeight, float gridSize)
+        public FloorSegmentEditor(Canvas canvase, Device device, Shader shader, float midWidth, float midHeight, float gridSize)
         {
-            _squareBrush = new SolidColorBrush(Color.FromRgb(128, 0, 128));
-            _selectedSquareBrush = new SolidColorBrush(Color.FromRgb(128, 128, 0));
+            _squareBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(128, 0, 128));
+            _selectedSquareBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(128, 128, 0));
             _canvas = canvase;
             _device = device;
             _shader = shader;
@@ -58,7 +60,7 @@ namespace MapEditor
             }
 
             Model[] model = new Model[6];
-            FunAndGamesWithSlimDX.Entities.Vertex[] vertexes = new FunAndGamesWithSlimDX.Entities.Vertex[4];
+            FunAndGamesWithSharpDX.Entities.Vertex[] vertexes = new FunAndGamesWithSharpDX.Entities.Vertex[4];
 
             float left = (float)Canvas.GetLeft(rect);
             float top = (float)Canvas.GetTop(rect);
@@ -99,7 +101,7 @@ namespace MapEditor
 
             normal = Vector3.Normalize(normal);
 
-            FunAndGamesWithSlimDX.Entities.Vertex vertex = new FunAndGamesWithSlimDX.Entities.Vertex();
+            FunAndGamesWithSharpDX.Entities.Vertex vertex = new FunAndGamesWithSharpDX.Entities.Vertex();
 
             model[0].x = vertexes[0].Position.X;
             model[0].y = vertexes[0].Position.Y;
@@ -165,7 +167,7 @@ namespace MapEditor
                             .WithTransformToWorld()
                             .Build();
 
-            _meshList.Add(new Tuple<Shape, FunAndGamesWithSlimDX.Entities.Polygon>(rect, roomMesh));
+            _meshList.Add(new Tuple<Shape, FunAndGamesWithSharpDX.Entities.Polygon>(rect, roomMesh));
 
         }
 
@@ -175,7 +177,7 @@ namespace MapEditor
             _tempRectangle = null;
         }
 
-        public List<Tuple<Shape, FunAndGamesWithSlimDX.Entities.Polygon>> GetMeshList()
+        public List<Tuple<Shape, FunAndGamesWithSharpDX.Entities.Polygon>> GetMeshList()
         {
             return _meshList;
         }

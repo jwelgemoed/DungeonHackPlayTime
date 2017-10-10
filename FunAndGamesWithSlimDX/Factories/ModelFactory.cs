@@ -1,18 +1,18 @@
 ﻿using System.Collections.Generic;
 using Assimp;
-using FunAndGamesWithSlimDX.Entities;
+using FunAndGamesWithSharpDX.Entities;
 using DungeonHack.Builders;
-using SlimDX.Direct3D11;
-using FunAndGamesWithSlimDX.DirectX;
+using SharpDX.Direct3D11;
+using FunAndGamesWithSharpDX.DirectX;
 
 namespace DungeonHack.Factories
 {
     public class ModelFactory
     {
         private Device _device;
-        private IShader _shader;
+        private Shader _shader;
 
-        public ModelFactory(Device device, IShader shader)
+        public ModelFactory(Device device, Shader shader)
         {
             _device = device;
             _shader = shader;

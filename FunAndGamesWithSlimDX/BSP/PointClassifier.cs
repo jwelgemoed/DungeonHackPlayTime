@@ -1,4 +1,4 @@
-﻿using SlimDX;
+﻿using SharpDX;
 
 namespace DungeonHack.BSP
 {

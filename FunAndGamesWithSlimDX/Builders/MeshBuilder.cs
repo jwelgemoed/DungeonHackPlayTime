@@ -1,8 +1,8 @@
-﻿using FunAndGamesWithSlimDX.DirectX;
-using FunAndGamesWithSlimDX.Engine;
-using FunAndGamesWithSlimDX.Entities;
-using SlimDX;
-using SlimDX.Direct3D11;
+﻿using FunAndGamesWithSharpDX.DirectX;
+using FunAndGamesWithSharpDX.Engine;
+using FunAndGamesWithSharpDX.Entities;
+using SharpDX;
+using SharpDX.Direct3D11;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,10 +15,10 @@ namespace DungeonHack.Builders
     {
         protected Polygon _mesh;
         protected readonly Device _device;
-        protected readonly IShader _shader;
+        protected readonly Shader _shader;
         private bool _withTransformToWorld;
 
-        public PolygonBuilder(Device device, IShader shader)
+        public PolygonBuilder(Device device, Shader shader)
         {
             _device = device;
             _shader = shader;
@@ -197,23 +197,23 @@ namespace DungeonHack.Builders
             return this;
         }
 
-        private SlimDX.Direct3D11.Buffer GetVertexBuffer()
+        private SharpDX.Direct3D11.Buffer GetVertexBuffer()
         {
             var vertices = new DataStream(Vertex.SizeOf * _mesh.VertexData.Length, true, true);
             vertices.WriteRange(_mesh.VertexData);
             vertices.Position = 0;
 
-            return new SlimDX.Direct3D11.Buffer(_device, vertices, Vertex.SizeOf * _mesh.VertexData.Length
+            return new SharpDX.Direct3D11.Buffer(_device, vertices, Vertex.SizeOf * _mesh.VertexData.Length
                     , ResourceUsage.Default, BindFlags.VertexBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, Vertex.SizeOf);
         }
 
-        private SlimDX.Direct3D11.Buffer GetIndexBuffer()
+        private SharpDX.Direct3D11.Buffer GetIndexBuffer()
         {
             var indexStream = new DataStream(sizeof(uint) * _mesh.IndexData.Length, true, true);
             indexStream.WriteRange(_mesh.IndexData);
             indexStream.Position = 0;
 
-            return new SlimDX.Direct3D11.Buffer(_device, indexStream, sizeof(uint) * _mesh.IndexData.Length,
+            return new SharpDX.Direct3D11.Buffer(_device, indexStream, sizeof(uint) * _mesh.IndexData.Length,
                                                            ResourceUsage.Default, BindFlags.IndexBuffer,
                                                            CpuAccessFlags.None, ResourceOptionFlags.None, 0);
         }

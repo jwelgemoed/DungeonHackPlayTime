@@ -1,6 +1,6 @@
-﻿using FunAndGamesWithSlimDX.DirectX;
-using FunAndGamesWithSlimDX.Engine;
-using SlimDX.Direct3D11;
+﻿using FunAndGamesWithSharpDX.DirectX;
+using FunAndGamesWithSharpDX.Engine;
+using SharpDX.Direct3D11;
 using System;
 using System.Collections.Generic;
 using System.Configuration;

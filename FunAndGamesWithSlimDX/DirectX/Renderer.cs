@@ -1,12 +1,13 @@
-﻿using FunAndGamesWithSlimDX.Engine;
-using SlimDX;
-using SlimDX.Direct3D11;
-using SlimDX.DXGI;
+﻿using FunAndGamesWithSharpDX.Engine;
+using SharpDX;
+using SharpDX.Direct3D11;
+using SharpDX.DXGI;
+using SharpDX.Mathematics.Interop;
 using System;
-using Device = SlimDX.Direct3D11.Device;
-using Resource = SlimDX.Direct3D11.Resource;
+using Device = SharpDX.Direct3D11.Device;
+using Resource = SharpDX.Direct3D11.Resource;
 
-namespace FunAndGamesWithSlimDX.DirectX
+namespace FunAndGamesWithSharpDX.DirectX
 {
     /// <summary>
     /// Responsible for creating DirectX stuff and rendering stuff.
@@ -115,7 +116,7 @@ namespace FunAndGamesWithSlimDX.DirectX
                 SwapEffect = SwapEffect.Discard,
             };
 
-            Device.CreateWithSwapChain(DriverType.Hardware, DeviceCreationFlags.Debug, description, out Device, out SwapChain);
+            Device.CreateWithSwapChain(SharpDX.Direct3D.DriverType.Hardware, DeviceCreationFlags.Debug, description, out Device, out SwapChain);
 
             OnResize();
         }
@@ -160,11 +161,7 @@ namespace FunAndGamesWithSlimDX.DirectX
 
             _depthStencilViewDesc = new DepthStencilViewDescription()
                 {
-                    ArraySize = 0,
-                    Dimension = DepthStencilViewDimension.Texture2D,
-                    MipSlice = 0,
-                    Flags = 0,
-                    FirstArraySlice = 0
+                    Dimension = DepthStencilViewDimension.Texture2D
                 };
 
             DepthStencilView = new DepthStencilView(Device, _depthStencilBuffer, _depthStencilViewDesc);
@@ -177,7 +174,7 @@ namespace FunAndGamesWithSlimDX.DirectX
                 DepthComparison = Comparison.Less,
             };
 
-            _depthStencilState = DepthStencilState.FromDescription(Device, dsStateDesc);
+            _depthStencilState = new DepthStencilState(Device, dsStateDesc);
 
             //Create the depth stencil with zbuffering disabled.
             var depthStencilDisabledDesc = new Texture2DDescription()
@@ -197,11 +194,7 @@ namespace FunAndGamesWithSlimDX.DirectX
 
             _depthStencilViewDesc = new DepthStencilViewDescription()
             {
-                ArraySize = 0,
-                Dimension = DepthStencilViewDimension.Texture2D,
-                MipSlice = 0,
-                Flags = 0,
-                FirstArraySlice = 0
+                Dimension = DepthStencilViewDimension.Texture2D
             };
 
             DepthStencilView = new DepthStencilView(Device, _depthStencilBuffer, _depthStencilViewDesc);
@@ -223,7 +216,7 @@ namespace FunAndGamesWithSlimDX.DirectX
 
             var dsStateDisabledDesc = new DepthStencilStateDescription()
             {
-                IsDepthEnabled = false,
+                IsDepthEnabled = true,
                 IsStencilEnabled = true,
                 DepthWriteMask = DepthWriteMask.All,
                 DepthComparison = Comparison.Less,
@@ -233,15 +226,23 @@ namespace FunAndGamesWithSlimDX.DirectX
                 BackFace = backFace
             };
 
-            _depthStencilDisabledState = DepthStencilState.FromDescription(Device, dsStateDisabledDesc);
+            _depthStencilDisabledState = new DepthStencilState(Device, dsStateDisabledDesc);
 
             Context = Device.ImmediateContext;
-            var viewport = new Viewport(0.0f, 0.0f, Width, Height, 0.0f, 1.0f);
+            var viewport = new RawViewportF()
+            {
+                X = 0,
+                Y = 0,
+                Width = Width,
+                Height = Height,
+                MinDepth = 0.0f,
+                MaxDepth = 1.0f
+            };
 
             Context.OutputMerger.DepthStencilState = _depthStencilState;
             Context.OutputMerger.SetTargets(DepthStencilView, RenderTarget);
             //Context.OutputMerger.SetTargets(RenderTarget);
-            Context.Rasterizer.SetViewports(viewport);
+            Context.Rasterizer.SetViewports(new[] { viewport });
             
             //SetRenderState();
             
@@ -257,13 +258,13 @@ namespace FunAndGamesWithSlimDX.DirectX
                     FillMode = fillMode,
                     IsAntialiasedLineEnabled = ConfigManager.AntiAliasedEnabled,
                     IsDepthClipEnabled = false,
-                    IsFrontCounterclockwise = false,
+                    IsFrontCounterClockwise = false,
                     IsMultisampleEnabled = ConfigManager.MultiSampleEnabled,
                     IsScissorEnabled = false,
                     SlopeScaledDepthBias = 0.0f
                 };
 
-            RasterizerState rs = RasterizerState.FromDescription(Device, rsd);
+            RasterizerState rs = new RasterizerState(Device, rsd);
             Device.ImmediateContext.Rasterizer.State = rs;
         }
 

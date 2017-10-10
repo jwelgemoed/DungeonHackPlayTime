@@ -1,6 +1,6 @@
-﻿using FunAndGamesWithSlimDX.Entities;
+﻿using FunAndGamesWithSharpDX.Entities;
 
-namespace FunAndGamesWithSlimDX.Engine
+namespace FunAndGamesWithSharpDX.Engine
 {
     public static class ApplicationStateEngine
     {

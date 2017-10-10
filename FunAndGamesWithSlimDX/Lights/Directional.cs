@@ -1,7 +1,7 @@
-﻿using SlimDX;
+﻿using SharpDX;
 using System.Runtime.InteropServices;
 
-namespace FunAndGamesWithSlimDX.Lights
+namespace FunAndGamesWithSharpDX.Lights
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct DirectionalLight

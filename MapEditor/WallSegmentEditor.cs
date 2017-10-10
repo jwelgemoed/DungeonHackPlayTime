@@ -1,18 +1,19 @@
-﻿using SlimDX;
+﻿using SharpDX;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using FunAndGamesWithSlimDX.Entities;
+using FunAndGamesWithSharpDX.Entities;
 using System.Collections.Generic;
 using System;
-using SlimDX.Direct3D11;
+using SharpDX.Direct3D11;
 using System.Windows.Input;
-using FunAndGamesWithSlimDX.DirectX;
+using FunAndGamesWithSharpDX.DirectX;
 using System.Configuration;
 using GameData;
 using DungeonHack.Builders;
+using Point = System.Windows.Point;
 
 namespace MapEditor
 {
@@ -42,9 +43,9 @@ namespace MapEditor
         private Brush _lineBrush;
         private Brush _selectedLineBrush;
         private List<Tuple<Line, GameData.LineSegment>> lineList = new List<Tuple<Line, GameData.LineSegment>>();
-        private List<Tuple<Shape, FunAndGamesWithSlimDX.Entities.Polygon>> meshList = new List<Tuple<Shape, FunAndGamesWithSlimDX.Entities.Polygon>>();
+        private List<Tuple<Shape, FunAndGamesWithSharpDX.Entities.Polygon>> meshList = new List<Tuple<Shape, FunAndGamesWithSharpDX.Entities.Polygon>>();
         private Device _device;
-        private IShader _shader;
+        private Shader _shader;
         private float _midWidth;
         private float _midHeight;
         private float _gridSize;
@@ -68,10 +69,10 @@ namespace MapEditor
             }
         }
 
-        public WallSegmentEditor(Canvas canvas, Device device, IShader shader, float midWidth, float midHeight, float gridSize, GameData.MapData mapData)
+        public WallSegmentEditor(Canvas canvas, Device device, Shader shader, float midWidth, float midHeight, float gridSize, GameData.MapData mapData)
         {
-            _lineBrush = new SolidColorBrush(Color.FromRgb(0, 128, 128));
-            _selectedLineBrush = new SolidColorBrush(Color.FromRgb(128, 0, 0));
+            _lineBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0, 128, 128));
+            _selectedLineBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(128, 0, 0));
             _canvas = canvas;
             _device = device;
             _shader = shader;
@@ -81,10 +82,10 @@ namespace MapEditor
             MapData = mapData;
         }
 
-        public WallSegmentEditor(Canvas canvas, Device device, IShader shader, float midWidth, float midHeight, float gridSize)
+        public WallSegmentEditor(Canvas canvas, Device device, Shader shader, float midWidth, float midHeight, float gridSize)
         {
-            _lineBrush = new SolidColorBrush(Color.FromRgb(0, 128, 128));
-            _selectedLineBrush = new SolidColorBrush(Color.FromRgb(128, 0, 0));
+            _lineBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0, 128, 128));
+            _selectedLineBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(128, 0, 0));
             _canvas = canvas;
             _device = device;
             _shader = shader;
@@ -94,7 +95,7 @@ namespace MapEditor
             MapData = new MapData();
         }
 
-        public List<Tuple<Shape, FunAndGamesWithSlimDX.Entities.Polygon>> GetMeshList()
+        public List<Tuple<Shape, FunAndGamesWithSharpDX.Entities.Polygon>> GetMeshList()
         {
             return meshList;
         }
@@ -361,7 +362,7 @@ namespace MapEditor
                             .SetScaling(1, 1, 1)
                             .WithTransformToWorld()
                             .Build();
-            meshList.Add(new Tuple<Shape, FunAndGamesWithSlimDX.Entities.Polygon>(line, roomMesh));
+            meshList.Add(new Tuple<Shape, FunAndGamesWithSharpDX.Entities.Polygon>(line, roomMesh));
 
             CreateNormalLine(line, normal);
         }

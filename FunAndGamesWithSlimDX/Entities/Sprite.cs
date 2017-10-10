@@ -1,15 +1,15 @@
-﻿using FunAndGamesWithSlimDX.DirectX;
-using FunAndGamesWithSlimDX.Engine;
-using SlimDX.Direct3D11;
+﻿using FunAndGamesWithSharpDX.DirectX;
+using FunAndGamesWithSharpDX.Engine;
+using SharpDX.Direct3D11;
 using System;
 
-namespace FunAndGamesWithSlimDX.Entities
+namespace FunAndGamesWithSharpDX.Entities
 {
     public class Sprite : IDisposable
     {
         private Texture _texture;
-        private SlimDX.Vector2 _size;
-        private SlimDX.Vector2 _position;
+        private SharpDX.Vector2 _size;
+        private SharpDX.Vector2 _position;
 
         public Sprite(Device device, string spriteFileName, int x, int y, int sizeX, int sizeY)
         {
@@ -17,8 +17,8 @@ namespace FunAndGamesWithSlimDX.Entities
             var basePath = ConfigManager.ResourcePath;
             var fileNamePath = basePath + @"\Resources\" + spriteFileName;
             _texture.LoadTexture(device, fileNamePath);
-            _position = new SlimDX.Vector2(x, y);
-            _size = new SlimDX.Vector2(sizeX, sizeY);
+            _position = new SharpDX.Vector2(x, y);
+            _size = new SharpDX.Vector2(sizeX, sizeY);
         }
 
         public void SetPosition(int x, int y)

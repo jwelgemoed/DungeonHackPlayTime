@@ -1,10 +1,10 @@
-﻿using SlimDX;
+﻿using SharpDX;
 
-namespace FunAndGamesWithSlimDX.Engine
+namespace FunAndGamesWithSharpDX.Engine
 {
     public class Frustrum
     {
-        private SlimDX.Plane[] planes = new SlimDX.Plane[6];
+        private SharpDX.Plane[] planes = new SharpDX.Plane[6];
 
         public void ConstructFrustrum(Matrix vp)
         {
@@ -27,7 +27,7 @@ namespace FunAndGamesWithSlimDX.Engine
 
             foreach (var plane in planes)
             {
-                var intersection = Plane.Intersects(plane, boundingBox);
+                var intersection = plane.Intersects(ref boundingBox);
                 if (intersection == PlaneIntersectionType.Back) return 0;
                 if (intersection == PlaneIntersectionType.Front)
                 {

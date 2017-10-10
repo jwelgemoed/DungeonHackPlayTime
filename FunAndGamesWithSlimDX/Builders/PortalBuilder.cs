@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using FunAndGamesWithSlimDX.DirectX;
-using SlimDX.Direct3D11;
+using FunAndGamesWithSharpDX.DirectX;
+using SharpDX.Direct3D11;
 using DungeonHack.BSP.LeafBsp;
-using FunAndGamesWithSlimDX.Entities;
-using SlimDX;
+using FunAndGamesWithSharpDX.Entities;
+using SharpDX;
 
 namespace DungeonHack.Builders
 {
     public class PortalBuilder : PolygonBuilder
     {
-        public PortalBuilder(Device device, IShader shader) : base(device, shader)
+        public PortalBuilder(Device device, Shader shader) : base(device, shader)
         {
         }
 

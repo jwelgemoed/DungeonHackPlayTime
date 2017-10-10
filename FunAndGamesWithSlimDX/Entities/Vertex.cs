@@ -1,9 +1,9 @@
-﻿using SlimDX;
-using SlimDX.Direct3D11;
-using SlimDX.DXGI;
+﻿using SharpDX;
+using SharpDX.Direct3D11;
+using SharpDX.DXGI;
 using System.Runtime.InteropServices;
 
-namespace FunAndGamesWithSlimDX.Entities
+namespace FunAndGamesWithSharpDX.Entities
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct Vertex

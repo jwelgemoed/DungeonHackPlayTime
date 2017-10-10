@@ -1,11 +1,11 @@
-﻿using FunAndGamesWithSlimDX.DirectX;
+﻿using FunAndGamesWithSharpDX.DirectX;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FunAndGamesWithSlimDX.Lights
+namespace FunAndGamesWithSharpDX.Lights
 {
     public static class LightEngine
     {
@@ -28,7 +28,7 @@ namespace FunAndGamesWithSlimDX.Lights
             _spotLight = spotlight;
         }
 
-        public static void RenderLights(IShader shader)
+        public static void RenderLights(Shader shader)
         {
             shader.RenderLights(_directionalLights, _pointLights, _spotLight);
         }

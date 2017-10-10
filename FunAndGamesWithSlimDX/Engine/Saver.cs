@@ -1,9 +1,9 @@
-﻿using FunAndGamesWithSlimDX.Entities;
+﻿using FunAndGamesWithSharpDX.Entities;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace FunAndGamesWithSlimDX.Engine
+namespace FunAndGamesWithSharpDX.Engine
 {
     /// <summary>
     /// Class responsible for saving scenes/levels/objects to file.

@@ -1,4 +1,4 @@
-﻿namespace FunAndGamesWithSlimDX.Menus
+﻿namespace FunAndGamesWithSharpDX.Menus
 {
     partial class SaveWindow
     {

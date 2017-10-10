@@ -1,7 +1,7 @@
-﻿using SlimDX;
+﻿using SharpDX;
 using System.Runtime.InteropServices;
 
-namespace FunAndGamesWithSlimDX.Entities
+namespace FunAndGamesWithSharpDX.Entities
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct Material

@@ -1,19 +1,19 @@
-﻿using FunAndGamesWithSlimDX.DirectX;
-using FunAndGamesWithSlimDX.Engine;
-using FunAndGamesWithSlimDX.Entities;
-using SlimDX.Direct3D11;
+﻿using FunAndGamesWithSharpDX.DirectX;
+using FunAndGamesWithSharpDX.Engine;
+using FunAndGamesWithSharpDX.Entities;
+using SharpDX.Direct3D11;
 using System;
 using System.Windows.Forms;
 
-namespace FunAndGamesWithSlimDX.Menus
+namespace FunAndGamesWithSharpDX.Menus
 {
     public partial class OptionsWindow : Form
     {
         private readonly Renderer _renderer;
         private readonly Camera _camera;
-        private readonly IShader _shader;
+        private readonly Shader _shader;
 
-        public OptionsWindow(Renderer renderer, IShader shader, Engine.Engine.FrameRateStats frameRateStats, Camera camera, int MouseSensitivity)
+        public OptionsWindow(Renderer renderer, Shader shader, Engine.Engine.FrameRateStats frameRateStats, Camera camera, int MouseSensitivity)
         {
             InitializeComponent();
             _renderer = renderer;

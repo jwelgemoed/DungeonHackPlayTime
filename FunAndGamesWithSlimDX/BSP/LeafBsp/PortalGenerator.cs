@@ -1,8 +1,8 @@
 ﻿using DungeonHack.Builders;
-using FunAndGamesWithSlimDX.DirectX;
-using FunAndGamesWithSlimDX.Entities;
-using SlimDX;
-using SlimDX.Direct3D11;
+using FunAndGamesWithSharpDX.DirectX;
+using FunAndGamesWithSharpDX.Entities;
+using SharpDX;
+using SharpDX.Direct3D11;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +16,7 @@ namespace DungeonHack.BSP.LeafBsp
         private readonly PolygonClassifier _polyClassifier;
         private readonly PortalSplitter _splitter;
 
-        public PortalGenerator(LeafBspMasterData masterData, Device device, IShader shader)
+        public PortalGenerator(LeafBspMasterData masterData, Device device, Shader shader)
         {
             _masterData = masterData;
             _portalBuilder = new PortalBuilder(device, shader);
@@ -38,7 +38,7 @@ namespace DungeonHack.BSP.LeafBsp
             Portal initialPortal = CalculateInitialPortal(nodeStack[stackPointer].Node);
             List<Portal> portalList = ClipPortal(0, initialPortal);
 
-            for (int i = 0; i > portalList.Count; i++)
+            for (int i = 0; i < portalList.Count; i++)
             {
                 if (portalList[i].NumberOfLeafs != 2)
                 {
@@ -164,7 +164,12 @@ namespace DungeonHack.BSP.LeafBsp
                 case PolygonClassification.OnPlane:
                     if (_masterData.NodeArray[node].IsLeaf)
                     {
-                        portal.LeafOwnerArray[portal.NumberOfLeafs] = _masterData.NodeArray[node].Front;
+                        int index = portal.NumberOfLeafs - 1;
+                        if (index < 0)
+                            index = 0;
+                        if (index > 1)
+                            index = 1;
+                        portal.LeafOwnerArray[index] = _masterData.NodeArray[node].Front;
                         portal.NumberOfLeafs++;
                         portal.Next = null;
                         portal.Previous = null;

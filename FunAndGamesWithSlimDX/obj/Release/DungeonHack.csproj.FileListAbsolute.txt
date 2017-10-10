@@ -34,10 +34,9 @@ C:\git\build\Resources\terrain2.dds
 C:\git\build\DungeonHack.dll.config
 C:\git\build\DungeonHack.dll
 C:\git\build\DungeonHack.pdb
-C:\git\DungeonHackPlayTime\FunAndGamesWithSlimDX\obj\Release\FunAndGamesWithSlimDX.Menus.OptionsWindow.resources
-C:\git\DungeonHackPlayTime\FunAndGamesWithSlimDX\obj\Release\FunAndGamesWithSlimDX.Menus.SaveWindow.resources
 C:\git\DungeonHackPlayTime\FunAndGamesWithSlimDX\obj\Release\DungeonHack.Properties.Resources.resources
 C:\git\DungeonHackPlayTime\FunAndGamesWithSlimDX\obj\Release\DungeonHack.csproj.GenerateResource.Cache
 C:\git\DungeonHackPlayTime\FunAndGamesWithSlimDX\obj\Release\DungeonHack.dll
 C:\git\DungeonHackPlayTime\FunAndGamesWithSlimDX\obj\Release\DungeonHack.pdb
-C:\git\DungeonHackPlayTime\FunAndGamesWithSlimDX\obj\Release\DungeonHack.csprojResolveAssemblyReference.cache
+C:\git\DungeonHackPlayTime\FunAndGamesWithSlimDX\obj\Release\FunAndGamesWithSharpDX.Menus.OptionsWindow.resources
+C:\git\DungeonHackPlayTime\FunAndGamesWithSlimDX\obj\Release\FunAndGamesWithSharpDX.Menus.SaveWindow.resources

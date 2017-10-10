@@ -1,8 +1,8 @@
 ﻿using DungeonHack.Builders;
-using FunAndGamesWithSlimDX.DirectX;
-using FunAndGamesWithSlimDX.Entities;
-using SlimDX;
-using SlimDX.Direct3D11;
+using FunAndGamesWithSharpDX.DirectX;
+using FunAndGamesWithSharpDX.Entities;
+using SharpDX;
+using SharpDX.Direct3D11;
 using System;
 using System.Collections.Generic;
 
@@ -13,9 +13,9 @@ namespace DungeonHack.BSP
         protected readonly PointClassifier _pointClassifier;
         private readonly PolygonBuilder _polygonBuilder;
         private readonly Device _device;
-        private readonly IShader _shader;
+        private readonly Shader _shader;
 
-        public PolygonSplitter(PointClassifier pointClassifier, Device device, IShader shader)
+        public PolygonSplitter(PointClassifier pointClassifier, Device device, Shader shader)
         {
             _pointClassifier = pointClassifier;
             _device = device;

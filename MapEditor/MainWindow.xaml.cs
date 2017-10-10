@@ -1,13 +1,13 @@
 ﻿using DungeonHack.BSP;
 using DungeonHack.BSP.LeafBsp;
 using DungeonHack.Builders;
-using FunAndGamesWithSlimDX;
-using FunAndGamesWithSlimDX.Entities;
+using FunAndGamesWithSharpDX;
+using FunAndGamesWithSharpDX.Entities;
 using GameData;
 using Geometry;
 using log4net;
 using Poly2Tri;
-using SlimDX;
+using SharpDX;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -22,6 +22,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Point = System.Windows.Point;
+using Rectangle = System.Windows.Shapes.Rectangle;
 
 namespace MapEditor
 {
@@ -74,9 +76,9 @@ namespace MapEditor
                 demo = new MapDemoRunner();
                 demo.Initialize();
 
-                _gridBrush = new SolidColorBrush(Color.FromArgb(50, 128, 128, 0));
-                _areaBrush = new SolidColorBrush(Color.FromArgb(50, 128, 0, 0));
-                _selectedShapeBrush = new SolidColorBrush(Color.FromArgb(50, 0, 128, 0));
+                _gridBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(50, 128, 128, 0));
+                _areaBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(50, 128, 0, 0));
+                _selectedShapeBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(50, 0, 128, 0));
                 _midWidth = (float)960 / 2;
                 _midHeight = (float)720 / 2;
 
@@ -159,7 +161,7 @@ namespace MapEditor
 
         private void btnRunMap_Click(object sender, RoutedEventArgs e)
         {
-            var meshList = new List<FunAndGamesWithSlimDX.Entities.Polygon>();
+            var meshList = new List<FunAndGamesWithSharpDX.Entities.Polygon>();
 
             foreach (var map in _globalMapData.GetMaps())
             {
@@ -180,10 +182,10 @@ namespace MapEditor
 
             demo.InitializeScene();
 
-            var leafTreeMasterData = leafTreeBuilder.BuildTree(0, demo.Meshes);
+            /*var leafTreeMasterData = leafTreeBuilder.BuildTree(0, demo.Meshes);
             var portalGenerator = new PortalGenerator(leafTreeMasterData, demo.Device, demo.GetShader);
 
-            portalGenerator.BuildPortals();
+            portalGenerator.BuildPortals();*/
 
             demo.BspRootNode = bspTreeBuilder.BuildTree(demo.Meshes);
             bspBoudingVolumeCalculator.ComputeBoundingVolumes(demo.BspRootNode);
@@ -508,9 +510,9 @@ namespace MapEditor
             }
         }
 
-        private IEnumerable<FunAndGamesWithSlimDX.Entities.Polygon> CreateMeshes(GameData.MapData mapdata, GameData.Sector sector, float currentScale)
+        private IEnumerable<FunAndGamesWithSharpDX.Entities.Polygon> CreateMeshes(GameData.MapData mapdata, GameData.Sector sector, float currentScale)
         {
-            List<FunAndGamesWithSlimDX.Entities.Polygon> meshList = new List<FunAndGamesWithSlimDX.Entities.Polygon>();
+            List<FunAndGamesWithSharpDX.Entities.Polygon> meshList = new List<FunAndGamesWithSharpDX.Entities.Polygon>();
 
             var lineSegments = mapdata
                 .LineSegments
@@ -572,9 +574,9 @@ namespace MapEditor
             return meshList;
         }
 
-        private List<FunAndGamesWithSlimDX.Entities.Polygon> CreateMesh(List<GameData.Vertex> triangles, float floorHeight, float ceilingHeight, int floorTextureId, int ceilingTextureId, Vector2 lowerBound, Vector2 upperBound)
+        private List<FunAndGamesWithSharpDX.Entities.Polygon> CreateMesh(List<GameData.Vertex> triangles, float floorHeight, float ceilingHeight, int floorTextureId, int ceilingTextureId, Vector2 lowerBound, Vector2 upperBound)
         {
-            List<FunAndGamesWithSlimDX.Entities.Polygon> meshes = new List<FunAndGamesWithSlimDX.Entities.Polygon>();
+            List<FunAndGamesWithSharpDX.Entities.Polygon> meshes = new List<FunAndGamesWithSharpDX.Entities.Polygon>();
             PolygonBuilder meshBuilder = new PolygonBuilder(demo.Device, demo.GetShader);
 
             int numberOfTriangles = triangles.Count / 3;
@@ -722,7 +724,7 @@ namespace MapEditor
             return meshes;
         }
 
-        private FunAndGamesWithSlimDX.Entities.Polygon CreateMesh(GameData.LineSegment lineSegment, float currentScale)
+        private FunAndGamesWithSharpDX.Entities.Polygon CreateMesh(GameData.LineSegment lineSegment, float currentScale)
         {
             if (lineSegment == null)
                 throw new ArgumentException(nameof(GameData.LineSegment));
@@ -878,7 +880,7 @@ namespace MapEditor
             //Task task = new Task(() =>
             {
 
-                var meshList = new List<FunAndGamesWithSlimDX.Entities.Polygon>();
+                var meshList = new List<FunAndGamesWithSharpDX.Entities.Polygon>();
 
                 foreach (var map in _globalMapData.GetMaps())
                 {
@@ -911,11 +913,11 @@ namespace MapEditor
                         canvasXZ.Children.Remove(lastRectangle);
                     }
 
-                    SlimDX.Matrix invWorld;
+                    SharpDX.Matrix invWorld;
 
                     var world = x.Splitter.WorldMatrix;
 
-                    SlimDX.Matrix.Invert(ref world, out invWorld);
+                    SharpDX.Matrix.Invert(ref world, out invWorld);
 
                     var boundingBox = new BoundingBox(
                         Vector3.TransformCoordinate(x.BoundingVolume.Value.Minimum, invWorld),
@@ -936,7 +938,7 @@ namespace MapEditor
             Rectangle rectangle = new Rectangle();
             rectangle.Height = (_midHeight - Math.Abs(box.Maximum.Z - box.Minimum.Z)) / _currentScale;
             rectangle.Width = (Math.Abs(box.Maximum.X - box.Minimum.X) + _midWidth) / _currentScale;
-            rectangle.Stroke = new SolidColorBrush(Color.FromRgb(128, 0, 0));
+            rectangle.Stroke = new SolidColorBrush(System.Windows.Media.Color.FromRgb(128, 0, 0));
             canvasXZ.Children.Add(rectangle);
             Canvas.SetLeft(rectangle, _midWidth);
             Canvas.SetRight(rectangle, _midHeight);

@@ -1,7 +1,7 @@
-﻿using FunAndGamesWithSlimDX.DirectX;
-using FunAndGamesWithSlimDX.Entities;
-using SlimDX;
-using SlimDX.Direct3D11;
+﻿using FunAndGamesWithSharpDX.DirectX;
+using FunAndGamesWithSharpDX.Entities;
+using SharpDX;
+using SharpDX.Direct3D11;
 using System;
 using System.Linq;
 using System.Collections.Generic;
@@ -15,14 +15,16 @@ using System.Text;
 using System.Runtime.Serialization.Formatters.Binary;
 using GameData;
 using DungeonHack.Builders;
+using Point = System.Windows.Point;
+using Rectangle = System.Windows.Shapes.Rectangle;
 
 namespace MapEditor
 {
     public class RectangleSegment
     {
-        private List<FunAndGamesWithSlimDX.Entities.Polygon> _meshList = new List<FunAndGamesWithSlimDX.Entities.Polygon>();
+        private List<FunAndGamesWithSharpDX.Entities.Polygon> _meshList = new List<FunAndGamesWithSharpDX.Entities.Polygon>();
         private Device _device;
-        private IShader _shader;
+        private Shader _shader;
 
         public float CeilingHeight { get; set; }
         public float FloorHeight { get; set; }
@@ -35,14 +37,14 @@ namespace MapEditor
 
         private float _x1,_y1,_x2,_y2;
 
-        public RectangleSegment(Device device, IShader shader)
+        public RectangleSegment(Device device, Shader shader)
         {
             _device = device;
             _shader = shader;
             TextureRepeat = 4.0f;
         }
 
-        public List<FunAndGamesWithSlimDX.Entities.Polygon> Meshes
+        public List<FunAndGamesWithSharpDX.Entities.Polygon> Meshes
         {
             get
             {
@@ -252,7 +254,7 @@ namespace MapEditor
         /// |--------------x--------------x---------|     = Mesh with cutting points
         /// |--------------|              |---------|     = Cut mesh - original mesh has been replaced by 2 new meshes
         /// </summary>
-        public void CutMesh(FunAndGamesWithSlimDX.Entities.Polygon mesh, float x1, float y1, float x2, float y2)
+        public void CutMesh(FunAndGamesWithSharpDX.Entities.Polygon mesh, float x1, float y1, float x2, float y2)
         {
             if (mesh == null)
                 throw new ArgumentNullException("mesh");
@@ -289,7 +291,7 @@ namespace MapEditor
     {
         private Canvas _canvas;
         private Device _device;
-        private IShader _shader;
+        private Shader _shader;
         private float _midWidth;
         private float _midHeight;
         private float _gridSize;
@@ -310,10 +312,10 @@ namespace MapEditor
 
         public event MouseButtonEventHandler RectangleClicked; 
 
-        public RectangleSegmentEditor(Canvas canvase, Device device, IShader shader, float midWidth, float midHeight, float gridSize)
+        public RectangleSegmentEditor(Canvas canvase, Device device, Shader shader, float midWidth, float midHeight, float gridSize)
         {
-            _squareBrush = new SolidColorBrush(Color.FromRgb(128, 0, 128));
-            _selectedSquareBrush = new SolidColorBrush(Color.FromRgb(128, 128, 0));
+            _squareBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(128, 0, 128));
+            _selectedSquareBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(128, 128, 0));
             _canvas = canvase;
             _device = device;
             _shader = shader;
@@ -393,15 +395,15 @@ namespace MapEditor
             _tempRectangle = null;
         }
 
-        public List<Tuple<Shape, FunAndGamesWithSlimDX.Entities.Polygon>> GetMeshList()
+        public List<Tuple<Shape, FunAndGamesWithSharpDX.Entities.Polygon>> GetMeshList()
         {
             //TODO: Change this
-            List<Tuple<Shape, FunAndGamesWithSlimDX.Entities.Polygon>> meshList = new List<Tuple<Shape, FunAndGamesWithSlimDX.Entities.Polygon>>();
+            List<Tuple<Shape, FunAndGamesWithSharpDX.Entities.Polygon>> meshList = new List<Tuple<Shape, FunAndGamesWithSharpDX.Entities.Polygon>>();
 
             foreach (var room in _roomList)
             {
                 //Roogsegment list is projected back onto old meshlist for backwards compatibility.
-                meshList.AddRange(room.Item2.Meshes.Select(x => new Tuple<Shape, FunAndGamesWithSlimDX.Entities.Polygon>(room.Item1, x)));
+                meshList.AddRange(room.Item2.Meshes.Select(x => new Tuple<Shape, FunAndGamesWithSharpDX.Entities.Polygon>(room.Item1, x)));
             }
 
             return meshList;

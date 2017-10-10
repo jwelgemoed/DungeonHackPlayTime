@@ -1,50 +1,31 @@
-﻿using FunAndGamesWithSlimDX.Engine;
-using FunAndGamesWithSlimDX.Entities;
-using FunAndGamesWithSlimDX.Lights;
-using SlimDX;
-using SlimDX.D3DCompiler;
-using SlimDX.Direct3D11;
+﻿using DungeonHack.DirectX.ConstantBuffer;
+using FunAndGamesWithSharpDX.Engine;
+using FunAndGamesWithSharpDX.Entities;
+using FunAndGamesWithSharpDX.Lights;
+using SharpDX;
+using SharpDX.D3DCompiler;
+using SharpDX.Direct3D11;
 using System;
-using Device = SlimDX.Direct3D11.Device;
+using Device = SharpDX.Direct3D11.Device;
 
-namespace FunAndGamesWithSlimDX.DirectX
+namespace FunAndGamesWithSharpDX.DirectX
 {
-    public class Shader : IShader, IDisposable
+    public class Shader : IDisposable
     {
         private Device _device;
+        private DeviceContext _context;
         private InputLayout _layout;
-        private Effect _fx;
-        private EffectTechnique _technique;
-
-        private EffectConstantBuffer _cbPerFrame;
-        private EffectConstantBuffer _cbPerObject;
-
-        private EffectVariable _gDirLight;
-        private EffectVariable _gPointLight;
-        private EffectVariable _gSpotLight;
-
-        private EffectVariable _material;
 
         private SamplerState _samplerState;
-        private ShaderBytecode _shader;
         private InputElement[] _elements;
 
-        private EffectMatrixVariable _worldMatrix;
-        private EffectMatrixVariable _viewMatrix;
-        private EffectMatrixVariable _projectionMatrix;
+        private SharpDX.Direct3D11.Buffer _staticContantBuffer;
 
-        private EffectVectorVariable _cameraPosition;
-
-        private EffectResourceVariable _shaderTexture;
-        private EffectSamplerVariable _sampleType;
-
-        public Shader()
-        {
-        }
-
-        public Shader(Device device)
+        
+        public Shader(Device device, DeviceContext context)
         {
             _device = device;
+            _context = context;
         }
 
         public void Initialize(Device device)
@@ -55,31 +36,22 @@ namespace FunAndGamesWithSlimDX.DirectX
 
             var basePath = ConfigManager.ResourcePath;
 
-            var fileName = basePath + @"\FX\ShaderEffects.fx";
+            var fileName = basePath + @"\Shaders\Texture.hlsl";
 
-            string errors;
+            var bytecode = ShaderBytecode.CompileFromFile(fileName, "TextureVertexShader", "vs_4_0");
+            var vertexShader = new VertexShader(device, bytecode);
 
-            _shader = ShaderBytecode.CompileFromFile(fileName, null, "fx_5_0",
-                                                     ShaderFlags.SkipOptimization | ShaderFlags.Debug,
-                                                     EffectFlags.None, null, new IncludeFX(), out errors);
+            _layout = new InputLayout(device, bytecode, _elements);
+            bytecode.Dispose();
 
-            _fx = new Effect(device, _shader);
+            bytecode = ShaderBytecode.CompileFromFile(fileName, "TexturePixelShader", "ps_4_0");
+            var pixelShader = new PixelShader(device, bytecode);
+            bytecode.Dispose();
 
-            _cbPerFrame = _fx.GetConstantBufferByName("cbPerFrame").AsConstantBuffer();
-            _cbPerObject = _fx.GetConstantBufferByName("cbPerObject").AsConstantBuffer();
+            _staticContantBuffer = new SharpDX.Direct3D11.Buffer(device, Utilities.SizeOf<ConstantBufferPerObject>(), 
+                ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0);
 
-            Initialize(device, "LightTech");
-        }
-
-        public void Initialize(Device device, string technique)
-        {
-            _technique = _fx.GetTechniqueByName(technique);
-
-            var passDescription = _technique.GetPassByIndex(0).Description;
-
-            _layout = new InputLayout(device, passDescription.Signature, _elements);
-
-            var samplerDesc = new SamplerDescription()
+            var samplerDesc = new SamplerStateDescription
             {
                 Filter = Filter.MinMagLinearMipPoint,
                 AddressU = TextureAddressMode.Wrap,
@@ -93,162 +65,52 @@ namespace FunAndGamesWithSlimDX.DirectX
                 MaximumLod = 0
             };
 
-            _samplerState = SamplerState.FromDescription(device, samplerDesc);
+            _samplerState = new SamplerState(device, samplerDesc);
 
-            _worldMatrix = _cbPerObject.GetMemberByName("worldMatrix").AsMatrix();
-            _viewMatrix = _cbPerObject.GetMemberByName("viewMatrix").AsMatrix();
-            _projectionMatrix = _cbPerObject.GetMemberByName("projectionMatrix").AsMatrix();
-
-            _gDirLight = _cbPerFrame.GetMemberByName("gDirLight");
-            _gPointLight = _cbPerFrame.GetMemberByName("gPointLight");
-            _gSpotLight = _cbPerFrame.GetMemberByName("gSpotLight");
-
-            _material = _cbPerObject.GetMemberByName("material");
-
-            _cameraPosition = _cbPerFrame.GetMemberByName("cameraPosition").AsVector();
-
-            _shaderTexture = _fx.GetVariableByName("shaderTexture").AsResource();
-            _sampleType = _fx.GetVariableByName("SampleType").AsSampler();
+            _context.InputAssembler.InputLayout = _layout;
+            _context.InputAssembler.PrimitiveTopology = SharpDX.Direct3D.PrimitiveTopology.TriangleList;
+            _context.VertexShader.SetConstantBuffer(0, _staticContantBuffer);
+            _context.VertexShader.Set(vertexShader);
+            _context.PixelShader.Set(pixelShader);
+            _context.PixelShader.SetSampler(0, _samplerState);           
         }
 
-        
+               
         public void SetSelectedShaderEffect(Device device, string technique)
         {
-            Initialize(device, technique);
+            
         }
-
-        public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix projectionMatrix)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix projectionMatrix,
-                           ShaderResourceView texture, Material material)
-        {
-            SetShaderParameters(context, worldMatrix, viewMatrix, projectionMatrix, texture);
-
-            RenderShader(context, indexCount);
-        }
-
-        public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix,
-                           Matrix projectionMatrix, ShaderResourceView texture, Color4 diffuseColor,
-                                         Vector3 lightDirection, Vector3 cameraPosition)
-        {
-            SetShaderParameters(context, worldMatrix, viewMatrix, projectionMatrix, texture, diffuseColor, Colors.White, lightDirection, cameraPosition, new Material());
-
-            RenderShader(context, indexCount);
-        }
-
-        public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix,
-                           Matrix projectionMatrix, ShaderResourceView texture, Color4 diffuseColor,
-                                         Vector3 lightDirection)
-        {
-            SetShaderParameters(context, worldMatrix, viewMatrix, projectionMatrix, texture, diffuseColor, Colors.White, lightDirection, new Vector3(1, 1, 1), new Material());
-
-            RenderShader(context, indexCount);
-        }
-
+                
         public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix,
                            Matrix projectionMatrix, ShaderResourceView texture, Vector3 cameraPosition, Material material)
         {
-            SetShaderParameters(context, worldMatrix, viewMatrix, projectionMatrix, texture, null, null, null, cameraPosition, material);
+            ConstantBufferPerObject perObjectBuffer;
+            perObjectBuffer.WorldMatrix = worldMatrix;
+            perObjectBuffer.WorldMatrix.Transpose();
+            perObjectBuffer.ViewMatrix = viewMatrix;
+            perObjectBuffer.ViewMatrix.Transpose();
+            perObjectBuffer.ProjectionMatrix = projectionMatrix;
+            perObjectBuffer.ProjectionMatrix.Transpose();
+            perObjectBuffer.Material = material;
 
-            RenderShader(context, indexCount);
+            context.UpdateSubresource(ref perObjectBuffer, _staticContantBuffer);
+
+            context.PixelShader.SetShaderResource(0, texture);
+
+            context.DrawIndexed(indexCount, 0, 0);
         }
 
         public void RenderLights(DirectionalLight directionalLight, PointLight pointLight, Spotlight spotLight)
         {
-            var d = Util.GetArray(directionalLight);
-            //Array.Copy(d, 0, _diretionalLightArray, 0, Directional.Stride);
-
-            using (var buffer = new DataStream(d, false, false))
-            {
-                _gDirLight.SetRawValue(buffer, DirectionalLight.Stride);
-            }
-
-            var p = Util.GetArray(pointLight);
-
-            using (var buffer = new DataStream(p, false, false))
-            {
-                _gPointLight.SetRawValue(buffer, PointLight.Stride);
-            }
-
-            var s = Util.GetArray(spotLight);
-
-            using (var buffer = new DataStream(s, false, false))
-            {
-                _gSpotLight.SetRawValue(buffer, Spotlight.Stride);
-            }
-        }
-
-        private void RenderShader(DeviceContext context, int indexCount)
-        {
-            context.InputAssembler.InputLayout = _layout;
-
-            var techDesc = _technique.Description;
-
-            for (int i = 0; i < techDesc.PassCount; i++)
-            {
-                _technique.GetPassByIndex(i).Apply(context);
-
-                context.PixelShader.SetSampler(_samplerState, 0);
-
-                context.DrawIndexed(indexCount, 0, 0);
-            }
-        }
-
-        private void SetShaderParameters(DeviceContext context, Matrix worldMatrix, Matrix viewMatrix,
-                                         Matrix projectionMatrix, ShaderResourceView texture)
-        {
-            _worldMatrix.SetMatrix(worldMatrix);
-            _viewMatrix.SetMatrix(viewMatrix);
-            _projectionMatrix.SetMatrix(projectionMatrix);
-
-            _shaderTexture.SetResource(texture);
-            _sampleType.SetSamplerState(0, _samplerState);
-
-            context.PixelShader.SetShaderResource(texture, 0);
-        }
-
-        private void SetShaderParameters(DeviceContext context, Matrix worldMatrix, Matrix viewMatrix,
-                                         Matrix projectionMatrix, ShaderResourceView texture, Color4? diffuseColor, Color4? ambientColor,
-                                         Vector3? lightDirection, Vector3 cameraPosition, Material material)
-        {
-            _worldMatrix.SetMatrix(worldMatrix);
-            _viewMatrix.SetMatrix(viewMatrix);
-            _projectionMatrix.SetMatrix(projectionMatrix);
-
-            var s = Util.GetArray(material);
-
-            using (var dataStream = new DataStream(s, false, false))
-            {
-                _material.SetRawValue(dataStream, Material.Stride);
-            }
             
-            _cameraPosition.Set(cameraPosition);
-
-            _shaderTexture.SetResource(texture);
-            _sampleType.SetSamplerState(0, _samplerState);
-
-            context.PixelShader.SetShaderResource(texture, 0);
         }
 
         public void Dispose()
         {
-            _shader.Dispose();
-            _fx.Dispose();
             _layout.Dispose();
             _samplerState.Dispose();
+            _staticContantBuffer.Dispose();
         }
 
-        public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix projectionMatrix, ShaderResourceView texture, Color4 diffuseColor, Color4 ambientColor, Vector3 lightDirection, Vector3 cameraPosition)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix projectionMatrix, ShaderResourceView texture)
-        {
-            throw new NotImplementedException();
-        }
-    }
+     }
 }

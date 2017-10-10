@@ -1,14 +1,14 @@
-﻿using FunAndGamesWithSlimDX.Engine;
-using FunAndGamesWithSlimDX;
-using SlimDX;
-using SlimDX.Direct3D11;
+﻿using FunAndGamesWithSharpDX.Engine;
+using FunAndGamesWithSharpDX;
+using SharpDX;
+using SharpDX.Direct3D11;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 
-namespace FunAndGamesWithSlimDX.Entities
+namespace FunAndGamesWithSharpDX.Entities
 {
     public class Console : IDisposable
     {

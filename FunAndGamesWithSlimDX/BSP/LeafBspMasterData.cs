@@ -1,5 +1,5 @@
 ﻿using DungeonHack.BSP.LeafBsp;
-using FunAndGamesWithSlimDX.Entities;
+using FunAndGamesWithSharpDX.Entities;
 using System.Collections.Generic;
 
 namespace DungeonHack.BSP
@@ -13,7 +13,7 @@ namespace DungeonHack.BSP
         public List<Portal> PortalArray;
         public byte[] PVSData;
 
-        public int NumberOfPolygons { get { return PortalArray.Count; } }
+        public int NumberOfPolygons { get { return PolygonArray.Count; } }
         public int NumberOfNodes { get { return NodeArray.Count; } }
         public int NumberOfLeaves { get { return LeafArray.Count; } }
         public int NumberOfPlanes { get { return PlaneArray.Count; } }

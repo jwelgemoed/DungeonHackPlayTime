@@ -1,5 +1,5 @@
-﻿using FunAndGamesWithSlimDX.Entities;
-using SlimDX.Direct3D11;
+﻿using FunAndGamesWithSharpDX.Entities;
+using SharpDX.Direct3D11;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +16,7 @@ namespace DungeonHack.BSP
 
         private int _recursionDepth = 0;
         
-        public BspTreeBuilder(Device device, FunAndGamesWithSlimDX.DirectX.IShader shader)
+        public BspTreeBuilder(Device device, FunAndGamesWithSharpDX.DirectX.Shader shader)
         {
             _polyClassifier = new PolygonClassifier();
             _splitterSelector = new SplitterSelector(_polyClassifier, 8);

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FunAndGamesWithSlimDX.DirectX;
-using SlimDX.Direct3D11;
-using FunAndGamesWithSlimDX.Entities;
+using FunAndGamesWithSharpDX.DirectX;
+using SharpDX.Direct3D11;
+using FunAndGamesWithSharpDX.Entities;
 using DungeonHack.BSP.LeafBsp;
-using SlimDX;
+using SharpDX;
 using DungeonHack.Builders;
 
 namespace DungeonHack.BSP
@@ -16,7 +16,7 @@ namespace DungeonHack.BSP
     {
         private readonly PortalBuilder _portalBuilder;
 
-        public PortalSplitter(PointClassifier pointClassifier, Device device, IShader shader) 
+        public PortalSplitter(PointClassifier pointClassifier, Device device, Shader shader) 
             : base(pointClassifier, device, shader)
         {
             _portalBuilder = new PortalBuilder(device, shader);

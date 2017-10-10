@@ -1,8 +1,9 @@
-﻿using SlimDX;
+﻿using SharpDX;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using Point = System.Windows.Point;
 
 namespace MapEditor
 {
@@ -16,7 +17,7 @@ namespace MapEditor
 
         public GridPlayer(Canvas canvas)
         {
-            _lineBrush = new SolidColorBrush(Color.FromRgb(0, 128, 0));
+            _lineBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0, 128, 0));
             _canvas = canvas;
         }
 

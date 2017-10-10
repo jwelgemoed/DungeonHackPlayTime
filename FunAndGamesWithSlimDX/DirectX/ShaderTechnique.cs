@@ -1,4 +1,4 @@
-﻿namespace FunAndGamesWithSlimDX.DirectX
+﻿namespace FunAndGamesWithSharpDX.DirectX
 {
     public enum ShaderTechnique
     {

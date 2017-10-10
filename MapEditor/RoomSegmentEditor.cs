@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Shapes;
-using FunAndGamesWithSlimDX.Entities;
+using FunAndGamesWithSharpDX.Entities;
 using System.Windows.Controls;
 using System.Windows.Media;
-using SlimDX.Direct3D11;
-using FunAndGamesWithSlimDX.DirectX;
+using SharpDX.Direct3D11;
+using FunAndGamesWithSharpDX.DirectX;
 using GameData;
 using System.Configuration;
 
@@ -195,7 +195,7 @@ namespace MapEditor
             throw new NotImplementedException();
         }
 
-        List<Tuple<Shape, FunAndGamesWithSlimDX.Entities.Polygon>> ISegmentEditor.GetMeshList()
+        List<Tuple<Shape, FunAndGamesWithSharpDX.Entities.Polygon>> ISegmentEditor.GetMeshList()
         {
             throw new NotImplementedException();
         }

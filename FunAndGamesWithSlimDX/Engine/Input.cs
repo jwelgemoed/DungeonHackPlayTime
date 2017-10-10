@@ -1,4 +1,4 @@
-﻿namespace FunAndGamesWithSlimDX.Engine
+﻿namespace FunAndGamesWithSharpDX.Engine
 {
     public class Input
     {

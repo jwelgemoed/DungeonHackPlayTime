@@ -116,10 +116,12 @@ C:\git\DungeonHackPlayTime\Project1\bin\Debug\Resources\terrain2.dds
 C:\git\DungeonHackPlayTime\Project1\bin\Debug\Geometry.dll.config
 C:\git\DungeonHackPlayTime\Project1\bin\Debug\Geometry.dll
 C:\git\DungeonHackPlayTime\Project1\bin\Debug\Geometry.pdb
+C:\git\DungeonHackPlayTime\Project1\bin\Debug\AssimpNet.dll
 C:\git\DungeonHackPlayTime\Project1\bin\Debug\GameData.dll
 C:\git\DungeonHackPlayTime\Project1\bin\Debug\GameData.pdb
+C:\git\DungeonHackPlayTime\Project1\bin\Debug\GameData.dll.config
+C:\git\DungeonHackPlayTime\Project1\bin\Debug\AssimpNet.xml
 C:\git\DungeonHackPlayTime\Project1\obj\Debug\Geometry.csprojResolveAssemblyReference.cache
 C:\git\DungeonHackPlayTime\Project1\obj\Debug\Geometry.dll
 C:\git\DungeonHackPlayTime\Project1\obj\Debug\Geometry.pdb
-C:\git\DungeonHackPlayTime\Project1\bin\Debug\AssimpNet.dll
-C:\git\DungeonHackPlayTime\Project1\bin\Debug\AssimpNet.xml
+C:\git\DungeonHackPlayTime\Project1\bin\Debug\Shaders\Texture.hlsl

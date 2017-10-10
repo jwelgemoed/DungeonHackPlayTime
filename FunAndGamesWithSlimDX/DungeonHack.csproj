@@ -84,16 +84,42 @@
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="SharpDX, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\..\..\nugetrepositories\SharpDX.4.0.1\lib\net45\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.D3DCompiler, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\..\..\nugetrepositories\SharpDX.D3DCompiler.4.0.1\lib\net45\SharpDX.D3DCompiler.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Desktop, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\..\..\nugetrepositories\SharpDX.Desktop.4.0.1\lib\net45\SharpDX.Desktop.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct2D1, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\..\..\nugetrepositories\SharpDX.Direct2D1.4.0.1\lib\net45\SharpDX.Direct2D1.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct3D11, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\..\..\nugetrepositories\SharpDX.Direct3D11.4.0.1\lib\net45\SharpDX.Direct3D11.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct3D11.Effects, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\..\..\nugetrepositories\SharpDX.Direct3D11.Effects.4.0.1\lib\net45\SharpDX.Direct3D11.Effects.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.DXGI, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\..\..\nugetrepositories\SharpDX.DXGI.4.0.1\lib\net45\SharpDX.DXGI.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Mathematics, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\..\..\nugetrepositories\SharpDX.Mathematics.4.0.1\lib\net45\SharpDX.Mathematics.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.RawInput, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\..\..\nugetrepositories\SharpDX.RawInput.4.0.1\lib\net45\SharpDX.RawInput.dll</HintPath>
+    </Reference>
     <Reference Include="SimpleInjector, Version=4.0.8.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
       <HintPath>..\..\..\nugetrepositories\SimpleInjector.4.0.8\lib\net45\SimpleInjector.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="SlimDX, Version=4.0.13.43, Culture=neutral, PublicKeyToken=b1b0c32fd1ffe4f9, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Refs\SlimDX\SlimDX.dll</HintPath>
-    </Reference>
     <Reference Include="SpriteTextRenderer">
       <HintPath>..\Refs\SpriteRenderer\SpriteTextRenderer.dll</HintPath>
+    </Reference>
+    <Reference Include="SpriteTextRenderer.SharpDX">
+      <HintPath>..\Refs\SpriteRenderer\SpriteTextRenderer.SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="SpriteTextRenderer.SlimDX">
       <HintPath>..\Refs\SpriteRenderer\SpriteTextRenderer.SlimDX.dll</HintPath>
@@ -114,6 +140,7 @@
     <Compile Include="BSP\BspBoundingVolumeCalculator.cs" />
     <Compile Include="BSP\BspNode.cs" />
     <Compile Include="BSP\BspRenderer.cs" />
+    <Compile Include="BSP\BspRenderStackItem.cs" />
     <Compile Include="BSP\BspTreeBuilder.cs" />
     <Compile Include="BSP\LeafBspMasterData.cs" />
     <Compile Include="BSP\LeafBsp\Leaf.cs" />
@@ -132,10 +159,12 @@
     <Compile Include="BSP\PVS\PVSCalculator.cs" />
     <Compile Include="BSP\SplitterSelector.cs" />
     <Compile Include="Builders\MeshBuilder.cs" />
+    <Compile Include="DirectX\ConstantBuffer\ConstantBufferPerObject.cs" />
+    <Compile Include="DirectX\Shader.cs" />
+    <Compile Include="DirectX\TextureLoader.cs" />
     <Compile Include="Factories\ModelFactory.cs" />
     <Compile Include="Builders\PortalBuilder.cs" />
-    <Compile Include="DirectX\LightShader.cs" />
-    <Compile Include="DirectX\Shader.cs" />
+    <Compile Include="DirectX\Shader_Old.cs" />
     <Compile Include="DirectX\IncludeFX.cs" />
     <Compile Include="DirectX\ShaderTechnique.cs" />
     <Compile Include="DirectX\Util.cs" />
@@ -144,9 +173,6 @@
     <Compile Include="Engine\FontRenderer.cs" />
     <Compile Include="Engine\Frustrum.cs" />
     <Compile Include="Engine\Input.cs" />
-    <Compile Include="Engine\RenderPanel.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Engine\SpriteRenderer.cs" />
     <Compile Include="Entities\Console.cs" />
     <Compile Include="Entities\EditorEnum.cs" />
@@ -155,7 +181,6 @@
     <Compile Include="Entities\Sprite.cs" />
     <Compile Include="Engine\ApplicationStateEngine.cs" />
     <Compile Include="Engine\Camera.cs" />
-    <Compile Include="DirectX\ColorShader.cs" />
     <Compile Include="Engine\ConfigManager.cs" />
     <Compile Include="Engine\Engine.cs" />
     <Compile Include="Engine\Saver.cs" />
@@ -164,9 +189,6 @@
     <Compile Include="Entities\Model.cs" />
     <Compile Include="Entities\Vertex.cs" />
     <Compile Include="Engine\GameTimer.cs" />
-    <Compile Include="DirectX\IShader.cs" />
-    <Compile Include="FX\TextureShaderEffect.cs" />
-    <Compile Include="FX\TextureShader.cs" />
     <Compile Include="Lights\Directional.cs" />
     <Compile Include="Lights\LightEngine.cs" />
     <Compile Include="Lights\Point.cs" />
@@ -190,12 +212,14 @@
     <Compile Include="DirectX\Renderer.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="DirectX\Texture.cs" />
-    <Compile Include="Tests\ShaderTest.cs" />
     <Compile Include="TextureDictionary.cs" />
     <Content Include="FX\LightHelper.fx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\MWALL4_2.PNG">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Texture.hlsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <EmbeddedResource Include="Menus\OptionsWindow.resx">

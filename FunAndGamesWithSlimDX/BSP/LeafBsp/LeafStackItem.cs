@@ -1,4 +1,4 @@
-﻿using FunAndGamesWithSlimDX.Entities;
+﻿using FunAndGamesWithSharpDX.Entities;
 using System.Collections.Generic;
 
 namespace DungeonHack.BSP.LeafBsp

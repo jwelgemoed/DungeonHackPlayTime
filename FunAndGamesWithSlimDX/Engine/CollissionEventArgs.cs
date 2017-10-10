@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FunAndGamesWithSlimDX.Engine
+namespace FunAndGamesWithSharpDX.Engine
 {
     public class CollissionEventArgs : EventArgs
     {

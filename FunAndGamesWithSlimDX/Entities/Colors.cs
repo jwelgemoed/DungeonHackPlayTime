@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SlimDX;
+using SharpDX;
 
-namespace FunAndGamesWithSlimDX.Entities
+namespace FunAndGamesWithSharpDX.Entities
 {
     public static class Colors
     {

@@ -1,11 +1,11 @@
-﻿using FunAndGamesWithSlimDX.Engine;
+﻿using FunAndGamesWithSharpDX.Engine;
 using System;
 using System.Collections.Generic;
-using FunAndGamesWithSlimDX.Entities;
-using SlimDX;
-using SlimDX.Direct3D11;
-using FunAndGamesWithSlimDX.DirectX;
-using FunAndGamesWithSlimDX.Lights;
+using FunAndGamesWithSharpDX.Entities;
+using SharpDX;
+using SharpDX.Direct3D11;
+using FunAndGamesWithSharpDX.DirectX;
+using FunAndGamesWithSharpDX.Lights;
 using DungeonHack.BSP;
 using System.IO;
 using System.Diagnostics;
@@ -33,8 +33,8 @@ namespace MapEditor
         {
             _wallMaterial = new Material()
             {
-                Ambient = new Color4(0.651f, 0.5f, 0.392f),
-                Diffuse = new Color4(0.651f, 0.5f, 0.392f),
+                Ambient = new Color4(0.651f, 0.5f, 0.392f, 1.0f),
+                Diffuse = new Color4(0.651f, 0.5f, 0.392f, 1.0f),
                 Specular = new Color4(4.0f, 0.2f, 0.2f, 0.2f)
             };
         }
@@ -47,7 +47,7 @@ namespace MapEditor
             }
         }
 
-        public IShader GetShader
+        public Shader GetShader
         {
             get
             {
@@ -68,8 +68,8 @@ namespace MapEditor
             base._stopwatch.Restart();
 
             _nodesVisited = 0;
-
-            _bspRenderer.DrawBspTreeFrontToBack(BspRootNode, Camera.EyeAt, _frustrum, ref _meshRenderedCount);
+                                
+            _bspRenderer.DrawBspTreeFrontToBack(BspRootNode, Camera.EyeAt, _frustrum, ref _meshRenderedCount, Camera);
             //DrawBspTreeBackToFront(BspRootNode, Camera.EyeAt);
         }
 
@@ -78,8 +78,8 @@ namespace MapEditor
             base.UpdateScene();
 
             var spotlight = new Spotlight(
-                new Color4(1.0f, 1.0f, 1.0f),
-                new Color4(0.2f, 0.2f, 0.2f),
+                new Color4(1.0f, 1.0f, 1.0f, 1.0f),
+                new Color4(0.2f, 0.2f, 0.2f, 1.0f),
                 Colors.White,
                 Camera.EyeAt,
                 1000.0f,
@@ -121,17 +121,17 @@ namespace MapEditor
             Shader.Initialize(base.Renderer.Device);
 
             _directionalLight = new DirectionalLight(
-                new Color4(0.2f, 0.2f, 0.2f),
-                new Color4(0.0f, 0.0f, 0.0f),
-                new Color4(0.0f, 0.0f, 0.0f),
+                new Color4(0.2f, 0.2f, 0.2f, 1.0f),
+                new Color4(0.0f, 0.0f, 0.0f, 1.0f),
+                new Color4(0.0f, 0.0f, 0.0f, 1.0f),
                 new Vector3(0.0f, 1.0f, 0.0f));
 
             LightEngine.AddDirectionalLight(_directionalLight);
 
             _pointLight = new PointLight(
-                new Color4(0.5f, 0.5f, 0.0f),
-                new Color4(0.2f, 0.2f, 0.2f),
-                new Color4(0.5f, 0.5f, 0.5f),
+                new Color4(0.5f, 0.5f, 0.0f, 1.0f),
+                new Color4(0.2f, 0.2f, 0.2f, 1.0f),
+                new Color4(0.5f, 0.5f, 0.5f, 1.0f),
                 new Vector3(0.0f, 0.0f, 0.0f),
                 100.0f,
                 new Vector3(1.0f, 1.0f, 1.0f)
@@ -140,9 +140,9 @@ namespace MapEditor
             LightEngine.AddPointLight(_pointLight);
 
             _spotlight = new Spotlight(
-                new Color4(0.5f, 1.5f, 0.0f),
-                new Color4(0.2f, 0.2f, 0.2f),
-                new Color4(1.5f, 0.5f, 0.5f),
+                new Color4(0.5f, 1.5f, 0.0f, 1.0f),
+                new Color4(0.2f, 0.2f, 0.2f, 1.0f),
+                new Color4(1.5f, 0.5f, 0.5f, 1.0f),
                 new Vector3(10.0f, 0.0f, 0.0f),
                 10.0f,
                 new Vector3(0.0f, 1.0f, 0.0f),

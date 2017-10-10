@@ -1,12 +1,12 @@
-﻿using SlimDX.Direct3D11;
-using SlimDX.Multimedia;
-using SlimDX.RawInput;
+﻿using SharpDX.Direct3D11;
+using SharpDX.Multimedia;
+using SharpDX.RawInput;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace FunAndGamesWithSlimDX.Engine
+namespace FunAndGamesWithSharpDX.Engine
 {
     public abstract class CameraEngine : Engine, IDisposable
     {
@@ -27,8 +27,8 @@ namespace FunAndGamesWithSlimDX.Engine
 
             Form.KeyDown += KeyDown;
             Form.KeyUp += KeyUp;
-            SlimDX.RawInput.Device.RegisterDevice(UsagePage.Generic, UsageId.Mouse, SlimDX.RawInput.DeviceFlags.None);
-            SlimDX.RawInput.Device.MouseInput += MoveMouse;
+            SharpDX.RawInput.Device.RegisterDevice(UsagePage.Generic, UsageId.GenericMouse, DeviceFlags.None);
+            SharpDX.RawInput.Device.MouseInput += MoveMouse;
 
             _centerPoint = Form.PointToScreen(new Point(Form.ClientSize.Width / 2, Form.ClientSize.Height / 2));
         }
@@ -42,7 +42,7 @@ namespace FunAndGamesWithSlimDX.Engine
         {
             Form.KeyUp -= KeyUp;
             Form.KeyDown -= KeyDown;
-            SlimDX.RawInput.Device.MouseInput -= MoveMouse;
+            SharpDX.RawInput.Device.MouseInput -= MoveMouse;
             Cursor.Show();
         }
 

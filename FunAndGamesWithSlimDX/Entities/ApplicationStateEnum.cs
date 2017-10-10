@@ -1,4 +1,4 @@
-﻿namespace FunAndGamesWithSlimDX.Entities
+﻿namespace FunAndGamesWithSharpDX.Entities
 {
     public enum ApplicationStateEnum
     {

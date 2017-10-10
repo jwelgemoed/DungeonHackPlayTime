@@ -1,4 +1,4 @@
-﻿using SlimDX;
+﻿using SharpDX;
 using System.Collections.Generic;
 
 namespace DungeonHack.BSP

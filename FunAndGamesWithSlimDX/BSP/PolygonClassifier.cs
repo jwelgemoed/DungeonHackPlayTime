@@ -1,5 +1,5 @@
-﻿using FunAndGamesWithSlimDX.Entities;
-using SlimDX;
+﻿using FunAndGamesWithSharpDX.Entities;
+using SharpDX;
 using Plane = DungeonHack.Entities.Plane;
 
 namespace DungeonHack.BSP

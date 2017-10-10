@@ -8,3 +8,4 @@ C:\git\DungeonHackPlayTime\MeshCreator\obj\Release\MeshCreator.exe
 C:\git\DungeonHackPlayTime\MeshCreator\obj\Release\MeshCreator.pdb
 C:\git\DungeonHackPlayTime\MeshCreator\bin\Release\AssimpNet.dll
 C:\git\DungeonHackPlayTime\MeshCreator\bin\Release\AssimpNet.xml
+C:\git\DungeonHackPlayTime\MeshCreator\obj\Release\MeshCreator.csprojResolveAssemblyReference.cache

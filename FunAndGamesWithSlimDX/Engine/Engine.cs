@@ -1,17 +1,16 @@
-﻿using FunAndGamesWithSlimDX.DirectX;
-using FunAndGamesWithSlimDX.Entities;
-using FunAndGamesWithSlimDX.FX;
-using FunAndGamesWithSlimDX.Menus;
-using SlimDX;
-using SlimDX.Direct3D11;
-using SlimDX.DirectWrite;
-using SlimDX.DXGI;
-using SlimDX.Windows;
+﻿using FunAndGamesWithSharpDX.DirectX;
+using FunAndGamesWithSharpDX.Entities;
+using FunAndGamesWithSharpDX.Menus;
+using SharpDX;
+using SharpDX.Direct3D11;
+using SharpDX.DirectWrite;
+using SharpDX.DXGI;
+using SharpDX.Windows;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
 
-namespace FunAndGamesWithSlimDX.Engine
+namespace FunAndGamesWithSharpDX.Engine
 {
     /// <summary>
     /// Engine class : main class responsible for doing all engine related work
@@ -20,7 +19,7 @@ namespace FunAndGamesWithSlimDX.Engine
     {
         protected RenderForm Form = new RenderForm();
         protected Renderer Renderer = new Renderer();
-        protected IShader Shader;
+        protected Shader Shader;
         protected readonly GameTimer Timer = new GameTimer();
         protected Camera Camera;
         private bool _hasInitialized = false;
@@ -94,7 +93,7 @@ namespace FunAndGamesWithSlimDX.Engine
 
             _frustrum = new Frustrum();
 
-            Shader = new Shader(Renderer.Device);
+            Shader = new Shader(Renderer.Device, Renderer.Context);
             Shader.Initialize(Renderer.Device);
 
             SpriteRenderer.Initialize(Renderer.Device);
@@ -115,7 +114,9 @@ namespace FunAndGamesWithSlimDX.Engine
 
             Timer.Start();
 
-            MessagePump.Run(Form, MainLoop);
+            RenderLoop.Run(Form, MainLoop);
+            
+            //MessagePump.Run(Form, MainLoop);
             
             Timer.Stop();
 

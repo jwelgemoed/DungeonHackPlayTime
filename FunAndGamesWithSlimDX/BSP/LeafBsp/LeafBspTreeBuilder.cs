@@ -1,6 +1,6 @@
-﻿using FunAndGamesWithSlimDX.Entities;
-using SlimDX;
-using SlimDX.Direct3D11;
+﻿using FunAndGamesWithSharpDX.Entities;
+using SharpDX;
+using SharpDX.Direct3D11;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +18,7 @@ namespace DungeonHack.BSP.LeafBsp
 
         private int _recursionDepth = 0;
 
-        public LeafBspTreeBuilder(Device device, FunAndGamesWithSlimDX.DirectX.IShader shader)
+        public LeafBspTreeBuilder(Device device, FunAndGamesWithSharpDX.DirectX.Shader shader)
         {
             _polygonClassifier = new PolygonClassifier();
             _polygonSplitter = new PolygonSplitter(new PointClassifier(), device, shader);
@@ -115,15 +115,20 @@ namespace DungeonHack.BSP.LeafBsp
                 if (!_frontList.Any(x => !x.HasBeenUsedAsSplitPlane) & _frontList.Count > 0)
                 {
                     Leaf newLeaf = new Leaf();
-                    newLeaf.StartPolygon = _masterData.NumberOfPolygons;
+                    newLeaf.StartPolygon = _masterData.NumberOfPolygons - 1;
+                    if (newLeaf.StartPolygon < 0)
+                        newLeaf.StartPolygon = 0;
 
                     _masterData.LeafArray.Add(newLeaf);
 
                     _frontList.ForEach(x => _masterData.PolygonArray.Add(x));
 
-                    newLeaf.EndPolygon = _masterData.NumberOfPolygons;
+                    newLeaf.EndPolygon = _masterData.NumberOfPolygons - 1;
+                    if (newLeaf.EndPolygon < 0)
+                        newLeaf.EndPolygon = 0;
+
                     newLeaf.BoundingBox = leafBox;
-                    _masterData.NodeArray[node].Front = _masterData.NumberOfLeaves;
+                    _masterData.NodeArray[node].Front = _masterData.NumberOfLeaves-1;
                     _masterData.NodeArray[node].IsLeaf = true;
 
                     _masterData.LeafArray.Add(newLeaf);
@@ -131,7 +136,7 @@ namespace DungeonHack.BSP.LeafBsp
                 else if (_frontList.Any())
                 {
                     _masterData.NodeArray[node].IsLeaf = false;
-                    _masterData.NodeArray[node].Front = _masterData.NumberOfNodes+1;
+                    _masterData.NodeArray[node].Front = _masterData.NumberOfNodes;
 
                     Node newNode = new Node();
                     _masterData.NodeArray.Add(newNode);
@@ -145,7 +150,7 @@ namespace DungeonHack.BSP.LeafBsp
                 }
                 else
                 {
-                    _masterData.NodeArray[node].Back = _masterData.NumberOfNodes+1;
+                    _masterData.NodeArray[node].Back = _masterData.NumberOfNodes;
 
                     Node newNode = new Node();
                     _masterData.NodeArray.Add(newNode);

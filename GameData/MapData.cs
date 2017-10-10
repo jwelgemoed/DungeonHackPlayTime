@@ -1,6 +1,4 @@
-﻿using FunAndGamesWithSlimDX.Entities;
-using SlimDX.Direct3D11;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace GameData

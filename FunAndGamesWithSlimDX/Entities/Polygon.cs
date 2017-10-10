@@ -1,10 +1,10 @@
-﻿using FunAndGamesWithSlimDX.DirectX;
-using SlimDX;
+﻿using FunAndGamesWithSharpDX.DirectX;
+using SharpDX;
 using System;
-using Buffer = SlimDX.Direct3D11.Buffer;
-using Device = SlimDX.Direct3D11.Device;
+using Buffer = SharpDX.Direct3D11.Buffer;
+using Device = SharpDX.Direct3D11.Device;
 
-namespace FunAndGamesWithSlimDX.Entities
+namespace FunAndGamesWithSharpDX.Entities
 {
     public class Polygon : IDisposable
     {
@@ -31,7 +31,7 @@ namespace FunAndGamesWithSlimDX.Entities
 
         public bool HasBeenUsedAsSplitPlane { get; set; }
 
-        public Polygon(Device device, IShader shader)
+        public Polygon(Device device, Shader shader)
         {
             ScaleMatrix = Matrix.Identity;
             TranslationMatrix = Matrix.Identity;

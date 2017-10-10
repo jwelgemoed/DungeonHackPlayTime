@@ -1,5 +1,5 @@
-﻿using FunAndGamesWithSlimDX.Entities;
-using SlimDX;
+﻿using FunAndGamesWithSharpDX.Entities;
+using SharpDX;
 using System.Collections.Generic;
 
 namespace DungeonHack.BSP

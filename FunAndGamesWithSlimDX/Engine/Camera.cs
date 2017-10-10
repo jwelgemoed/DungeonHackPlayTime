@@ -1,9 +1,9 @@
-﻿using FunAndGamesWithSlimDX.DirectX;
-using FunAndGamesWithSlimDX.Entities;
-using SlimDX;
+﻿using FunAndGamesWithSharpDX.DirectX;
+using FunAndGamesWithSharpDX.Entities;
+using SharpDX;
 using System;
 
-namespace FunAndGamesWithSlimDX.Engine
+namespace FunAndGamesWithSharpDX.Engine
 {
     public class Camera
     {
@@ -46,10 +46,6 @@ namespace FunAndGamesWithSlimDX.Engine
         }
 
         public MoveState PreviousMoveState { get; set; }
-
-        public bool Collided { get; set; }
-
-        public Vertex? CollidedVertex { get; set; }
 
         public bool RestrictMovementPlaneXZ { get; set; }
 
@@ -170,35 +166,18 @@ namespace FunAndGamesWithSlimDX.Engine
         {
             var direction = Vector3.Normalize(_lookAt - _eyeAt);
 
-            if (CollidedVertex.HasValue)
-            {
-                Vector3 invertedNormal = Vector3.Negate(CollidedVertex.Value.Normal);
-                MoveForward(moveState, direction, invertedNormal);
-                MoveBackward(moveState, direction, invertedNormal);
-                MoveLeft(moveState, direction, invertedNormal);
-                MoveRight(moveState, direction, invertedNormal);
-                MoveUp(moveState, direction, invertedNormal);
-                MoveDown(moveState, direction, invertedNormal);
-            }
-            else //Don't handle collisions
-            {
-                MoveForward(moveState, direction, null);
-                MoveBackward(moveState, direction, null);
-                MoveLeft(moveState, direction, null);
-                MoveRight(moveState, direction, null);
-                MoveUp(moveState, direction, null);
-                MoveDown(moveState, direction, null);
 
-                Collided = false;
-            }
-
-            CollidedVertex = null;
-
+            MoveForward(moveState, direction, null);
+            MoveBackward(moveState, direction, null);
+            MoveLeft(moveState, direction, null);
+            MoveRight(moveState, direction, null);
+            MoveUp(moveState, direction, null);
+            MoveDown(moveState, direction, null);
+            
             if (RestrictMovementPlaneXZ)
             {
                 _eyeAt.Y = _startingEyeAt.Y;
             }
-
         }
 
         private void MoveRight(MoveState moveState, Vector3 direction, Vector3? invertedNormal)

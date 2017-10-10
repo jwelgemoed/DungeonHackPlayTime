@@ -1,6 +1,6 @@
-﻿using FunAndGamesWithSlimDX.Engine;
-using FunAndGamesWithSlimDX.Entities;
-using SlimDX;
+﻿using FunAndGamesWithSharpDX.Engine;
+using FunAndGamesWithSharpDX.Entities;
+using SharpDX;
 using System;
 
 namespace DungeonHack.BSP.LeafBsp

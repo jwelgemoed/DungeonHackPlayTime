@@ -1,11 +1,11 @@
-﻿using FunAndGamesWithSlimDX.Entities;
+﻿using FunAndGamesWithSharpDX.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FunAndGamesWithSlimDX.DirectX;
-using SlimDX.Direct3D11;
+using FunAndGamesWithSharpDX.DirectX;
+using SharpDX.Direct3D11;
 using AutoMapper;
 
 namespace DungeonHack.BSP.LeafBsp
@@ -13,9 +13,9 @@ namespace DungeonHack.BSP.LeafBsp
     public class Portal : Polygon
     {
         private Device _device;
-        private IShader _shader;
+        private Shader _shader;
 
-        public Portal(Device device, IShader shader) 
+        public Portal(Device device, Shader shader) 
             : base(device, shader)
         {
             _device = device;
