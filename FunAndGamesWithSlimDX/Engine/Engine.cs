@@ -93,8 +93,8 @@ namespace FunAndGamesWithSharpDX.Engine
 
             _frustrum = new Frustrum();
 
-            Shader = new Shader(Renderer.Device, Renderer.Context);
-            Shader.Initialize(Renderer.Device);
+            Shader = new Shader();
+            Shader.Initialize(Renderer.Device, Renderer.Context);
 
             SpriteRenderer.Initialize(Renderer.Device);
             FontRenderer.Initialize(Renderer.Device, "Arial", FontWeight.Normal, FontStyle.Normal, FontStretch.Normal, 12);

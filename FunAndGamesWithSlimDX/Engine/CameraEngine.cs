@@ -13,7 +13,7 @@ namespace FunAndGamesWithSharpDX.Engine
         private float _previousMouseX;
         private float _previousMouseY;
         private readonly Point _centerPoint;
-        private readonly List<string> _shaderTechniques = new List<string>() { "LightTech", "TextureTech", "NoSpotSpotLightTech" };
+        private readonly List<string> _shaderTechniques = new List<string>() { "LightTech", "TextureTech" };
         private int currentTechId = 0;
         private bool _flashLightOn = true;
 
@@ -90,11 +90,11 @@ namespace FunAndGamesWithSharpDX.Engine
 
                 if (_flashLightOn)
                 {
-                    Shader.SetSelectedShaderEffect(Renderer.Device, "NoSpotSpotLightTech");
+                    Shader.SetShader(DirectX.ShaderTechnique.LightShader);
                 }
                 else
                 {
-                    Shader.SetSelectedShaderEffect(Renderer.Device, "LightTech");
+                    Shader.SetShader(DirectX.ShaderTechnique.TextureShader);
                 }
                 
             }
@@ -109,7 +109,7 @@ namespace FunAndGamesWithSharpDX.Engine
                 else
                 {
                     Renderer.SetRasterizerState(FillMode.Solid, CullMode.Back);
-                    Shader.SetSelectedShaderEffect(Renderer.Device, _shaderTechniques[currentTechId]);
+                    Shader.SetShader((DirectX.ShaderTechnique) currentTechId);
                 }
             }
             else if (e.KeyCode == Keys.F2)

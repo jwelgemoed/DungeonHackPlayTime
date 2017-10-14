@@ -118,7 +118,7 @@ namespace MapEditor
             if (_startingPosition == null)
                 Camera.SetPosition(0, 0, 0);
 
-            Shader.Initialize(base.Renderer.Device);
+            Shader.Initialize(base.Renderer.Device, base.Renderer.Context);
 
             _directionalLight = new DirectionalLight(
                 new Color4(0.2f, 0.2f, 0.2f, 1.0f),
