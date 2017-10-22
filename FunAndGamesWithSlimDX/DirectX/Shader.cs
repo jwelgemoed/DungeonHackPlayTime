@@ -12,6 +12,7 @@ namespace FunAndGamesWithSharpDX.DirectX
         private DeviceContext _context;
         private LightShader _lightShader;
         private TextureShader _textureShader;
+        private EffectsShader _effectsShader;
         private IShader _currentShader;
 
         public void Dispose()
@@ -35,6 +36,10 @@ namespace FunAndGamesWithSharpDX.DirectX
                     _textureShader.Initialize(_device, _context);
                     _currentShader = _textureShader;
                     break;
+                case ShaderTechnique.EffectsShader:
+                    _effectsShader.Initialize(_device, _context);
+                    _currentShader = _effectsShader;
+                    break;
             }
         }
 
@@ -45,6 +50,7 @@ namespace FunAndGamesWithSharpDX.DirectX
 
             _textureShader = new TextureShader(device, context);
             _lightShader = new LightShader(device, context);
+            _effectsShader = new EffectsShader(device);
 
             SetShader(ShaderTechnique.LightShader);
         }

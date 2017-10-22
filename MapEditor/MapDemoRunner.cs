@@ -78,14 +78,14 @@ namespace MapEditor
             base.UpdateScene();
 
             var spotlight = new Spotlight(
-                new Color4(1.0f, 1.0f, 1.0f, 1.0f),
-                new Color4(0.2f, 0.2f, 0.2f, 1.0f),
-                Colors.White,
+                new Color4(2.0f, 2.0f, 2.0f, 2.0f),
+                new Color4(2.0f, 2.0f, 2.0f, 2.0f),
+                new Color4(2.0f, 2.0f, 2.0f, 2.0f),
                 Camera.EyeAt,
                 1000.0f,
                 Vector3.Normalize(Camera.LookAt - Camera.EyeAt),
                 96.0f,
-                new Vector3(1.0f, 0.0f, 0.0f)
+                new Vector3(1.0f, 1.0f, 1.0f)
             );
 
             LightEngine.AddSpotLight(spotlight);

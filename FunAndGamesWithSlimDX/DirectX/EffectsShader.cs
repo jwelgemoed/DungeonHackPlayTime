@@ -10,7 +10,7 @@ using Device = SharpDX.Direct3D11.Device;
 
 namespace FunAndGamesWithSharpDX.DirectX
 {
-    public class Shader_Old : IDisposable
+    public class EffectsShader : IShader
     {
         private Device _device;
         private InputLayout _layout;
@@ -39,13 +39,18 @@ namespace FunAndGamesWithSharpDX.DirectX
         private EffectShaderResourceVariable _shaderTexture;
         private EffectSamplerVariable _sampleType;
 
-        public Shader_Old()
+        public EffectsShader()
         {
         }
 
-        public Shader_Old(Device device)
+        public EffectsShader(Device device)
         {
             _device = device;
+        }
+
+        public void Initialize(Device device, DeviceContext context)
+        {
+            Initialize(device);
         }
 
         public void Initialize(Device device)
@@ -239,16 +244,6 @@ namespace FunAndGamesWithSharpDX.DirectX
             _fx.Dispose();
             _layout.Dispose();
             _samplerState.Dispose();
-        }
-
-        public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix projectionMatrix, ShaderResourceView texture, Color4 diffuseColor, Color4 ambientColor, Vector3 lightDirection, Vector3 cameraPosition)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix projectionMatrix, ShaderResourceView texture)
-        {
-            throw new NotImplementedException();
         }
     }
 }

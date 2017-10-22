@@ -23,9 +23,8 @@ namespace FunAndGamesWithSharpDX.DirectX
         private ConstantBufferPerFrame _perFrameBuffer;
         private ShaderResourceView _currentTexture;
 
-        private SharpDX.Direct3D11.Buffer _staticConstantBufferPerObject;
-        private SharpDX.Direct3D11.Buffer _dynamicConstantBufferPerFrame;
-
+        private SharpDX.Direct3D11.Buffer _constantBufferPerObject;
+        private SharpDX.Direct3D11.Buffer _constantBufferPerFrame;
         
         public LightShader(Device device, DeviceContext context)
         {
@@ -44,21 +43,21 @@ namespace FunAndGamesWithSharpDX.DirectX
 
             var fileName = basePath + @"\Shaders\LightTexture.hlsl";
 
-            var bytecode = ShaderBytecode.CompileFromFile(fileName, "LightVertexShader", "vs_4_0");
+            var bytecode = ShaderBytecode.CompileFromFile(fileName, "LightVertexShader", "vs_5_0");
             var vertexShader = new VertexShader(device, bytecode);
 
             _layout = new InputLayout(device, bytecode, _elements);
             bytecode.Dispose();
 
-            bytecode = ShaderBytecode.CompileFromFile(fileName, "LightPixelShader", "ps_4_0");
+            bytecode = ShaderBytecode.CompileFromFile(fileName, "LightPixelShader", "ps_5_0");
             var pixelShader = new PixelShader(device, bytecode);
             bytecode.Dispose();
 
-            _staticConstantBufferPerObject = new SharpDX.Direct3D11.Buffer(device, Utilities.SizeOf<ConstantBufferPerObject>(), 
-                ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0);
-
-            _dynamicConstantBufferPerFrame = new SharpDX.Direct3D11.Buffer(device, Utilities.SizeOf<ConstantBufferPerFrame>(),
+            _constantBufferPerObject = new SharpDX.Direct3D11.Buffer(device, Utilities.SizeOf<ConstantBufferPerObject>(), 
                 ResourceUsage.Dynamic, BindFlags.ConstantBuffer, CpuAccessFlags.Write, ResourceOptionFlags.None, 0);
+
+            _constantBufferPerFrame = new SharpDX.Direct3D11.Buffer(device, Utilities.SizeOf<ConstantBufferPerFrame>(),
+                ResourceUsage.Dynamic, BindFlags.ConstantBuffer, CpuAccessFlags.Write, ResourceOptionFlags.None, ConstantBufferPerFrame.Stride);
 
             var samplerDesc = new SamplerStateDescription
             {
@@ -79,11 +78,11 @@ namespace FunAndGamesWithSharpDX.DirectX
             _context.InputAssembler.InputLayout = _layout;
             _context.InputAssembler.PrimitiveTopology = SharpDX.Direct3D.PrimitiveTopology.TriangleList;
 
-            _context.VertexShader.SetConstantBuffer(0, _staticConstantBufferPerObject);
-            _context.VertexShader.SetConstantBuffer(1, _dynamicConstantBufferPerFrame);
+            _context.VertexShader.SetConstantBuffer(0, _constantBufferPerObject);
+            _context.VertexShader.SetConstantBuffer(1, _constantBufferPerFrame);
 
-            _context.PixelShader.SetConstantBuffer(0, _staticConstantBufferPerObject);
-            _context.PixelShader.SetConstantBuffer(1, _dynamicConstantBufferPerFrame);
+            _context.PixelShader.SetConstantBuffer(0, _constantBufferPerObject);
+            _context.PixelShader.SetConstantBuffer(1, _constantBufferPerFrame);
             _context.PixelShader.SetSampler(0, _samplerState);
 
             _context.VertexShader.Set(vertexShader);
@@ -103,16 +102,21 @@ namespace FunAndGamesWithSharpDX.DirectX
 
             _perFrameBuffer.CameraPosition = cameraPosition;
 
-            context.UpdateSubresource(ref _perObjectBuffer, _staticConstantBufferPerObject);
-
+            //context.UpdateSubresource(ref _perObjectBuffer, _constantBufferPerObject);
             DataStream mappedResource;
-            context.MapSubresource(_dynamicConstantBufferPerFrame, 0, MapMode.WriteDiscard, MapFlags.None, out mappedResource);
+            context.MapSubresource(_constantBufferPerObject, 0, MapMode.WriteDiscard, MapFlags.None, out mappedResource);
 
-            mappedResource.Write(_perFrameBuffer);
+            mappedResource.Write(_perObjectBuffer);
+            context.UnmapSubresource(_constantBufferPerObject, 0);
+
+            DataStream mappedResource2;
+            context.MapSubresource(_constantBufferPerFrame, 0, MapMode.WriteDiscard, MapFlags.None, out mappedResource2);
+
+            mappedResource2.Write(_perFrameBuffer);
 
             //var databox = context.MapSubresource(_dynamicConstantBufferPerFrame, 0, MapMode.WriteDiscard, MapFlags.None);
             //Utilities.Write(databox.DataPointer, ref _perFrameBuffer);
-            context.UnmapSubresource(_dynamicConstantBufferPerFrame, 0);
+            context.UnmapSubresource(_constantBufferPerFrame, 0);
 
             context.PixelShader.SetShaderResource(0, texture);
             
@@ -134,11 +138,11 @@ namespace FunAndGamesWithSharpDX.DirectX
             if (_samplerState != null)
                 _samplerState.Dispose();
 
-            if (_staticConstantBufferPerObject != null)
-                _staticConstantBufferPerObject.Dispose();
+            if (_constantBufferPerObject != null)
+                _constantBufferPerObject.Dispose();
 
-            if (_dynamicConstantBufferPerFrame != null)
-                _dynamicConstantBufferPerFrame.Dispose();
+            if (_constantBufferPerFrame != null)
+                _constantBufferPerFrame.Dispose();
         }
 
      }

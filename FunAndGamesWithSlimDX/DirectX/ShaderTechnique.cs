@@ -2,7 +2,9 @@
 {
     public enum ShaderTechnique
     {
+        WireFrame,
         LightShader,
-        TextureShader
+        TextureShader,
+        EffectsShader
     }
 }

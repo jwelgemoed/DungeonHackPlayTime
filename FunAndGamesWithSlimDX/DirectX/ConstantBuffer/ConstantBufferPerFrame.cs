@@ -9,8 +9,8 @@ namespace DungeonHack.DirectX.ConstantBuffer
     public struct ConstantBufferPerFrame
     {
         public DirectionalLight DirectionalLight;
-        public PointLight PointLight;
         public Spotlight SpotLight;
+        public PointLight PointLight;
         public Vector3 CameraPosition;
         public float Pad;
 

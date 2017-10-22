@@ -195,9 +195,10 @@ cbuffer cbPerObject : register(b0)
 cbuffer cbPerFrame : register(b1)
 {
 	DirectionalLight gDirLight;
-	PointLight gPointLight;
 	SpotLight gSpotLight;
+	PointLight gPointLight;
 	float3 cameraPosition;
+	float pad;
 };
 
 Texture2D shaderTexture;
@@ -230,7 +231,7 @@ PixelInputType LightVertexShader(VertexInputType input)
 	input.position.w = 1.0f;
 
 	// Calculate the position of the vertex against the world, view, and projection matrices.
-	output.position = mul(input.position, worldMatrix);
+	//output.position = mul(input.position, worldMatrix);
 	output.position = mul(input.position, viewMatrix);
 	output.position = mul(output.position, projectionMatrix);
 
@@ -241,7 +242,7 @@ PixelInputType LightVertexShader(VertexInputType input)
 	output.normal = normalize(output.normal);
 
 	// Calculate the position of the vertex in the world.
-	output.worldPosition = mul(input.position, worldMatrix);
+	//output.worldPosition = mul(input.position, worldMatrix);
 	output.worldPosition = input.position;
 
 	// Determine the viewing direction based on the position of the camera and the position of the vertex in the world.
@@ -281,11 +282,11 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
 	diffuse += D;
 	specular += S;
 
-	/*ComputePointLight(material, gPointLight, input.position, input.normal, toEyeW, A, D, S);
+	ComputePointLight(material, gPointLight, input.position, input.normal, input.viewDirection, A, D, S);
 
 	ambient += A;
 	diffuse += D;
-	specular += S;*/
+	specular += S;
 
 	ComputeSpotLight(material, gSpotLight, input.worldPosition, input.normal, input.viewDirection, A, D, S);
 

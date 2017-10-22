@@ -168,7 +168,7 @@
     <Compile Include="DirectX\TextureLoader.cs" />
     <Compile Include="Factories\ModelFactory.cs" />
     <Compile Include="Builders\PortalBuilder.cs" />
-    <Compile Include="DirectX\Shader_Old.cs" />
+    <Compile Include="DirectX\EffectsShader.cs" />
     <Compile Include="DirectX\IncludeFX.cs" />
     <Compile Include="DirectX\ShaderTechnique.cs" />
     <Compile Include="DirectX\Util.cs" />

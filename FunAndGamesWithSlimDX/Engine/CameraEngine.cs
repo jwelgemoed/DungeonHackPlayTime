@@ -1,4 +1,5 @@
-﻿using SharpDX.Direct3D11;
+﻿using FunAndGamesWithSharpDX.DirectX;
+using SharpDX.Direct3D11;
 using SharpDX.Multimedia;
 using SharpDX.RawInput;
 using System;
@@ -13,7 +14,6 @@ namespace FunAndGamesWithSharpDX.Engine
         private float _previousMouseX;
         private float _previousMouseY;
         private readonly Point _centerPoint;
-        private readonly List<string> _shaderTechniques = new List<string>() { "LightTech", "TextureTech" };
         private int currentTechId = 0;
         private bool _flashLightOn = true;
 
@@ -100,9 +100,9 @@ namespace FunAndGamesWithSharpDX.Engine
             }
             else if (e.KeyCode == Keys.CapsLock)
             {
-                currentTechId = (currentTechId + 1) % (_shaderTechniques.Count);
+                currentTechId = (currentTechId + 1) % 4;
 
-                if (currentTechId == _shaderTechniques.Count - 1) //last one is always wireframe
+                if ((ShaderTechnique) currentTechId == ShaderTechnique.WireFrame)
                 {
                     Renderer.SetRasterizerState(FillMode.Wireframe, CullMode.Back);
                 }
