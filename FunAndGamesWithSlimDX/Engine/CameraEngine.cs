@@ -100,7 +100,7 @@ namespace FunAndGamesWithSharpDX.Engine
             }
             else if (e.KeyCode == Keys.CapsLock)
             {
-                currentTechId = (currentTechId + 1) % 4;
+                currentTechId = (currentTechId + 1) % 3;
 
                 if ((ShaderTechnique) currentTechId == ShaderTechnique.WireFrame)
                 {

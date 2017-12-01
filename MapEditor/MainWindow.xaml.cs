@@ -1,6 +1,7 @@
 ﻿using DungeonHack.BSP;
 using DungeonHack.BSP.LeafBsp;
 using DungeonHack.Builders;
+using DungeonHack.Octree;
 using FunAndGamesWithSharpDX;
 using FunAndGamesWithSharpDX.Entities;
 using GameData;
@@ -180,15 +181,21 @@ namespace MapEditor
             BspBoundingVolumeCalculator bspBoudingVolumeCalculator = new BspBoundingVolumeCalculator();
             LeafBspTreeBuilder leafTreeBuilder = new LeafBspTreeBuilder(demo.Device, demo.GetShader);
 
+            var rootNode = bspTreeBuilder.BuildTree(demo.Meshes);
+            bspBoudingVolumeCalculator.ComputeBoundingVolumes(rootNode);
+
+            demo.BspNodes = bspTreeBuilder.TransformNodesToOptomizedNodes(rootNode);
+
             demo.InitializeScene();
 
+            var octbuilder = new OctreeBuilder();
+
+            var octRootNode = octbuilder.BuildTree(demo.Meshes);
+            demo.OctreeRootNode = octRootNode;
             /*var leafTreeMasterData = leafTreeBuilder.BuildTree(0, demo.Meshes);
             var portalGenerator = new PortalGenerator(leafTreeMasterData, demo.Device, demo.GetShader);
 
             portalGenerator.BuildPortals();*/
-
-            demo.BspRootNode = bspTreeBuilder.BuildTree(demo.Meshes);
-            bspBoudingVolumeCalculator.ComputeBoundingVolumes(demo.BspRootNode);
 
             demo.Start();
             demo.Run();

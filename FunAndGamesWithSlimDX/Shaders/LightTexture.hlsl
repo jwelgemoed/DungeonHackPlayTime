@@ -282,11 +282,11 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
 	diffuse += D;
 	specular += S;
 
-	ComputePointLight(material, gPointLight, input.position, input.normal, input.viewDirection, A, D, S);
+	/*ComputePointLight(material, gPointLight, input.position, input.normal, input.viewDirection, A, D, S);
 
 	ambient += A;
 	diffuse += D;
-	specular += S;
+	specular += S;*/
 
 	ComputeSpotLight(material, gSpotLight, input.worldPosition, input.normal, input.viewDirection, A, D, S);
 

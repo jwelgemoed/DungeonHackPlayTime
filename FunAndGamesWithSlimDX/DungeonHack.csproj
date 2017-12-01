@@ -139,6 +139,8 @@
     <Compile Include="BSP\BoundingBoxCalculator.cs" />
     <Compile Include="BSP\BspBoundingVolumeCalculator.cs" />
     <Compile Include="BSP\BspNode.cs" />
+    <Compile Include="BSP\BspNodeOptomized.cs" />
+    <Compile Include="BSP\BspRendererOptomized.cs" />
     <Compile Include="BSP\BspRenderer.cs" />
     <Compile Include="BSP\BspRenderStackItem.cs" />
     <Compile Include="BSP\BspTreeBuilder.cs" />
@@ -163,6 +165,7 @@
     <Compile Include="DirectX\ConstantBuffer\ConstantBufferPerObject.cs" />
     <Compile Include="DirectX\IShader.cs" />
     <Compile Include="DirectX\LightShader.cs" />
+    <Compile Include="DirectX\OcclusionQuery.cs" />
     <Compile Include="DirectX\Shader.cs" />
     <Compile Include="DirectX\TextureShader.cs" />
     <Compile Include="DirectX\TextureLoader.cs" />
@@ -211,6 +214,9 @@
     <Compile Include="Menus\SaveWindow.Designer.cs">
       <DependentUpon>SaveWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Octree\OctreeBuilder.cs" />
+    <Compile Include="Octree\OctreeNode.cs" />
+    <Compile Include="Octree\OctreeRenderer.cs" />
     <Compile Include="PolygonRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DirectX\Renderer.cs" />

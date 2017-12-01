@@ -1,23 +1,24 @@
 ﻿using FunAndGamesWithSharpDX.Engine;
 using FunAndGamesWithSharpDX.Entities;
 using SharpDX;
+using SharpDX.Direct3D11;
 using System.Collections.Generic;
 
 namespace DungeonHack.BSP
 {
-    
-
     public class BspRenderer
     {
         private readonly PolygonRenderer _meshRenderer;
         private readonly PointClassifier _pointClassifier;
         private List<Polygon> _renderList;
         private List<BoundingBox> _renderedBoxList;
+        private Device _device;
 
         public int NodesVisited { get; private set; }
 
-        public BspRenderer(PolygonRenderer meshRenderer, PointClassifier pointClassifier)
+        public BspRenderer(Device device, PolygonRenderer meshRenderer, PointClassifier pointClassifier)
         {
+            _device = device;
             _meshRenderer = meshRenderer;
             _pointClassifier = pointClassifier;
             _renderList = new List<Polygon>();
@@ -69,35 +70,52 @@ namespace DungeonHack.BSP
         public void DrawBspTreeFrontToBack(BspNode node, Vector3 position, Frustrum frustrum, ref int meshRenderedCount, Camera camera)
         {
             DrawBspTreeFrontToBackRecurse(node, position, frustrum, ref meshRenderedCount);
-            bool breakloop;
-            var viewProjMatrix = camera.ViewMatrix * camera.ProjectionMatrix;
+
+            //var viewProjMatrix = camera.ViewMatrix * camera.ProjectionMatrix;
+
+            //queries
+
+           /* _device.ImmediateContext.OutputMerger.DepthStencilState = new DepthStencilState(_device, new DepthStencilStateDescription()
+            {
+                
+            })
+                
+                .Description.DepthWriteMask = DepthWriteMask.Zero;*/
+                
             for (int i=0; i < _renderList.Count; i++)
             {
-                //breakloop = false;
-                //for (int j = 0; j < _renderedBoxList.Count; j++)
-                //{
-                //    var rblMin = Vector3.Transform(_renderedBoxList[j].Minimum, viewProjMatrix);
-                //    var rblMax = Vector3.Transform(_renderedBoxList[j].Maximum, viewProjMatrix);
-                //    var rbMin = Vector3.Transform(_renderList[i].BoundingBox.Minimum, viewProjMatrix);
-                //    var rbMax = Vector3.Transform(_renderList[i].BoundingBox.Maximum, viewProjMatrix);
-                    
-                //    if ((rbMin.X >= rblMin.X) && (rbMax.X <= rblMax.X) &&
-                //            (rbMin.Y >= rblMin.Y) && (rbMax.Y <= rblMax.Y))
-                //    {
-                //        breakloop = true;
-                //        break;
-                //    }
-                //}
+                //if (!_renderList[i].OcclusionQuery.IsComplete())
+                if (!_renderList[i].OcclusionQuery.IsIssued)
+                    _renderList[i].OcclusionQuery.Begin();
 
-                //if (breakloop)
-                //    continue;
-
-                _renderedBoxList.Add(_renderList[i].BoundingBox);
                 _meshRenderer.Render(frustrum, _renderList[i], ref meshRenderedCount);
+
+                if (_renderList[i].OcclusionQuery.IsComplete())
+                    _renderList[i].OcclusionQuery.End();
+
+              //  _renderList[i].OcclusionQuery.End();
             }
 
+           /* for (int i=0; i < _renderList.Count; i++)
+            {
+                while (!_renderList[i].OcclusionQuery.IsComplete())
+
+                //if (isComplete)
+                {
+                    int pixelCount = _renderList[i].OcclusionQuery.PixelCount;
+
+                    if (pixelCount > 0)
+                    {
+                        _meshRenderer.Render(frustrum, _renderList[i], ref meshRenderedCount);
+                    }
+                }
+                /*else
+                {
+                    _meshRenderer.Render(frustrum, _renderList[i], ref meshRenderedCount);
+                }
+            }*/
+
             _renderList.Clear();
-            _renderedBoxList.Clear();
         }
 
         private void DrawBspTreeFrontToBackRecurse(BspNode node, Vector3 position, Frustrum frustrum, ref int meshRenderedCount)
@@ -107,13 +125,12 @@ namespace DungeonHack.BSP
                 return;
             }
 
+            //Do frustrum culling for boundingvolume of current node.
             if (node.BoundingVolume.HasValue)
             {
-                //var BoundingBox = new BoundingBox(node.BoundingVolume.Value.Minimum, node.BoundingVolume.Value.Maximum);
-
                 if (frustrum.CheckBoundingBox(node.BoundingVolume.Value) == 0)
                 {
-                    return;
+                     return;
                 }
             }
 
@@ -132,8 +149,11 @@ namespace DungeonHack.BSP
                     DrawBspTreeFrontToBackRecurse(node.Back, position, frustrum, ref meshRenderedCount);
                 }
 
-                _renderList.Add(node.Splitter);
-                //_meshRenderer.Render(frustrum, node.Splitter, ref meshRenderedCount);
+                //Do frustrum culling for current polygon
+                if (frustrum.CheckBoundingBox(node.Splitter.BoundingBox) != 0)
+                {
+                    _renderList.Add(node.Splitter);
+                }
 
                 if (node.Front != null)
                     DrawBspTreeFrontToBackRecurse(node.Front, position, frustrum, ref meshRenderedCount);
@@ -143,8 +163,11 @@ namespace DungeonHack.BSP
                 if (node.Front != null)
                     DrawBspTreeFrontToBackRecurse(node.Front, position, frustrum, ref meshRenderedCount);
 
-                _renderList.Add(node.Splitter);
-                //_meshRenderer.Render(frustrum, node.Splitter, ref meshRenderedCount);
+                //Do frustrum culling for current polygon
+                if (frustrum.CheckBoundingBox(node.Splitter.BoundingBox) != 0)
+                {
+                    _renderList.Add(node.Splitter);
+                }
 
                 if (node.Back != null)
                     DrawBspTreeFrontToBackRecurse(node.Back, position, frustrum, ref meshRenderedCount);

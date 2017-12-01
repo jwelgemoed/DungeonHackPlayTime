@@ -1,4 +1,5 @@
-﻿using FunAndGamesWithSharpDX.DirectX;
+﻿using DungeonHack.DirectX;
+using FunAndGamesWithSharpDX.DirectX;
 using SharpDX;
 using System;
 using Buffer = SharpDX.Direct3D11.Buffer;
@@ -31,12 +32,15 @@ namespace FunAndGamesWithSharpDX.Entities
 
         public bool HasBeenUsedAsSplitPlane { get; set; }
 
+        public OcclusionQuery OcclusionQuery { get; private set; }
+
         public Polygon(Device device, Shader shader)
         {
             ScaleMatrix = Matrix.Identity;
             TranslationMatrix = Matrix.Identity;
             RotationMatrix = Matrix.Identity;
             WorldMatrix = Matrix.Identity;
+            OcclusionQuery = new OcclusionQuery(device);
         }
 
         public void Dispose()
@@ -45,6 +49,8 @@ namespace FunAndGamesWithSharpDX.Entities
                 VertexBuffer.Dispose();
             if (IndexBuffer != null)
                 IndexBuffer.Dispose();
+            if (OcclusionQuery != null)
+                OcclusionQuery.Dispose();
         }
     }
 }

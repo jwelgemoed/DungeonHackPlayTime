@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.15
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DungeonHack", "FunAndGamesWithSlimDX\DungeonHack.csproj", "{9E9CB014-FD9D-422A-B425-2E9C0A522965}"
 EndProject
@@ -14,6 +14,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameData", "GameData\GameData.csproj", "{8A9B18CC-FE62-41DE-82AF-F9D2378A925B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Poly2Tri", "poly2tri-cs-master\Poly2Tri.csproj", "{C5E5802D-6A45-4FE9-BAE7-5F0AE91D72C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MazeEditor", "MazeEditor\MazeEditor.csproj", "{0F841E4B-434D-47EC-9557-0EF9372F5CBE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -71,6 +73,14 @@ Global
 		{C5E5802D-6A45-4FE9-BAE7-5F0AE91D72C1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C5E5802D-6A45-4FE9-BAE7-5F0AE91D72C1}.Release|x86.ActiveCfg = Release|x86
 		{C5E5802D-6A45-4FE9-BAE7-5F0AE91D72C1}.Release|x86.Build.0 = Release|x86
+		{0F841E4B-434D-47EC-9557-0EF9372F5CBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F841E4B-434D-47EC-9557-0EF9372F5CBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F841E4B-434D-47EC-9557-0EF9372F5CBE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0F841E4B-434D-47EC-9557-0EF9372F5CBE}.Debug|x86.Build.0 = Debug|Any CPU
+		{0F841E4B-434D-47EC-9557-0EF9372F5CBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F841E4B-434D-47EC-9557-0EF9372F5CBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F841E4B-434D-47EC-9557-0EF9372F5CBE}.Release|x86.ActiveCfg = Release|Any CPU
+		{0F841E4B-434D-47EC-9557-0EF9372F5CBE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

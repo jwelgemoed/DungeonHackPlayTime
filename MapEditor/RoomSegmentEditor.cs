@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Shapes;
-using FunAndGamesWithSharpDX.Entities;
 using System.Windows.Controls;
 using System.Windows.Media;
-using SharpDX.Direct3D11;
-using FunAndGamesWithSharpDX.DirectX;
 using GameData;
 using System.Configuration;
 

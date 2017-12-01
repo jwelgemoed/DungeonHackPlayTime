@@ -12,6 +12,7 @@ using System.Diagnostics;
 using DungeonHack;
 using DungeonHack.DataDictionaries;
 using System.Configuration;
+using DungeonHack.Octree;
 
 namespace MapEditor
 {
@@ -23,9 +24,11 @@ namespace MapEditor
         private PointLight _pointLight;
         private DirectionalLight _directionalLight;
         private Spotlight _spotlight;
-        private BspRenderer _bspRenderer;
+        private BspRendererOptomized _bspRenderer;
+        private OctreeRenderer _octreeRenderer;
 
-        public BspNode BspRootNode { get; set; }
+        public BspNodeOptomized[] BspNodes { get; set; }
+        public OctreeNode OctreeRootNode { get; set; }
 
         private int _nodesVisited = 0;
 
@@ -68,8 +71,9 @@ namespace MapEditor
             base._stopwatch.Restart();
 
             _nodesVisited = 0;
-                                
-            _bspRenderer.DrawBspTreeFrontToBack(BspRootNode, Camera.EyeAt, _frustrum, ref _meshRenderedCount, Camera);
+
+            //_octreeRenderer.DrawOctree(OctreeRootNode, _frustrum, Camera, ref _meshRenderedCount);
+            _bspRenderer.DrawBspTreeFrontToBack(Camera.EyeAt, _frustrum, ref _meshRenderedCount, Camera);
             //DrawBspTreeBackToFront(BspRootNode, Camera.EyeAt);
         }
 
@@ -113,7 +117,8 @@ namespace MapEditor
 
             var meshRenderer = new PolygonRenderer(materialDictionary, textureDictionary, base.Renderer.Context, Camera, Shader);
 
-            _bspRenderer = new BspRenderer(meshRenderer, new PointClassifier());
+            _bspRenderer = new BspRendererOptomized(base.Renderer.Device, meshRenderer, new PointClassifier(), BspNodes);
+            _octreeRenderer = new OctreeRenderer(meshRenderer);
 
             if (_startingPosition == null)
                 Camera.SetPosition(0, 0, 0);

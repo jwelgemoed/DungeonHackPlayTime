@@ -34,7 +34,7 @@ namespace DungeonHack.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0.1")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
         public float ScreenNear {
             get {
                 return ((float)(this["ScreenNear"]));
@@ -61,7 +61,7 @@ namespace DungeonHack.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("10000")]
+        [global::System.Configuration.DefaultSettingValueAttribute("2000")]
         public float ScreenFar {
             get {
                 return ((float)(this["ScreenFar"]));

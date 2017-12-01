@@ -1,0 +1,14 @@
+C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor.csprojResolveAssemblyReference.cache
+C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MainWindow.g.cs
+C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\App.g.cs
+C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor_MarkupCompile.cache
+C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor_MarkupCompile.lref
+C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\MazeEditor.exe.config
+C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\MazeEditor.exe
+C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\MazeEditor.pdb
+C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MainWindow.baml
+C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor.g.resources
+C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor.Properties.Resources.resources
+C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor.csproj.GenerateResource.Cache
+C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor.exe
+C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor.pdb

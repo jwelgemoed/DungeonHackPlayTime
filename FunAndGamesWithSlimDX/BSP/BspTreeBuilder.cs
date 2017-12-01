@@ -11,6 +11,8 @@ namespace DungeonHack.BSP
         private readonly PolygonClassifier _polyClassifier;
         private readonly SplitterSelector _splitterSelector;
         private readonly PolygonSplitter _polygonSplitter;
+        private List<BspNode> _bspWorkList;
+        private BspNode[] MasterBspNodeArray;
 
         public int NumberOfNodesUpdated { get; private set; }
 
@@ -21,6 +23,7 @@ namespace DungeonHack.BSP
             _polyClassifier = new PolygonClassifier();
             _splitterSelector = new SplitterSelector(_polyClassifier, 8);
             _polygonSplitter = new PolygonSplitter(new PointClassifier(), device, shader);
+            _bspWorkList = new List<BspNode>();
         }
 
         public BspNode BuildTree(List<Polygon> meshList)
@@ -28,11 +31,13 @@ namespace DungeonHack.BSP
             BspNode bspRootNode = new BspNode();
             bspRootNode.IsRoot = true;
 
+            _bspWorkList.Add(bspRootNode);
             BuildBspTree(bspRootNode, meshList);
 
             return bspRootNode;
         }
 
+        
         public void TraverseBspTreeAndPerformAction(BspNode rootNode, Action<Polygon> action)
         {
             if (rootNode.Splitter == null)
@@ -59,6 +64,36 @@ namespace DungeonHack.BSP
             NumberOfNodesUpdated++;
 
             TraverseBspTreeAndPerformActionOnNode(node.Front, action);
+        }
+
+        private void AddAllNodesToList(BspNode node)
+        {
+            _bspWorkList.Add(node);
+
+            if (node.IsLeaf)
+                return;
+
+            AddAllNodesToList(node.Back);
+
+            AddAllNodesToList(node.Front);
+        }
+
+        public BspNodeOptomized[] TransformNodesToOptomizedNodes(BspNode rootNode)
+        {
+            AddAllNodesToList(rootNode);
+
+            return _bspWorkList.Select(x => new BspNodeOptomized()
+            {
+                Back = x.Back != null ? _bspWorkList.IndexOf(x.Back) : -1,
+                BoundingVolume = x.BoundingVolume,
+                ConvexPolygonSet = x.ConvexPolygonSet,
+                Front = x.Front != null ? _bspWorkList.IndexOf(x.Front) : -1,
+                IsLeaf = x.IsLeaf,
+                IsRoot = x.IsRoot,
+                IsSolid = x.IsSolid,
+                Parent = x.Parent != null ? _bspWorkList.IndexOf(x.Parent) : -1,
+                Splitter = x.Splitter
+            }).ToArray();
         }
 
         private void BuildBspTree(BspNode currentNode, List<Polygon> meshList)

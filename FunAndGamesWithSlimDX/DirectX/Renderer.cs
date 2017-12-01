@@ -268,6 +268,17 @@ namespace FunAndGamesWithSharpDX.DirectX
             Device.ImmediateContext.Rasterizer.State = rs;
         }
 
+        public void SetupOcclusionQuery()
+        {
+            SharpDX.Direct3D11.BlendStateDescription blendDescription = new BlendStateDescription();
+            blendDescription.RenderTarget[0] = new RenderTargetBlendDescription(true, BlendOption.SourceAlpha, BlendOption.InverseSourceAlpha,
+                BlendOperation.Add, BlendOption.One, BlendOption.Zero, BlendOperation.Add, ColorWriteMaskFlags.All);
+
+
+
+        }
+
+
         public void Dispose()
         {
             _depthStencilBuffer.Dispose();
