@@ -11,19 +11,23 @@
         <Button Content="Create Maze
                 " HorizontalAlignment="Left" Margin="641,10,0,0" VerticalAlignment="Top" Width="91" Click="Button_Click"/>
         <Button Content="Enter Dungeon" HorizontalAlignment="Left" Margin="10,529,0,0" VerticalAlignment="Top" Width="122"/>
-        <Slider x:Name="numberOfRoomsSlider" HorizontalAlignment="Left" Margin="641,63,0,0" VerticalAlignment="Top" Width="92" Maximum="50" SmallChange="1" Value="10" AutoToolTipPlacement="TopLeft"/>
-        <Label Content="Rooms" HorizontalAlignment="Left" Margin="641,34,0,0" VerticalAlignment="Top" Height="24" RenderTransformOrigin="3.195,0.696"/>
-        <CheckBox x:Name="OverlappingRoomsChkBox" Content="Overlapping Rooms" HorizontalAlignment="Left" Margin="642,216,0,0" VerticalAlignment="Top"/>
-        <Slider x:Name="minRoomSizeSlider" HorizontalAlignment="Left" Margin="642,128,0,0" VerticalAlignment="Top" Width="91" SmallChange="1" Minimum="1" AutoToolTipPlacement="TopLeft" Value="2"/>
-        <Label Content="Minimum Room Size" HorizontalAlignment="Left" Margin="641,97,0,0" VerticalAlignment="Top"/>
-        <Label Content="Maximum Room Size" HorizontalAlignment="Left" Margin="642,151,0,0" VerticalAlignment="Top"/>
-        <Slider x:Name="maxRoomSizeSlider" HorizontalAlignment="Left" Margin="642,182,0,0" VerticalAlignment="Top" Width="90" Minimum="1" SmallChange="1" AutoToolTipPlacement="TopLeft" Value="8"/>
-        <Label Content="Selection Method" HorizontalAlignment="Left" Margin="642,236,0,0" VerticalAlignment="Top"/>
-        <ListBox x:Name="selectionMethodListBox" HorizontalAlignment="Left" Height="74" Margin="642,267,0,0" VerticalAlignment="Top" Width="148">
+        <Slider x:Name="numberOfRoomsSlider" HorizontalAlignment="Left" Margin="641,190,0,0" VerticalAlignment="Top" Width="92" Maximum="50" SmallChange="1" Value="10" AutoToolTipPlacement="TopLeft"/>
+        <Label Content="Rooms" HorizontalAlignment="Left" Margin="636,161,0,0" VerticalAlignment="Top" Height="24" RenderTransformOrigin="3.195,0.696"/>
+        <CheckBox x:Name="OverlappingRoomsChkBox" Content="Overlapping Rooms" HorizontalAlignment="Left" Margin="642,404,0,0" VerticalAlignment="Top"/>
+        <Slider x:Name="minRoomSizeSlider" HorizontalAlignment="Left" Margin="641,337,0,0" VerticalAlignment="Top" Width="91" SmallChange="1" Minimum="1" AutoToolTipPlacement="TopLeft" Value="2"/>
+        <Label Content="Minimum Room Size" HorizontalAlignment="Left" Margin="636,306,0,0" VerticalAlignment="Top"/>
+        <Label Content="Maximum Room Size" HorizontalAlignment="Left" Margin="636,355,0,0" VerticalAlignment="Top"/>
+        <Slider x:Name="maxRoomSizeSlider" HorizontalAlignment="Left" Margin="643,381,0,0" VerticalAlignment="Top" Width="90" Minimum="1" SmallChange="1" AutoToolTipPlacement="TopLeft" Value="8"/>
+        <Label Content="Selection Method" HorizontalAlignment="Left" Margin="641,419,0,0" VerticalAlignment="Top"/>
+        <ListBox x:Name="selectionMethodListBox" HorizontalAlignment="Left" Height="74" Margin="641,450,0,0" VerticalAlignment="Top" Width="148">
             <RadioButton Content="Latest" IsChecked="True"/>
             <RadioButton Content="Oldest"/>
             <RadioButton Content="Random"/>
         </ListBox>
+        <Slider x:Name="maxMazeHeightSlider" HorizontalAlignment="Left" Margin="644,288,0,0" VerticalAlignment="Top" Width="89" AutoToolTipPlacement="TopLeft" Maximum="63" SmallChange="1" Value="63"/>
+        <Label Content="Maximum Maze Height" HorizontalAlignment="Left" Margin="636,262,0,0" VerticalAlignment="Top"/>
+        <Slider x:Name="maxMazeWidthSlider" HorizontalAlignment="Left" Margin="644,239,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.615,1.247" Width="88" Maximum="77" Minimum="10" SmallChange="1" AutoToolTipPlacement="TopLeft" Value="77"/>
+        <Label Content="Maximum Maze Width" HorizontalAlignment="Left" Margin="636,208,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>

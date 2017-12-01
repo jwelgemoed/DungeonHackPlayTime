@@ -14,6 +14,8 @@ namespace MazeEditor
         private int MaxAttempts = 500;
         private Dungeon _dungeon;
 
+        private int MaxMazeWidth { get { return (int)maxMazeWidthSlider.Value; } }
+        private int MaxMazeHeight { get { return (int)maxMazeHeightSlider.Value; } }
         private int MaxRoomSize { get { return (int)maxRoomSizeSlider.Value; } }
         private int MinRoomSize { get { return (int)minRoomSizeSlider.Value; } }
         private bool OverlappingRoomsAllowed { get { return OverlappingRoomsChkBox.IsChecked ?? false; } }
@@ -27,10 +29,7 @@ namespace MazeEditor
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            int sizex = 77;
-            int sizey = 63;
-
-            _dungeon = new Dungeon(sizex, sizey);
+            _dungeon = new Dungeon(MaxMazeWidth, MaxMazeHeight);
             var dungeonView = new DungeonView(_dungeon, canvas);
             Random randomizer = new Random((int)DateTime.UtcNow.Ticks);
             canvas.Children.Clear();
@@ -49,8 +48,8 @@ namespace MazeEditor
                         Width = randomizer.Next(MinRoomSize, MaxRoomSize)
                     };
 
-                    rectangle.PositionX = randomizer.Next(0, sizex - (int)rectangle.Width);
-                    rectangle.PositionY = randomizer.Next(0, sizey - (int)rectangle.Height);
+                    rectangle.PositionX = randomizer.Next(0, MaxMazeWidth - (int)rectangle.Width);
+                    rectangle.PositionY = randomizer.Next(0, MaxMazeHeight - (int)rectangle.Height);
 
                     if (_rectangles.Exists(x => x.Overlaps(rectangle)) && (!OverlappingRoomsAllowed))
                     {
