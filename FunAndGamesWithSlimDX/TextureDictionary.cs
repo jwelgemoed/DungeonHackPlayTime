@@ -70,6 +70,9 @@ namespace DungeonHack.DataDictionaries
             return texture;
         }
 
-
+        public void AddAllTextureFromPath(object p)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

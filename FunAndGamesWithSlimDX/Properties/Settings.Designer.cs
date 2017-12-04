@@ -61,7 +61,7 @@ namespace DungeonHack.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2000")]
+        [global::System.Configuration.DefaultSettingValueAttribute("500")]
         public float ScreenFar {
             get {
                 return ((float)(this["ScreenFar"]));

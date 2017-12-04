@@ -1,5 +1,9 @@
-﻿using System;
+﻿using DungeonHack.BSP;
+using DungeonHack.BSP.LeafBsp;
+using DungeonHack.Octree;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -13,6 +17,7 @@ namespace MazeEditor
         private List<MyRectangle> _rectangles = new List<MyRectangle>();
         private int MaxAttempts = 500;
         private Dungeon _dungeon;
+        private MazeRunner _mazeRunner;
 
         private int MaxMazeWidth { get { return (int)maxMazeWidthSlider.Value; } }
         private int MaxMazeHeight { get { return (int)maxMazeHeightSlider.Value; } }
@@ -25,6 +30,9 @@ namespace MazeEditor
         public MainWindow()
         {
             InitializeComponent();
+            _mazeRunner = new MazeRunner();
+
+            _mazeRunner.Initialize();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -98,6 +106,33 @@ namespace MazeEditor
                     return SelectionMethodType.Newest;
 
             }
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            GridPolygonBuilder builder = new GridPolygonBuilder(_dungeon.GridBoard, _mazeRunner.Device, _mazeRunner.GetShader);
+            var meshList = builder.GeneratePolygons();
+
+            _mazeRunner.Meshes = meshList.ToList();
+
+            BspTreeBuilder bspTreeBuilder = new BspTreeBuilder(_mazeRunner.Device, _mazeRunner.GetShader);
+            BspBoundingVolumeCalculator bspBoudingVolumeCalculator = new BspBoundingVolumeCalculator();
+            LeafBspTreeBuilder leafTreeBuilder = new LeafBspTreeBuilder(_mazeRunner.Device, _mazeRunner.GetShader);
+
+            var rootNode = bspTreeBuilder.BuildTree(_mazeRunner.Meshes);
+            bspBoudingVolumeCalculator.ComputeBoundingVolumes(rootNode);
+
+            _mazeRunner.BspNodes = bspTreeBuilder.TransformNodesToOptomizedNodes(rootNode);
+
+            _mazeRunner.InitializeScene();
+
+            var octbuilder = new OctreeBuilder();
+
+            var octRootNode = octbuilder.BuildTree(_mazeRunner.Meshes);
+            _mazeRunner.OctreeRootNode = octRootNode;
+           
+            _mazeRunner.Start();
+            _mazeRunner.Run();
         }
     }
 }

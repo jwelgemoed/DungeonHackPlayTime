@@ -166,7 +166,6 @@ namespace FunAndGamesWithSharpDX.Engine
         {
             var direction = Vector3.Normalize(_lookAt - _eyeAt);
 
-
             MoveForward(moveState, direction, null);
             MoveBackward(moveState, direction, null);
             MoveLeft(moveState, direction, null);

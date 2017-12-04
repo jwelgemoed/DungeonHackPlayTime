@@ -10,7 +10,7 @@
         <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="514" Margin="10,10,0,0" VerticalAlignment="Top" Width="626" Background="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}"/>
         <Button Content="Create Maze
                 " HorizontalAlignment="Left" Margin="641,10,0,0" VerticalAlignment="Top" Width="91" Click="Button_Click"/>
-        <Button Content="Enter Dungeon" HorizontalAlignment="Left" Margin="10,529,0,0" VerticalAlignment="Top" Width="122"/>
+        <Button Content="Enter Dungeon" HorizontalAlignment="Left" Margin="10,529,0,0" VerticalAlignment="Top" Width="122" Click="Button_Click_1"/>
         <Slider x:Name="numberOfRoomsSlider" HorizontalAlignment="Left" Margin="641,190,0,0" VerticalAlignment="Top" Width="92" Maximum="50" SmallChange="1" Value="10" AutoToolTipPlacement="TopLeft"/>
         <Label Content="Rooms" HorizontalAlignment="Left" Margin="636,161,0,0" VerticalAlignment="Top" Height="24" RenderTransformOrigin="3.195,0.696"/>
         <CheckBox x:Name="OverlappingRoomsChkBox" Content="Overlapping Rooms" HorizontalAlignment="Left" Margin="642,404,0,0" VerticalAlignment="Top"/>
