@@ -10,6 +10,7 @@ using SharpDX;
 using SharpDX.Direct3D11;
 using System;
 using System.Collections.Generic;
+using DungeonHack.QuadTree;
 
 namespace MazeEditor
 {
@@ -23,9 +24,12 @@ namespace MazeEditor
         private Spotlight _spotlight;
         private BspRendererOptomized _bspRenderer;
         private OctreeRenderer _octreeRenderer;
+        private QuadTreeRenderer _quadTreeRenderer;
+        private PolygonRenderer _meshRenderer;
 
         public BspNodeOptomized[] BspNodes { get; set; }
         public OctreeNode OctreeRootNode { get; set; }
+        public QuadTreeNode QuadTreeNode { get; internal set; }
 
 
         public MazeRunner() : base(8.0f, true)
@@ -66,8 +70,15 @@ namespace MazeEditor
             _meshRenderedCount = 0;
             base._stopwatch.Restart();
 
+            //foreach (var mesh in Meshes)
+            //{
+            //    _meshRenderer.Render(_frustrum, mesh, ref _meshRenderedCount);
+            //}
+
             //_octreeRenderer.DrawOctree(OctreeRootNode, _frustrum, Camera, ref _meshRenderedCount);
-            _bspRenderer.DrawBspTreeFrontToBack(Camera.EyeAt, _frustrum, ref _meshRenderedCount, Camera);
+            //_bspRenderer.DrawBspTreeFrontToBack(Camera.EyeAt, _frustrum, ref _meshRenderedCount, Camera);
+            _quadTreeRenderer.DrawQuadTree(QuadTreeNode, _frustrum, Camera, ref _meshRenderedCount);
+            
             //DrawBspTreeBackToFront(BspRootNode, Camera.EyeAt);
         }
 
@@ -105,10 +116,11 @@ namespace MazeEditor
 
             Camera.SetPosition(0, 16, 0);
 
-            var meshRenderer = new PolygonRenderer(materialDictionary, textureDictionary, base.Renderer.Context, Camera, Shader);
+            _meshRenderer = new PolygonRenderer(materialDictionary, textureDictionary, base.Renderer.Context, Camera, Shader);
 
-            _bspRenderer = new BspRendererOptomized(base.Renderer.Device, meshRenderer, new PointClassifier(), BspNodes);
-            _octreeRenderer = new OctreeRenderer(meshRenderer);
+            _bspRenderer = new BspRendererOptomized(base.Renderer.Device, _meshRenderer, new PointClassifier(), BspNodes);
+            _octreeRenderer = new OctreeRenderer(_meshRenderer);
+            _quadTreeRenderer = new QuadTreeRenderer(_meshRenderer);
 
             Shader.Initialize(base.Renderer.Device, base.Renderer.Context);
 

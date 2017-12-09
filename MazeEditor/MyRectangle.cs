@@ -31,6 +31,16 @@ namespace MazeEditor
                                       (byte)randomizer.Next(0, 255)));
         }
 
+        public void ChangeFill(Brush fill)
+        {
+            _rectangle.Fill = fill;
+        }
+
+        public void ChangeStroke(Brush stroke)
+        {
+            _rectangle.Stroke = stroke;
+        }
+
         public void AddRectangleToCanvas(Canvas canvas)
         {
             if (canvas == null)

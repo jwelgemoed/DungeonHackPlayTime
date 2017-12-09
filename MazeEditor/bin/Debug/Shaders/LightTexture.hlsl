@@ -198,7 +198,9 @@ cbuffer cbPerFrame : register(b1)
 	SpotLight gSpotLight;
 	PointLight gPointLight;
 	float3 cameraPosition;
-	float pad;
+	float fogStart;
+	float fogEnd;
+	float3 pad;
 };
 
 Texture2D shaderTexture;
@@ -218,6 +220,7 @@ struct PixelInputType
 	float2 tex : TEXCOORD0;
 	float3 normal : NORMAL;
 	float3 viewDirection : TEXCOORD1;
+	float fogFactor : FOG;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -225,6 +228,7 @@ struct PixelInputType
 ////////////////////////////////////////////////////////////////////////////////
 PixelInputType LightVertexShader(VertexInputType input)
 {
+	float4 worldPos;
 	PixelInputType output;
 
 	// Change the position vector to be 4 units for proper matrix calculations.
@@ -251,6 +255,9 @@ PixelInputType LightVertexShader(VertexInputType input)
 	// Normalize the viewing direction vector.
 	output.viewDirection = normalize(output.viewDirection);
 
+	// Calculate linear fog.    
+	output.fogFactor = saturate((fogEnd - output.worldPosition.z) / (fogEnd - fogStart));
+
 	return output;
 }
 
@@ -264,6 +271,7 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
 	float lightIntensity;
 	float4 color;
 	float3 reflection;
+	float4 fogColor;
 
 	input.normal = normalize(input.normal);
 
@@ -303,6 +311,13 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
 
 	// Add the specular component last to the output color.
 	color = saturate(color + specular);
+
+	// Set the color of the fog to grey.
+	fogColor = float4(0.5f, 0.5f, 0.5f, 1.0f);
+	//The fog color equation then does a linear interpolation between the texture color and the fog color based on the fog factor.
+
+	// Calculate the final color using the fog effect equation.
+	//color = input.fogFactor * color + (1.0 - input.fogFactor) * fogColor;
 
 	return color;
 }

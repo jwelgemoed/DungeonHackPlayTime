@@ -21,7 +21,7 @@ namespace DungeonHack.BSP
         public BspTreeBuilder(Device device, FunAndGamesWithSharpDX.DirectX.Shader shader)
         {
             _polyClassifier = new PolygonClassifier();
-            _splitterSelector = new SplitterSelector(_polyClassifier, 8);
+            _splitterSelector = new SplitterSelector(_polyClassifier, 25);
             _polygonSplitter = new PolygonSplitter(new PointClassifier(), device, shader);
             _bspWorkList = new List<BspNode>();
         }
@@ -123,13 +123,15 @@ namespace DungeonHack.BSP
                         backList.Insert(0, testMesh);
                         break;
                     case PolygonClassification.Spanning:
+                        //frontList.Insert(0, testMesh);
+                        //backList.Insert(0, testMesh);
                         HandleSpanningPolygon(currentNode, 
-                                                meshList, 
-                                                out frontSplit, 
-                                                out backSplit, 
-                                                frontList, 
-                                                backList, 
-                                                testMesh);
+                                                 meshList, 
+                                                 out frontSplit, 
+                                                 out backSplit, 
+                                                 frontList, 
+                                                 backList, 
+                                                 testMesh);
 
                         break;
                     default:

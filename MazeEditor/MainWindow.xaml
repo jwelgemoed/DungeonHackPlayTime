@@ -28,6 +28,7 @@
         <Label Content="Maximum Maze Height" HorizontalAlignment="Left" Margin="636,262,0,0" VerticalAlignment="Top"/>
         <Slider x:Name="maxMazeWidthSlider" HorizontalAlignment="Left" Margin="644,239,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.615,1.247" Width="88" Maximum="77" Minimum="10" SmallChange="1" AutoToolTipPlacement="TopLeft" Value="77"/>
         <Label Content="Maximum Maze Width" HorizontalAlignment="Left" Margin="636,208,0,0" VerticalAlignment="Top"/>
+        <Button Content="Create QuadTree" x:Name="btnQuadTree" HorizontalAlignment="Left" Margin="641,34,0,0" VerticalAlignment="Top" Width="92" Height="22" Click="btnQuadTree_Click"/>
 
     </Grid>
 </Window>

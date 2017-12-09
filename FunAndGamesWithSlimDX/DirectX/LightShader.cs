@@ -128,6 +128,8 @@ namespace FunAndGamesWithSharpDX.DirectX
             _perFrameBuffer.DirectionalLight = directionalLight;
             _perFrameBuffer.PointLight = pointLight;
             _perFrameBuffer.SpotLight = spotLight;
+            _perFrameBuffer.FogStart = 10;
+            _perFrameBuffer.FogEnd = 100;
         }
 
         public void Dispose()
