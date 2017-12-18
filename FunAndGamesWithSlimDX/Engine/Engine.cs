@@ -65,7 +65,7 @@ namespace FunAndGamesWithSharpDX.Engine
                 ApplicationStateEngine.CurrentState = ApplicationStateEnum.OpenSettings;
         }
 
-        public void Initialize()
+        public void Initialize(int threadCount)
         {
             Form.StartPosition = FormStartPosition.CenterScreen;
             Form.KeyDown += HandleOptionsKeyPress;
@@ -89,12 +89,12 @@ namespace FunAndGamesWithSharpDX.Engine
             Renderer.Height = ConfigManager.ScreenHeight;
             Renderer.Use4XMSAA = ConfigManager.Use4XMSAA;
             Renderer.FullScreen = ConfigManager.FullScreen;
-            Renderer.Initialize(Form.Handle);
+            Renderer.Initialize(Form.Handle, threadCount);
 
             _frustrum = new Frustrum();
 
             Shader = new Shader();
-            Shader.Initialize(Renderer.Device, Renderer.Context);
+            Shader.Initialize(Renderer.Device, Renderer.ContextPerThread);
 
             SpriteRenderer.Initialize(Renderer.Device);
             FontRenderer.Initialize(Renderer.Device, "Arial", FontWeight.Normal, FontStyle.Normal, FontStretch.Normal, 12);
@@ -105,10 +105,10 @@ namespace FunAndGamesWithSharpDX.Engine
             _hasInitialized = true;
         }
 
-        public virtual void Run()
+        public virtual void Run(int threadCount)
         {
             if (!_hasInitialized)
-                Initialize();
+                Initialize(threadCount);
 
             InitializeScene();
 
@@ -134,8 +134,8 @@ namespace FunAndGamesWithSharpDX.Engine
                 case ApplicationStateEnum.Normal:
                     Timer.Tick();
                     _frameRateStats = CalculateFrameRateStats();
-                    Renderer.Context.ClearRenderTargetView(Renderer.RenderTarget, Colors.Black);
-                    Renderer.Context.ClearDepthStencilView(Renderer.DepthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
+                    Renderer.ContextPerThread[0].ClearRenderTargetView(Renderer.RenderTarget, Colors.Blue);
+                    Renderer.ContextPerThread[0].ClearDepthStencilView(Renderer.DepthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
                     UpdateScene();
                     _stopwatch.Restart();
                     DrawScene();

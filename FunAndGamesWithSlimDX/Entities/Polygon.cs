@@ -40,7 +40,7 @@ namespace FunAndGamesWithSharpDX.Entities
             TranslationMatrix = Matrix.Identity;
             RotationMatrix = Matrix.Identity;
             WorldMatrix = Matrix.Identity;
-           // OcclusionQuery = new OcclusionQuery(device);
+            OcclusionQuery = new OcclusionQuery(device);
         }
 
         public void Dispose()

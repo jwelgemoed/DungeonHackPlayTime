@@ -75,7 +75,7 @@ namespace MapEditor
                 LoadRoomList();
 
                 demo = new MapDemoRunner();
-                demo.Initialize();
+                demo.Initialize(1);
 
                 _gridBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(50, 128, 128, 0));
                 _areaBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(50, 128, 0, 0));
@@ -198,7 +198,7 @@ namespace MapEditor
             portalGenerator.BuildPortals();*/
 
             demo.Start();
-            demo.Run();
+            demo.Run(1);
         }
 
         private void DrawGrid(int gridSize, Canvas canvas)

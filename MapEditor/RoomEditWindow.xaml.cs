@@ -66,7 +66,7 @@ namespace MapEditor
                 ResourcePath = ConfigurationManager.AppSettings["ResourcePath"];
 
                 demo = new MapDemoRunner();
-                demo.Initialize();
+                demo.Initialize(1);
 
                 _gridBrush = new SolidColorBrush(Color.FromArgb(50, 128, 128, 0));
                 _areaBrush = new SolidColorBrush(Color.FromArgb(50, 128, 0, 0));

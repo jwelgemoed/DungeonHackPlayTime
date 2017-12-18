@@ -44,7 +44,7 @@ namespace DungeonHack.BSP
 
             for (int i = 0; i < _renderList.Count; i++)
             {
-                _meshRenderer.Render(frustrum, _renderList[i], ref meshRenderedCount);
+                _meshRenderer.Render(0, frustrum, _renderList[i], ref meshRenderedCount);
             }
 
             _renderList.Clear();

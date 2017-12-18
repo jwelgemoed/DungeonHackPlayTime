@@ -115,7 +115,7 @@ namespace MapEditor
             var materialDictionary = new MaterialDictionary();
             materialDictionary.AddMaterial(_wallMaterial);
 
-            var meshRenderer = new PolygonRenderer(materialDictionary, textureDictionary, base.Renderer.Context, Camera, Shader);
+            var meshRenderer = new PolygonRenderer(materialDictionary, textureDictionary, base.Renderer.ContextPerThread, Camera, Shader);
 
             _bspRenderer = new BspRendererOptomized(base.Renderer.Device, meshRenderer, new PointClassifier(), BspNodes);
             _octreeRenderer = new OctreeRenderer(meshRenderer);
@@ -123,7 +123,7 @@ namespace MapEditor
             if (_startingPosition == null)
                 Camera.SetPosition(0, 0, 0);
 
-            Shader.Initialize(base.Renderer.Device, base.Renderer.Context);
+            Shader.Initialize(base.Renderer.Device, base.Renderer.ContextPerThread);
 
             _directionalLight = new DirectionalLight(
                 new Color4(0.2f, 0.2f, 0.2f, 1.0f),

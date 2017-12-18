@@ -11,25 +11,30 @@ namespace DungeonHack
     {
         private readonly MaterialDictionary _materialDictionary;
         private readonly TextureDictionary _textureDictionary;
-        private readonly DeviceContext _deviceContext;
+        private readonly DeviceContext[] _contextPerThread;
         private readonly Camera _camera;
         private readonly Shader _shader;
 
         public PolygonRenderer(MaterialDictionary materialDictionary, 
                             TextureDictionary textureDictionary,
-                            DeviceContext deviceContext,
+                            DeviceContext[] contextPerThread,
                             Camera camera,
                             Shader shader)
         {
             _materialDictionary = materialDictionary;
             _textureDictionary = textureDictionary;
-            _deviceContext = deviceContext;
+            _contextPerThread = contextPerThread;
             _camera = camera;
             _shader = shader;
         }
 
-        public void Render(Frustrum frustrum, Polygon polygon, ref int polygonRenderedCount)
+        public void Render(int contextThread, Frustrum frustrum, Polygon polygon, ref int polygonRenderedCount)
         {
+            if (polygon == null)
+            {
+                return;
+            }
+
             //Frustrum culling.
             if (ConfigManager.FrustrumCullingEnabled &&
                 frustrum.CheckBoundingBox(polygon.BoundingBox) == 0)
@@ -39,10 +44,10 @@ namespace DungeonHack
 
             polygonRenderedCount++;
 
-            _deviceContext.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(polygon.VertexBuffer, Vertex.SizeOf, 0));
-            _deviceContext.InputAssembler.SetIndexBuffer(polygon.IndexBuffer, Format.R16_UInt, 0);
+            _contextPerThread[contextThread].InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(polygon.VertexBuffer, Vertex.SizeOf, 0));
+            _contextPerThread[contextThread].InputAssembler.SetIndexBuffer(polygon.IndexBuffer, Format.R16_UInt, 0);
 
-            _shader.Render(_deviceContext, 
+            _shader.Render(contextThread, 
                             polygon.IndexData.Length, 
                             polygon.WorldMatrix, 
                             _camera.ViewMatrix,

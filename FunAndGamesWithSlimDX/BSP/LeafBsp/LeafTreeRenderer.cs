@@ -82,7 +82,7 @@ namespace DungeonHack.BSP.LeafBsp
 
                             for (int j = _masterData.LeafArray[currentleaf].StartPolygon; j < _masterData.LeafArray[currentleaf].EndPolygon; j++)
                             {
-                                _polyRenderer.Render(frustrum, _masterData.PolygonArray[j], ref counter);
+                                _polyRenderer.Render(0, frustrum, _masterData.PolygonArray[j], ref counter);
                             }
                         }
                         currentleaf++;

@@ -9,7 +9,7 @@ namespace FunAndGamesWithSharpDX.DirectX
     public class Shader : IShader
     {
         private Device _device;
-        private DeviceContext _context;
+        private DeviceContext[] _contextPerThread;
         private LightShader _lightShader;
         private TextureShader _textureShader;
         private IShader _currentShader;
@@ -28,30 +28,30 @@ namespace FunAndGamesWithSharpDX.DirectX
             switch (shaderTechnique)
             {
                 case ShaderTechnique.LightShader:
-                    _lightShader.Initialize(_device, _context);
+                    _lightShader.Initialize(_device, _contextPerThread);
                     _currentShader = _lightShader;
                     break;
                 case ShaderTechnique.TextureShader:
-                    _textureShader.Initialize(_device, _context);
+                    _textureShader.Initialize(_device, _contextPerThread);
                     _currentShader = _textureShader;
                     break;
             }
         }
 
-        public void Initialize(Device device, DeviceContext context)
+        public void Initialize(Device device, DeviceContext[] contextPerThread)
         {
             _device = device;
-            _context = context;
+            _contextPerThread = contextPerThread;
 
-            _textureShader = new TextureShader(device, context);
-            _lightShader = new LightShader(device, context);
+            _textureShader = new TextureShader(device, contextPerThread);
+            _lightShader = new LightShader(device, contextPerThread);
 
             SetShader(ShaderTechnique.LightShader);
         }
 
-        public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix projectionMatrix, ShaderResourceView texture, Vector3 cameraPosition, Material material)
+        public void Render(int contextCount, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix projectionMatrix, ShaderResourceView texture, Vector3 cameraPosition, Material material)
         {
-            _currentShader.Render(context, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture, cameraPosition, material);
+            _currentShader.Render(contextCount, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture, cameraPosition, material);
         }
 
         public void RenderLights(DirectionalLight directionalLight, PointLight pointLight, Spotlight spotLight)

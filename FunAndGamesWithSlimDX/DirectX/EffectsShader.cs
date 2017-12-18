@@ -10,7 +10,7 @@ using Device = SharpDX.Direct3D11.Device;
 
 namespace FunAndGamesWithSharpDX.DirectX
 {
-    public class EffectsShader : IShader
+    public class EffectsShader
     {
         private Device _device;
         private InputLayout _layout;

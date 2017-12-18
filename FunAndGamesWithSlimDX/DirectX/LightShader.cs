@@ -13,7 +13,7 @@ namespace FunAndGamesWithSharpDX.DirectX
     public class LightShader : IShader
     {
         private Device _device;
-        private DeviceContext _context;
+        private DeviceContext[] _contextPerThread;
         private InputLayout _layout;
 
         private SamplerState _samplerState;
@@ -25,17 +25,21 @@ namespace FunAndGamesWithSharpDX.DirectX
 
         private SharpDX.Direct3D11.Buffer _constantBufferPerObject;
         private SharpDX.Direct3D11.Buffer _constantBufferPerFrame;
+
+        private int _threadCount;
         
-        public LightShader(Device device, DeviceContext context)
+        public LightShader(Device device, DeviceContext[] contextPerThread)
         {
             _device = device;
-            _context = context;
+            _contextPerThread = contextPerThread;
+            _threadCount = _contextPerThread.Length;
         }
 
-        public void Initialize(Device device, DeviceContext context)
+        public void Initialize(Device device, DeviceContext[] contextPerThread)
         {
             _device = device;
-            _context = context;
+            _contextPerThread = contextPerThread;
+            _threadCount = _contextPerThread.Length;
 
             _elements = Vertex.GetInputElements();
 
@@ -75,21 +79,26 @@ namespace FunAndGamesWithSharpDX.DirectX
 
             _samplerState = new SamplerState(device, samplerDesc);
 
-            _context.InputAssembler.InputLayout = _layout;
-            _context.InputAssembler.PrimitiveTopology = SharpDX.Direct3D.PrimitiveTopology.TriangleList;
+            for (int i = 0; i < _threadCount; i++)
+            {
+                var context = _contextPerThread[i];
 
-            _context.VertexShader.SetConstantBuffer(0, _constantBufferPerObject);
-            _context.VertexShader.SetConstantBuffer(1, _constantBufferPerFrame);
+                context.InputAssembler.InputLayout = _layout;
+                context.InputAssembler.PrimitiveTopology = SharpDX.Direct3D.PrimitiveTopology.TriangleList;
 
-            _context.PixelShader.SetConstantBuffer(0, _constantBufferPerObject);
-            _context.PixelShader.SetConstantBuffer(1, _constantBufferPerFrame);
-            _context.PixelShader.SetSampler(0, _samplerState);
+                context.VertexShader.SetConstantBuffer(0, _constantBufferPerObject);
+                context.VertexShader.SetConstantBuffer(1, _constantBufferPerFrame);
 
-            _context.VertexShader.Set(vertexShader);
-            _context.PixelShader.Set(pixelShader);
+                context.PixelShader.SetConstantBuffer(0, _constantBufferPerObject);
+                context.PixelShader.SetConstantBuffer(1, _constantBufferPerFrame);
+                context.PixelShader.SetSampler(0, _samplerState);
+
+                context.VertexShader.Set(vertexShader);
+                context.PixelShader.Set(pixelShader);
+            }
         }
                 
-        public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix,
+        public void Render(int contextCount, int indexCount, Matrix worldMatrix, Matrix viewMatrix,
                            Matrix projectionMatrix, ShaderResourceView texture, Vector3 cameraPosition, Material material)
         {
             _perObjectBuffer.WorldMatrix = worldMatrix;
@@ -101,6 +110,8 @@ namespace FunAndGamesWithSharpDX.DirectX
             _perObjectBuffer.Material = material;
 
             _perFrameBuffer.CameraPosition = cameraPosition;
+
+            var context = _contextPerThread[contextCount];
 
             //context.UpdateSubresource(ref _perObjectBuffer, _constantBufferPerObject);
             DataStream mappedResource;

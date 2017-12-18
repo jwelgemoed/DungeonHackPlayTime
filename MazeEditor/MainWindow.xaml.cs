@@ -34,7 +34,7 @@ namespace MazeEditor
             InitializeComponent();
             _mazeRunner = new MazeRunner();
 
-            _mazeRunner.Initialize();
+            _mazeRunner.Initialize(4);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -141,7 +141,7 @@ namespace MazeEditor
             int treeDepth = quadTreeBuilder.TreeDepth;
            
             _mazeRunner.Start();
-            _mazeRunner.Run();
+            _mazeRunner.Run(1);
         }
 
         private void btnQuadTree_Click(object sender, RoutedEventArgs e)

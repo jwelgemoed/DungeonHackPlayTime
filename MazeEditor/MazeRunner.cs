@@ -11,6 +11,7 @@ using SharpDX.Direct3D11;
 using System;
 using System.Collections.Generic;
 using DungeonHack.QuadTree;
+using System.Threading.Tasks;
 
 namespace MazeEditor
 {
@@ -31,6 +32,8 @@ namespace MazeEditor
         public OctreeNode OctreeRootNode { get; set; }
         public QuadTreeNode QuadTreeNode { get; internal set; }
 
+        public int ThreadCount { get; set; }
+
 
         public MazeRunner() : base(8.0f, true)
         {
@@ -40,6 +43,8 @@ namespace MazeEditor
                 Diffuse = new Color4(0.651f, 0.5f, 0.392f, 1.0f),
                 Specular = new Color4(4.0f, 0.2f, 0.2f, 0.2f)
             };
+
+            ThreadCount = base.Renderer.MaxThreads;
         }
 
         public Device Device
@@ -68,18 +73,51 @@ namespace MazeEditor
             LightEngine.RenderLights(Shader);
 
             _meshRenderedCount = 0;
-            base._stopwatch.Restart();
+            ThreadCount = 4;
+            var tasks = new Task[ThreadCount];
+            for (int i = 0; i < ThreadCount; i++)
+            {
+                int j = i;
+                tasks[i] = new Task(() => RenderQuadTree(j));
+                tasks[i].Start();
+            }
+            Task.WaitAll(tasks);
 
-            //foreach (var mesh in Meshes)
-            //{
-            //    _meshRenderer.Render(_frustrum, mesh, ref _meshRenderedCount);
-            //}
+            for (int i = 0; i < ThreadCount; i++)
+            {
+                var commandList = base.Renderer.CommandLists[i];
+                base.Renderer.Device.ImmediateContext.ExecuteCommandList(commandList, false);
 
-            //_octreeRenderer.DrawOctree(OctreeRootNode, _frustrum, Camera, ref _meshRenderedCount);
-            //_bspRenderer.DrawBspTreeFrontToBack(Camera.EyeAt, _frustrum, ref _meshRenderedCount, Camera);
-            _quadTreeRenderer.DrawQuadTree(QuadTreeNode, _frustrum, Camera, ref _meshRenderedCount);
-            
-            //DrawBspTreeBackToFront(BspRootNode, Camera.EyeAt);
+                base.Renderer.CommandLists[i].Dispose();
+                base.Renderer.CommandLists[i] = null;
+            }
+        }
+
+        private void RenderQuadTree(int i)
+        {
+            QuadTreeNode node;
+
+            switch (i)
+            {
+                case 0:
+                    node = ThreadCount == 1 ? QuadTreeNode : QuadTreeNode.Octant1;
+                    break;
+                case 1:
+                    node = QuadTreeNode.Octant2;
+                    break;
+                case 2:
+                    node = QuadTreeNode.Octant3;
+                    break;
+                case 3:
+                    node = QuadTreeNode.Octant4;
+                    break;
+                default:
+                    node = QuadTreeNode;
+                    break;
+            }
+
+            _quadTreeRenderer.DrawQuadTree(i, node, _frustrum, Camera, ref _meshRenderedCount);
+            base.Renderer.CommandLists[i] = base.Renderer.ContextPerThread[i].FinishCommandList(false);
         }
 
         public override void UpdateScene()
@@ -116,13 +154,13 @@ namespace MazeEditor
 
             Camera.SetPosition(0, 16, 0);
 
-            _meshRenderer = new PolygonRenderer(materialDictionary, textureDictionary, base.Renderer.Context, Camera, Shader);
+            _meshRenderer = new PolygonRenderer(materialDictionary, textureDictionary, base.Renderer.ContextPerThread, Camera, Shader);
 
             _bspRenderer = new BspRendererOptomized(base.Renderer.Device, _meshRenderer, new PointClassifier(), BspNodes);
             _octreeRenderer = new OctreeRenderer(_meshRenderer);
             _quadTreeRenderer = new QuadTreeRenderer(_meshRenderer);
 
-            Shader.Initialize(base.Renderer.Device, base.Renderer.Context);
+            Shader.Initialize(base.Renderer.Device, base.Renderer.ContextPerThread);
 
             _directionalLight = new DirectionalLight(
                 new Color4(0.2f, 0.2f, 0.2f, 1.0f),
