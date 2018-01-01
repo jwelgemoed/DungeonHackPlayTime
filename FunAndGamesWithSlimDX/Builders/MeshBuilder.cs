@@ -228,11 +228,15 @@ namespace DungeonHack.Builders
         {
             RecalculateWorldMatrix();
 
+            _mesh.WorldVectors = new Vector3[_mesh.VertexData.Length];
+
             for (int i = 0; i < _mesh.VertexData.Length; i++)
             {
-                var vertex = Vector3.TransformCoordinate(
-                    new Vector3(_mesh.VertexData[i].Position.X, _mesh.VertexData[i].Position.Y, _mesh.VertexData[i].Position.Z)
-                    , _mesh.WorldMatrix);
+                var vector = new Vector3(_mesh.VertexData[i].Position.X, _mesh.VertexData[i].Position.Y, _mesh.VertexData[i].Position.Z);
+
+                var vertex = Vector3.TransformCoordinate(vector, _mesh.WorldMatrix);
+
+                _mesh.WorldVectors[i] = vertex;
 
                 _mesh.VertexData[i].Position = new Vector4(vertex.X, vertex.Y, vertex.Z, 1.0f);
 

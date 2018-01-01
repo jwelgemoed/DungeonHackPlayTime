@@ -26,6 +26,7 @@ namespace MazeEditor
         private OctreeRenderer _octreeRenderer;
         private QuadTreeRenderer _quadTreeRenderer;
         private PolygonRenderer _meshRenderer;
+        private Matrix _viewProjectionMatrix;
 
         public BspNodeOptomized[] BspNodes { get; set; }
         public OctreeNode OctreeRootNode { get; set; }
@@ -62,7 +63,7 @@ namespace MazeEditor
         {
             //Construct the frustrum
             if (ConfigManager.FrustrumCullingEnabled)
-                _frustrum.ConstructFrustrum(Camera.FirstPersonViewMatrix * Renderer.ProjectionMatrix);
+                _frustrum.ConstructFrustrum(Camera.ViewProjectionMatrix);
 
             //Do the light rendering
             LightEngine.RenderLights(Shader);
@@ -120,7 +121,7 @@ namespace MazeEditor
 
             _bspRenderer = new BspRendererOptomized(base.Renderer.Device, _meshRenderer, new PointClassifier(), BspNodes);
             _octreeRenderer = new OctreeRenderer(_meshRenderer);
-            _quadTreeRenderer = new QuadTreeRenderer(_meshRenderer);
+            _quadTreeRenderer = new QuadTreeRenderer(_meshRenderer, Camera);
 
             Shader.Initialize(base.Renderer.Device, base.Renderer.Context);
 

@@ -139,12 +139,12 @@ namespace FunAndGamesWithSharpDX.Engine
                     UpdateScene();
                     _stopwatch.Restart();
                     DrawScene();
+                    _stopwatch.Stop();
                     DisplayConsoleInformation();
                     FontRenderer.FinalizeDraw();
                     SpriteRenderer.FinalizeDraw();
                     Renderer.SwapChain.Present(0, PresentFlags.None);
-                    _updateTime = _stopwatch.ElapsedTicks;
-                    _stopwatch.Stop();
+                    _updateTime = _stopwatch.ElapsedMilliseconds;
                     break;
 
                 case ApplicationStateEnum.OpenSettings:

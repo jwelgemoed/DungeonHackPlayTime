@@ -14,6 +14,8 @@ namespace FunAndGamesWithSharpDX.Entities
 
         public Vertex[] VertexData { get; set; }
 
+        public Vector3[] WorldVectors { get; set; }
+
         public short[] IndexData { get; set; }
 
         public Model[] Model { get; set; }
@@ -40,7 +42,7 @@ namespace FunAndGamesWithSharpDX.Entities
             TranslationMatrix = Matrix.Identity;
             RotationMatrix = Matrix.Identity;
             WorldMatrix = Matrix.Identity;
-           // OcclusionQuery = new OcclusionQuery(device);
+            OcclusionQuery = new OcclusionQuery(device);
         }
 
         public void Dispose()

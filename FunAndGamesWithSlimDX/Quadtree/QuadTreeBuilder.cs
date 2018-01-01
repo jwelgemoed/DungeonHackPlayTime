@@ -133,8 +133,8 @@ namespace DungeonHack.QuadTree
 
             node.Polygons = containedPolygons;
 
-            if ((node.Polygons.Count() > 64) &&
-                    (treeDepth < 3))
+            if (//(node.Polygons.Count() > 64) &&
+                    (treeDepth < 2))
             {
                 BuildQuadTree(node, containedPolygons, treeDepth + 1);
             }

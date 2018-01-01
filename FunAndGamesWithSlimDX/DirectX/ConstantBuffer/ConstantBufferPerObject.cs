@@ -8,8 +8,7 @@ namespace DungeonHack.DirectX.ConstantBuffer
     public struct ConstantBufferPerObject
     {
         public Matrix WorldMatrix;
-        public Matrix ViewMatrix;
-        public Matrix ProjectionMatrix;
+        public Matrix ViewProjectionMatrix;
         public Material Material;
 
         public static readonly int Stride = Marshal.SizeOf(typeof(ConstantBufferPerObject));

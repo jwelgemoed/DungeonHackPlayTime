@@ -2,6 +2,7 @@
 using FunAndGamesWithSharpDX.DirectX;
 using FunAndGamesWithSharpDX.Engine;
 using FunAndGamesWithSharpDX.Entities;
+using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 
@@ -28,14 +29,14 @@ namespace DungeonHack
             _shader = shader;
         }
 
-        public void Render(Frustrum frustrum, Polygon polygon, ref int polygonRenderedCount)
+        public void Render(Frustrum frustrum, Polygon polygon, Matrix viewProjectionMatrix, ref int polygonRenderedCount)
         {
-            //Frustrum culling.
-            if (ConfigManager.FrustrumCullingEnabled &&
-                frustrum.CheckBoundingBox(polygon.BoundingBox) == 0)
-            {
-                return;
-            }
+            ////Frustrum culling.
+            //if (ConfigManager.FrustrumCullingEnabled &&
+            //    frustrum.CheckBoundingBox(polygon.BoundingBox) == 0)
+            //{
+            //    return;
+            //}
 
             polygonRenderedCount++;
 
@@ -45,8 +46,7 @@ namespace DungeonHack
             _shader.Render(_deviceContext, 
                             polygon.IndexData.Length, 
                             polygon.WorldMatrix, 
-                            _camera.ViewMatrix,
-                            _camera.ProjectionMatrix, 
+                            viewProjectionMatrix,
                             _textureDictionary.GetTexture(polygon.TextureIndex).TextureData, 
                             _camera.GetPosition(), 
                             _materialDictionary.GetMaterial(polygon.MaterialIndex));

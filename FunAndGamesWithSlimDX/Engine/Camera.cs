@@ -104,6 +104,24 @@ namespace FunAndGamesWithSharpDX.Engine
                 return _projectionMatrix.Value;
             }
         }
+
+        public Matrix ViewProjectionMatrix { get; private set; }
+
+        public Matrix TopDownViewProjectionMatrix { get; private set; }
+
+        public Matrix RenderViewProjectionMatrix
+        {
+            get
+            {
+                if (_topdown)
+                {
+                    return TopDownViewProjectionMatrix;
+                }
+
+                return ViewProjectionMatrix;
+            }
+        }
+
         public Camera()
         {
             _up = new Vector3(0, 1, 0);
@@ -540,11 +558,14 @@ namespace FunAndGamesWithSharpDX.Engine
             {
                 ViewMatrix = Matrix.LookAtLH(TopdownEyePosition, _eyeAt, _up);
                 FirstPersonViewMatrix = Matrix.LookAtLH(_eyeAt, _lookAt, _up);
+                TopDownViewProjectionMatrix = ViewMatrix * ProjectionMatrix;
             }
             else
             {
                 ViewMatrix = FirstPersonViewMatrix = Matrix.LookAtLH(_eyeAt, _lookAt, _up);
             }
+
+            ViewProjectionMatrix = FirstPersonViewMatrix * ProjectionMatrix;
         }
     }
 

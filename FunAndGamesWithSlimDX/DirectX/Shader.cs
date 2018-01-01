@@ -49,9 +49,9 @@ namespace FunAndGamesWithSharpDX.DirectX
             SetShader(ShaderTechnique.LightShader);
         }
 
-        public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix projectionMatrix, ShaderResourceView texture, Vector3 cameraPosition, Material material)
+        public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewProjMatrix, ShaderResourceView texture, Vector3 cameraPosition, Material material)
         {
-            _currentShader.Render(context, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture, cameraPosition, material);
+            _currentShader.Render(context, indexCount, worldMatrix, viewProjMatrix, texture, cameraPosition, material);
         }
 
         public void RenderLights(DirectionalLight directionalLight, PointLight pointLight, Spotlight spotLight)

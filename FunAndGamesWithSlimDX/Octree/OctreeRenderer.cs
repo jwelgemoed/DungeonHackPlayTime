@@ -44,7 +44,7 @@ namespace DungeonHack.Octree
             {
                 foreach (var polygon in node.Polygons)
                 {
-                    _renderer.Render(frustrum, polygon, ref meshRenderedCount);
+                    _renderer.Render(frustrum, polygon, camera.ViewProjectionMatrix, ref meshRenderedCount);
                 }
             }
         }

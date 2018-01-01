@@ -85,15 +85,13 @@ namespace FunAndGamesWithSharpDX.DirectX
             
         }
                 
-        public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix,
-                           Matrix projectionMatrix, ShaderResourceView texture, Vector3 cameraPosition, Material material)
+        public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewProjectionMatrix,
+                           ShaderResourceView texture, Vector3 cameraPosition, Material material)
         {
             _perObjectBuffer.WorldMatrix = worldMatrix;
             _perObjectBuffer.WorldMatrix.Transpose();
-            _perObjectBuffer.ViewMatrix = viewMatrix;
-            _perObjectBuffer.ViewMatrix.Transpose();
-            _perObjectBuffer.ProjectionMatrix = projectionMatrix;
-            _perObjectBuffer.ProjectionMatrix.Transpose();
+            _perObjectBuffer.ViewProjectionMatrix = viewProjectionMatrix;
+            _perObjectBuffer.ViewProjectionMatrix.Transpose();
             _perObjectBuffer.Material = material;
 
             context.UpdateSubresource(ref _perObjectBuffer, _staticContantBuffer);

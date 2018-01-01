@@ -187,8 +187,7 @@ void ComputeSpotLight(Material mat, SpotLight L, float3 pos, float3 normal, floa
 cbuffer cbPerObject : register(b0)
 {
 	matrix worldMatrix;
-	matrix viewMatrix;
-	matrix projectionMatrix;
+	matrix viewProjectionMatrix;
 	Material material;
 };
 
@@ -236,8 +235,7 @@ PixelInputType LightVertexShader(VertexInputType input)
 
 	// Calculate the position of the vertex against the world, view, and projection matrices.
 	//output.position = mul(input.position, worldMatrix);
-	output.position = mul(input.position, viewMatrix);
-	output.position = mul(output.position, projectionMatrix);
+	output.position = mul(input.position, viewProjectionMatrix);
 
 	// Store the input color for the pixel shader to use.
 	output.tex = input.tex;

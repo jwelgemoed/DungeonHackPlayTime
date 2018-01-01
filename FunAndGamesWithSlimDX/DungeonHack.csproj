@@ -148,7 +148,6 @@
     <Compile Include="BSP\LeafBsp\Leaf.cs" />
     <Compile Include="BSP\LeafBsp\LeafBspTreeBuilder.cs" />
     <Compile Include="BSP\LeafBsp\LeafStackItem.cs" />
-    <Compile Include="BSP\LeafBsp\LeafTreeRenderer.cs" />
     <Compile Include="BSP\LeafBsp\Node.cs" />
     <Compile Include="BSP\LeafBsp\Portal.cs" />
     <Compile Include="BSP\LeafBsp\PortalGenerator.cs" />
@@ -214,6 +213,7 @@
     <Compile Include="Menus\SaveWindow.Designer.cs">
       <DependentUpon>SaveWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="OcclusionCulling\DepthBuffer.cs" />
     <Compile Include="Octree\OctreeBuilder.cs" />
     <Compile Include="Octree\OctreeNode.cs" />
     <Compile Include="Octree\OctreeRenderer.cs" />
