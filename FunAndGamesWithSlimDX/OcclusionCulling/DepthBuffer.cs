@@ -1,12 +1,6 @@
-﻿using DungeonHack.Properties;
-using SharpDX.Mathematics;
-using FunAndGamesWithSharpDX.Engine;
+﻿using FunAndGamesWithSharpDX.Engine;
 using SharpDX;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DungeonHack.OcclusionCulling
 {
@@ -39,8 +33,8 @@ namespace DungeonHack.OcclusionCulling
             r = ConfigManager.ScreenWidth;
             b = ConfigManager.ScreenHeight;
             Width = ConfigManager.ScreenWidth / 8;
-            Height = ConfigManager.ScreenHeight / 4;
-            MaxDepth = 1000;
+            Height = ConfigManager.ScreenHeight / 8;
+            MaxDepth = 250;
             _buffer = new float[Width, Height];
             _depthBuffer = new float[Width * Height];
 
@@ -63,15 +57,7 @@ namespace DungeonHack.OcclusionCulling
             }
         }
 
-        public void ClearBuffer()
-        {
-            //for (int i = 0; i < _depthBuffer.Length; i++)
-            //{
-            //    _depthBuffer[i] = -10000;
-            //}
-        }
-
-        public bool CheckOccludedBox(BoundingBox box)
+        public bool IsBoundingBoxOccluded(BoundingBox box)
         {
             var corners = box.GetCorners();
             bool occludedBox = true;
@@ -174,10 +160,13 @@ namespace DungeonHack.OcclusionCulling
             }
 
             //backface culling
-            //if ((rasterVectors[0].X * rasterVectors[1].Y - rasterVectors[0].Y * rasterVectors[1].X) > 0)
-            //{
-            //    return false;
-            //}
+            Vector3 u = rasterVectors[1] - rasterVectors[0];
+            Vector3 v = rasterVectors[2] - rasterVectors[0];
+
+            if ((u.X * v.Y - u.Y * v.X) < 0)
+            {
+                return false;
+            }
 
             Triangle triangle = new Triangle()
             {
@@ -193,7 +182,7 @@ namespace DungeonHack.OcclusionCulling
             return true;
         }
 
-        public void RasterTriangles(int threadNumber)
+        public void RasterizeTriangles(int threadNumber)
         {
             foreach (var triangle in triangles[threadNumber])
             {
@@ -225,13 +214,12 @@ namespace DungeonHack.OcclusionCulling
                             float w1area = (float) w1 / area;
                             float w2area = (float) w2 / area;
                             // linearly interpolate sample depth
-                            float oneOverZ = triangle.Vectors[0].Z * w0area + triangle.Vectors[1].Z * w1area + triangle.Vectors[2].Z * w2area;
-                            //float z = 1 / oneOverZ;
-                            // do we pass depth buffer test?
+                            float interZ = triangle.Vectors[0].Z * w0area + triangle.Vectors[1].Z * w1area + triangle.Vectors[2].Z * w2area;
                             int bufLocation = y * Width + x;
-                            if (oneOverZ < _depthBuffer[bufLocation])
+
+                            if (interZ < _depthBuffer[bufLocation])
                             {
-                                _depthBuffer[bufLocation] = oneOverZ;
+                                _depthBuffer[bufLocation] = interZ;
                             }
                         }
 

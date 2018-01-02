@@ -94,9 +94,8 @@ namespace DungeonHack.QuadTree
 
         private void DrawQuadTreeIterative(int threadCount, QuadTreeNode root, Camera camera, Frustrum frustrum)
         {
-            _nodeStack[threadCount].Push(root);
             QuadTreeNode node;
-            _depthBuffer.ClearBuffer();
+            _nodeStack[threadCount].Push(root);
 
             while (_nodeStack[threadCount].Count > 0)
             {
@@ -104,6 +103,9 @@ namespace DungeonHack.QuadTree
 
                 if (node.IsLeaf)
                 {
+                    int polygonsdrawn = 0;
+                    int backfaceculled = 0;
+
                     foreach (var polygon in node.Polygons)
                     {
                         if (ConfigManager.FrustrumCullingEnabled &&
@@ -111,7 +113,7 @@ namespace DungeonHack.QuadTree
                         {
                             continue;
                         }
-
+                        
                         bool draw = true;
 
                         if (polygon.WorldVectors.Length == 6)
@@ -124,31 +126,35 @@ namespace DungeonHack.QuadTree
                         {
                             _renderList[threadCount][_endOfList[threadCount]] = polygon;
                             _endOfList[threadCount]++;
+                            polygonsdrawn++;
                         }
-
+                        else
+                        {
+                            backfaceculled++;
+                        }
                     }
 
-                    _depthBuffer.RasterTriangles(threadCount);
+                    _depthBuffer.RasterizeTriangles(threadCount);
                 }
                 else
                 {
                     if (node.Octant1 != null && frustrum.CheckBoundingBox(node.Octant1.BoundingBox) != 0
-                        && !_depthBuffer.CheckOccludedBox(node.Octant1.BoundingBox))
+                        && !_depthBuffer.IsBoundingBoxOccluded(node.Octant1.BoundingBox))
                     {
                         _nodeStack[threadCount].Push(node.Octant1);
                     }
                     if (node.Octant2 != null && frustrum.CheckBoundingBox(node.Octant2.BoundingBox) != 0
-                        && !_depthBuffer.CheckOccludedBox(node.Octant2.BoundingBox))
+                        && !_depthBuffer.IsBoundingBoxOccluded(node.Octant2.BoundingBox))
                     {
                         _nodeStack[threadCount].Push(node.Octant2);
                     }
                     if (node.Octant3 != null && frustrum.CheckBoundingBox(node.Octant3.BoundingBox) != 0
-                        && !_depthBuffer.CheckOccludedBox(node.Octant3.BoundingBox))
+                        && !_depthBuffer.IsBoundingBoxOccluded(node.Octant3.BoundingBox))
                     {
                         _nodeStack[threadCount].Push(node.Octant3);
                     }
                     if (node.Octant4 != null && frustrum.CheckBoundingBox(node.Octant4.BoundingBox) != 0
-                        && !_depthBuffer.CheckOccludedBox(node.Octant4.BoundingBox))
+                        && !_depthBuffer.IsBoundingBoxOccluded(node.Octant4.BoundingBox))
                     {
                         _nodeStack[threadCount].Push(node.Octant4);
                     }
