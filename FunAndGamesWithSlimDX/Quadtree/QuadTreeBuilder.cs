@@ -1,10 +1,8 @@
-﻿using FunAndGamesWithSharpDX.Entities;
+﻿using DungeonHack.Entities;
+using FunAndGamesWithSharpDX.Entities;
 using SharpDX;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DungeonHack.QuadTree
 {
@@ -17,8 +15,6 @@ namespace DungeonHack.QuadTree
         public QuadTreeNode BuildTree(IEnumerable<Polygon> polygons)
         {
             NumberOfNodes = 1;
-            QuadTreeNode rootNode = new QuadTreeNode();
-            rootNode.Polygons = polygons;
            
             Vector3 minimumVector = new Vector3();
             Vector3 maximumVector = new Vector3();
@@ -38,6 +34,11 @@ namespace DungeonHack.QuadTree
                     minimumVector.Z = minBox.Z;
                 }
 
+                if (minBox.Y < minimumVector.Y)
+                {
+                    minimumVector.Y = minBox.Y;
+                }
+
                 if (maxBox.X > maximumVector.X)
                 {
                     maximumVector.X = maxBox.X;
@@ -47,14 +48,23 @@ namespace DungeonHack.QuadTree
                 {
                     maximumVector.Z = maxBox.Z;
                 }
+
+                if (maxBox.Y > maximumVector.Y)
+                {
+                    maximumVector.Y = maxBox.Y;
+                }
             }
 
-            rootNode.BoundingBox = new SharpDX.BoundingBox()
+            QuadTreeNode rootNode = new QuadTreeNode()
             {
-                Minimum = minimumVector,
-                Maximum = maximumVector
+                Id = NumberOfNodes,
+                Polygons = polygons,
+                BoundingBox = new AABoundingBox(new BoundingBox()
+                {
+                    Minimum = minimumVector,
+                    Maximum = maximumVector
+                })
             };
-
 
             BuildQuadTree(rootNode, polygons, 0);
 
@@ -90,9 +100,9 @@ namespace DungeonHack.QuadTree
             TreeDepth = treeDepth;
 
             //Build subnodes
-            var min = node.BoundingBox.Minimum - 1;
-            var max = node.BoundingBox.Maximum + 1;
-            var halfMax = (node.BoundingBox.Maximum - node.BoundingBox.Minimum) / 2;
+            var min = node.BoundingBox.BoundingBox.Minimum - 1;
+            var max = node.BoundingBox.BoundingBox.Maximum + 1;
+            var halfMax = (node.BoundingBox.BoundingBox.Maximum - node.BoundingBox.BoundingBox.Minimum) / 2;
 
             //octant1
             node.Octant1 = CreateQuadTreeNode(min, 
@@ -117,16 +127,17 @@ namespace DungeonHack.QuadTree
 
         public QuadTreeNode CreateQuadTreeNode(Vector3 minimum, Vector3 maximum, QuadTreeNode parent, IEnumerable<Polygon> polygons, int treeDepth)
         {
-            QuadTreeNode node = new QuadTreeNode
-            {
-                Parent = parent,
-                BoundingBox = new BoundingBox(minimum, maximum)
-            };
-
             NumberOfNodes++;
 
+            QuadTreeNode node = new QuadTreeNode
+            {
+                Id = NumberOfNodes,
+                Parent = parent,
+                BoundingBox = new AABoundingBox(new BoundingBox(minimum, maximum))
+            };
+
             //contained or intersected polygons...that means intersected polygons will end up in more than 1 octant.
-            var containedPolygons = polygons.Where(x => node.BoundingBox.Contains(x.BoundingBox) != ContainmentType.Disjoint);
+            var containedPolygons = polygons.Where(x => node.BoundingBox.BoundingBox.Contains(x.BoundingBox) != ContainmentType.Disjoint);
 
             if (containedPolygons.Count() == 0)
                 return null;
@@ -135,7 +146,7 @@ namespace DungeonHack.QuadTree
 
             if (//(node.Polygons.Count() > 64) &&
                     (treeDepth < 2))
-            {
+            { 
                 BuildQuadTree(node, containedPolygons, treeDepth + 1);
             }
 

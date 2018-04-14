@@ -74,3 +74,6 @@ C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor.Properties.Resources.
 C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor.csproj.GenerateResource.Cache
 C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor.exe
 C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor.pdb
+C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor.csproj.CoreCompileInputs.cache
+C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\NBidi.dll
+C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor.csproj.CopyComplete

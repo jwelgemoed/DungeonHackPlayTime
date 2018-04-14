@@ -164,10 +164,10 @@ namespace MazeEditor
 
                 MyRectangle rectangle = new MyRectangle()
                 {
-                    PositionX = (int)(node.BoundingBox.Minimum.X / 8),
-                    PositionY = (int)(node.BoundingBox.Minimum.Z / 8),
-                    Height = (node.BoundingBox.Maximum - node.BoundingBox.Minimum).Z /8,
-                    Width = (node.BoundingBox.Maximum - node.BoundingBox.Minimum).X /8
+                    PositionX = (int)(node.BoundingBox.BoundingBox.Minimum.X / 8),
+                    PositionY = (int)(node.BoundingBox.BoundingBox.Minimum.Z / 8),
+                    Height = (node.BoundingBox.BoundingBox.Maximum - node.BoundingBox.BoundingBox.Minimum).Z /8,
+                    Width = (node.BoundingBox.BoundingBox.Maximum - node.BoundingBox.BoundingBox.Minimum).X /8
                 };
 
                 rectangle.ChangeFill(null);

@@ -1,4 +1,5 @@
-﻿using FunAndGamesWithSharpDX.Engine;
+﻿using DungeonHack.Entities;
+using FunAndGamesWithSharpDX.Engine;
 using SharpDX;
 using System.Collections.Generic;
 
@@ -18,7 +19,6 @@ namespace DungeonHack.OcclusionCulling
         public int MaxDepth { get; set; }
 
         private List<Triangle>[] triangles;
-        private float[,] _buffer;
         private float[] _depthBuffer;
         private float _nearClipPane;
         private Camera _camera;
@@ -34,8 +34,7 @@ namespace DungeonHack.OcclusionCulling
             b = ConfigManager.ScreenHeight;
             Width = ConfigManager.ScreenWidth / 8;
             Height = ConfigManager.ScreenHeight / 8;
-            MaxDepth = 250;
-            _buffer = new float[Width, Height];
+            MaxDepth = 10000;
             _depthBuffer = new float[Width * Height];
 
             for (int i=0; i<_depthBuffer.Length; i++)
@@ -57,6 +56,25 @@ namespace DungeonHack.OcclusionCulling
             }
         }
 
+        public void ClearBuffer()
+        {
+            for (int i = 0; i < _depthBuffer.Length; i++)
+            {
+                _depthBuffer[i] = MaxDepth;
+            }
+        }
+
+        public void SaveBufferToFile()
+        {
+            //System.Drawing.ImageConverter ic = new System.Drawing.ImageConverter();
+
+            //System.Drawing.Image img = (System.Drawing.Image)ic.ConvertFrom(_depthBuffer);
+
+            //System.Drawing.Bitmap bitmap1 = new System.Drawing.Bitmap(img);
+
+            //bitmap1.Save(@"c:\buffer.bmp");
+        }
+
         public bool IsBoundingBoxOccluded(BoundingBox box)
         {
             var corners = box.GetCorners();
@@ -70,24 +88,42 @@ namespace DungeonHack.OcclusionCulling
                 float ndcX = camVec.X / camVec.W;
                 float ndcY = camVec.Y / camVec.W;
 
-                float rasterVecX = ((ndcX + 1) / 2 * Width);
-                float rasterVecY = ((1 - ndcY) / 2 * Height);
+                float rasterVecX = (int) ((ndcX + 1) * halfWidth);/// 2 * Width);
+                float rasterVecY = (int) ((1 - ndcY) * halfHeight);/// 2 * Height);
 
-                if (rasterVecX > Width || rasterVecX < 0)
-                {
-                    occludedBox = false;
-                    break;
-                }
+                //if (rasterVecX > Width || rasterVecX < 0)
+                //{
+                //    occludedBox = false;
+                //    break;
+                //}
 
-                if (rasterVecY > Height || rasterVecY < 0)
-                {
-                    occludedBox = false;
-                    break;
-                }
+                //if (rasterVecY > Height || rasterVecY < 0)
+                //{
+                //    occludedBox = false;
+                //    break;
+                //}
+
+                if (rasterVecX < 0)
+                    rasterVecX = 0;
+
+                if (rasterVecX > Width)
+                    rasterVecX = Width;
+
+                if (rasterVecY < 0)
+                    rasterVecY = 0;
+
+                if (rasterVecY > Height)
+                    rasterVecY = Height;
 
                 int bufferLocation = ((int) rasterVecY * Width) + (int) rasterVecX;
 
-                if ((camVec.Z) < _depthBuffer[bufferLocation])
+                if (bufferLocation >= _depthBuffer.Length)
+                {
+                    occludedBox = false;
+                    break;
+                }
+
+                if (camVec.Z < _depthBuffer[bufferLocation])
                 {
                     occludedBox = false;
                     break;
@@ -95,6 +131,134 @@ namespace DungeonHack.OcclusionCulling
             }
 
             return occludedBox;
+        }
+
+        public bool IsBoundingBoxOccluded(AABoundingBox box)
+        {
+            for (int i = 0; i < 12; i++)
+            {
+                //Triangle
+                Triangle triangle = new Triangle();
+                Vector3[] rasterVecs = new Vector3[3];
+                int minx, maxx, miny, maxy;
+                maxx = maxy = 0;
+                miny = Height;
+                minx = Width;
+
+                for (int j = 0; j < 3; j++)
+                {
+                    int index = (i * 3) + j;
+
+                    Vector4 camVec = Multiply(_camera.ViewProjectionMatrix, box.Vectors[box.Indexes[index]]);
+
+                    float ndcX = camVec.X / camVec.W;
+                    float ndcY = camVec.Y / camVec.W;
+
+                    rasterVecs[j].X = (int)((ndcX + 1) * halfWidth);/// 2 * Width);
+                    rasterVecs[j].Y = (int)((1 - ndcY) * halfHeight);/// 2 * Height);
+                    rasterVecs[j].Z = camVec.Z;
+
+                    if (rasterVecs[j].X > maxx)
+                    {
+                        maxx = (int)rasterVecs[j].X;
+
+                        if (maxx >= Width)
+                        {
+                            maxx = Width;
+                         //   return false;
+                        }
+                    }
+
+                    if (rasterVecs[j].X < minx)
+                    {
+                        minx = (int)rasterVecs[j].X;
+
+                        if (minx < 0)
+                        {
+                            minx = 0;
+                            //return false;
+                        }
+                    }
+
+                    if (rasterVecs[j].Y > maxy)
+                    {
+                        maxy = (int)rasterVecs[j].Y;
+
+                        if (maxy > Height)
+                        {
+                            maxy = Height;
+                          //  return false;
+                        }
+                    }
+
+                    if (rasterVecs[j].Y < miny)
+                    {
+                        miny = (int)rasterVecs[j].Y;
+
+                        if (miny < 0)
+                        {
+                            miny = 0;
+                          //  return false;
+                        }
+                    }
+                }
+
+                triangle.Vectors = rasterVecs;
+                triangle.minX = minx;
+                triangle.maxX = maxx;
+                triangle.minY = miny;
+                triangle.maxY = maxy;
+
+                Point v0 = new Point((int)triangle.Vectors[0].X, (int)triangle.Vectors[0].Y);
+                Point v1 = new Point((int)triangle.Vectors[1].X, (int)triangle.Vectors[1].Y);
+                Point v2 = new Point((int)triangle.Vectors[2].X, (int)triangle.Vectors[2].Y);
+
+                int A01 = v0.Y - v1.Y; int B01 = v1.X - v0.X;
+                int A12 = v1.Y - v2.Y; int B12 = v2.X - v1.X;
+                int A20 = v2.Y - v0.Y; int B20 = v0.X - v2.X;
+
+                Point p = new Point(triangle.minX, triangle.minY);
+                int area = Orient2d(v0, v1, v2);
+                int w0_row = Orient2d(v1, v2, p);
+                int w1_row = Orient2d(v2, v0, p);
+                int w2_row = Orient2d(v0, v1, p);
+
+                for (int y = triangle.minY; y < triangle.maxY; y++)
+                {
+                    int w0 = w0_row;
+                    int w1 = w1_row;
+                    int w2 = w2_row;
+
+                    for (int x = triangle.minX; x < triangle.maxX; x++)
+                    {
+                        if ((w0 >= 0 && w1 >= 0 && w2 >= 0) && (area > 0))
+                        {
+                            //float w0area = (float) w0 / area;
+                            //float w1area = (float) w1 / area;
+                            //float w2area = (float) w2 / area;
+                            // linearly interpolate sample depth
+                            //float interZ = triangle.Vectors[0].Z * w0area + triangle.Vectors[1].Z * w1area + triangle.Vectors[2].Z * w2area;
+                            float interZ = (triangle.Vectors[0].Z * w0 + triangle.Vectors[1].Z * w1 + triangle.Vectors[2].Z * w2) / area;
+                            int bufLocation = y * Width + x;
+
+                            if (interZ < _depthBuffer[bufLocation])
+                            {
+                                return false;
+                            }
+                        }
+
+                        w0 += A12;
+                        w1 += A20;
+                        w2 += A01;
+                    }
+
+                    w0_row += B12;
+                    w1_row += B20;
+                    w2_row += B01;
+                }
+            }
+
+            return true;
         }
 
         public bool TransformPolygon(Vector4[] vectors, int threadNumber)
@@ -112,10 +276,10 @@ namespace DungeonHack.OcclusionCulling
                 cameraVectors[i] = Multiply(_camera.ViewProjectionMatrix, vectors[i]);
 
                 float ndcVectorsX = cameraVectors[i].X / cameraVectors[i].W;
-                float ndcVectorsY = cameraVectors[i].Y / cameraVectors[i].W; 
+                float ndcVectorsY = cameraVectors[i].Y / cameraVectors[i].W;
 
-                rasterVectors[i].X = ((ndcVectorsX + 1) / 2 * Width);
-                rasterVectors[i].Y = ((1 - ndcVectorsY) / 2 * Height);
+                rasterVectors[i].X = ((ndcVectorsX + 1) * halfWidth);/// 2 * Width);
+                rasterVectors[i].Y = ((1 - ndcVectorsY) * halfHeight);/// 2 * Height);
                 rasterVectors[i].Z = cameraVectors[i].Z;
 
                 if (rasterVectors[i].X > maxx)
@@ -196,6 +360,10 @@ namespace DungeonHack.OcclusionCulling
 
                 Point p = new Point(triangle.minX, triangle.minY);
                 int area = Orient2d(v0, v1, v2);
+
+                if (area <= 0)
+                    continue;
+
                 int w0_row = Orient2d(v1, v2, p);
                 int w1_row = Orient2d(v2, v0, p);
                 int w2_row = Orient2d(v0, v1, p);
@@ -210,11 +378,12 @@ namespace DungeonHack.OcclusionCulling
                     {
                         if ((w0 >= 0 && w1 >= 0 && w2 >= 0) && (area > 0))
                         {
-                            float w0area = (float) w0 / area;
-                            float w1area = (float) w1 / area;
-                            float w2area = (float) w2 / area;
+                            //float w0area = (float) w0 / area;
+                            //float w1area = (float) w1 / area;
+                            //float w2area = (float) w2 / area;
                             // linearly interpolate sample depth
-                            float interZ = triangle.Vectors[0].Z * w0area + triangle.Vectors[1].Z * w1area + triangle.Vectors[2].Z * w2area;
+                            //float interZ = triangle.Vectors[0].Z * w0area + triangle.Vectors[1].Z * w1area + triangle.Vectors[2].Z * w2area;
+                            float interZ = (triangle.Vectors[0].Z * w0 + triangle.Vectors[1].Z * w1 + triangle.Vectors[2].Z * w2) / area;
                             int bufLocation = y * Width + x;
 
                             if (interZ < _depthBuffer[bufLocation])

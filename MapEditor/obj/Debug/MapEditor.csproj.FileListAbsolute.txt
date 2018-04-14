@@ -231,3 +231,6 @@ C:\git\DungeonHackPlayTime\MapEditor\obj\Debug\MapEditor.exe.manifest
 C:\git\DungeonHackPlayTime\MapEditor\obj\Debug\MapEditor.application
 C:\git\DungeonHackPlayTime\MapEditor\obj\Debug\MapEditor.exe
 C:\git\DungeonHackPlayTime\MapEditor\obj\Debug\MapEditor.pdb
+C:\git\DungeonHackPlayTime\MapEditor\obj\Debug\MapEditor.csproj.CoreCompileInputs.cache
+C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\NBidi.dll
+C:\git\DungeonHackPlayTime\MapEditor\obj\Debug\MapEditor.csproj.CopyComplete

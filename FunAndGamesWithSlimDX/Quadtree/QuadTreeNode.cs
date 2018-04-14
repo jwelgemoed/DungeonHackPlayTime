@@ -1,4 +1,5 @@
-﻿using FunAndGamesWithSharpDX.Entities;
+﻿using DungeonHack.Entities;
+using FunAndGamesWithSharpDX.Entities;
 using SharpDX;
 using System.Collections.Generic;
 
@@ -6,7 +7,9 @@ namespace DungeonHack.QuadTree
 {
     public class QuadTreeNode
     {
-        public BoundingBox BoundingBox { get; set; }
+        public int Id { get; set; }
+
+        public AABoundingBox BoundingBox { get; set; }
 
         public IEnumerable<Polygon> Polygons { get; set; }
 

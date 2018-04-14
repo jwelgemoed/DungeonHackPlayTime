@@ -39,8 +39,8 @@ namespace DungeonHack.QuadTree
 
         public void DrawQuadTree(QuadTreeNode node, Frustrum frustrum, Camera camera, ref int meshRenderedCount)
         {
-            //DrawQuadTreeRecursive(node, frustrum, camera);
             _stopwatch.Start();
+
             for (int i = 0; i < _threadCount; i++)
             {
                 int j = i;
@@ -76,8 +76,6 @@ namespace DungeonHack.QuadTree
 
             _stopwatch.Restart();
 
-            //DrawQuadTreeAlternative(node, camera);
-
             for (int i = 0; i < _threadCount; i++)
             {
                 for (int j = 0; j < _endOfList[i]; j++)
@@ -96,10 +94,20 @@ namespace DungeonHack.QuadTree
         {
             QuadTreeNode node;
             _nodeStack[threadCount].Push(root);
+            int depth = 1;
 
             while (_nodeStack[threadCount].Count > 0)
             {
+                depth--;
                 node = _nodeStack[threadCount].Pop();
+
+                if (!node.BoundingBox.ContainsOrIntersectsCamera(camera) &&
+                    (frustrum.CheckBoundingBox(node.BoundingBox.BoundingBox) == 0
+                        || _depthBuffer.IsBoundingBoxOccluded(node.BoundingBox)
+                        || node.BoundingBox.DistanceToCamera(camera) >= 2500))
+                {
+                    continue;
+                }
 
                 if (node.IsLeaf)
                 {
@@ -138,62 +146,28 @@ namespace DungeonHack.QuadTree
                 }
                 else
                 {
-                    if (node.Octant1 != null && frustrum.CheckBoundingBox(node.Octant1.BoundingBox) != 0
-                        && !_depthBuffer.IsBoundingBoxOccluded(node.Octant1.BoundingBox))
+                    int currentdepth = depth;
+
+                    if (node.Octant1 != null)
                     {
                         _nodeStack[threadCount].Push(node.Octant1);
+                        depth++;
                     }
-                    if (node.Octant2 != null && frustrum.CheckBoundingBox(node.Octant2.BoundingBox) != 0
-                        && !_depthBuffer.IsBoundingBoxOccluded(node.Octant2.BoundingBox))
+                    if (node.Octant2 != null)
                     {
                         _nodeStack[threadCount].Push(node.Octant2);
+                        depth++;
                     }
-                    if (node.Octant3 != null && frustrum.CheckBoundingBox(node.Octant3.BoundingBox) != 0
-                        && !_depthBuffer.IsBoundingBoxOccluded(node.Octant3.BoundingBox))
+                    if (node.Octant3 != null)
                     {
                         _nodeStack[threadCount].Push(node.Octant3);
+                        depth++;
                     }
-                    if (node.Octant4 != null && frustrum.CheckBoundingBox(node.Octant4.BoundingBox) != 0
-                        && !_depthBuffer.IsBoundingBoxOccluded(node.Octant4.BoundingBox))
+                    if (node.Octant4 != null)
                     {
                         _nodeStack[threadCount].Push(node.Octant4);
+                        depth++;
                     }
-                }
-            }
-        }
-
-
-        private void DrawQuadTreeRecursive(QuadTreeNode node, Frustrum frustrum)
-        {
-            if (node.Octant1 != null)
-            {
-                if (frustrum.CheckBoundingBox(node.Octant1.BoundingBox) != 0)
-                    DrawQuadTreeRecursive(node.Octant1, frustrum);
-            }
-
-            if (node.Octant2 != null)
-            {
-                if (frustrum.CheckBoundingBox(node.Octant2.BoundingBox) != 0)
-                    DrawQuadTreeRecursive(node.Octant2, frustrum);
-            }
-
-            if (node.Octant3 != null)
-            {
-                if (frustrum.CheckBoundingBox(node.Octant3.BoundingBox) != 0)
-                    DrawQuadTreeRecursive(node.Octant3, frustrum);
-            }
-
-            if (node.Octant4 != null)
-            {
-                if (frustrum.CheckBoundingBox(node.Octant4.BoundingBox) != 0)
-                    DrawQuadTreeRecursive(node.Octant4, frustrum);
-            }
-
-            if (node.IsLeaf)
-            {
-                foreach (var polygon in node.Polygons)
-                {
-                    //_renderList.Add(polygon);
                 }
             }
         }

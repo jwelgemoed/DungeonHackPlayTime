@@ -164,3 +164,6 @@ C:\git\DungeonHackPlayTime\GameData\bin\Debug\AutoMapper.xml
 C:\git\DungeonHackPlayTime\GameData\obj\Debug\GameData.csprojResolveAssemblyReference.cache
 C:\git\DungeonHackPlayTime\GameData\obj\Debug\GameData.dll
 C:\git\DungeonHackPlayTime\GameData\obj\Debug\GameData.pdb
+C:\git\DungeonHackPlayTime\GameData\obj\Debug\GameData.csproj.CoreCompileInputs.cache
+C:\git\DungeonHackPlayTime\GameData\bin\Debug\NBidi.dll
+C:\git\DungeonHackPlayTime\GameData\obj\Debug\GameData.csproj.CopyComplete
