@@ -165,7 +165,7 @@ namespace DungeonHack.OcclusionCulling
                         if (maxx >= Width)
                         {
                             maxx = Width;
-                         //   return false;
+                            return false;
                         }
                     }
 
@@ -176,7 +176,7 @@ namespace DungeonHack.OcclusionCulling
                         if (minx < 0)
                         {
                             minx = 0;
-                            //return false;
+                            return false;
                         }
                     }
 
@@ -187,7 +187,7 @@ namespace DungeonHack.OcclusionCulling
                         if (maxy > Height)
                         {
                             maxy = Height;
-                          //  return false;
+                            return false;
                         }
                     }
 
@@ -198,7 +198,7 @@ namespace DungeonHack.OcclusionCulling
                         if (miny < 0)
                         {
                             miny = 0;
-                          //  return false;
+                            return false;
                         }
                     }
                 }

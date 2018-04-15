@@ -14,6 +14,8 @@ namespace DungeonHack.Entities
 
         public Vector4[] Vectors { get; set; }
 
+        public Vector3[] Vectors3 { get; set; }
+
         public int[] Indexes { get; set; }
 
         public Vector4 Center { get; private set; }
@@ -33,10 +35,12 @@ namespace DungeonHack.Entities
             BoundingBox = box;
             var corners = box.GetCorners();
             Vectors = new Vector4[corners.Length];
-
+            Vectors3 = new Vector3[corners.Length];
+            
             for (int i = 0; i < corners.Length; i++)
             {
                 Vectors[i] = new Vector4(corners[i], 1.0f);
+                Vectors3[i] = corners[i];
             }
 
             var minimum = BoundingBox.Minimum;
@@ -94,6 +98,13 @@ namespace DungeonHack.Entities
 	            //0, 6, 5,
              //   1, 6, 0
             };
+
+            var front = new SharpDX.Plane(corners[Indexes[4]], corners[Indexes[5]], corners[Indexes[6]]);
+            var back = new SharpDX.Plane(corners[Indexes[2]], corners[Indexes[1]], corners[Indexes[0]]);
+            var top = new SharpDX.Plane(corners[Indexes[0]], corners[Indexes[1]], corners[Indexes[5]]);
+            var bottom = new SharpDX.Plane(corners[Indexes[3]], corners[Indexes[2]], corners[Indexes[6]]);
+            var left = new SharpDX.Plane(corners[Indexes[0]], corners[Indexes[4]], corners[Indexes[7]]);
+            var right = new SharpDX.Plane(corners[Indexes[6]], corners[Indexes[5]], corners[Indexes[1]]);
         }
     }
 }
