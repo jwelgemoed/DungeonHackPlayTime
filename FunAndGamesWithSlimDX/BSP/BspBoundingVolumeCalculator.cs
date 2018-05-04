@@ -32,22 +32,22 @@ namespace DungeonHack.BSP
                 {
                     if (node.BoundingVolume.HasValue)
                     {
-                        node.BoundingVolume = BoundingBox.Merge(node.BoundingVolume.Value, boundingBox);
+                        node.BoundingVolume = BoundingBox.Merge(node.BoundingVolume.Value, boundingBox.BoundingBox);
                     }
                     else
                     {
-                        node.BoundingVolume = boundingBox;
+                        node.BoundingVolume = boundingBox.BoundingBox;
                     }
                 }
                 else
                 {
                     if (node.BoundingVolume.HasValue)
                     {
-                        node.BoundingVolume = BoundingBox.Merge(node.BoundingVolume.Value, BoundingBox.Merge(boundingBox, volume.Value));
+                        node.BoundingVolume = BoundingBox.Merge(node.BoundingVolume.Value, BoundingBox.Merge(boundingBox.BoundingBox, volume.Value));
                     }
                     else
                     {
-                        node.BoundingVolume = BoundingBox.Merge(boundingBox, volume.Value);
+                        node.BoundingVolume = BoundingBox.Merge(boundingBox.BoundingBox, volume.Value);
                     }
                 }
             }

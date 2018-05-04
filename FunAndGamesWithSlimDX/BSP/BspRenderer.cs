@@ -150,7 +150,7 @@ namespace DungeonHack.BSP
                 }
 
                 //Do frustrum culling for current polygon
-                if (frustrum.CheckBoundingBox(node.Splitter.BoundingBox) != 0)
+                if (frustrum.CheckBoundingBox(node.Splitter.BoundingBox.BoundingBox) != 0)
                 {
                     _renderList.Add(node.Splitter);
                 }
@@ -164,7 +164,7 @@ namespace DungeonHack.BSP
                     DrawBspTreeFrontToBackRecurse(node.Front, position, frustrum, ref meshRenderedCount);
 
                 //Do frustrum culling for current polygon
-                if (frustrum.CheckBoundingBox(node.Splitter.BoundingBox) != 0)
+                if (frustrum.CheckBoundingBox(node.Splitter.BoundingBox.BoundingBox) != 0)
                 {
                     _renderList.Add(node.Splitter);
                 }

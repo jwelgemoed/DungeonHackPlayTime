@@ -146,6 +146,7 @@ C:\git\DungeonHackPlayTime\GameData\bin\Debug\SharpDX.Direct3D11.Effects.dll
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\SharpDX.DXGI.dll
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\AutoMapper.dll
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\SpriteTextRenderer.dll
+C:\git\DungeonHackPlayTime\GameData\bin\Debug\NBidi.dll
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\DungeonHack.pdb
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\DungeonHack.dll.config
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\AssimpNet.xml
@@ -162,8 +163,7 @@ C:\git\DungeonHackPlayTime\GameData\bin\Debug\SharpDX.Direct3D11.Effects.xml
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\SharpDX.DXGI.xml
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\AutoMapper.xml
 C:\git\DungeonHackPlayTime\GameData\obj\Debug\GameData.csprojResolveAssemblyReference.cache
+C:\git\DungeonHackPlayTime\GameData\obj\Debug\GameData.csproj.CoreCompileInputs.cache
+C:\git\DungeonHackPlayTime\GameData\obj\Debug\GameData.csproj.CopyComplete
 C:\git\DungeonHackPlayTime\GameData\obj\Debug\GameData.dll
 C:\git\DungeonHackPlayTime\GameData\obj\Debug\GameData.pdb
-C:\git\DungeonHackPlayTime\GameData\obj\Debug\GameData.csproj.CoreCompileInputs.cache
-C:\git\DungeonHackPlayTime\GameData\bin\Debug\NBidi.dll
-C:\git\DungeonHackPlayTime\GameData\obj\Debug\GameData.csproj.CopyComplete

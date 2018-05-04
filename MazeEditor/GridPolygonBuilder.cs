@@ -12,6 +12,7 @@ namespace MazeEditor
         private GridBoard _gridBoard;
         private Device _device;
         private Shader _shader;
+        private int _baseSize = 64;
 
         public GridPolygonBuilder(GridBoard gridboard, Device device, Shader shader)
         {
@@ -31,10 +32,10 @@ namespace MazeEditor
                     if (_gridBoard.Grid[i, j] == NodeType.Empty)
                         continue;
 
-                    int startx = i * 64;
-                    int endx = (i+1) * 64;
-                    int starty = j * 64 ;
-                    int endy = (j+1) * 64;
+                    int startx = i * _baseSize;
+                    int endx = (i+1) * _baseSize;
+                    int starty = j * _baseSize ;
+                    int endy = (j+1) * _baseSize;
 
                     if (i > 0 && (_gridBoard.Grid[i - 1, j] == NodeType.Empty))
                     {
@@ -164,19 +165,19 @@ namespace MazeEditor
             Vector3[] vectors = new Vector3[4];
 
             vectors[0].X = startx;
-            vectors[0].Y = 64.0f;
+            vectors[0].Y = _baseSize;
             vectors[0].Z = starty;
 
             vectors[1].X = endx;
-            vectors[1].Y = 64.0f;
+            vectors[1].Y = _baseSize;
             vectors[1].Z = starty;
 
             vectors[2].X = endx;
-            vectors[2].Y = 64.0f;
+            vectors[2].Y = _baseSize;
             vectors[2].Z = endy;
 
             vectors[3].X = startx;
-            vectors[3].Y = 64.0f;
+            vectors[3].Y = _baseSize;
             vectors[3].Z = endy;
 
             //Indexes for the above square
@@ -258,11 +259,11 @@ namespace MazeEditor
             Vector3[] vectors = new Vector3[4];
 
             vectors[0].X = startx;
-            vectors[0].Y = 64.0f;
+            vectors[0].Y = _baseSize;
             vectors[0].Z = starty;
 
             vectors[1].X = endx;
-            vectors[1].Y = 64.0f;
+            vectors[1].Y = _baseSize;
             vectors[1].Z = endy;
 
             vectors[2].X = endx;

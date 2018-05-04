@@ -12,7 +12,7 @@ namespace DungeonHack.BSP
 
             foreach (var mesh in meshes)
             {
-                startBox = BoundingBox.Merge(startBox, mesh.BoundingBox);
+                startBox = BoundingBox.Merge(startBox, mesh.BoundingBox.BoundingBox);
             }
 
             return startBox;

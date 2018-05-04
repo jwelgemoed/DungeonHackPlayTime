@@ -225,6 +225,7 @@
     <Compile Include="DirectX\Renderer.cs" />
     <Compile Include="Quadtree\QuadTreeBuilder.cs" />
     <Compile Include="Quadtree\QuadTreeNode.cs" />
+    <Compile Include="Quadtree\QuadTreeLeafNodeRenderer.cs" />
     <Compile Include="Quadtree\QuadTreeRenderer.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="DirectX\Texture.cs" />

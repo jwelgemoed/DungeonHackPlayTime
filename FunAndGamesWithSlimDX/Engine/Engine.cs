@@ -143,7 +143,7 @@ namespace FunAndGamesWithSharpDX.Engine
                     DisplayConsoleInformation();
                     FontRenderer.FinalizeDraw();
                     SpriteRenderer.FinalizeDraw();
-                    Renderer.SwapChain.Present(0, PresentFlags.None);
+                    Renderer.SwapChain.Present(1, PresentFlags.None);
                     _updateTime = _stopwatch.ElapsedMilliseconds;
                     break;
 

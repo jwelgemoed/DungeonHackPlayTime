@@ -94,7 +94,7 @@ namespace DungeonHack.BSP
                         result = nodeItem.Item2;
                     }
 
-                    if (frustrum.CheckBoundingBox(node.Splitter.BoundingBox) != 0)
+                    if (frustrum.CheckBoundingBox(node.Splitter.BoundingBox.BoundingBox) != 0)
                     {
                         _renderList.Add(node.Splitter);
                     }
@@ -144,7 +144,7 @@ namespace DungeonHack.BSP
             }
 
             //Do frustrum culling for current polygon
-            if (frustrum.CheckBoundingBox(node.Splitter.BoundingBox) != 0)
+            if (frustrum.CheckBoundingBox(node.Splitter.BoundingBox.BoundingBox) != 0)
             {
                 _renderList.Add(node.Splitter);
             }

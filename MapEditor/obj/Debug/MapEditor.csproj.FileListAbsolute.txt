@@ -193,6 +193,7 @@ C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SpriteTextRenderer.SharpDX.dll
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SharpDX.Desktop.dll
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\AutoMapper.dll
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SpriteTextRenderer.dll
+C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\NBidi.dll
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\DungeonHack.pdb
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\DungeonHack.dll.config
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\GameData.pdb
@@ -226,11 +227,10 @@ C:\git\DungeonHackPlayTime\MapEditor\obj\Debug\MapEditor_MarkupCompile.lref
 C:\git\DungeonHackPlayTime\MapEditor\obj\Debug\MapEditorWindow.baml
 C:\git\DungeonHackPlayTime\MapEditor\obj\Debug\MapEditor.g.resources
 C:\git\DungeonHackPlayTime\MapEditor\obj\Debug\MapEditor.Properties.Resources.resources
-C:\git\DungeonHackPlayTime\MapEditor\obj\Debug\MapEditor.csproj.GenerateResource.Cache
+C:\git\DungeonHackPlayTime\MapEditor\obj\Debug\MapEditor.csproj.GenerateResource.cache
+C:\git\DungeonHackPlayTime\MapEditor\obj\Debug\MapEditor.csproj.CoreCompileInputs.cache
 C:\git\DungeonHackPlayTime\MapEditor\obj\Debug\MapEditor.exe.manifest
 C:\git\DungeonHackPlayTime\MapEditor\obj\Debug\MapEditor.application
+C:\git\DungeonHackPlayTime\MapEditor\obj\Debug\MapEditor.csproj.CopyComplete
 C:\git\DungeonHackPlayTime\MapEditor\obj\Debug\MapEditor.exe
 C:\git\DungeonHackPlayTime\MapEditor\obj\Debug\MapEditor.pdb
-C:\git\DungeonHackPlayTime\MapEditor\obj\Debug\MapEditor.csproj.CoreCompileInputs.cache
-C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\NBidi.dll
-C:\git\DungeonHackPlayTime\MapEditor\obj\Debug\MapEditor.csproj.CopyComplete

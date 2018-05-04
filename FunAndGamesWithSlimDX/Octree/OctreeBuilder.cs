@@ -21,8 +21,8 @@ namespace DungeonHack.Octree
 
             foreach (var polygon in polygons)
             {
-                var minBox = polygon.BoundingBox.Minimum;
-                var maxBox = polygon.BoundingBox.Maximum;
+                var minBox = polygon.BoundingBox.BoundingBox.Minimum;
+                var maxBox = polygon.BoundingBox.BoundingBox.Maximum;
 
                 if (minBox.X < minimumVector.X)
                 {
@@ -175,7 +175,7 @@ namespace DungeonHack.Octree
             };
 
             //contained or intersected polygons...that means intersected polygons will end up in more than 1 octant.
-            var containedPolygons = polygons.Where(x => node.BoundingBox.Contains(x.BoundingBox) != ContainmentType.Disjoint);
+            var containedPolygons = polygons.Where(x => node.BoundingBox.Contains(x.BoundingBox.BoundingBox) != ContainmentType.Disjoint);
 
             if (containedPolygons.Count() == 0)
                 return null;

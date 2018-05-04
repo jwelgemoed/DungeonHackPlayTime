@@ -158,6 +158,15 @@ namespace DungeonHack.OcclusionCulling
                     rasterVecs[j].Y = (int)((1 - ndcY) * halfHeight);/// 2 * Height);
                     rasterVecs[j].Z = camVec.Z;
 
+                    //backface culling
+                    //Vector3 u = rasterVecs[1] - rasterVecs[0];
+                    //Vector3 v = rasterVecs[2] - rasterVecs[0];
+
+                    //if (((u.X * v.Y - u.Y * v.X) < 0) && rasterVecs[0].Z > 100)
+                    //{
+                    //    break;
+                    //}
+
                     if (rasterVecs[j].X > maxx)
                     {
                         maxx = (int)rasterVecs[j].X;
@@ -203,6 +212,15 @@ namespace DungeonHack.OcclusionCulling
                     }
                 }
 
+                //backface culling
+                //Vector3 u = rasterVecs[1] - rasterVecs[0];
+                //Vector3 v = rasterVecs[2] - rasterVecs[0];
+
+                //if (((u.X * v.Y - u.Y * v.X) < 0) && rasterVecs[0].Z > 100)
+                //{
+                //    break;
+                //}
+
                 triangle.Vectors = rasterVecs;
                 triangle.minX = minx;
                 triangle.maxX = maxx;
@@ -239,7 +257,7 @@ namespace DungeonHack.OcclusionCulling
                             // linearly interpolate sample depth
                             //float interZ = triangle.Vectors[0].Z * w0area + triangle.Vectors[1].Z * w1area + triangle.Vectors[2].Z * w2area;
                             float interZ = (triangle.Vectors[0].Z * w0 + triangle.Vectors[1].Z * w1 + triangle.Vectors[2].Z * w2) / area;
-                            int bufLocation = y * Width + x;
+                            int bufLocation = (y * Width) + x;
 
                             if (interZ < _depthBuffer[bufLocation])
                             {
@@ -326,7 +344,7 @@ namespace DungeonHack.OcclusionCulling
             //backface culling
             Vector3 u = rasterVectors[1] - rasterVectors[0];
             Vector3 v = rasterVectors[2] - rasterVectors[0];
-            
+
             if (((u.X * v.Y - u.Y * v.X) < 0) && rasterVectors[0].Z > 100)
             {
                 return false;

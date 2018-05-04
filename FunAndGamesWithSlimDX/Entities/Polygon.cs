@@ -1,4 +1,5 @@
 ﻿using DungeonHack.DirectX;
+using DungeonHack.Entities;
 using FunAndGamesWithSharpDX.DirectX;
 using SharpDX;
 using System;
@@ -22,7 +23,7 @@ namespace FunAndGamesWithSharpDX.Entities
 
         public Vector3 Normal { get { return VertexData[0].Normal; } }
 
-        public BoundingBox BoundingBox { get; set; }
+        public AABoundingBox BoundingBox { get; set; }
 
         public int TextureIndex { get; set; }
         public int MaterialIndex { get; set; }
@@ -33,6 +34,8 @@ namespace FunAndGamesWithSharpDX.Entities
         public Matrix WorldMatrix { get; set; }
 
         public bool HasBeenUsedAsSplitPlane { get; set; }
+
+        public bool HasBeenProcessedForRenderingThisFrame { get; set; }
 
         public OcclusionQuery OcclusionQuery { get; private set; }
 

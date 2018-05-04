@@ -12,17 +12,21 @@ namespace DungeonHack.QuadTree
 
         public int NumberOfNodes { get; private set; }
 
+        public IList<QuadTreeNode> LeafNodeList { get; private set; }
+
         public QuadTreeNode BuildTree(IEnumerable<Polygon> polygons)
         {
             NumberOfNodes = 1;
+
+            LeafNodeList = new List<QuadTreeNode>();
            
             Vector3 minimumVector = new Vector3();
             Vector3 maximumVector = new Vector3();
 
             foreach (var polygon in polygons)
             {
-                var minBox = polygon.BoundingBox.Minimum;
-                var maxBox = polygon.BoundingBox.Maximum;
+                var minBox = polygon.BoundingBox.BoundingBox.Minimum;
+                var maxBox = polygon.BoundingBox.BoundingBox.Maximum;
 
                 if (minBox.X < minimumVector.X)
                 {
@@ -78,6 +82,8 @@ namespace DungeonHack.QuadTree
             if ((node.Octant1 == null) && (node.Octant2 == null) && (node.Octant3 == null) && (node.Octant4 == null))
             {
                 node.IsLeaf = true;
+
+                LeafNodeList.Add(node);
                 return;
             }
 
@@ -100,8 +106,8 @@ namespace DungeonHack.QuadTree
             TreeDepth = treeDepth;
 
             //Build subnodes
-            var min = node.BoundingBox.BoundingBox.Minimum - 1;
-            var max = node.BoundingBox.BoundingBox.Maximum + 1;
+            var min = node.BoundingBox.BoundingBox.Minimum ;
+            var max = node.BoundingBox.BoundingBox.Maximum ;
             var halfMax = (node.BoundingBox.BoundingBox.Maximum - node.BoundingBox.BoundingBox.Minimum) / 2;
 
             //octant1
@@ -137,14 +143,14 @@ namespace DungeonHack.QuadTree
             };
 
             //contained or intersected polygons...that means intersected polygons will end up in more than 1 octant.
-            var containedPolygons = polygons.Where(x => node.BoundingBox.BoundingBox.Contains(x.BoundingBox) != ContainmentType.Disjoint);
+            var containedPolygons = polygons.Where(x => node.BoundingBox.BoundingBox.Contains(x.BoundingBox.BoundingBox) != ContainmentType.Disjoint);
 
             if (containedPolygons.Count() == 0)
                 return null;
 
             node.Polygons = containedPolygons;
 
-            if (//(node.Polygons.Count() > 64) &&
+            if ((node.Polygons.Count() > 64) &&
                     (treeDepth < 2))
             { 
                 BuildQuadTree(node, containedPolygons, treeDepth + 1);

@@ -108,24 +108,21 @@ namespace FunAndGamesWithSharpDX.DirectX
 
             _context.GeometryShader.Set(geometryShader);
         }
+                      
+        //public void Render(DeviceContext context, ShaderResourceView texture, )
+        //{
+        //    //_perObjectBuffer.WorldMatrix = worldMatrix;
+        //    //_perObjectBuffer.WorldMatrix.Transpose();
+        //    //_perObjectBuffer.ViewProjectionMatrix = viewProjectionMatrix;
+        //    //_perObjectBuffer.ViewProjectionMatrix.Transpose();
+        //    //_perObjectBuffer.Material = material;
 
+        //    //context.UpdateSubresource(ref _perObjectBuffer, _vertexBuffer);
 
-              
-        public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewProjectionMatrix,
-                           ShaderResourceView texture, Vector3 cameraPosition, Material material)
-        {
-            //_perObjectBuffer.WorldMatrix = worldMatrix;
-            //_perObjectBuffer.WorldMatrix.Transpose();
-            //_perObjectBuffer.ViewProjectionMatrix = viewProjectionMatrix;
-            //_perObjectBuffer.ViewProjectionMatrix.Transpose();
-            //_perObjectBuffer.Material = material;
+        //    //context.PixelShader.SetShaderResource(0, texture);
 
-            //context.UpdateSubresource(ref _perObjectBuffer, _vertexBuffer);
-
-            //context.PixelShader.SetShaderResource(0, texture);
-
-            //context.DrawIndexed(indexCount, 0, 0);
-        }
+        //    //context.DrawIndexed(indexCount, 0, 0);
+        //}
 
         public void Dispose()
         {

@@ -15,6 +15,7 @@ namespace DungeonHack
         private readonly DeviceContext _deviceContext;
         private readonly Camera _camera;
         private readonly Shader _shader;
+        private object _lock = new object() ;
 
         public PolygonRenderer(MaterialDictionary materialDictionary, 
                             TextureDictionary textureDictionary,
@@ -38,18 +39,21 @@ namespace DungeonHack
             //    return;
             //}
 
-            polygonRenderedCount++;
+            lock (_lock)
+            {
+                polygonRenderedCount++;
 
-            _deviceContext.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(polygon.VertexBuffer, Vertex.SizeOf, 0));
-            _deviceContext.InputAssembler.SetIndexBuffer(polygon.IndexBuffer, Format.R16_UInt, 0);
+                _deviceContext.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(polygon.VertexBuffer, Vertex.SizeOf, 0));
+                _deviceContext.InputAssembler.SetIndexBuffer(polygon.IndexBuffer, Format.R16_UInt, 0);
 
-            _shader.Render(_deviceContext, 
-                            polygon.IndexData.Length, 
-                            polygon.WorldMatrix, 
-                            viewProjectionMatrix,
-                            _textureDictionary.GetTexture(polygon.TextureIndex).TextureData, 
-                            _camera.GetPosition(), 
-                            _materialDictionary.GetMaterial(polygon.MaterialIndex));
+                _shader.Render(_deviceContext,
+                                polygon.IndexData.Length,
+                                polygon.WorldMatrix,
+                                viewProjectionMatrix,
+                                _textureDictionary.GetTexture(polygon.TextureIndex).TextureData,
+                                _camera.GetPosition(),
+                                _materialDictionary.GetMaterial(polygon.MaterialIndex));
+            }
         }
     }
 }

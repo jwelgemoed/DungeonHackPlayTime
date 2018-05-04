@@ -121,11 +121,13 @@ namespace MazeEditor
             BspBoundingVolumeCalculator bspBoudingVolumeCalculator = new BspBoundingVolumeCalculator();
             LeafBspTreeBuilder leafTreeBuilder = new LeafBspTreeBuilder(_mazeRunner.Device, _mazeRunner.GetShader);
 
-           /* var rootNode = bspTreeBuilder.BuildTree(_mazeRunner.Meshes);
-            bspBoudingVolumeCalculator.ComputeBoundingVolumes(rootNode);
+            /* var rootNode = bspTreeBuilder.BuildTree(_mazeRunner.Meshes);
+             bspBoudingVolumeCalculator.ComputeBoundingVolumes(rootNode);
 
-            _mazeRunner.BspNodes = bspTreeBuilder.TransformNodesToOptomizedNodes(rootNode);*/
-
+             _mazeRunner.BspNodes = bspTreeBuilder.TransformNodesToOptomizedNodes(rootNode);*/
+            var quadTreeBuilder = new QuadTreeBuilder();
+            var quadtreeNode = quadTreeBuilder.BuildTree(_mazeRunner.Meshes);
+            _mazeRunner.QuadTreeLeafNodes = quadTreeBuilder.LeafNodeList;
             _mazeRunner.InitializeScene();
 
             var octbuilder = new OctreeBuilder();
@@ -133,8 +135,6 @@ namespace MazeEditor
             var octRootNode = octbuilder.BuildTree(_mazeRunner.Meshes);
             _mazeRunner.OctreeRootNode = octRootNode;
 
-            var quadTreeBuilder = new QuadTreeBuilder();
-            var quadtreeNode = quadTreeBuilder.BuildTree(_mazeRunner.Meshes);
             _mazeRunner.QuadTreeNode = quadtreeNode;
 
             int numberOfNodes = quadTreeBuilder.NumberOfNodes;
@@ -175,7 +175,7 @@ namespace MazeEditor
 
                 rectangle.AddRectangleToCanvas(canvas);
 
-                MessageBox.Show("ok");
+                //MessageBox.Show("ok");
 
                 if (!node.IsLeaf)
                 {

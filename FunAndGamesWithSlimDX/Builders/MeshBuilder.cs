@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Assimp;
+using DungeonHack.Entities;
 
 namespace DungeonHack.Builders
 {
@@ -247,10 +248,10 @@ namespace DungeonHack.Builders
                 _mesh.VertexData[i].Normal = normal;
             }
 
-            var minimumVector = Vector3.TransformCoordinate(_mesh.BoundingBox.Minimum, _mesh.WorldMatrix);
-            var maximumVector = Vector3.TransformCoordinate(_mesh.BoundingBox.Maximum, _mesh.WorldMatrix);
+            var minimumVector = Vector3.TransformCoordinate(_mesh.BoundingBox.BoundingBox.Minimum, _mesh.WorldMatrix);
+            var maximumVector = Vector3.TransformCoordinate(_mesh.BoundingBox.BoundingBox.Maximum, _mesh.WorldMatrix);
 
-            _mesh.BoundingBox = new BoundingBox(minimumVector, maximumVector);
+            _mesh.BoundingBox = new AABoundingBox(new BoundingBox(minimumVector, maximumVector));
 
         }
 
@@ -281,7 +282,7 @@ namespace DungeonHack.Builders
                     _mesh.IndexData[i] = (short)i;
             }
 
-            _mesh.BoundingBox = BoundingBox.FromPoints(positions);
+            _mesh.BoundingBox = new AABoundingBox(BoundingBox.FromPoints(positions));
         }
 
         private void SetIndexAndBoundingBoxDataFromVertexData()
@@ -292,7 +293,7 @@ namespace DungeonHack.Builders
             var positions = _mesh.VertexData
                             .Select(x => new Vector3(x.Position.X, x.Position.Y, x.Position.Z));
 
-            _mesh.BoundingBox = BoundingBox.FromPoints(positions.ToArray());
+            _mesh.BoundingBox = new AABoundingBox(BoundingBox.FromPoints(positions.ToArray()));
 
             if (_mesh.IndexData != null)
             {

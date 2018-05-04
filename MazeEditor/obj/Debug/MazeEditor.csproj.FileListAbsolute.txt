@@ -50,6 +50,7 @@ C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\SharpDX.Direct3D11.Effects.dll
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\AssimpNet.dll
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\AutoMapper.dll
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\SpriteTextRenderer.dll
+C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\NBidi.dll
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\DungeonHack.pdb
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\DungeonHack.dll.config
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\SharpDX.xml
@@ -71,9 +72,8 @@ C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor_MarkupCompile.lref
 C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MainWindow.baml
 C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor.g.resources
 C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor.Properties.Resources.resources
-C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor.csproj.GenerateResource.Cache
+C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor.csproj.GenerateResource.cache
+C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor.csproj.CoreCompileInputs.cache
+C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor.csproj.CopyComplete
 C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor.exe
 C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor.pdb
-C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor.csproj.CoreCompileInputs.cache
-C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\NBidi.dll
-C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor.csproj.CopyComplete

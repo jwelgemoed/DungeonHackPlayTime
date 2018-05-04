@@ -25,12 +25,14 @@ namespace MazeEditor
         private BspRendererOptomized _bspRenderer;
         private OctreeRenderer _octreeRenderer;
         private QuadTreeRenderer _quadTreeRenderer;
+        private QuadTreeLeafNodeRenderer _quadTreeLeafNodeRenderer;
         private PolygonRenderer _meshRenderer;
         private Matrix _viewProjectionMatrix;
 
         public BspNodeOptomized[] BspNodes { get; set; }
         public OctreeNode OctreeRootNode { get; set; }
         public QuadTreeNode QuadTreeNode { get; internal set; }
+        public IEnumerable<QuadTreeNode> QuadTreeLeafNodes { get; internal set; }
 
 
         public MazeRunner() : base(8.0f, true)
@@ -79,7 +81,8 @@ namespace MazeEditor
             //_octreeRenderer.DrawOctree(OctreeRootNode, _frustrum, Camera, ref _meshRenderedCount);
             //_bspRenderer.DrawBspTreeFrontToBack(Camera.EyeAt, _frustrum, ref _meshRenderedCount, Camera);
             _quadTreeRenderer.DrawQuadTree(QuadTreeNode, _frustrum, Camera, ref _meshRenderedCount);
-            
+            //_quadTreeLeafNodeRenderer.DrawQuadTree(_frustrum, Camera, ref _meshRenderedCount);
+
             //DrawBspTreeBackToFront(BspRootNode, Camera.EyeAt);
         }
 
@@ -122,6 +125,7 @@ namespace MazeEditor
             _bspRenderer = new BspRendererOptomized(base.Renderer.Device, _meshRenderer, new PointClassifier(), BspNodes);
             _octreeRenderer = new OctreeRenderer(_meshRenderer);
             _quadTreeRenderer = new QuadTreeRenderer(_meshRenderer, Camera);
+            _quadTreeLeafNodeRenderer = new QuadTreeLeafNodeRenderer(_meshRenderer, Camera, QuadTreeLeafNodes);
 
             Shader.Initialize(base.Renderer.Device, base.Renderer.Context);
 
