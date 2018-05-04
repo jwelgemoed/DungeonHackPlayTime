@@ -517,11 +517,7 @@ namespace FunAndGamesWithSharpDX.Engine
             direction = Vector3.TransformCoordinate(direction, matRotAxis * matRotY);
             _up = Vector3.TransformCoordinate(_up, matRotAxis * matRotY);
 
-            direction.Normalize();
-            _up.Normalize();
-
             _lookAt = direction + _eyeAt;
-            //_lookAt.Normalize();
         }
 
         private void TopdownRotate(float relativeX, float relativeY)

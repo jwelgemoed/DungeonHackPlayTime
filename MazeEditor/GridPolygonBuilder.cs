@@ -13,6 +13,9 @@ namespace MazeEditor
         private Device _device;
         private Shader _shader;
         private int _baseSize = 64;
+        private int _floorTextureIndex = 1;
+        private int _ceilingTextureIndex = 2;
+        private int _wallTextureIndex = 9;
 
         public GridPolygonBuilder(GridBoard gridboard, Device device, Shader shader)
         {
@@ -156,6 +159,7 @@ namespace MazeEditor
                             .SetModel(model)
                             .SetScaling(1, 1, 1)
                             .WithTransformToWorld()
+                            .SetTextureIndex(_floorTextureIndex)
                             .Build();
         }
 
@@ -250,6 +254,7 @@ namespace MazeEditor
                             .SetModel(model)
                             .SetScaling(1, 1, 1)
                             .WithTransformToWorld()
+                            .SetTextureIndex(_ceilingTextureIndex)
                             .Build();
         }
 
@@ -344,6 +349,7 @@ namespace MazeEditor
                             .SetModel(model)
                             .SetScaling(1, 1, 1)
                             .WithTransformToWorld()
+                            .SetTextureIndex(_wallTextureIndex)
                             .Build();
         }
 
