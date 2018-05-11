@@ -160,6 +160,7 @@
     <Compile Include="BSP\PVS\PVSCalculator.cs" />
     <Compile Include="BSP\SplitterSelector.cs" />
     <Compile Include="Builders\MeshBuilder.cs" />
+    <Compile Include="CollisionDetection\ICollisionDetector.cs" />
     <Compile Include="DirectX\ConstantBuffer\ConstantBufferPerFrame.cs" />
     <Compile Include="DirectX\ConstantBuffer\ConstantBufferPerObject.cs" />
     <Compile Include="DirectX\IShader.cs" />
@@ -170,6 +171,7 @@
     <Compile Include="DirectX\TextureShader.cs" />
     <Compile Include="DirectX\TextureLoader.cs" />
     <Compile Include="Entities\AABoundingBox.cs" />
+    <Compile Include="Entities\PolygonType.cs" />
     <Compile Include="Factories\ModelFactory.cs" />
     <Compile Include="Builders\PortalBuilder.cs" />
     <Compile Include="DirectX\EffectsShader.cs" />
@@ -223,10 +225,12 @@
     <Compile Include="PolygonRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DirectX\Renderer.cs" />
+    <Compile Include="CollisionDetection\QuadTreeCollisionDetector.cs" />
     <Compile Include="Quadtree\QuadTreeBuilder.cs" />
     <Compile Include="Quadtree\QuadTreeNode.cs" />
     <Compile Include="Quadtree\QuadTreeLeafNodeRenderer.cs" />
     <Compile Include="Quadtree\QuadTreeRenderer.cs" />
+    <Compile Include="Quadtree\QuadTreeTraverser.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="DirectX\Texture.cs" />
     <Compile Include="TextureDictionary.cs" />

@@ -1,4 +1,5 @@
 ﻿using DungeonHack.Builders;
+using DungeonHack.Entities;
 using FunAndGamesWithSharpDX.DirectX;
 using FunAndGamesWithSharpDX.Entities;
 using SharpDX;
@@ -160,6 +161,7 @@ namespace MazeEditor
                             .SetScaling(1, 1, 1)
                             .WithTransformToWorld()
                             .SetTextureIndex(_floorTextureIndex)
+                            .SetType(PolygonType.Floor)
                             .Build();
         }
 
@@ -255,6 +257,7 @@ namespace MazeEditor
                             .SetScaling(1, 1, 1)
                             .WithTransformToWorld()
                             .SetTextureIndex(_ceilingTextureIndex)
+                            .SetType(PolygonType.Ceiling)
                             .Build();
         }
 
@@ -350,6 +353,7 @@ namespace MazeEditor
                             .SetScaling(1, 1, 1)
                             .WithTransformToWorld()
                             .SetTextureIndex(_wallTextureIndex)
+                            .SetType(PolygonType.Wall)
                             .Build();
         }
 

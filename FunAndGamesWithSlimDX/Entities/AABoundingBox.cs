@@ -30,6 +30,11 @@ namespace DungeonHack.Entities
             return BoundingBox.Contains(camera.EyeAt) != ContainmentType.Disjoint;
         }
 
+        public bool CollidesWithCamera(Camera camera)
+        {
+            return BoundingBox.Intersects(camera.CameraSphere);
+        }
+
         public AABoundingBox(BoundingBox box)
         {
             BoundingBox = box;

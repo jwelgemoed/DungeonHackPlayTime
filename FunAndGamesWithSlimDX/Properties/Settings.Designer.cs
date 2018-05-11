@@ -43,7 +43,7 @@ namespace DungeonHack.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1280")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1200")]
         public int ScreenWidth {
             get {
                 return ((int)(this["ScreenWidth"]));
@@ -124,7 +124,7 @@ namespace DungeonHack.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool WallClip {
             get {
                 return ((bool)(this["WallClip"]));

@@ -11,6 +11,8 @@ using SharpDX.Direct3D11;
 using System;
 using System.Collections.Generic;
 using DungeonHack.QuadTree;
+using DungeonHack.CollisionDetection;
+using DungeonHack.Quadtree;
 
 namespace MazeEditor
 {
@@ -26,6 +28,8 @@ namespace MazeEditor
         private OctreeRenderer _octreeRenderer;
         private QuadTreeRenderer _quadTreeRenderer;
         private QuadTreeLeafNodeRenderer _quadTreeLeafNodeRenderer;
+        private QuadTreeCollisionDetector _quadTreeCollisionDetector;
+        private QuadTreeTraverser _quadTreeTraverser;
         private PolygonRenderer _meshRenderer;
         private Matrix _viewProjectionMatrix;
 
@@ -73,21 +77,18 @@ namespace MazeEditor
             _meshRenderedCount = 0;
             base._stopwatch.Restart();
 
-            //foreach (var mesh in Meshes)
-            //{
-            //    _meshRenderer.Render(_frustrum, mesh, ref _meshRenderedCount);
-            //}
-
             //_octreeRenderer.DrawOctree(OctreeRootNode, _frustrum, Camera, ref _meshRenderedCount);
             //_bspRenderer.DrawBspTreeFrontToBack(Camera.EyeAt, _frustrum, ref _meshRenderedCount, Camera);
             _quadTreeRenderer.DrawQuadTree(QuadTreeNode, _frustrum, Camera, ref _meshRenderedCount);
             //_quadTreeLeafNodeRenderer.DrawQuadTree(_frustrum, Camera, ref _meshRenderedCount);
 
-            //DrawBspTreeBackToFront(BspRootNode, Camera.EyeAt);
         }
 
         public override void UpdateScene()
         {
+            _quadTreeCollisionDetector.Camera = Camera;
+            _quadTreeCollisionDetector.CurrentNode = _quadTreeTraverser.FindCurrentCameraLeafNode(Camera);
+
             base.UpdateScene();
 
             var spotlight = new Spotlight(
@@ -126,6 +127,9 @@ namespace MazeEditor
             _octreeRenderer = new OctreeRenderer(_meshRenderer);
             _quadTreeRenderer = new QuadTreeRenderer(_meshRenderer, Camera);
             _quadTreeLeafNodeRenderer = new QuadTreeLeafNodeRenderer(_meshRenderer, Camera, QuadTreeLeafNodes);
+            _quadTreeTraverser = new QuadTreeTraverser(QuadTreeNode);
+            _quadTreeCollisionDetector = new QuadTreeCollisionDetector();
+            Camera.CollisionDetector = _quadTreeCollisionDetector;
 
             Shader.Initialize(base.Renderer.Device, base.Renderer.Context);
 
@@ -162,12 +166,14 @@ namespace MazeEditor
             LightEngine.AddSpotLight(_spotlight);
         }
 
-        public void Dispose()
+        public new void Dispose()
         {
             foreach (var mesh in Meshes)
                 mesh.Dispose();
 
             Shader.Dispose();
+
+            base.Dispose();
         }
     }
 }

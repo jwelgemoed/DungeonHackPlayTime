@@ -116,7 +116,6 @@ namespace FunAndGamesWithSharpDX.Engine
             {
                 Camera.ToggleTopDownView();
             }
-
         }
 
         protected void KeyUp(object sender, KeyEventArgs e)

@@ -1,4 +1,5 @@
-﻿using FunAndGamesWithSharpDX.DirectX;
+﻿using DungeonHack.CollisionDetection;
+using FunAndGamesWithSharpDX.DirectX;
 using FunAndGamesWithSharpDX.Entities;
 using SharpDX;
 using System;
@@ -122,6 +123,10 @@ namespace FunAndGamesWithSharpDX.Engine
             }
         }
 
+        public ICollisionDetector CollisionDetector { get; set; }
+        private bool _wallClip = true;
+        private Vector3 LastEyeAtWithNoCollision;
+
         public Camera()
         {
             _up = new Vector3(0, 1, 0);
@@ -143,6 +148,7 @@ namespace FunAndGamesWithSharpDX.Engine
             _zoomInAcceleration = ConfigManager.ZoomInAcceleration;
             _zoomOutAcceleration = ConfigManager.ZoomOutAcceleration;
             _maxZoomAcceleration = ConfigManager.MaxZoomAcceleration;
+            _wallClip = ConfigManager.WallClipEnabled;
             _topdownHeight = 1750.0f;
         }
 
@@ -183,21 +189,27 @@ namespace FunAndGamesWithSharpDX.Engine
         public void Move(MoveState moveState)
         {
             var direction = Vector3.Normalize(_lookAt - _eyeAt);
+            Vector3? invertedNormal = null;
 
-            MoveForward(moveState, direction, null);
-            MoveBackward(moveState, direction, null);
-            MoveLeft(moveState, direction, null);
-            MoveRight(moveState, direction, null);
-            MoveUp(moveState, direction, null);
-            MoveDown(moveState, direction, null);
-            
+            if (!_wallClip)
+            {
+                invertedNormal = CollisionDetector.HasCollided();
+            }
+
+            MoveForward(moveState, direction, invertedNormal);
+            MoveBackward(moveState, direction, invertedNormal);
+            MoveLeft(moveState, direction, invertedNormal);
+            MoveRight(moveState, direction, invertedNormal);
+            MoveUp(moveState, direction, invertedNormal);
+            MoveDown(moveState, direction, invertedNormal);
+
             if (RestrictMovementPlaneXZ)
             {
                 _eyeAt.Y = _startingEyeAt.Y;
             }
         }
 
-        private void MoveRight(MoveState moveState, Vector3 direction, Vector3? invertedNormal)
+        private void MoveRight(MoveState moveState, Vector3 direction, Vector3? normal)
         {
             if (moveState.MoveRight)
             {
@@ -211,15 +223,14 @@ namespace FunAndGamesWithSharpDX.Engine
                 direction = Vector3.Cross(direction, _up);
                 direction = Vector3.Normalize(direction);
 
-                if (invertedNormal.HasValue)
+                if (normal.HasValue)
                 {
-                    Vector3 desiredMotion = (Vector3.Dot(direction, invertedNormal.Value) * invertedNormal.Value);
-                    desiredMotion.Normalize();
-                    direction = direction - desiredMotion;
+                    direction = GetDirectionAfterCollision(direction, normal.Value);
                 }
 
                 if (RestrictMovementPlaneXZ)
                     direction.Y = 0.0f;
+
                 _eyeAt -= direction * _rightSpeed;
                 _lookAt -= direction * _rightSpeed;
             }
@@ -235,11 +246,9 @@ namespace FunAndGamesWithSharpDX.Engine
                 direction = Vector3.Cross(direction, _up);
                 direction = Vector3.Normalize(direction);
 
-                if (invertedNormal.HasValue)
+                if (normal.HasValue)
                 {
-                    Vector3 desiredMotion = (Vector3.Dot(direction, invertedNormal.Value) * invertedNormal.Value);
-                    desiredMotion.Normalize();
-                    direction = direction - desiredMotion;
+                    direction = GetDirectionAfterCollision(direction, normal.Value);
                 }
 
                 if (RestrictMovementPlaneXZ)
@@ -249,7 +258,15 @@ namespace FunAndGamesWithSharpDX.Engine
             }
         }
 
-        private void MoveLeft(MoveState moveState, Vector3 direction, Vector3? invertedNormal)
+        private static Vector3 GetDirectionAfterCollision(Vector3 direction, Vector3 normal)
+        {
+            var invertedNormal = normal;//Vector3.Negate(normal);
+            invertedNormal = invertedNormal * (direction * normal).Length();
+
+            return direction - invertedNormal; 
+        }
+
+        private void MoveLeft(MoveState moveState, Vector3 direction, Vector3? normal)
         {
             if (moveState.MoveLeft)
             {
@@ -260,15 +277,18 @@ namespace FunAndGamesWithSharpDX.Engine
                     _leftSpeed = FrameTime * _maxSidewaysAcceleration;
                 }
 
+                if (normal.HasValue)
+                {
+                    direction = GetDirectionAfterCollision(direction, normal.Value);
+                }
+
                 direction = Vector3.Cross(direction, _up);
                 direction = Vector3.Normalize(direction);
 
-                if (invertedNormal.HasValue)
-                {
-                    Vector3 desiredMotion = (Vector3.Dot(direction, invertedNormal.Value) * invertedNormal.Value);
-                    desiredMotion.Normalize();
-                    direction = direction - desiredMotion;
-                }
+                //if (normal.HasValue)
+                //{
+                //    direction = GetDirectionAfterCollision(direction, normal.Value);
+                //}
 
                 if (RestrictMovementPlaneXZ)
                     direction.Y = 0.0f;
@@ -288,11 +308,9 @@ namespace FunAndGamesWithSharpDX.Engine
                 direction = Vector3.Cross(direction, _up);
                 direction = Vector3.Normalize(direction);
 
-                if (invertedNormal.HasValue)
+                if (normal.HasValue)
                 {
-                    Vector3 desiredMotion = (Vector3.Dot(direction, invertedNormal.Value) * invertedNormal.Value);
-                    desiredMotion.Normalize();
-                    direction = direction - desiredMotion;
+                    direction = GetDirectionAfterCollision(direction, normal.Value);
                 }
 
                 if (RestrictMovementPlaneXZ)
@@ -302,7 +320,7 @@ namespace FunAndGamesWithSharpDX.Engine
             }
         }
 
-        private void MoveBackward(MoveState moveState, Vector3 direction, Vector3? invertedNormal)
+        private void MoveBackward(MoveState moveState, Vector3 direction, Vector3? normal)
         {
             if (moveState.MoveBackward)
             {
@@ -313,11 +331,9 @@ namespace FunAndGamesWithSharpDX.Engine
                     _backwardSpeed = FrameTime * _maxAcceleration;
                 }
 
-                if (invertedNormal.HasValue)
+                if (normal.HasValue)
                 {
-                    Vector3 desiredMotion = (Vector3.Dot(direction, invertedNormal.Value) * invertedNormal.Value);
-                    desiredMotion.Normalize();
-                    direction = direction - desiredMotion;
+                    direction = GetDirectionAfterCollision(direction, normal.Value);
                 }
 
                 if (RestrictMovementPlaneXZ)
@@ -335,11 +351,9 @@ namespace FunAndGamesWithSharpDX.Engine
                     _backwardSpeed = 0.0f;
                 }
 
-                if (invertedNormal.HasValue)
+                if (normal.HasValue)
                 {
-                    Vector3 desiredMotion = (Vector3.Dot(direction, invertedNormal.Value) * invertedNormal.Value);
-                    desiredMotion.Normalize();
-                    direction = direction - desiredMotion;
+                    direction = GetDirectionAfterCollision(direction, normal.Value);
                 }
 
                 if (RestrictMovementPlaneXZ)
@@ -350,7 +364,7 @@ namespace FunAndGamesWithSharpDX.Engine
             }
         }
 
-        private void MoveForward(MoveState moveState, Vector3 direction, Vector3? invertedNormal)
+        private void MoveForward(MoveState moveState, Vector3 direction, Vector3? normal)
         {
             if (moveState.MoveForward)
             {
@@ -361,11 +375,9 @@ namespace FunAndGamesWithSharpDX.Engine
                     _forwardSpeed = FrameTime * _maxAcceleration;
                 }
 
-                if (invertedNormal.HasValue)
+                if (normal.HasValue)
                 {
-                    Vector3 desiredMotion = (Vector3.Dot(direction, invertedNormal.Value) * invertedNormal.Value);
-                    desiredMotion.Normalize();
-                    direction = direction - desiredMotion;
+                    direction = GetDirectionAfterCollision(direction, normal.Value);
                 }
 
                 if (RestrictMovementPlaneXZ)
@@ -383,11 +395,9 @@ namespace FunAndGamesWithSharpDX.Engine
                     _forwardSpeed = 0.0f;
                 }
 
-                if (invertedNormal.HasValue)
+                if (normal.HasValue)
                 {
-                    Vector3 desiredMotion = (Vector3.Dot(direction, invertedNormal.Value) * invertedNormal.Value);
-                    desiredMotion.Normalize();
-                    direction = direction - desiredMotion;
+                    direction = GetDirectionAfterCollision(direction, normal.Value);
                 }
 
                 if (RestrictMovementPlaneXZ)
@@ -398,7 +408,7 @@ namespace FunAndGamesWithSharpDX.Engine
             }
         }
 
-        public void MoveUp(MoveState moveState, Vector3 direction, Vector3? invertedNormal)
+        public void MoveUp(MoveState moveState, Vector3 direction, Vector3? normal)
         {
             if (moveState.MoveUp)
             {
@@ -412,11 +422,9 @@ namespace FunAndGamesWithSharpDX.Engine
                 direction = _up;
                 direction = Vector3.Normalize(direction);
 
-                if (invertedNormal.HasValue)
+                if (normal.HasValue)
                 {
-                    Vector3 desiredMotion = (Vector3.Dot(direction, invertedNormal.Value) * invertedNormal.Value);
-                    desiredMotion.Normalize();
-                    direction = direction - desiredMotion;
+                    direction = GetDirectionAfterCollision(direction, normal.Value);
                 }
 
                 _eyeAt += direction * _upSpeed;
@@ -434,11 +442,9 @@ namespace FunAndGamesWithSharpDX.Engine
                 direction = _up;
                 direction = Vector3.Normalize(direction);
 
-                if (invertedNormal.HasValue)
+                if (normal.HasValue)
                 {
-                    Vector3 desiredMotion = (Vector3.Dot(direction, invertedNormal.Value) * invertedNormal.Value);
-                    desiredMotion.Normalize();
-                    direction = direction - desiredMotion;
+                    direction = GetDirectionAfterCollision(direction, normal.Value);
                 }
 
                 _eyeAt += direction * _upSpeed;
@@ -446,7 +452,7 @@ namespace FunAndGamesWithSharpDX.Engine
             }
         }
 
-        public void MoveDown(MoveState moveState, Vector3 direction, Vector3? invertedNormal)
+        public void MoveDown(MoveState moveState, Vector3 direction, Vector3? normal)
         {
             if (moveState.MoveDown)
             {
@@ -460,11 +466,9 @@ namespace FunAndGamesWithSharpDX.Engine
                 direction = _up;
                 direction = Vector3.Normalize(direction);
 
-                if (invertedNormal.HasValue)
+                if (normal.HasValue)
                 {
-                    Vector3 desiredMotion = (Vector3.Dot(direction, invertedNormal.Value) * invertedNormal.Value);
-                    desiredMotion.Normalize();
-                    direction = direction - desiredMotion;
+                    direction = GetDirectionAfterCollision(direction, normal.Value);
                 }
 
                 _eyeAt += direction * _downSpeed;
@@ -482,11 +486,9 @@ namespace FunAndGamesWithSharpDX.Engine
                 direction = _up;
                 direction = Vector3.Normalize(direction);
 
-                if (invertedNormal.HasValue)
+                if (normal.HasValue)
                 {
-                    Vector3 desiredMotion = (Vector3.Dot(direction, invertedNormal.Value) * invertedNormal.Value);
-                    desiredMotion.Normalize();
-                    direction = direction - desiredMotion;
+                    direction = GetDirectionAfterCollision(direction, normal.Value);
                 }
 
                 _eyeAt += direction * _downSpeed;

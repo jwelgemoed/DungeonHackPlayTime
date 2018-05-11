@@ -38,6 +38,8 @@ namespace FunAndGamesWithSharpDX.Entities
         public bool HasBeenProcessedForRenderingThisFrame { get; set; }
 
         public OcclusionQuery OcclusionQuery { get; private set; }
+        
+        public PolygonType PolygonType { get; set; }
 
         public Polygon(Device device, Shader shader)
         {

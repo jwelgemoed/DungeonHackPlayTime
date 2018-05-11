@@ -110,6 +110,11 @@ namespace DungeonHack.Builders
             return this;
         }
 
+        public PolygonBuilder SetType(PolygonType type)
+        {
+            _mesh.PolygonType = type;
+            return this;
+        }
 
         public PolygonBuilder LoadFromMesh(Mesh mesh)
         {
