@@ -14,7 +14,7 @@ namespace DungeonHack.CollisionDetection
         public Vector3[] HasCollided()
         {
             if (CurrentNode == null)
-                return null;
+                return new Vector3[0];
 
             return CurrentNode.Polygons
                .Where(x => x.PolygonType == PolygonType.Wall && x.BoundingBox.CollidesWithCamera(Camera))
