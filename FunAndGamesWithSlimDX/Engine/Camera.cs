@@ -225,7 +225,7 @@ namespace FunAndGamesWithSharpDX.Engine
 
                 if (normals.Length > 0)
                 {
-                    direction = GetDirectionAfterCollision(direction, normals);
+                    direction = GetDirectionAfterCollision(direction, normals, true);
                 }
 
                 if (RestrictMovementPlaneXZ)
@@ -248,7 +248,7 @@ namespace FunAndGamesWithSharpDX.Engine
 
                 if (normals.Length > 0)
                 {
-                    direction = GetDirectionAfterCollision(direction, normals);
+                    direction = GetDirectionAfterCollision(direction, normals, true);
                 }
 
                 if (RestrictMovementPlaneXZ)
@@ -258,13 +258,23 @@ namespace FunAndGamesWithSharpDX.Engine
             }
         }
 
-        private static Vector3 GetDirectionAfterCollision(Vector3 direction, Vector3[] normals)
+        private static Vector3 GetDirectionAfterCollision(Vector3 direction, Vector3[] normals, bool invertNormal = false)
         {
             Vector3 invertedNormal = new Vector3(0, 0, 0);
 
-            foreach (var normal in normals)
+            if (invertNormal)
             {
-                invertedNormal += normal * (direction * normal).Length();
+                foreach (var normal in normals)
+                {
+                    invertedNormal -= normal * (direction * normal).Length();
+                }
+            }
+            else
+            {
+                foreach (var normal in normals)
+                {
+                    invertedNormal += normal * (direction * normal).Length();
+                }
             }
 
             return direction - invertedNormal; 
@@ -289,10 +299,10 @@ namespace FunAndGamesWithSharpDX.Engine
                 direction = Vector3.Cross(direction, _up);
                 direction = Vector3.Normalize(direction);
 
-                //if (normal.HasValue)
-                //{
-                //    direction = GetDirectionAfterCollision(direction, normal.Value);
-                //}
+                if (normals.Length > 0)
+                {
+                    direction = GetDirectionAfterCollision(direction, normals);
+                }
 
                 if (RestrictMovementPlaneXZ)
                     direction.Y = 0.0f;
@@ -337,7 +347,7 @@ namespace FunAndGamesWithSharpDX.Engine
 
                 if (normals.Length > 0)
                 {
-                    direction = GetDirectionAfterCollision(direction, normals);
+                    direction = GetDirectionAfterCollision(direction, normals, true);
                 }
 
                 if (RestrictMovementPlaneXZ)
@@ -357,7 +367,7 @@ namespace FunAndGamesWithSharpDX.Engine
 
                 if (normals.Length > 0)
                 {
-                    direction = GetDirectionAfterCollision(direction, normals);
+                    direction = GetDirectionAfterCollision(direction, normals, true);
                 }
 
                 if (RestrictMovementPlaneXZ)
@@ -521,7 +531,7 @@ namespace FunAndGamesWithSharpDX.Engine
             matRotAxis = Matrix.RotationAxis(rotAxis, relativeY / -RotationSpeed);
 
             direction = Vector3.TransformCoordinate(direction, matRotAxis * matRotY);
-            _up = Vector3.TransformCoordinate(_up, matRotAxis * matRotY);
+            //_up = Vector3.TransformCoordinate(_up, matRotAxis * matRotY);
 
             _lookAt = direction + _eyeAt;
         }
@@ -538,7 +548,7 @@ namespace FunAndGamesWithSharpDX.Engine
 
             matRotAxis = Matrix.RotationAxis(rotAxis, relativeY / -RotationSpeed);
             direction = Vector3.TransformCoordinate(direction, matRotAxis * matRotY);
-            _up = Vector3.TransformCoordinate(_up, matRotAxis * matRotY);
+           // _up = Vector3.TransformCoordinate(_up, matRotAxis * matRotY);
             
             _lookAt = direction + _eyeAt;
             _lookAt.Y = Height * 2;
