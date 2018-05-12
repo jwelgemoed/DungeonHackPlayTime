@@ -4,6 +4,6 @@ namespace DungeonHack.CollisionDetection
 {
     public interface ICollisionDetector
     {
-        Vector3? HasCollided();
+        Vector3[] HasCollided();
     }
 }
