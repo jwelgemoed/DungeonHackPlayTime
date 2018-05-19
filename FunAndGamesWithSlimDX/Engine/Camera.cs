@@ -531,7 +531,7 @@ namespace FunAndGamesWithSharpDX.Engine
             matRotAxis = Matrix.RotationAxis(rotAxis, relativeY / -RotationSpeed);
 
             direction = Vector3.TransformCoordinate(direction, matRotAxis * matRotY);
-            //_up = Vector3.TransformCoordinate(_up, matRotAxis * matRotY);
+            _up = Vector3.TransformCoordinate(_up, matRotAxis * matRotY);
 
             _lookAt = direction + _eyeAt;
         }
@@ -548,7 +548,7 @@ namespace FunAndGamesWithSharpDX.Engine
 
             matRotAxis = Matrix.RotationAxis(rotAxis, relativeY / -RotationSpeed);
             direction = Vector3.TransformCoordinate(direction, matRotAxis * matRotY);
-           // _up = Vector3.TransformCoordinate(_up, matRotAxis * matRotY);
+            _up = Vector3.TransformCoordinate(_up, matRotAxis * matRotY);
             
             _lookAt = direction + _eyeAt;
             _lookAt.Y = Height * 2;
@@ -571,7 +571,7 @@ namespace FunAndGamesWithSharpDX.Engine
         {
             CameraSphere = BoundingSphere.FromPoints(new Vector3[] { _eyeAt });
 
-            CameraSphere.Radius = 5.0f;
+            CameraSphere.Radius = 10.0f;
 
             if (_topdown)
             {

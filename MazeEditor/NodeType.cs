@@ -10,6 +10,8 @@ namespace MazeEditor
     {
         Empty = 0,
         Corridor = 1,
-        Room = 2
+        Room = 2,
+        Item = 3,
+        PlayerStart = 4
     }
 }

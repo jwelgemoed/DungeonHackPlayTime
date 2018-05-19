@@ -29,18 +29,22 @@ namespace DungeonHack.DataDictionaries
             }
         }
         
-        public void AddTextureRelativePath(string filename)
+        public int AddTextureRelativePath(string filename)
         {
             var texture = LoadTexture(filename);
 
             _dictionary.Add(_dictionary.Count, new Tuple<Texture, string>(texture, filename));
+
+            return _dictionary.Count - 1;
         }
 
-        public void AddTextureFullPath(string filenamePath)
+        public int AddTextureFullPath(string filenamePath)
         {
             var texture = LoadTextureFullPath(filenamePath);
 
             _dictionary.Add(_dictionary.Count, new Tuple<Texture, string>(texture, filenamePath));
+
+            return _dictionary.Count - 1;
         }
 
         public Texture GetTexture(int id)

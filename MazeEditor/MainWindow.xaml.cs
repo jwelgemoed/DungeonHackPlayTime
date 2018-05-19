@@ -78,6 +78,9 @@ namespace MazeEditor
 
             corridorCreator.GrowingTree(false, SelectionMethod);
 
+            corridorCreator.SetItemLocation();
+            corridorCreator.SetPlayerStartRandomLocation();
+
             dungeonView.DrawCanvas();
 
         }
@@ -112,14 +115,14 @@ namespace MazeEditor
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            GridPolygonBuilder builder = new GridPolygonBuilder(_dungeon.GridBoard, _mazeRunner.Device, _mazeRunner.GetShader);
+            GridPolygonBuilder builder = new GridPolygonBuilder(_dungeon.GridBoard, _mazeRunner.Device, _mazeRunner.Shader);
             var meshList = builder.GeneratePolygons();
 
             _mazeRunner.Meshes = meshList.ToList();
 
-            BspTreeBuilder bspTreeBuilder = new BspTreeBuilder(_mazeRunner.Device, _mazeRunner.GetShader);
+            BspTreeBuilder bspTreeBuilder = new BspTreeBuilder(_mazeRunner.Device, _mazeRunner.Shader);
             BspBoundingVolumeCalculator bspBoudingVolumeCalculator = new BspBoundingVolumeCalculator();
-            LeafBspTreeBuilder leafTreeBuilder = new LeafBspTreeBuilder(_mazeRunner.Device, _mazeRunner.GetShader);
+            LeafBspTreeBuilder leafTreeBuilder = new LeafBspTreeBuilder(_mazeRunner.Device, _mazeRunner.Shader);
 
             /* var rootNode = bspTreeBuilder.BuildTree(_mazeRunner.Meshes);
              bspBoudingVolumeCalculator.ComputeBoundingVolumes(rootNode);
@@ -128,6 +131,7 @@ namespace MazeEditor
             var quadTreeBuilder = new QuadTreeBuilder();
             var quadtreeNode = quadTreeBuilder.BuildTree(_mazeRunner.Meshes);
             _mazeRunner.QuadTreeLeafNodes = quadTreeBuilder.LeafNodeList;
+            _mazeRunner.Dungeon = _dungeon;
             _mazeRunner.InitializeScene();
 
             var octbuilder = new OctreeBuilder();
@@ -146,7 +150,7 @@ namespace MazeEditor
 
         private void btnQuadTree_Click(object sender, RoutedEventArgs e)
         {
-            GridPolygonBuilder builder = new GridPolygonBuilder(_dungeon.GridBoard, _mazeRunner.Device, _mazeRunner.GetShader);
+            GridPolygonBuilder builder = new GridPolygonBuilder(_dungeon.GridBoard, _mazeRunner.Device, _mazeRunner.Shader);
             var meshList = builder.GeneratePolygons();
 
             _mazeRunner.Meshes = meshList.ToList();

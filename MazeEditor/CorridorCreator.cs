@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Shapes;
 
 namespace MazeEditor
 {
@@ -88,7 +85,44 @@ namespace MazeEditor
                     _cells.RemoveAt(index);
                 }
             }
+        }
 
+        public void SetPlayerStartRandomLocation()
+        {
+            bool placed = false;
+            Random random = new Random();
+
+            while (!placed)
+            {
+                int x = _random.Next(_dungeon.GridBoard.SizeX);
+                int y = _random.Next(_dungeon.GridBoard.SizeY);
+
+                if (_dungeon.GridBoard.Grid[x, y] == NodeType.Corridor || 
+                    _dungeon.GridBoard.Grid[x, y] == NodeType.Room)
+                {
+                    _dungeon.GridBoard.Grid[x, y] = NodeType.PlayerStart;
+                    placed = true;
+                }
+            }
+        }
+
+        public void SetItemLocation()
+        {
+            bool placed = false;
+            Random random = new Random();
+
+            while (!placed)
+            {
+                int x = _random.Next(_dungeon.GridBoard.SizeX);
+                int y = _random.Next(_dungeon.GridBoard.SizeY);
+
+                if (_dungeon.GridBoard.Grid[x, y] == NodeType.Corridor ||
+                    _dungeon.GridBoard.Grid[x, y] == NodeType.Room)
+                {
+                    _dungeon.GridBoard.Grid[x, y] = NodeType.Item;
+                    placed = true;
+                }
+            }
         }
 
         private int GetNextCellIndex(SelectionMethodType method)

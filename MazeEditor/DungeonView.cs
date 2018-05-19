@@ -19,6 +19,10 @@ namespace MazeEditor
 
         public Brush CorridorBrush { get; set; }
 
+        public Brush PlayerStartBrush { get; set; }
+
+        public Brush ItemLocationBrush { get; set; }
+
         private int _gridSize = 8;
 
         public DungeonView(Dungeon dungeon, Canvas canvas)
@@ -27,6 +31,8 @@ namespace MazeEditor
             _canvas = canvas;
             RoomBrush = new SolidColorBrush(Color.FromRgb(100, 0, 0));
             CorridorBrush = new SolidColorBrush(Color.FromRgb(0, 0, 100));
+            PlayerStartBrush = new SolidColorBrush(Color.FromRgb(0, 100, 0));
+            ItemLocationBrush = new SolidColorBrush(Color.FromRgb(100, 100, 0));
         }
 
         public void DrawCanvas()
@@ -45,14 +51,23 @@ namespace MazeEditor
                         Width = _gridSize,
                         Height = _gridSize
                     };
-
-                    if (_dungeon.GridBoard.Grid[i, j] == NodeType.Corridor)
+                    
+                    switch (_dungeon.GridBoard.Grid[i,j])
                     {
-                        _rectangle.Fill = CorridorBrush;
-                    }
-                    else
-                    {
-                        _rectangle.Fill = RoomBrush;
+                        case NodeType.Corridor:
+                            _rectangle.Fill = CorridorBrush;
+                            break;
+                        case NodeType.Room:
+                            _rectangle.Fill = RoomBrush;
+                            break;
+                        case NodeType.Item:
+                            _rectangle.Fill = ItemLocationBrush;
+                            break;
+                        case NodeType.PlayerStart:
+                            _rectangle.Fill = PlayerStartBrush;
+                            break;
+                        default:
+                            break;
                     }
 
                     _canvas.Children.Add(_rectangle);

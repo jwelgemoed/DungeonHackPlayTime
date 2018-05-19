@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MazeEditor
 {
@@ -31,5 +27,30 @@ namespace MazeEditor
             }
         }
 
+        public Tuple<int, int> GetPlayerStartLocation()
+        {
+            return GetLocation(NodeType.PlayerStart);
+        }
+
+        public Tuple<int, int> GetItemLocation()
+        {
+            return GetLocation(NodeType.Item);
+        }
+
+        private Tuple<int, int> GetLocation(NodeType nodeType)
+        {
+            for (int i = 0; i < GridBoard.SizeX; i++)
+            {
+                for (int j = 0; j < GridBoard.SizeY; j++)
+                {
+                    if (GridBoard.Grid[i, j] == nodeType)
+                    {
+                        return new Tuple<int, int>(i, j);
+                    }
+                }
+            }
+
+            return new Tuple<int, int>(0, 0);
+        }
     }
 }
