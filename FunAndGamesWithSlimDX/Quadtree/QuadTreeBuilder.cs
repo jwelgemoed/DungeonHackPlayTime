@@ -62,7 +62,7 @@ namespace DungeonHack.QuadTree
             QuadTreeNode rootNode = new QuadTreeNode()
             {
                 Id = NumberOfNodes,
-                Polygons = polygons,
+                Polygons = polygons.ToList(),
                 BoundingBox = new AABoundingBox(new BoundingBox()
                 {
                     Minimum = minimumVector,
@@ -148,7 +148,7 @@ namespace DungeonHack.QuadTree
             if (containedPolygons.Count() == 0)
                 return null;
 
-            node.Polygons = containedPolygons;
+            node.Polygons = containedPolygons.ToList();
 
             if ((node.Polygons.Count() > 64) &&
                     (treeDepth < 2))

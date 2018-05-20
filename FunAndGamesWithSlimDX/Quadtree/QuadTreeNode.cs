@@ -11,7 +11,7 @@ namespace DungeonHack.QuadTree
 
         public AABoundingBox BoundingBox { get; set; }
 
-        public IEnumerable<Polygon> Polygons { get; set; }
+        public IList<Polygon> Polygons { get; set; }
 
         public QuadTreeNode Parent { get; set; }
 

@@ -130,6 +130,7 @@ namespace MazeEditor
              _mazeRunner.BspNodes = bspTreeBuilder.TransformNodesToOptomizedNodes(rootNode);*/
             var quadTreeBuilder = new QuadTreeBuilder();
             var quadtreeNode = quadTreeBuilder.BuildTree(_mazeRunner.Meshes);
+            _mazeRunner.QuadTreeNode = quadtreeNode;
             _mazeRunner.QuadTreeLeafNodes = quadTreeBuilder.LeafNodeList;
             _mazeRunner.Dungeon = _dungeon;
             _mazeRunner.InitializeScene();
@@ -138,8 +139,6 @@ namespace MazeEditor
 
             var octRootNode = octbuilder.BuildTree(_mazeRunner.Meshes);
             _mazeRunner.OctreeRootNode = octRootNode;
-
-            _mazeRunner.QuadTreeNode = quadtreeNode;
 
             int numberOfNodes = quadTreeBuilder.NumberOfNodes;
             int treeDepth = quadTreeBuilder.TreeDepth;

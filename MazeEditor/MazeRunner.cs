@@ -89,7 +89,7 @@ namespace MazeEditor
             //Draw items in world;
             foreach (var item in _itemRegistry.GetItems())
             {
-                _meshRenderer.Render(_frustrum, item.Polygon, Camera.ViewProjectionMatrix, ref _meshRenderedCount);
+                _meshRenderer.Render(_frustrum, item.Polygon, Camera.RenderViewProjectionMatrix, ref _meshRenderedCount);
             }
 
         }
@@ -189,6 +189,11 @@ namespace MazeEditor
                                     new Vector3(itemLocation.Item1 * 64, 0, itemLocation.Item2 * 64))
                 //itemFactory.CreateItem("treasure_chest.obj-model.txt", "treasure_chest.png")
                 );
+
+            foreach (var item in _itemRegistry.GetItems())
+            {
+                _quadTreeTraverser.PlaceItemInLeafNode(item);
+            }
         }
 
         public new void Dispose()

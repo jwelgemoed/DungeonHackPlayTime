@@ -25,6 +25,11 @@ namespace DungeonHack.Entities
             return Vector4.Distance(Center, new Vector4(camera.EyeAt, 1.0f));
         }
 
+        public bool ContainsOrIntersectsItem(AABoundingBox boundingBox)
+        {
+            return BoundingBox.Contains(boundingBox.BoundingBox) != ContainmentType.Disjoint;
+        }
+
         public bool ContainsOrIntersectsCamera(Camera camera)
         {
             return BoundingBox.Contains(camera.EyeAt) != ContainmentType.Disjoint;
