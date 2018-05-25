@@ -23,6 +23,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using DungeonHack.DirectX;
 using Point = System.Windows.Point;
 using Rectangle = System.Windows.Shapes.Rectangle;
 
@@ -177,9 +178,17 @@ namespace MapEditor
             if (_playerStart != null)
                 demo.SetStartingPosition(_playerStart.TranslateToRealSpace(1, (float) canvasXZ.Width / 2, (float) canvasXZ.Height / 2));
 
-            BspTreeBuilder bspTreeBuilder = new BspTreeBuilder(demo.Device, demo.GetShader);
+            PolygonClassifier polygonClassifier = new PolygonClassifier();
+            SplitterSelector splitterSelector = new SplitterSelector(polygonClassifier, 25);
+            PointClassifier pointClassifier = new PointClassifier();
+            BufferFactory bufferFactory = new BufferFactory(demo.Device);
+            PolygonBuilder polygonBuilder = new PolygonBuilder(demo.Device, demo.GetShader, bufferFactory);
+            PolygonSplitter polygonSplitter = new PolygonSplitter(pointClassifier, polygonBuilder);
+            BspTreeBuilder bspTreeBuilder = new BspTreeBuilder(polygonClassifier, splitterSelector, polygonSplitter);
             BspBoundingVolumeCalculator bspBoudingVolumeCalculator = new BspBoundingVolumeCalculator();
-            LeafBspTreeBuilder leafTreeBuilder = new LeafBspTreeBuilder(demo.Device, demo.GetShader);
+            BoundingBoxCalculator boundingBoxCalculator = new BoundingBoxCalculator();
+            LeafBspMasterData masterData = new LeafBspMasterData();
+            LeafBspTreeBuilder leafTreeBuilder = new LeafBspTreeBuilder(polygonClassifier, polygonSplitter, splitterSelector, boundingBoxCalculator, masterData);
 
             var rootNode = bspTreeBuilder.BuildTree(demo.Meshes);
             bspBoudingVolumeCalculator.ComputeBoundingVolumes(rootNode);
@@ -584,7 +593,7 @@ namespace MapEditor
         private List<FunAndGamesWithSharpDX.Entities.Polygon> CreateMesh(List<GameData.Vertex> triangles, float floorHeight, float ceilingHeight, int floorTextureId, int ceilingTextureId, Vector2 lowerBound, Vector2 upperBound)
         {
             List<FunAndGamesWithSharpDX.Entities.Polygon> meshes = new List<FunAndGamesWithSharpDX.Entities.Polygon>();
-            PolygonBuilder meshBuilder = new PolygonBuilder(demo.Device, demo.GetShader);
+            PolygonBuilder meshBuilder = new PolygonBuilder(demo.Device, demo.GetShader, new BufferFactory(demo.Device));
 
             int numberOfTriangles = triangles.Count / 3;
 
@@ -857,7 +866,7 @@ namespace MapEditor
             model[5].tx = 0.0f;
             model[5].ty = maxTY;
 
-            PolygonBuilder meshBuilder = new PolygonBuilder(demo.Device, demo.GetShader);
+            PolygonBuilder meshBuilder = new PolygonBuilder(demo.Device, demo.GetShader, new BufferFactory(demo.Device));
 
             var roomMesh = meshBuilder
                             .New()
@@ -899,7 +908,13 @@ namespace MapEditor
 
                 demo.Meshes = meshList;
 
-                BspTreeBuilder bspTreeBuilder = new BspTreeBuilder(demo.Device, demo.GetShader);
+                PolygonClassifier polygonClassifier = new PolygonClassifier();
+                PointClassifier pointClassifier = new PointClassifier();
+                SplitterSelector splitterSelector = new SplitterSelector(polygonClassifier, 25);
+                BufferFactory bufferFactory = new BufferFactory(demo.Device);
+                PolygonBuilder polygonBuilder = new PolygonBuilder(demo.Device, demo.GetShader, bufferFactory);
+                PolygonSplitter polygonSplitter = new PolygonSplitter(pointClassifier, polygonBuilder);
+                BspTreeBuilder bspTreeBuilder = new BspTreeBuilder(polygonClassifier, splitterSelector, polygonSplitter);
                 BspBoundingVolumeCalculator bspBoudingVolumeCalculator = new BspBoundingVolumeCalculator();
 
                 var bspRootNode = bspTreeBuilder.BuildTree(demo.Meshes);

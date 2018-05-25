@@ -1,10 +1,8 @@
 ﻿using DungeonHack.BSP.LeafBsp;
 using DungeonHack.Builders;
-using FunAndGamesWithSharpDX.DirectX;
-using SharpDX.Direct3D11;
+using SharpDX;
 using System;
 using System.Collections.Generic;
-using SharpDX;
 
 namespace DungeonHack.BSP.PVS
 {
@@ -17,12 +15,13 @@ namespace DungeonHack.BSP.PVS
         private LeafBspMasterData _masterData;
         private int _bytesPerSet;
 
-        public PVSCalculator(LeafBspMasterData masterData, Device device, Shader shader)
+        public PVSCalculator(PolygonClassifier polygonClassifier, PortalSplitter portalSplitter, PointClassifier pointClassifier, 
+                        LeafBspMasterData masterData)
         {
             _masterData = masterData;
-            _polyClassifier = new PolygonClassifier();
-            _splitter = new PortalSplitter(new PointClassifier(), device, shader);
-            _pointClassifier = new PointClassifier();
+            _polyClassifier = polygonClassifier;
+            _splitter = portalSplitter;
+            _pointClassifier = pointClassifier;
 
             _bytesPerSet = (_masterData.NumberOfLeaves + 7) >> 3;
 

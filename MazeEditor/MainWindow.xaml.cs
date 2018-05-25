@@ -8,6 +8,8 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using DungeonHack.Builders;
+using DungeonHack.DirectX;
 
 namespace MazeEditor
 {
@@ -115,15 +117,22 @@ namespace MazeEditor
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            GridPolygonBuilder builder = new GridPolygonBuilder(_dungeon.GridBoard, _mazeRunner.Device, _mazeRunner.Shader);
+            PolygonClassifier polygonClassifier = new PolygonClassifier();
+            SplitterSelector splitterSelector = new SplitterSelector(polygonClassifier, 25);
+            PointClassifier pointClassifier = new PointClassifier();
+            BufferFactory bufferFactory = new BufferFactory(_mazeRunner.Device);
+            PolygonBuilder polygonBuilder = new PolygonBuilder(_mazeRunner.Device, _mazeRunner.Shader, bufferFactory);
+            PolygonSplitter polygonSplitter = new PolygonSplitter(pointClassifier, polygonBuilder);
+            BspTreeBuilder bspTreeBuilder = new BspTreeBuilder(polygonClassifier, splitterSelector, polygonSplitter);
+            BspBoundingVolumeCalculator bspBoudingVolumeCalculator = new BspBoundingVolumeCalculator();
+            BoundingBoxCalculator boundingBoxCalculator = new BoundingBoxCalculator();
+            LeafBspMasterData masterData = new LeafBspMasterData();
+            LeafBspTreeBuilder leafTreeBuilder = new LeafBspTreeBuilder(polygonClassifier, polygonSplitter, splitterSelector, boundingBoxCalculator, masterData);
+
+            GridPolygonBuilder builder = new GridPolygonBuilder(_dungeon.GridBoard, polygonBuilder);
             var meshList = builder.GeneratePolygons();
 
             _mazeRunner.Meshes = meshList.ToList();
-
-            BspTreeBuilder bspTreeBuilder = new BspTreeBuilder(_mazeRunner.Device, _mazeRunner.Shader);
-            BspBoundingVolumeCalculator bspBoudingVolumeCalculator = new BspBoundingVolumeCalculator();
-            LeafBspTreeBuilder leafTreeBuilder = new LeafBspTreeBuilder(_mazeRunner.Device, _mazeRunner.Shader);
-
             /* var rootNode = bspTreeBuilder.BuildTree(_mazeRunner.Meshes);
              bspBoudingVolumeCalculator.ComputeBoundingVolumes(rootNode);
 
@@ -149,7 +158,9 @@ namespace MazeEditor
 
         private void btnQuadTree_Click(object sender, RoutedEventArgs e)
         {
-            GridPolygonBuilder builder = new GridPolygonBuilder(_dungeon.GridBoard, _mazeRunner.Device, _mazeRunner.Shader);
+            BufferFactory bufferFactory = new BufferFactory(_mazeRunner.Device);
+            PolygonBuilder polygonBuilder = new PolygonBuilder(_mazeRunner.Device, _mazeRunner.Shader, bufferFactory);
+            GridPolygonBuilder builder = new GridPolygonBuilder(_dungeon.GridBoard, polygonBuilder);
             var meshList = builder.GeneratePolygons();
 
             _mazeRunner.Meshes = meshList.ToList();

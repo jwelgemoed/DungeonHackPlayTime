@@ -11,6 +11,7 @@ namespace FunAndGamesWithSharpDX.Entities
     public class Polygon : IDisposable
     {
         public Buffer VertexBuffer { get; set; }
+
         public Buffer IndexBuffer { get; set; }
 
         public Vertex[] VertexData { get; set; }

@@ -13,6 +13,7 @@ using FunAndGamesWithSharpDX.DirectX;
 using System.Configuration;
 using GameData;
 using DungeonHack.Builders;
+using DungeonHack.DirectX;
 using Point = System.Windows.Point;
 
 namespace MapEditor
@@ -354,7 +355,7 @@ namespace MapEditor
             model[5].tx = 0.0f;
             model[5].ty = 1.0f;
 
-            PolygonBuilder meshBuilder = new PolygonBuilder(_device, _shader);
+            PolygonBuilder meshBuilder = new PolygonBuilder(_device, _shader, new BufferFactory(_device));
             var roomMesh = meshBuilder
                             .New()
                             .SetPosition((float)startPoint.X * scaleFactor, 0.0f, (float)startPoint.Y * scaleFactor)

@@ -1,14 +1,14 @@
-﻿using FunAndGamesWithSharpDX.DirectX;
+﻿using Assimp;
+using DungeonHack.DirectX;
+using DungeonHack.Entities;
+using FunAndGamesWithSharpDX.DirectX;
 using FunAndGamesWithSharpDX.Engine;
 using FunAndGamesWithSharpDX.Entities;
 using SharpDX;
 using SharpDX.Direct3D11;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Assimp;
-using DungeonHack.Entities;
 
 namespace DungeonHack.Builders
 {
@@ -17,12 +17,15 @@ namespace DungeonHack.Builders
         protected Polygon _mesh;
         protected readonly Device _device;
         protected readonly Shader _shader;
+        protected readonly BufferFactory _bufferFactory;
+
         private bool _withTransformToWorld;
 
-        public PolygonBuilder(Device device, Shader shader)
+        public PolygonBuilder(Device device, Shader shader, BufferFactory bufferFactory)
         {
             _device = device;
             _shader = shader;
+            _bufferFactory = bufferFactory;
         }
 
         public PolygonBuilder New()
@@ -39,8 +42,8 @@ namespace DungeonHack.Builders
             {
                 TransformToWorld();
             }
-            _mesh.VertexBuffer = GetVertexBuffer();
-            _mesh.IndexBuffer = GetIndexBuffer();
+            _mesh.VertexBuffer = _bufferFactory.GetVertexBuffer(_mesh.VertexData);
+            _mesh.IndexBuffer = _bufferFactory.GetIndexBuffer(_mesh.IndexData);
             return _mesh;
         }
 
@@ -201,27 +204,6 @@ namespace DungeonHack.Builders
             _withTransformToWorld = true;
 
             return this;
-        }
-
-        private SharpDX.Direct3D11.Buffer GetVertexBuffer()
-        {
-            var vertices = new DataStream(Vertex.SizeOf * _mesh.VertexData.Length, true, true);
-            vertices.WriteRange(_mesh.VertexData);
-            vertices.Position = 0;
-
-            return new SharpDX.Direct3D11.Buffer(_device, vertices, Vertex.SizeOf * _mesh.VertexData.Length
-                    , ResourceUsage.Default, BindFlags.VertexBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, Vertex.SizeOf);
-        }
-
-        private SharpDX.Direct3D11.Buffer GetIndexBuffer()
-        {
-            var indexStream = new DataStream(sizeof(uint) * _mesh.IndexData.Length, true, true);
-            indexStream.WriteRange(_mesh.IndexData);
-            indexStream.Position = 0;
-
-            return new SharpDX.Direct3D11.Buffer(_device, indexStream, sizeof(uint) * _mesh.IndexData.Length,
-                                                           ResourceUsage.Default, BindFlags.IndexBuffer,
-                                                           CpuAccessFlags.None, ResourceOptionFlags.None, 0);
         }
 
         private void RecalculateWorldMatrix()

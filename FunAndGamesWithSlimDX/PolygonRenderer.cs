@@ -55,5 +55,22 @@ namespace DungeonHack
                                 _materialDictionary.GetMaterial(polygon.MaterialIndex));
             }
         }
+
+        public void RenderBoundingBox(Frustrum frustrum, Polygon polygon, Matrix viewProjectionMatrix)
+        {
+            lock (_lock)
+            {
+                _deviceContext.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(polygon.VertexBuffer, Vertex.SizeOf, 0));
+                _deviceContext.InputAssembler.SetIndexBuffer(polygon.IndexBuffer, Format.R16_UInt, 0);
+
+                _shader.Render(_deviceContext,
+                                polygon.IndexData.Length,
+                                polygon.WorldMatrix,
+                                viewProjectionMatrix,
+                                _textureDictionary.GetTexture(polygon.TextureIndex).TextureData,
+                                _camera.GetPosition(),
+                                _materialDictionary.GetMaterial(polygon.MaterialIndex));
+            }
+        }
     }
 }

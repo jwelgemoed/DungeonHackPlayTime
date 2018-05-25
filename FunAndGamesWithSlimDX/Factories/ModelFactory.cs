@@ -2,6 +2,7 @@
 using Assimp;
 using FunAndGamesWithSharpDX.Entities;
 using DungeonHack.Builders;
+using DungeonHack.DirectX;
 using SharpDX.Direct3D11;
 using FunAndGamesWithSharpDX.DirectX;
 
@@ -24,7 +25,7 @@ namespace DungeonHack.Factories
             List<Polygon> polygons = new List<Polygon>();
 
             var scene = context.ImportFile(filename);
-            var pBuilder = new PolygonBuilder(_device, _shader);
+            var pBuilder = new PolygonBuilder(_device, _shader, new BufferFactory(_device));
 
             foreach (var mesh in scene.Meshes)
             {

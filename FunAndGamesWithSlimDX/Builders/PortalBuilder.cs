@@ -4,6 +4,7 @@ using System.Linq;
 using FunAndGamesWithSharpDX.DirectX;
 using SharpDX.Direct3D11;
 using DungeonHack.BSP.LeafBsp;
+using DungeonHack.DirectX;
 using FunAndGamesWithSharpDX.Entities;
 using SharpDX;
 
@@ -11,7 +12,8 @@ namespace DungeonHack.Builders
 {
     public class PortalBuilder : PolygonBuilder
     {
-        public PortalBuilder(Device device, Shader shader) : base(device, shader)
+        public PortalBuilder(Device device, Shader shader, BufferFactory bufferFactory) 
+            : base(device, shader, bufferFactory)
         {
         }
 

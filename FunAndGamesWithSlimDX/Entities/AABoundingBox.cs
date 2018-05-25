@@ -1,10 +1,6 @@
 ﻿using FunAndGamesWithSharpDX.Engine;
 using SharpDX;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SharpDX.Direct3D11;
 
 namespace DungeonHack.Entities
 {
@@ -19,6 +15,9 @@ namespace DungeonHack.Entities
         public int[] Indexes { get; set; }
 
         public Vector4 Center { get; private set; }
+        
+        public Buffer BoundingBoxVertexBuffer { get; set; }
+        public Buffer BoundingBoxIndexBuffer { get; set; }
 
         public float DistanceToCamera(Camera camera)
         {

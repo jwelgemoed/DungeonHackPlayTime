@@ -13,6 +13,7 @@ using FunAndGamesWithSharpDX.DirectX;
 using SharpDX;
 using GameData;
 using DungeonHack.Builders;
+using DungeonHack.DirectX;
 using Point = System.Windows.Point;
 using Rectangle = System.Windows.Shapes.Rectangle;
 
@@ -229,7 +230,7 @@ namespace MapEditor
                     }
                 }
 
-                PolygonBuilder meshBuilder = new PolygonBuilder(_device, _shader);
+                PolygonBuilder meshBuilder = new PolygonBuilder(_device, _shader, new BufferFactory(_device));
                 var roomMesh = meshBuilder
                                 .New()
                                 .SetModel(model)

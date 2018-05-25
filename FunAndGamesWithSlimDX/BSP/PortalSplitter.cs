@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FunAndGamesWithSharpDX.DirectX;
-using SharpDX.Direct3D11;
-using FunAndGamesWithSharpDX.Entities;
-using DungeonHack.BSP.LeafBsp;
-using SharpDX;
+﻿using DungeonHack.BSP.LeafBsp;
 using DungeonHack.Builders;
+using FunAndGamesWithSharpDX.Entities;
+using SharpDX;
+using System.Collections.Generic;
 
 namespace DungeonHack.BSP
 {
@@ -16,10 +10,10 @@ namespace DungeonHack.BSP
     {
         private readonly PortalBuilder _portalBuilder;
 
-        public PortalSplitter(PointClassifier pointClassifier, Device device, Shader shader) 
-            : base(pointClassifier, device, shader)
+        public PortalSplitter(PointClassifier pointClassifier, PolygonBuilder polygonBuilder, PortalBuilder portalBuilder) 
+            : base(pointClassifier, polygonBuilder)
         {
-            _portalBuilder = new PortalBuilder(device, shader);
+            _portalBuilder = portalBuilder;
         }
 
         public void Split(Portal testMesh, Entities.Plane plane, out Portal frontSplit, out Portal backSplit)
@@ -29,16 +23,12 @@ namespace DungeonHack.BSP
 
         public void Split(Portal testMesh, Vector3 pointOnPlane, Vector3 planeNormal, out Portal frontSplit, out Portal backSplit)
         {
-            List<Vertex> frontList = new List<Vertex>();
-            List<Vertex> backList = new List<Vertex>();
-            Vertex firstVertex, pointA, pointB;
-            Vector3 intersectPoint;
-            int currentVertex;
-            float percent;
+            var frontList = new List<Vertex>();
+            var backList = new List<Vertex>();
 
-            firstVertex = testMesh.VertexData[0];
+            var firstVertex = testMesh.VertexData[0];
 
-            switch (_pointClassifier.ClassifyPoint(
+            switch (PointClassifier.ClassifyPoint(
                    new Vector3(firstVertex.Position.X, firstVertex.Position.Y, firstVertex.Position.Z),
                    pointOnPlane,
                    planeNormal))
@@ -59,6 +49,7 @@ namespace DungeonHack.BSP
 
             for (int i = 1; i < testMesh.VertexData.Length + 1; i++)
             {
+                int currentVertex;
                 if (i == testMesh.VertexData.Length)
                 {
                     currentVertex = 0;
@@ -68,10 +59,10 @@ namespace DungeonHack.BSP
                     currentVertex = i;
                 }
 
-                pointA = testMesh.VertexData[i - 1];
-                pointB = testMesh.VertexData[currentVertex];
+                var pointA = testMesh.VertexData[i - 1];
+                var pointB = testMesh.VertexData[currentVertex];
 
-                var pointClassification = _pointClassifier.ClassifyPoint(
+                var pointClassification = PointClassifier.ClassifyPoint(
                     new Vector3(pointB.Position.X, pointB.Position.Y, pointB.Position.Z), pointOnPlane, planeNormal);
 
                 if (pointClassification == PointClassification.OnPlane)
@@ -85,67 +76,75 @@ namespace DungeonHack.BSP
                                      new Vector3(pointB.Position.X, pointB.Position.Y, pointB.Position.Z),
                                      pointOnPlane,
                                      planeNormal,
-                                     out intersectPoint,
-                                     out percent))
+                                     out var intersectPoint,
+                                     out var percent))
                     {
-                        float deltax, deltay, texx, texy;
-                        deltax = testMesh.VertexData[currentVertex].Texture.X - testMesh.VertexData[i - 1].Texture.X;
-                        deltay = testMesh.VertexData[currentVertex].Texture.Y - testMesh.VertexData[i - 1].Texture.Y;
-                        texx = testMesh.VertexData[i - 1].Texture.X + (deltax * percent);
-                        texy = testMesh.VertexData[i - 1].Texture.Y + (deltay * percent);
-                        Vertex copy = new Vertex();
-                        copy.Position = new Vector4(intersectPoint.X, intersectPoint.Y, intersectPoint.Z, 1.0f);
-                        copy.Texture = new Vector2(texx, texy);
-                        copy.Normal = new Vector3(planeNormal.X, planeNormal.Y, planeNormal.Z);
+                        var deltax = testMesh.VertexData[currentVertex].Texture.X - testMesh.VertexData[i - 1].Texture.X;
+                        var deltay = testMesh.VertexData[currentVertex].Texture.Y - testMesh.VertexData[i - 1].Texture.Y;
+                        var texx = testMesh.VertexData[i - 1].Texture.X + (deltax * percent);
+                        var texy = testMesh.VertexData[i - 1].Texture.Y + (deltay * percent);
 
-                        if (pointClassification == PointClassification.Front)
+                        var copy = new Vertex
                         {
-                            backList.Add(copy);
-                            frontList.Add(copy);
+                            Position = new Vector4(intersectPoint.X, intersectPoint.Y, intersectPoint.Z, 1.0f),
+                            Texture = new Vector2(texx, texy),
+                            Normal = new Vector3(planeNormal.X, planeNormal.Y, planeNormal.Z)
+                        };
 
-                            if (currentVertex != 0)
-                            {
-                                frontList.Add(testMesh.VertexData[currentVertex]);
-                            }
-                        }
-                        else if (pointClassification == PointClassification.Back)
+                        switch (pointClassification)
                         {
-                            frontList.Add(copy);
-                            backList.Add(copy);
+                            case PointClassification.Front:
+                                backList.Add(copy);
+                                frontList.Add(copy);
 
-                            if (currentVertex != 0)
-                            {
-                                backList.Add(testMesh.VertexData[currentVertex]);
-                            }
+                                if (currentVertex != 0)
+                                {
+                                    frontList.Add(testMesh.VertexData[currentVertex]);
+                                }
+
+                                break;
+                            case PointClassification.Back:
+                                frontList.Add(copy);
+                                backList.Add(copy);
+
+                                if (currentVertex != 0)
+                                {
+                                    backList.Add(testMesh.VertexData[currentVertex]);
+                                }
+
+                                break;
                         }
                     }
                     else
                     {
-                        if (pointClassification == PointClassification.Front)
+                        switch (pointClassification)
                         {
-                            if (currentVertex != 0)
-                            {
-                                frontList.Add(testMesh.VertexData[currentVertex]);
-                            }
-                        }
-                        else if (pointClassification == PointClassification.Back)
-                        {
-                            if (currentVertex != 0)
-                            {
-                                backList.Add(testMesh.VertexData[currentVertex]);
-                            }
+                            case PointClassification.Front:
+                                if (currentVertex != 0)
+                                {
+                                    frontList.Add(testMesh.VertexData[currentVertex]);
+                                }
+
+                                break;
+                            case PointClassification.Back:
+                                if (currentVertex != 0)
+                                {
+                                    backList.Add(testMesh.VertexData[currentVertex]);
+                                }
+
+                                break;
                         }
                     }
                 }
             }
 
             short v0 = 0, v1 = 0, v2 = 0;
-            int numberOfFrontIndexes = (frontList.Count - 2) * 3;
-            int numberOfBackIndexes = (backList.Count - 2) * 3;
-            short[] indexListFront = new short[numberOfFrontIndexes];
-            short[] indexListBack = new short[numberOfBackIndexes];
+            var numberOfFrontIndexes = (frontList.Count - 2) * 3;
+            var numberOfBackIndexes = (backList.Count - 2) * 3;
+            var indexListFront = new short[numberOfFrontIndexes];
+            var indexListBack = new short[numberOfBackIndexes];
 
-            for (int i = 0; i < numberOfFrontIndexes / 3; i++)
+            for (var i = 0; i < numberOfFrontIndexes / 3; i++)
             {
                 if (i == 0)
                 {

@@ -1,28 +1,25 @@
 ﻿using DungeonHack.Builders;
 using DungeonHack.Entities;
-using FunAndGamesWithSharpDX.DirectX;
 using FunAndGamesWithSharpDX.Entities;
 using SharpDX;
-using SharpDX.Direct3D11;
 using System.Collections.Generic;
+using DungeonHack.DirectX;
 
 namespace MazeEditor
 {
     public class GridPolygonBuilder
     {
         private GridBoard _gridBoard;
-        private Device _device;
-        private Shader _shader;
         private int _baseSize = 64;
         private int _floorTextureIndex = 1;
         private int _ceilingTextureIndex = 2;
         private int _wallTextureIndex = 9;
+        private readonly PolygonBuilder _meshBuilder;
 
-        public GridPolygonBuilder(GridBoard gridboard, Device device, Shader shader)
+        public GridPolygonBuilder(GridBoard gridboard, PolygonBuilder meshBuilder)
         {
             _gridBoard = gridboard;
-            _shader = shader;
-            _device = device;
+            _meshBuilder = meshBuilder;
         }
 
         public IEnumerable<Polygon> GeneratePolygons()
@@ -154,8 +151,7 @@ namespace MazeEditor
             model[5].tx = 0.0f;
             model[5].ty = 1.0f;
 
-            PolygonBuilder meshBuilder = new PolygonBuilder(_device, _shader);
-            return meshBuilder
+            return _meshBuilder
                             .New()
                             .SetModel(model)
                             .SetScaling(1, 1, 1)
@@ -250,8 +246,7 @@ namespace MazeEditor
             model[5].tx = 0.0f;
             model[5].ty = 1.0f;
 
-            PolygonBuilder meshBuilder = new PolygonBuilder(_device, _shader);
-            return meshBuilder
+            return _meshBuilder
                             .New()
                             .SetModel(model)
                             .SetScaling(1, 1, 1)
@@ -346,8 +341,7 @@ namespace MazeEditor
             model[5].tx = 0.0f;
             model[5].ty = 1.0f;
 
-            PolygonBuilder meshBuilder = new PolygonBuilder(_device, _shader);
-            return meshBuilder
+            return _meshBuilder
                             .New()
                             .SetModel(model)
                             .SetScaling(1, 1, 1)

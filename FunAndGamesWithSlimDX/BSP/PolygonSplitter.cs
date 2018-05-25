@@ -1,8 +1,6 @@
 ﻿using DungeonHack.Builders;
-using FunAndGamesWithSharpDX.DirectX;
 using FunAndGamesWithSharpDX.Entities;
 using SharpDX;
-using SharpDX.Direct3D11;
 using System;
 using System.Collections.Generic;
 
@@ -10,17 +8,13 @@ namespace DungeonHack.BSP
 {
     public class PolygonSplitter
     {
-        protected readonly PointClassifier _pointClassifier;
+        protected readonly PointClassifier PointClassifier;
         private readonly PolygonBuilder _polygonBuilder;
-        private readonly Device _device;
-        private readonly Shader _shader;
 
-        public PolygonSplitter(PointClassifier pointClassifier, Device device, Shader shader)
+        public PolygonSplitter(PointClassifier pointClassifier, PolygonBuilder polygonBuilder)
         {
-            _pointClassifier = pointClassifier;
-            _device = device;
-            _shader = shader;
-            _polygonBuilder = new PolygonBuilder(device, shader);
+            PointClassifier = pointClassifier;
+            _polygonBuilder = polygonBuilder;
         }
 
         public void Split(Polygon testMesh, Polygon plane, out Polygon frontSplit, out Polygon backSplit)
@@ -43,7 +37,7 @@ namespace DungeonHack.BSP
 
             firstVertex = testMesh.VertexData[0];
 
-            switch (_pointClassifier.ClassifyPoint(
+            switch (PointClassifier.ClassifyPoint(
                    new Vector3(firstVertex.Position.X, firstVertex.Position.Y, firstVertex.Position.Z),
                    pointOnPlane,
                    planeNormal))
@@ -76,7 +70,7 @@ namespace DungeonHack.BSP
                 pointA = testMesh.VertexData[i - 1];
                 pointB = testMesh.VertexData[currentVertex];
 
-                var pointClassification = _pointClassifier.ClassifyPoint(
+                var pointClassification = PointClassifier.ClassifyPoint(
                     new Vector3(pointB.Position.X, pointB.Position.Y, pointB.Position.Z), pointOnPlane, planeNormal);
 
                 if (pointClassification == PointClassification.OnPlane)

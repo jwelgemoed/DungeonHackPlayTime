@@ -15,6 +15,7 @@ using DungeonHack.CollisionDetection;
 using DungeonHack.Quadtree;
 using DungeonHack.Entities;
 using DungeonHack.Builders;
+using DungeonHack.DirectX;
 
 namespace MazeEditor
 {
@@ -177,7 +178,7 @@ namespace MazeEditor
 
             LightEngine.AddSpotLight(_spotlight);
 
-            var polygonBuilder = new PolygonBuilder(Device, Shader);
+            var polygonBuilder = new PolygonBuilder(Device, Shader, new BufferFactory(Device));
             var itemFactory = new ItemFactory(polygonBuilder, textureDictionary, materialDictionary);
             _itemRegistry = new ItemRegistry();
 
