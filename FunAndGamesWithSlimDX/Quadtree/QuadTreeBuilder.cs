@@ -3,6 +3,8 @@ using FunAndGamesWithSharpDX.Entities;
 using SharpDX;
 using System.Collections.Generic;
 using System.Linq;
+using DungeonHack.DirectX;
+using SharpDX.Direct3D11;
 
 namespace DungeonHack.QuadTree
 {
@@ -13,6 +15,13 @@ namespace DungeonHack.QuadTree
         public int NumberOfNodes { get; private set; }
 
         public IList<QuadTreeNode> LeafNodeList { get; private set; }
+
+        private readonly Device _device;
+
+        public QuadTreeBuilder(Device device)
+        {
+            _device = device;
+        }
 
         public QuadTreeNode BuildTree(IEnumerable<Polygon> polygons)
         {
@@ -67,7 +76,7 @@ namespace DungeonHack.QuadTree
                 {
                     Minimum = minimumVector,
                     Maximum = maximumVector
-                })
+                }, new BufferFactory(_device))
             };
 
             BuildQuadTree(rootNode, polygons, 0);
@@ -139,7 +148,7 @@ namespace DungeonHack.QuadTree
             {
                 Id = NumberOfNodes,
                 Parent = parent,
-                BoundingBox = new AABoundingBox(new BoundingBox(minimum, maximum))
+                BoundingBox = new AABoundingBox(new BoundingBox(minimum, maximum), new BufferFactory(_device))
             };
 
             //contained or intersected polygons...that means intersected polygons will end up in more than 1 octant.

@@ -134,8 +134,10 @@ namespace DungeonHack.QuadTree
                 if (!node.BoundingBox.ContainsOrIntersectsCamera(camera) &&
                     (frustrum.CheckBoundingBox(node.BoundingBox.BoundingBox) == 0
                         || node.BoundingBox.DistanceToCamera(camera) >= 2500)
-                        || _depthBuffer.IsBoundingBoxOccluded(node.BoundingBox))
+                        ||
+                        _depthBuffer.IsBoundingBoxOccluded(node.BoundingBox))
                 {
+                    _renderer.RenderBoundingBox(node.BoundingBox, Matrix.Identity, camera.RenderViewProjectionMatrix, 1, 0);
                     continue;
                 }
 
@@ -146,15 +148,15 @@ namespace DungeonHack.QuadTree
 
                     foreach (var polygon in node.Polygons)
                     {
-                       // if (polygon.HasBeenProcessedForRenderingThisFrame)
-                       //     continue;
+                        // if (polygon.HasBeenProcessedForRenderingThisFrame)
+                        //     continue;
 
                         if //(ConfigManager.FrustrumCullingEnabled &&
                            ((frustrum.CheckBoundingBox(polygon.BoundingBox.BoundingBox) == 0))
                         {
                             continue;
                         }
-                        
+
                         bool draw = true;
 
                         if (polygon.WorldVectors.Length == 6)
@@ -170,7 +172,7 @@ namespace DungeonHack.QuadTree
                             //_endOfList[threadCount]++;
                             polygonsdrawn++;
                             int meshRenderedCount = 0;
-                            _renderer.Render(frustrum, polygon, camera.RenderViewProjectionMatrix, ref meshRenderedCount);
+                            _renderer.Render(polygon, camera.RenderViewProjectionMatrix, ref meshRenderedCount);
                         }
                         else
                         {

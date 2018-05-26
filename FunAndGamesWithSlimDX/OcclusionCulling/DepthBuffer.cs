@@ -30,8 +30,8 @@ namespace DungeonHack.OcclusionCulling
             _nearClipPane = ConfigManager.ScreenNear;
             _camera = camera;
             l = t = 0;
-            r = ConfigManager.ScreenWidth;
-            b = ConfigManager.ScreenHeight;
+            r = ConfigManager.ScreenWidth / 8;
+            b = ConfigManager.ScreenHeight / 8;
             Width = ConfigManager.ScreenWidth / 8;
             Height = ConfigManager.ScreenHeight / 8;
             MaxDepth = 10000;
@@ -173,7 +173,7 @@ namespace DungeonHack.OcclusionCulling
 
                         if (maxx >= Width)
                         {
-                            maxx = Width;
+                          //  maxx = Width;
                             return false;
                         }
                     }
@@ -184,7 +184,7 @@ namespace DungeonHack.OcclusionCulling
 
                         if (minx < 0)
                         {
-                            minx = 0;
+                          //  minx = 0;
                             return false;
                         }
                     }
@@ -195,7 +195,7 @@ namespace DungeonHack.OcclusionCulling
 
                         if (maxy > Height)
                         {
-                            maxy = Height;
+                         //   maxy = Height;
                             return false;
                         }
                     }
@@ -206,7 +206,7 @@ namespace DungeonHack.OcclusionCulling
 
                         if (miny < 0)
                         {
-                            miny = 0;
+                         //   miny = 0;
                             return false;
                         }
                     }

@@ -4,8 +4,9 @@ using SharpDX.Multimedia;
 using SharpDX.RawInput;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Windows.Forms;
+using SharpDX;
+using Point = System.Drawing.Point;
 
 namespace FunAndGamesWithSharpDX.Engine
 {
@@ -116,6 +117,47 @@ namespace FunAndGamesWithSharpDX.Engine
             {
                 Camera.ToggleTopDownView();
             }
+            else if (e.KeyCode == Keys.I)
+            {
+                ConfigManager.SpotLightFactor++;
+            }
+            else if (e.KeyCode == Keys.U)
+            {
+                ConfigManager.SpotLightFactor--;
+            }
+            else if (e.KeyCode == Keys.O)
+            {
+                ConfigManager.SpotLightRange -= 10;
+            }
+            else if (e.KeyCode == Keys.P)
+            {
+                ConfigManager.SpotLightRange += 10;
+            }
+            else if (e.KeyCode == Keys.G)
+            {
+                ConfigManager.SpotLightAttentuationA -= 0.1f;
+            }
+            else if (e.KeyCode == Keys.H)
+            {
+                ConfigManager.SpotLightAttentuationA += 0.1f;
+            }
+            else if (e.KeyCode == Keys.J)
+            {
+                ConfigManager.SpotLightAttentuationB -= 0.1f;
+            }
+            else if (e.KeyCode == Keys.K)
+            {
+                ConfigManager.SpotLightAttentuationB += 0.1f;
+            }
+            else if (e.KeyCode == Keys.L)
+            {
+                ConfigManager.SpotLightAttentuationC -= 0.1f;
+            }
+            else if (e.KeyCode == Keys.OemSemicolon)
+            {
+                ConfigManager.SpotLightAttentuationC += 0.1f;
+            }
+
         }
 
         protected void KeyUp(object sender, KeyEventArgs e)

@@ -95,7 +95,7 @@ namespace DungeonHack.QuadTree
                     //_endOfList[threadCount]++;
                     polygonsdrawn++;
                     int meshRenderedCount = 0;
-                    _renderer.Render(frustrum, polygon, camera.RenderViewProjectionMatrix, ref meshRenderedCount);
+                    _renderer.Render(polygon, camera.RenderViewProjectionMatrix, ref meshRenderedCount);
                 }
                 else
                 {

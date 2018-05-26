@@ -137,7 +137,7 @@ namespace MazeEditor
              bspBoudingVolumeCalculator.ComputeBoundingVolumes(rootNode);
 
              _mazeRunner.BspNodes = bspTreeBuilder.TransformNodesToOptomizedNodes(rootNode);*/
-            var quadTreeBuilder = new QuadTreeBuilder();
+            var quadTreeBuilder = new QuadTreeBuilder(_mazeRunner.Device);
             var quadtreeNode = quadTreeBuilder.BuildTree(_mazeRunner.Meshes);
             _mazeRunner.QuadTreeNode = quadtreeNode;
             _mazeRunner.QuadTreeLeafNodes = quadTreeBuilder.LeafNodeList;
@@ -165,7 +165,7 @@ namespace MazeEditor
 
             _mazeRunner.Meshes = meshList.ToList();
 
-            var quadTreeBuilder = new QuadTreeBuilder();
+            var quadTreeBuilder = new QuadTreeBuilder(_mazeRunner.Device);
             var root = quadTreeBuilder.BuildTree(_mazeRunner.Meshes);
             Stack<QuadTreeNode> nodeStack = new Stack<QuadTreeNode>();
 

@@ -88,7 +88,7 @@ namespace DungeonHack.BSP
                 if (!_renderList[i].OcclusionQuery.IsIssued)
                     _renderList[i].OcclusionQuery.Begin();
 
-                _meshRenderer.Render(frustrum, _renderList[i], camera.ViewProjectionMatrix, ref meshRenderedCount);
+                _meshRenderer.Render(_renderList[i], camera.ViewProjectionMatrix, ref meshRenderedCount);
 
                 if (_renderList[i].OcclusionQuery.IsComplete())
                     _renderList[i].OcclusionQuery.End();

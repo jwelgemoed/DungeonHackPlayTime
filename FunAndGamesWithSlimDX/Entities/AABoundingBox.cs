@@ -1,4 +1,7 @@
-﻿using FunAndGamesWithSharpDX.Engine;
+﻿using DungeonHack.BSP;
+using DungeonHack.DirectX;
+using FunAndGamesWithSharpDX.Engine;
+using FunAndGamesWithSharpDX.Entities;
 using SharpDX;
 using SharpDX.Direct3D11;
 
@@ -12,7 +15,9 @@ namespace DungeonHack.Entities
 
         public Vector3[] Vectors3 { get; set; }
 
-        public int[] Indexes { get; set; }
+        public Vertex[] VertexData { get; set; }
+
+        public short[] Indexes { get; set; }
 
         public Vector4 Center { get; private set; }
         
@@ -39,17 +44,19 @@ namespace DungeonHack.Entities
             return BoundingBox.Intersects(camera.CameraSphere);
         }
 
-        public AABoundingBox(BoundingBox box)
+        public AABoundingBox(BoundingBox box, BufferFactory bufferFactory)
         {
             BoundingBox = box;
             var corners = box.GetCorners();
             Vectors = new Vector4[corners.Length];
             Vectors3 = new Vector3[corners.Length];
-            
+            VertexData = new Vertex[corners.Length];
+
             for (int i = 0; i < corners.Length; i++)
             {
                 Vectors[i] = new Vector4(corners[i], 1.0f);
                 Vectors3[i] = corners[i];
+                VertexData[i].Position = Vectors[i];
             }
 
             var minimum = BoundingBox.Minimum;
@@ -58,7 +65,7 @@ namespace DungeonHack.Entities
             var halfPoint = maximum - minimum;
             Center = new Vector4(minimum + halfPoint, 1.0f);
 
-            Indexes = new int[] 
+            Indexes = new short[] 
             {
                 //Front
                 4, 5, 6,
@@ -107,6 +114,9 @@ namespace DungeonHack.Entities
 	            //0, 6, 5,
              //   1, 6, 0
             };
+
+            BoundingBoxVertexBuffer = bufferFactory.GetVertexBuffer(VertexData);
+            BoundingBoxIndexBuffer = bufferFactory.GetIndexBuffer(Indexes);
 
             var front = new SharpDX.Plane(corners[Indexes[4]], corners[Indexes[5]], corners[Indexes[6]]);
             var back = new SharpDX.Plane(corners[Indexes[2]], corners[Indexes[1]], corners[Indexes[0]]);

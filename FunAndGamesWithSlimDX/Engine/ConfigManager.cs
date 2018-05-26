@@ -1,4 +1,5 @@
 ﻿using DungeonHack.Properties;
+using SharpDX;
 
 namespace FunAndGamesWithSharpDX.Engine
 {
@@ -128,5 +129,15 @@ namespace FunAndGamesWithSharpDX.Engine
         {
             get { return Settings.Default.TopdownMaxZoomAcceleration; }
         }
+
+        public static float SpotLightRange { get; set; }
+
+        public static float SpotLightFactor { get; set; }
+
+        public static float SpotLightAttentuationA { get; set; }
+
+        public static float SpotLightAttentuationB { get; set; }
+
+        public static float SpotLightAttentuationC { get; set; }
     }
 }

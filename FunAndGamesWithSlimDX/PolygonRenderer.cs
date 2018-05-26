@@ -1,4 +1,6 @@
-﻿using DungeonHack.DataDictionaries;
+﻿using Assimp.Configs;
+using DungeonHack.DataDictionaries;
+using DungeonHack.Entities;
 using FunAndGamesWithSharpDX.DirectX;
 using FunAndGamesWithSharpDX.Engine;
 using FunAndGamesWithSharpDX.Entities;
@@ -15,7 +17,7 @@ namespace DungeonHack
         private readonly DeviceContext _deviceContext;
         private readonly Camera _camera;
         private readonly Shader _shader;
-        private object _lock = new object() ;
+        private readonly object _lock = new object() ;
 
         public PolygonRenderer(MaterialDictionary materialDictionary, 
                             TextureDictionary textureDictionary,
@@ -30,15 +32,8 @@ namespace DungeonHack
             _shader = shader;
         }
 
-        public void Render(Frustrum frustrum, Polygon polygon, Matrix viewProjectionMatrix, ref int polygonRenderedCount)
+        public void Render(Polygon polygon, Matrix viewProjectionMatrix, ref int polygonRenderedCount)
         {
-            ////Frustrum culling.
-            //if (ConfigManager.FrustrumCullingEnabled &&
-            //    frustrum.CheckBoundingBox(polygon.BoundingBox) == 0)
-            //{
-            //    return;
-            //}
-
             lock (_lock)
             {
                 polygonRenderedCount++;
@@ -56,20 +51,20 @@ namespace DungeonHack
             }
         }
 
-        public void RenderBoundingBox(Frustrum frustrum, Polygon polygon, Matrix viewProjectionMatrix)
+        public void RenderBoundingBox(AABoundingBox boundingBox, Matrix worldMatrix, Matrix viewProjectionMatrix, int textureIndex, int materialIndex)
         {
             lock (_lock)
             {
-                _deviceContext.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(polygon.VertexBuffer, Vertex.SizeOf, 0));
-                _deviceContext.InputAssembler.SetIndexBuffer(polygon.IndexBuffer, Format.R16_UInt, 0);
+                _deviceContext.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(boundingBox.BoundingBoxVertexBuffer, Vertex.SizeOf, 0));
+                _deviceContext.InputAssembler.SetIndexBuffer(boundingBox.BoundingBoxIndexBuffer, Format.R16_UInt, 0);
 
                 _shader.Render(_deviceContext,
-                                polygon.IndexData.Length,
-                                polygon.WorldMatrix,
+                                boundingBox.Indexes.Length,
+                                worldMatrix,
                                 viewProjectionMatrix,
-                                _textureDictionary.GetTexture(polygon.TextureIndex).TextureData,
+                                _textureDictionary.GetTexture(textureIndex).TextureData,
                                 _camera.GetPosition(),
-                                _materialDictionary.GetMaterial(polygon.MaterialIndex));
+                                _materialDictionary.GetMaterial(materialIndex));
             }
         }
     }

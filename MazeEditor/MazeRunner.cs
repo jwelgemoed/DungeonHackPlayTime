@@ -90,7 +90,7 @@ namespace MazeEditor
             //Draw items in world;
             foreach (var item in _itemRegistry.GetItems())
             {
-                _meshRenderer.Render(_frustrum, item.Polygon, Camera.RenderViewProjectionMatrix, ref _meshRenderedCount);
+                _meshRenderer.Render(item.Polygon, Camera.RenderViewProjectionMatrix, ref _meshRenderedCount);
             }
 
         }
@@ -107,10 +107,11 @@ namespace MazeEditor
                 new Color4(2.0f, 2.0f, 2.0f, 2.0f),
                 new Color4(2.0f, 2.0f, 2.0f, 2.0f),
                 Camera.EyeAt,
-                1000.0f,
+                ConfigManager.SpotLightRange,//500.0f,
                 Vector3.Normalize(Camera.LookAt - Camera.EyeAt),
-                96.0f,
-                new Vector3(1.0f, 1.0f, 1.0f)
+                ConfigManager.SpotLightFactor,//96.0f,
+                //new Vector3(1.0f, 1.0f, 1.0f)
+                new Vector3(ConfigManager.SpotLightAttentuationA, ConfigManager.SpotLightAttentuationB, ConfigManager.SpotLightAttentuationC)
             );
 
             LightEngine.AddSpotLight(spotlight);
@@ -132,7 +133,7 @@ namespace MazeEditor
 
             var playerStart = Dungeon.GetPlayerStartLocation();
 
-            Camera.SetPosition(playerStart.Item1 * 64, 16, playerStart.Item2 * 64);
+            Camera.SetPosition(playerStart.Item1 * 65, 16, playerStart.Item2 * 65);
 
             _meshRenderer = new PolygonRenderer(materialDictionary, textureDictionary, base.Renderer.Context, Camera, base.Shader);
 
@@ -146,10 +147,16 @@ namespace MazeEditor
 
             base.Shader.Initialize(base.Renderer.Device, base.Renderer.Context);
 
+            ConfigManager.SpotLightAttentuationA = 1.0f;
+            ConfigManager.SpotLightAttentuationB = 1.0f;
+            ConfigManager.SpotLightAttentuationC = 1.0f;
+            ConfigManager.SpotLightFactor = 96.0f;
+            ConfigManager.SpotLightRange = 1000;
+
             _directionalLight = new DirectionalLight(
-                new Color4(0.2f, 0.2f, 0.2f, 1.0f),
+                new Color4(0.1f, 0.1f, 0.1f, 1.0f),
                 new Color4(0.0f, 0.0f, 0.0f, 1.0f),
-                new Color4(0.0f, 0.0f, 0.0f, 1.0f),
+                new Color4(20.0f, 20.0f, 20.0f, 1.0f),
                 new Vector3(0.0f, 1.0f, 0.0f));
 
             LightEngine.AddDirectionalLight(_directionalLight);
@@ -158,21 +165,21 @@ namespace MazeEditor
                 new Color4(0.5f, 0.5f, 0.0f, 1.0f),
                 new Color4(0.2f, 0.2f, 0.2f, 1.0f),
                 new Color4(0.5f, 0.5f, 0.5f, 1.0f),
-                new Vector3(0.0f, 0.0f, 0.0f),
+                Camera.EyeAt,
                 100.0f,
                 new Vector3(1.0f, 1.0f, 1.0f)
             );
 
-            LightEngine.AddPointLight(_pointLight);
+            //LightEngine.AddPointLight(_pointLight);
 
-            _spotlight = new Spotlight(
-                new Color4(0.5f, 1.5f, 0.0f, 1.0f),
-                new Color4(0.2f, 0.2f, 0.2f, 1.0f),
-                new Color4(1.5f, 0.5f, 0.5f, 1.0f),
-                new Vector3(10.0f, 0.0f, 0.0f),
-                10.0f,
-                new Vector3(0.0f, 1.0f, 0.0f),
-                1.0f,
+             _spotlight = new Spotlight(
+                new Color4(2.0f, 2.0f, 2.0f, 2.0f),
+                new Color4(2.0f, 2.0f, 2.0f, 2.0f),
+                new Color4(2.0f, 2.0f, 2.0f, 2.0f),
+                Camera.EyeAt,
+                1000.0f,
+                Vector3.Normalize(Camera.LookAt - Camera.EyeAt),
+                96.0f,
                 new Vector3(1.0f, 1.0f, 1.0f)
             );
 
