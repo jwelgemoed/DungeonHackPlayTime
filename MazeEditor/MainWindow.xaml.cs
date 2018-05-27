@@ -23,13 +23,13 @@ namespace MazeEditor
         private Dungeon _dungeon;
         private MazeRunner _mazeRunner;
 
-        private int MaxMazeWidth { get { return (int)maxMazeWidthSlider.Value; } }
-        private int MaxMazeHeight { get { return (int)maxMazeHeightSlider.Value; } }
-        private int MaxRoomSize { get { return (int)maxRoomSizeSlider.Value; } }
-        private int MinRoomSize { get { return (int)minRoomSizeSlider.Value; } }
-        private bool OverlappingRoomsAllowed { get { return OverlappingRoomsChkBox.IsChecked ?? false; } }
-        private int NumberOfRooms { get { return (int) numberOfRoomsSlider.Value; } }
-        private SelectionMethodType SelectionMethod { get { return GetSelectionMethodTypeFromListBox(); } }
+        private int MaxMazeWidth => (int)maxMazeWidthSlider.Value;
+        private int MaxMazeHeight => (int)maxMazeHeightSlider.Value;
+        private int MaxRoomSize => (int)maxRoomSizeSlider.Value;
+        private int MinRoomSize => (int)minRoomSizeSlider.Value;
+        private bool OverlappingRoomsAllowed => OverlappingRoomsChkBox.IsChecked ?? false;
+        private int NumberOfRooms => (int) numberOfRoomsSlider.Value;
+        private SelectionMethodType SelectionMethod => GetSelectionMethodTypeFromListBox();
 
         public MainWindow()
         {

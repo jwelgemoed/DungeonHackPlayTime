@@ -1,5 +1,6 @@
 ﻿using Assimp.Configs;
 using DungeonHack.DataDictionaries;
+using DungeonHack.DirectX;
 using DungeonHack.Entities;
 using FunAndGamesWithSharpDX.DirectX;
 using FunAndGamesWithSharpDX.Engine;
@@ -44,6 +45,7 @@ namespace DungeonHack
                 _shader.Render(_deviceContext,
                                 polygon.IndexData.Length,
                                 polygon.WorldMatrix,
+                                _camera.ViewMatrix,
                                 viewProjectionMatrix,
                                 _textureDictionary.GetTexture(polygon.TextureIndex).TextureData,
                                 _camera.GetPosition(),
@@ -61,6 +63,7 @@ namespace DungeonHack
                 _shader.Render(_deviceContext,
                                 boundingBox.Indexes.Length,
                                 worldMatrix,
+                                _camera.ViewMatrix,
                                 viewProjectionMatrix,
                                 _textureDictionary.GetTexture(textureIndex).TextureData,
                                 _camera.GetPosition(),

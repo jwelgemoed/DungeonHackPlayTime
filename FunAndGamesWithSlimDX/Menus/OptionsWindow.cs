@@ -4,6 +4,7 @@ using FunAndGamesWithSharpDX.Entities;
 using SharpDX.Direct3D11;
 using System;
 using System.Windows.Forms;
+using DungeonHack.DirectX;
 
 namespace FunAndGamesWithSharpDX.Menus
 {

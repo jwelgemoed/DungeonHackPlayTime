@@ -1,18 +1,17 @@
 ﻿using DungeonHack.DirectX.ConstantBuffer;
+using FunAndGamesWithSharpDX.DirectX;
 using FunAndGamesWithSharpDX.Engine;
 using FunAndGamesWithSharpDX.Entities;
 using FunAndGamesWithSharpDX.Lights;
 using SharpDX;
 using SharpDX.D3DCompiler;
 using SharpDX.Direct3D11;
-using System;
 using Device = SharpDX.Direct3D11.Device;
 
-namespace FunAndGamesWithSharpDX.DirectX
+namespace DungeonHack.DirectX
 {
     public class LightShader : IShader
     {
-        private Device _device;
         private DeviceContext _context;
         private InputLayout _layout;
 
@@ -28,13 +27,11 @@ namespace FunAndGamesWithSharpDX.DirectX
         
         public LightShader(Device device, DeviceContext context)
         {
-            _device = device;
             _context = context;
         }
 
         public void Initialize(Device device, DeviceContext context)
         {
-            _device = device;
             _context = context;
 
             _elements = Vertex.GetInputElements();
@@ -89,10 +86,12 @@ namespace FunAndGamesWithSharpDX.DirectX
             _context.PixelShader.Set(pixelShader);
         }
                 
-        public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewProjectionMatrix, ShaderResourceView texture, Vector3 cameraPosition, Material material)
+        public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix viewProjectionMatrix, ShaderResourceView texture, Vector3 cameraPosition, Material material)
         {
             _perObjectBuffer.WorldMatrix = worldMatrix;
             _perObjectBuffer.WorldMatrix.Transpose();
+            _perObjectBuffer.ViewMatrix = viewMatrix;
+            _perObjectBuffer.ViewMatrix.Transpose();
             _perObjectBuffer.ViewProjectionMatrix = viewProjectionMatrix;
             _perObjectBuffer.ViewProjectionMatrix.Transpose();
             _perObjectBuffer.Material = material;
@@ -125,8 +124,8 @@ namespace FunAndGamesWithSharpDX.DirectX
             _perFrameBuffer.DirectionalLight = directionalLight;
             _perFrameBuffer.PointLight = pointLight;
             _perFrameBuffer.SpotLight = spotLight;
-            _perFrameBuffer.FogStart = 10;
-            _perFrameBuffer.FogEnd = 100;
+            _perFrameBuffer.FogStart = 100;
+            _perFrameBuffer.FogEnd = 1000;
         }
 
         public void Dispose()

@@ -4,7 +4,7 @@ using FunAndGamesWithSharpDX.Lights;
 using SharpDX;
 using SharpDX.Direct3D11;
 
-namespace FunAndGamesWithSharpDX.DirectX
+namespace DungeonHack.DirectX
 {
     public class Shader : IShader
     {
@@ -16,11 +16,9 @@ namespace FunAndGamesWithSharpDX.DirectX
 
         public void Dispose()
         {
-            if (_lightShader != null)
-                _lightShader.Dispose();
+            _lightShader?.Dispose();
 
-            if (_textureShader != null)
-                _textureShader.Dispose();
+            _textureShader?.Dispose();
         }
 
         public void SetShader(ShaderTechnique shaderTechnique)
@@ -49,9 +47,9 @@ namespace FunAndGamesWithSharpDX.DirectX
             SetShader(ShaderTechnique.LightShader);
         }
 
-        public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewProjMatrix, ShaderResourceView texture, Vector3 cameraPosition, Material material)
+        public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix viewProjMatrix, ShaderResourceView texture, Vector3 cameraPosition, Material material)
         {
-            _currentShader.Render(context, indexCount, worldMatrix, viewProjMatrix, texture, cameraPosition, material);
+            _currentShader.Render(context, indexCount, worldMatrix, viewMatrix, viewProjMatrix, texture, cameraPosition, material);
         }
 
         public void RenderLights(DirectionalLight directionalLight, PointLight pointLight, Spotlight spotLight)

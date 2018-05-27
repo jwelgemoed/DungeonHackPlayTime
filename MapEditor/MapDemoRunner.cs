@@ -12,6 +12,7 @@ using System.Diagnostics;
 using DungeonHack;
 using DungeonHack.DataDictionaries;
 using System.Configuration;
+using DungeonHack.DirectX;
 using DungeonHack.Octree;
 
 namespace MapEditor

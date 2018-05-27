@@ -135,27 +135,36 @@ namespace FunAndGamesWithSharpDX.Engine
             }
             else if (e.KeyCode == Keys.G)
             {
-                ConfigManager.SpotLightAttentuationA -= 0.1f;
+                ConfigManager.SpotLightAttentuationA -= 1.0f;
+
+                if (ConfigManager.SpotLightAttentuationA <= 0)
+                    ConfigManager.SpotLightAttentuationA = 0;
             }
             else if (e.KeyCode == Keys.H)
             {
-                ConfigManager.SpotLightAttentuationA += 0.1f;
+                ConfigManager.SpotLightAttentuationA += 1.0f;
             }
             else if (e.KeyCode == Keys.J)
             {
-                ConfigManager.SpotLightAttentuationB -= 0.1f;
+                ConfigManager.SpotLightAttentuationB -= 1.0f;
+
+                if (ConfigManager.SpotLightAttentuationB <= 0)
+                    ConfigManager.SpotLightAttentuationB = 0;
             }
             else if (e.KeyCode == Keys.K)
             {
-                ConfigManager.SpotLightAttentuationB += 0.1f;
+                ConfigManager.SpotLightAttentuationB += 1.0f;
             }
             else if (e.KeyCode == Keys.L)
             {
-                ConfigManager.SpotLightAttentuationC -= 0.1f;
+                ConfigManager.SpotLightAttentuationC -= 1.0f;
+
+                if (ConfigManager.SpotLightAttentuationC <= 0)
+                    ConfigManager.SpotLightAttentuationC = 0;
             }
             else if (e.KeyCode == Keys.OemSemicolon)
             {
-                ConfigManager.SpotLightAttentuationC += 0.1f;
+                ConfigManager.SpotLightAttentuationC += 1.0f;
             }
 
         }

@@ -8,6 +8,7 @@ namespace DungeonHack.DirectX.ConstantBuffer
     public struct ConstantBufferPerObject
     {
         public Matrix WorldMatrix;
+        public Matrix ViewMatrix;
         public Matrix ViewProjectionMatrix;
         public Material Material;
 

@@ -148,8 +148,8 @@ namespace MazeEditor
             base.Shader.Initialize(base.Renderer.Device, base.Renderer.Context);
 
             ConfigManager.SpotLightAttentuationA = 1.0f;
-            ConfigManager.SpotLightAttentuationB = 1.0f;
-            ConfigManager.SpotLightAttentuationC = 1.0f;
+            ConfigManager.SpotLightAttentuationB = 0.2f;//1.0f;
+            ConfigManager.SpotLightAttentuationC = 0.1f;//1.0f;
             ConfigManager.SpotLightFactor = 96.0f;
             ConfigManager.SpotLightRange = 1000;
 

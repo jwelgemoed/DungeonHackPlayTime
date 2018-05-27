@@ -9,6 +9,7 @@ using SharpDX.Windows;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
+using DungeonHack.DirectX;
 
 namespace FunAndGamesWithSharpDX.Engine
 {

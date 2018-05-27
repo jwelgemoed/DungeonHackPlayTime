@@ -187,6 +187,7 @@ void ComputeSpotLight(Material mat, SpotLight L, float3 pos, float3 normal, floa
 cbuffer cbPerObject : register(b0)
 {
 	matrix worldMatrix;
+	matrix viewMatrix;
 	matrix viewProjectionMatrix;
 	Material material;
 };
@@ -254,7 +255,8 @@ PixelInputType LightVertexShader(VertexInputType input)
 	output.viewDirection = normalize(output.viewDirection);
 
 	// Calculate linear fog.    
-	output.fogFactor = saturate((fogEnd - output.worldPosition.z) / (fogEnd - fogStart));
+	worldPos = mul(input.position, viewMatrix);
+	output.fogFactor = saturate((fogEnd - worldPos.z) / (fogEnd - fogStart));
 
 	return output;
 }
@@ -288,11 +290,11 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
 	diffuse += D;
 	specular += S;
 
-	ComputePointLight(material, gPointLight, input.position, input.normal, input.viewDirection, A, D, S);
-
-	ambient += A;
-	diffuse += D;
-	specular += S;
+	//ComputePointLight(material, gPointLight, input.position, input.normal, input.viewDirection, A, D, S);
+	//
+	//ambient += A;
+	//diffuse += D;
+	//specular += S;
 
 	ComputeSpotLight(material, gSpotLight, input.worldPosition, input.normal, input.viewDirection, A, D, S);
 
@@ -315,7 +317,7 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
 	//The fog color equation then does a linear interpolation between the texture color and the fog color based on the fog factor.
 
 	// Calculate the final color using the fog effect equation.
-	//color = input.fogFactor * color + (1.0 - input.fogFactor) * fogColor;
+	color = input.fogFactor * color + (1.0 - input.fogFactor) * fogColor;
 
 	return color;
 }

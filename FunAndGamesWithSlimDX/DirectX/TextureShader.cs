@@ -6,6 +6,7 @@ using SharpDX;
 using SharpDX.D3DCompiler;
 using SharpDX.Direct3D11;
 using System;
+using DungeonHack.DirectX;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace FunAndGamesWithSharpDX.DirectX
@@ -85,11 +86,13 @@ namespace FunAndGamesWithSharpDX.DirectX
             
         }
                 
-        public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewProjectionMatrix,
+        public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix viewProjectionMatrix,
                            ShaderResourceView texture, Vector3 cameraPosition, Material material)
         {
             _perObjectBuffer.WorldMatrix = worldMatrix;
             _perObjectBuffer.WorldMatrix.Transpose();
+            _perObjectBuffer.ViewMatrix = viewMatrix;
+            _perObjectBuffer.ViewMatrix.Transpose();
             _perObjectBuffer.ViewProjectionMatrix = viewProjectionMatrix;
             _perObjectBuffer.ViewProjectionMatrix.Transpose();
             _perObjectBuffer.Material = material;
