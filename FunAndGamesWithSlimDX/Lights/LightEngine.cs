@@ -1,12 +1,6 @@
-﻿using FunAndGamesWithSharpDX.DirectX;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DungeonHack.DirectX;
+﻿using DungeonHack.DirectX;
 
-namespace FunAndGamesWithSharpDX.Lights
+namespace DungeonHack.Lights
 {
     public static class LightEngine
     {

@@ -10,7 +10,7 @@ using Point = System.Drawing.Point;
 
 namespace FunAndGamesWithSharpDX.Engine
 {
-    public abstract class CameraEngine : Engine, IDisposable
+    public abstract class CameraEngine : DungeonHack.Engine.Engine, IDisposable
     {
         private float _previousMouseX;
         private float _previousMouseY;
@@ -87,17 +87,7 @@ namespace FunAndGamesWithSharpDX.Engine
             }
             else if (e.KeyCode == Keys.F)
             {
-                _flashLightOn = !_flashLightOn;
-
-                if (_flashLightOn)
-                {
-                    Shader.SetShader(DirectX.ShaderTechnique.LightShader);
-                }
-                else
-                {
-                    Shader.SetShader(DirectX.ShaderTechnique.TextureShader);
-                }
-                
+                ConfigManager.SpotlightOn = !ConfigManager.SpotlightOn;
             }
             else if (e.KeyCode == Keys.CapsLock)
             {
@@ -166,7 +156,22 @@ namespace FunAndGamesWithSharpDX.Engine
             {
                 ConfigManager.SpotLightAttentuationC += 1.0f;
             }
-
+            else if (e.KeyCode == Keys.V)
+            {
+                ConfigManager.FogStart -=5;
+            }
+            else if (e.KeyCode == Keys.B)
+            {
+                ConfigManager.FogStart +=5;
+            }
+            else if (e.KeyCode == Keys.N)
+            {
+                ConfigManager.FogEnd -= 5;
+            }
+            else if (e.KeyCode == Keys.M)
+            {
+                ConfigManager.FogEnd += 5;
+            }
         }
 
         protected void KeyUp(object sender, KeyEventArgs e)

@@ -68,6 +68,11 @@ void ComputeDirectionalLight(Material mat, DirectionalLight L,
 	if (diffuseFactor > 0.0f)
 	{
 		float3 v = reflect(-lightVec, normal);
+		float term1 = dot(v, toEye);
+		float term1max = max(term1, 0.0f);
+		float specw = mat.Specular.w;
+		float specpow = pow(term1max, specw);
+
 		float specFactor = pow(max(dot(v, toEye), 0.0f), mat.Specular.w);
 
 		diffuse = diffuseFactor * mat.Diffuse * L.Diffuse;
@@ -290,11 +295,12 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
 	diffuse += D;
 	specular += S;
 
-	//ComputePointLight(material, gPointLight, input.position, input.normal, input.viewDirection, A, D, S);
-	//
-	//ambient += A;
-	//diffuse += D;
-	//specular += S;
+	//gPointLight.Attentuation = float3(0.0f, 100.0f, 100.0f);
+	ComputePointLight(material, gPointLight, input.worldPosition, input.normal, input.viewDirection, A, D, S);
+	
+	ambient += A;
+	diffuse += D;
+	specular += S;
 
 	ComputeSpotLight(material, gSpotLight, input.worldPosition, input.normal, input.viewDirection, A, D, S);
 
@@ -304,7 +310,7 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
 
 	float4 litColor = ambient + diffuse;
 
-	litColor.a = material.Diffuse.a;
+	//litColor.a = material.Diffuse.a;
 
 	// Multiply the texture pixel and the input color to get the textured result.
 	color = litColor * textureColor;
@@ -313,7 +319,7 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
 	color = saturate(color + specular);
 
 	// Set the color of the fog to grey.
-	fogColor = float4(0.5f, 0.5f, 0.5f, 1.0f);
+	fogColor = float4(0.2f, 0.2f, 0.2f, 0.5f);
 	//The fog color equation then does a linear interpolation between the texture color and the fog color based on the fog factor.
 
 	// Calculate the final color using the fog effect equation.

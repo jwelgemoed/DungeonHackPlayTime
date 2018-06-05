@@ -1,5 +1,5 @@
-﻿using FunAndGamesWithSharpDX.Entities;
-using FunAndGamesWithSharpDX.Lights;
+﻿using DungeonHack.Lights;
+using FunAndGamesWithSharpDX.Entities;
 using SharpDX;
 using SharpDX.Direct3D11;
 

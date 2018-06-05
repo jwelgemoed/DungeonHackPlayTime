@@ -1,12 +1,12 @@
 ﻿using DungeonHack.DirectX.ConstantBuffer;
 using FunAndGamesWithSharpDX.Engine;
 using FunAndGamesWithSharpDX.Entities;
-using FunAndGamesWithSharpDX.Lights;
 using SharpDX;
 using SharpDX.D3DCompiler;
 using SharpDX.Direct3D11;
 using System;
 using DungeonHack.DirectX;
+using DungeonHack.Lights;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace FunAndGamesWithSharpDX.DirectX
@@ -119,6 +119,7 @@ namespace FunAndGamesWithSharpDX.DirectX
 
             if (_staticContantBuffer != null)
                 _staticContantBuffer.Dispose();
+        
         }
 
      }

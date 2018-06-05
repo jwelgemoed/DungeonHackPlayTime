@@ -1,7 +1,6 @@
-﻿using FunAndGamesWithSharpDX.Entities;
+﻿using DungeonHack.Lights;
 using SharpDX;
 using System.Runtime.InteropServices;
-using FunAndGamesWithSharpDX.Lights;
 
 namespace DungeonHack.DirectX.ConstantBuffer
 {

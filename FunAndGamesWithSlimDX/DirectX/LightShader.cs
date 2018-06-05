@@ -1,8 +1,8 @@
 ﻿using DungeonHack.DirectX.ConstantBuffer;
+using DungeonHack.Lights;
 using FunAndGamesWithSharpDX.DirectX;
 using FunAndGamesWithSharpDX.Engine;
 using FunAndGamesWithSharpDX.Entities;
-using FunAndGamesWithSharpDX.Lights;
 using SharpDX;
 using SharpDX.D3DCompiler;
 using SharpDX.Direct3D11;
@@ -40,13 +40,13 @@ namespace DungeonHack.DirectX
 
             var fileName = basePath + @"\Shaders\LightTexture.hlsl";
 
-            var bytecode = ShaderBytecode.CompileFromFile(fileName, "LightVertexShader", "vs_5_0");
+            var bytecode = ShaderBytecode.CompileFromFile(fileName, "LightVertexShader", "vs_5_0", ShaderFlags.Debug | ShaderFlags.SkipOptimization);
             var vertexShader = new VertexShader(device, bytecode);
 
             _layout = new InputLayout(device, bytecode, _elements);
             bytecode.Dispose();
 
-            bytecode = ShaderBytecode.CompileFromFile(fileName, "LightPixelShader", "ps_5_0");
+            bytecode = ShaderBytecode.CompileFromFile(fileName, "LightPixelShader", "ps_5_0", ShaderFlags.Debug | ShaderFlags.SkipOptimization);
             var pixelShader = new PixelShader(device, bytecode);
             bytecode.Dispose();
 
@@ -54,7 +54,7 @@ namespace DungeonHack.DirectX
                 ResourceUsage.Dynamic, BindFlags.ConstantBuffer, CpuAccessFlags.Write, ResourceOptionFlags.None, 0);
 
             _constantBufferPerFrame = new SharpDX.Direct3D11.Buffer(device, Utilities.SizeOf<ConstantBufferPerFrame>(),
-                ResourceUsage.Dynamic, BindFlags.ConstantBuffer, CpuAccessFlags.Write, ResourceOptionFlags.None, ConstantBufferPerFrame.Stride);
+                ResourceUsage.Dynamic, BindFlags.ConstantBuffer, CpuAccessFlags.Write, ResourceOptionFlags.None, 0);// ConstantBufferPerFrame.Stride);
 
             var samplerDesc = new SamplerStateDescription
             {
@@ -124,8 +124,8 @@ namespace DungeonHack.DirectX
             _perFrameBuffer.DirectionalLight = directionalLight;
             _perFrameBuffer.PointLight = pointLight;
             _perFrameBuffer.SpotLight = spotLight;
-            _perFrameBuffer.FogStart = 100;
-            _perFrameBuffer.FogEnd = 1000;
+            _perFrameBuffer.FogStart = ConfigManager.FogStart;
+            _perFrameBuffer.FogEnd = ConfigManager.FogEnd;
         }
 
         public void Dispose()

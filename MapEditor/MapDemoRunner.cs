@@ -5,7 +5,6 @@ using FunAndGamesWithSharpDX.Entities;
 using SharpDX;
 using SharpDX.Direct3D11;
 using FunAndGamesWithSharpDX.DirectX;
-using FunAndGamesWithSharpDX.Lights;
 using DungeonHack.BSP;
 using System.IO;
 using System.Diagnostics;
@@ -13,6 +12,7 @@ using DungeonHack;
 using DungeonHack.DataDictionaries;
 using System.Configuration;
 using DungeonHack.DirectX;
+using DungeonHack.Lights;
 using DungeonHack.Octree;
 
 namespace MapEditor

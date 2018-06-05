@@ -24,6 +24,7 @@ struct PixelInputType
 cbuffer cbPerObject: register(b0)
 {
 	matrix worldMatrix;
+	matrix viewMatrix;
 	matrix viewProjectionMatrix;
 	Material material;
 };

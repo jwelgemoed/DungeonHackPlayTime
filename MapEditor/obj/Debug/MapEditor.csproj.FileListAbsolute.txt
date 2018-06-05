@@ -215,7 +215,7 @@ C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SharpDX.Direct2D1.xml
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SharpDX.RawInput.xml
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SharpDX.Desktop.xml
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\AutoMapper.xml
-C:\git\DungeonHackPlayTime\MapEditor\obj\Debug\MapEditor.csprojResolveAssemblyReference.cache
+C:\git\DungeonHackPlayTime\MapEditor\obj\Debug\MapEditor.csprojAssemblyReference.cache
 C:\git\DungeonHackPlayTime\MapEditor\obj\Debug\RoomEditWindow.baml
 C:\git\DungeonHackPlayTime\MapEditor\obj\Debug\MainWindow.baml
 C:\git\DungeonHackPlayTime\MapEditor\obj\Debug\RoomEditWindow.g.cs

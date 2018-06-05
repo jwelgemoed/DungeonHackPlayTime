@@ -1,7 +1,7 @@
-﻿using SharpDX;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
+using SharpDX;
 
-namespace FunAndGamesWithSharpDX.Lights
+namespace DungeonHack.Lights
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct PointLight

@@ -1,4 +1,9 @@
-﻿using FunAndGamesWithSharpDX.DirectX;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Windows.Forms;
+using DungeonHack.DirectX;
+using FunAndGamesWithSharpDX.DirectX;
+using FunAndGamesWithSharpDX.Engine;
 using FunAndGamesWithSharpDX.Entities;
 using FunAndGamesWithSharpDX.Menus;
 using SharpDX;
@@ -6,12 +11,8 @@ using SharpDX.Direct3D11;
 using SharpDX.DirectWrite;
 using SharpDX.DXGI;
 using SharpDX.Windows;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Windows.Forms;
-using DungeonHack.DirectX;
 
-namespace FunAndGamesWithSharpDX.Engine
+namespace DungeonHack.Engine
 {
     /// <summary>
     /// Engine class : main class responsible for doing all engine related work

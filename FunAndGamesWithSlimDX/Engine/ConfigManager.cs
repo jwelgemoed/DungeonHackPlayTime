@@ -139,5 +139,9 @@ namespace FunAndGamesWithSharpDX.Engine
         public static float SpotLightAttentuationB { get; set; }
 
         public static float SpotLightAttentuationC { get; set; }
+
+        public static bool SpotlightOn { get; set; }
+        public static float FogStart { get; set; }
+        public static float FogEnd { get; set; }
     }
 }
