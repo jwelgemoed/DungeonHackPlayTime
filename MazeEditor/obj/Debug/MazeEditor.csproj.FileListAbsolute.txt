@@ -1,3 +1,4 @@
+C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\Zuccaralo.txt
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\FX\LightHelper.fx
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\MWALL4_2.PNG
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Shaders\LightTexture.hlsl
@@ -29,7 +30,6 @@ C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\F-35_Lightning_II_P01.
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\cat.obj-model.txt
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\cat_diff.tga
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\cat_diff.dds
-C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\Zuccaralo.txt
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\Cube-Maya.txt
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\Cube.txt
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\terrain2.dds
@@ -46,11 +46,11 @@ C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\SharpDX.Direct2D1.dll
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\SharpDX.RawInput.dll
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\SpriteTextRenderer.SharpDX.dll
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\SharpDX.D3DCompiler.dll
-C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\SharpDX.Direct3D11.Effects.dll
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\SharpDX.Desktop.dll
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\AssimpNet.dll
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\AutoMapper.dll
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\SpriteTextRenderer.dll
+C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\SharpDX.Direct3D11.Effects.dll
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\NBidi.dll
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\DungeonHack.pdb
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\DungeonHack.dll.config
@@ -62,10 +62,10 @@ C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\SharpDX.Mathematics.xml
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\SharpDX.Direct2D1.xml
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\SharpDX.RawInput.xml
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\SharpDX.D3DCompiler.xml
-C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\SharpDX.Direct3D11.Effects.xml
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\SharpDX.Desktop.xml
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\AssimpNet.xml
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\AutoMapper.xml
+C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\SharpDX.Direct3D11.Effects.xml
 C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor.csprojAssemblyReference.cache
 C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MainWindow.g.cs
 C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\App.g.cs

@@ -92,8 +92,8 @@ namespace MazeEditor
                 1, 0, 3, 1, 3, 2
             };
 
-            Vector3 normal = Vector3.Cross(new Vector3(vectors[0].X, vectors[0].Y, vectors[0].Z)
-                , new Vector3(vectors[1].X, vectors[1].Y, vectors[1].Z));
+            Vector3 normal = Vector3.Cross(vectors[1] - vectors[0], vectors[2] - vectors[1]);//Vector3.Cross(new Vector3(vectors[0].X, vectors[0].Y, vectors[0].Z)
+                //, new Vector3(vectors[1].X, vectors[1].Y, vectors[1].Z));
 
             normal = Vector3.Normalize(normal);
 
@@ -187,8 +187,8 @@ namespace MazeEditor
                 0, 1, 2, 0, 2, 3
             };
 
-            Vector3 normal = Vector3.Cross(new Vector3(vectors[0].X, vectors[0].Y, vectors[0].Z)
-                , new Vector3(vectors[1].X, vectors[1].Y, vectors[1].Z));
+            Vector3 normal = Vector3.Cross(vectors[1] - vectors[0], vectors[2] - vectors[1]);//Vector3.Cross(new Vector3(vectors[0].X, vectors[0].Y, vectors[0].Z)
+                //, new Vector3(vectors[1].X, vectors[1].Y, vectors[1].Z));
 
             normal = Vector3.Normalize(normal);
 

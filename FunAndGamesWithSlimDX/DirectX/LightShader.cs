@@ -1,4 +1,6 @@
-﻿using DungeonHack.DirectX.ConstantBuffer;
+﻿using System.Runtime.InteropServices;
+using DungeonHack.DirectX.ConstantBuffer;
+using DungeonHack.Engine;
 using DungeonHack.Lights;
 using FunAndGamesWithSharpDX.DirectX;
 using FunAndGamesWithSharpDX.Engine;
@@ -24,6 +26,9 @@ namespace DungeonHack.DirectX
 
         private SharpDX.Direct3D11.Buffer _constantBufferPerObject;
         private SharpDX.Direct3D11.Buffer _constantBufferPerFrame;
+        private DataStream _perFrameDataStream;
+
+        private int NumberOfLights = 4;
         
         public LightShader(Device device, DeviceContext context)
         {
@@ -53,8 +58,12 @@ namespace DungeonHack.DirectX
             _constantBufferPerObject = new SharpDX.Direct3D11.Buffer(device, Utilities.SizeOf<ConstantBufferPerObject>(), 
                 ResourceUsage.Dynamic, BindFlags.ConstantBuffer, CpuAccessFlags.Write, ResourceOptionFlags.None, 0);
 
-            _constantBufferPerFrame = new SharpDX.Direct3D11.Buffer(device, Utilities.SizeOf<ConstantBufferPerFrame>(),
-                ResourceUsage.Dynamic, BindFlags.ConstantBuffer, CpuAccessFlags.Write, ResourceOptionFlags.None, 0);// ConstantBufferPerFrame.Stride);
+           int size = Marshal.SizeOf(typeof(ConstantBufferPerFrame));
+
+            _constantBufferPerFrame = new SharpDX.Direct3D11.Buffer(device, size,
+                ResourceUsage.Dynamic, BindFlags.ConstantBuffer, CpuAccessFlags.Write, ResourceOptionFlags.None, 0);
+
+            _perFrameDataStream = new DataStream(size, true, true);
 
             var samplerDesc = new SamplerStateDescription
             {
@@ -110,8 +119,8 @@ namespace DungeonHack.DirectX
 
             mappedResource2.Write(_perFrameBuffer);
 
-            //var databox = context.MapSubresource(_dynamicConstantBufferPerFrame, 0, MapMode.WriteDiscard, MapFlags.None);
-            //Utilities.Write(databox.DataPointer, ref _perFrameBuffer);
+            ////var databox = context.MapSubresource(_dynamicConstantBufferPerFrame, 0, MapMode.WriteDiscard, MapFlags.None);
+            ////Utilities.Write(databox.DataPointer, ref _perFrameBuffer);
             context.UnmapSubresource(_constantBufferPerFrame, 0);
 
             context.PixelShader.SetShaderResource(0, texture);
@@ -119,11 +128,11 @@ namespace DungeonHack.DirectX
             context.DrawIndexed(indexCount, 0, 0);
         }
 
-        public void RenderLights(DirectionalLight directionalLight, PointLight pointLight, Spotlight spotLight)
+        public void RenderLights(DirectionalLight[] directionalLight, PointLight[] pointLight, Spotlight[] spotLight)
         {
             _perFrameBuffer.DirectionalLight = directionalLight;
-            _perFrameBuffer.PointLight = pointLight;
-            _perFrameBuffer.SpotLight = spotLight;
+            //_perFrameBuffer.PointLight = pointLight;
+            //_perFrameBuffer.SpotLight = spotLight;
             _perFrameBuffer.FogStart = ConfigManager.FogStart;
             _perFrameBuffer.FogEnd = ConfigManager.FogEnd;
         }

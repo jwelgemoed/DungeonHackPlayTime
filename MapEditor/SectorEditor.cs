@@ -20,6 +20,7 @@ using GameData;
 using DungeonHack.Builders;
 using DungeonHack.DirectX;
 using Point = System.Windows.Point;
+using Polygon = DungeonHack.Entities.Polygon;
 
 namespace MapEditor
 {
@@ -33,7 +34,7 @@ namespace MapEditor
         private Brush _sectorBrush;
         private List<Tuple<Line, GameData.LineSegment>> lineList = new List<Tuple<Line, GameData.LineSegment>>();
         private List<Tuple<Line, GameData.LineSegment>> currentSectorLineList = new List<Tuple<Line, GameData.LineSegment>>();
-        private List<Tuple<Shape, FunAndGamesWithSharpDX.Entities.Polygon>> meshList = new List<Tuple<Shape, FunAndGamesWithSharpDX.Entities.Polygon>>();
+        private List<Tuple<Shape, Polygon>> meshList = new List<Tuple<Shape, Polygon>>();
         private Device _device;
         private Shader _shader;
         private float _midWidth;
@@ -102,7 +103,7 @@ namespace MapEditor
             MapData = new MapData();
         }
 
-        public List<Tuple<Shape, FunAndGamesWithSharpDX.Entities.Polygon>> GetMeshList()
+        public List<Tuple<Shape, Polygon>> GetMeshList()
         {
             return meshList;
         }
@@ -464,7 +465,7 @@ namespace MapEditor
                            .WithTransformToWorld()
                            .Build();
 
-            meshList.Add(new Tuple<Shape, FunAndGamesWithSharpDX.Entities.Polygon>(line, roomMesh));
+            meshList.Add(new Tuple<Shape, Polygon>(line, roomMesh));
 
             CreateNormalLine(line, normal);
         }
@@ -498,7 +499,7 @@ namespace MapEditor
             _canvas.Children.Add(normalLine);
         }
 
-        public FunAndGamesWithSharpDX.Entities.Polygon CreateMesh(GameData.LineSegment lineSeg)
+        public Polygon CreateMesh(GameData.LineSegment lineSeg)
         {
             Model[] model = new Model[6];
             Vector3[] vectors = new Vector3[4];

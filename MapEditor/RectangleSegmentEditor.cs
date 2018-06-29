@@ -17,13 +17,14 @@ using GameData;
 using DungeonHack.Builders;
 using DungeonHack.DirectX;
 using Point = System.Windows.Point;
+using Polygon = DungeonHack.Entities.Polygon;
 using Rectangle = System.Windows.Shapes.Rectangle;
 
 namespace MapEditor
 {
     public class RectangleSegment
     {
-        private List<FunAndGamesWithSharpDX.Entities.Polygon> _meshList = new List<FunAndGamesWithSharpDX.Entities.Polygon>();
+        private List<Polygon> _meshList = new List<Polygon>();
         private Device _device;
         private Shader _shader;
 
@@ -45,7 +46,7 @@ namespace MapEditor
             TextureRepeat = 4.0f;
         }
 
-        public List<FunAndGamesWithSharpDX.Entities.Polygon> Meshes
+        public List<Polygon> Meshes
         {
             get
             {
@@ -255,7 +256,7 @@ namespace MapEditor
         /// |--------------x--------------x---------|     = Mesh with cutting points
         /// |--------------|              |---------|     = Cut mesh - original mesh has been replaced by 2 new meshes
         /// </summary>
-        public void CutMesh(FunAndGamesWithSharpDX.Entities.Polygon mesh, float x1, float y1, float x2, float y2)
+        public void CutMesh(Polygon mesh, float x1, float y1, float x2, float y2)
         {
             if (mesh == null)
                 throw new ArgumentNullException("mesh");
@@ -396,15 +397,15 @@ namespace MapEditor
             _tempRectangle = null;
         }
 
-        public List<Tuple<Shape, FunAndGamesWithSharpDX.Entities.Polygon>> GetMeshList()
+        public List<Tuple<Shape, Polygon>> GetMeshList()
         {
             //TODO: Change this
-            List<Tuple<Shape, FunAndGamesWithSharpDX.Entities.Polygon>> meshList = new List<Tuple<Shape, FunAndGamesWithSharpDX.Entities.Polygon>>();
+            List<Tuple<Shape, Polygon>> meshList = new List<Tuple<Shape, Polygon>>();
 
             foreach (var room in _roomList)
             {
                 //Roogsegment list is projected back onto old meshlist for backwards compatibility.
-                meshList.AddRange(room.Item2.Meshes.Select(x => new Tuple<Shape, FunAndGamesWithSharpDX.Entities.Polygon>(room.Item1, x)));
+                meshList.AddRange(room.Item2.Meshes.Select(x => new Tuple<Shape, Polygon>(room.Item1, x)));
             }
 
             return meshList;

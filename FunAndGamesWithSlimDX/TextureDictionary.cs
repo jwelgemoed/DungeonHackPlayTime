@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.IO;
+using DungeonHack.Engine;
 
 namespace DungeonHack.DataDictionaries
 {

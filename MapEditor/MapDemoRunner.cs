@@ -12,6 +12,8 @@ using DungeonHack;
 using DungeonHack.DataDictionaries;
 using System.Configuration;
 using DungeonHack.DirectX;
+using DungeonHack.Engine;
+using DungeonHack.Entities;
 using DungeonHack.Lights;
 using DungeonHack.Octree;
 
@@ -126,11 +128,13 @@ namespace MapEditor
 
             Shader.Initialize(base.Renderer.Device, base.Renderer.Context);
 
-            _directionalLight = new DirectionalLight(
-                new Color4(0.2f, 0.2f, 0.2f, 1.0f),
-                new Color4(0.0f, 0.0f, 0.0f, 1.0f),
-                new Color4(0.0f, 0.0f, 0.0f, 1.0f),
-                new Vector3(0.0f, 1.0f, 0.0f));
+            _directionalLight = new DirectionalLight()
+            {
+                Ambient = new Vector4(0.2f, 0.2f, 0.2f, 1.0f),
+                //Diffuse = new Vector4(0.0f, 0.0f, 0.0f, 1.0f),
+                //Specular = new Vector4(0.0f, 0.0f, 0.0f, 1.0f),
+                //Direction = new Vector3(0.0f, 1.0f, 0.0f)
+            };
 
             LightEngine.AddDirectionalLight(_directionalLight);
 

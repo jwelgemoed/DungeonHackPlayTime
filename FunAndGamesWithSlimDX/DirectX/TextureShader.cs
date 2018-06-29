@@ -6,6 +6,7 @@ using SharpDX.D3DCompiler;
 using SharpDX.Direct3D11;
 using System;
 using DungeonHack.DirectX;
+using DungeonHack.Engine;
 using DungeonHack.Lights;
 using Device = SharpDX.Direct3D11.Device;
 
@@ -104,7 +105,7 @@ namespace FunAndGamesWithSharpDX.DirectX
             context.DrawIndexed(indexCount, 0, 0);
         }
 
-        public void RenderLights(DirectionalLight directionalLight, PointLight pointLight, Spotlight spotLight)
+        public void RenderLights(DirectionalLight[] directionalLight, PointLight[] pointLight, Spotlight[] spotLight)
         {
             
         }

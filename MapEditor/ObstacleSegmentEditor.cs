@@ -15,6 +15,7 @@ using GameData;
 using DungeonHack.Builders;
 using DungeonHack.DirectX;
 using Point = System.Windows.Point;
+using Polygon = DungeonHack.Entities.Polygon;
 using Rectangle = System.Windows.Shapes.Rectangle;
 
 namespace MapEditor
@@ -34,7 +35,7 @@ namespace MapEditor
         private Rectangle _lastRectangle;
         private List<Rectangle> _rectangleList = new List<Rectangle>();
 
-        private List<Tuple<Shape, FunAndGamesWithSharpDX.Entities.Polygon>> _meshList = new List<Tuple<Shape, FunAndGamesWithSharpDX.Entities.Polygon>>();
+        private List<Tuple<Shape, Polygon>> _meshList = new List<Tuple<Shape, Polygon>>();
 
         public ObstacleSegmentEditor(Canvas canvase, Device device, Shader shader, float midWidth, float midHeight, float gridSize)
         {
@@ -239,7 +240,7 @@ namespace MapEditor
                                 .WithTransformToWorld()
                                 .Build();
 
-                _meshList.Add(new Tuple<Shape, FunAndGamesWithSharpDX.Entities.Polygon>(rect, roomMesh));
+                _meshList.Add(new Tuple<Shape, Polygon>(rect, roomMesh));
             }
         }
 
@@ -250,7 +251,7 @@ namespace MapEditor
             _tempRectangle = null;
         }
 
-        public List<Tuple<Shape, FunAndGamesWithSharpDX.Entities.Polygon>> GetMeshList()
+        public List<Tuple<Shape, Polygon>> GetMeshList()
         {
             return _meshList;
         }

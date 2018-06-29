@@ -77,5 +77,8 @@
     <Setting Name="TopdownMaxZoomAcceleration" Type="System.Single" Scope="Application">
       <Value Profile="(Default)">0.9</Value>
     </Setting>
+    <Setting Name="VSync" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

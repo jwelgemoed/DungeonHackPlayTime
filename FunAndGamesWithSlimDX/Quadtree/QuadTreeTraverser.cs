@@ -30,7 +30,14 @@ namespace DungeonHack.Quadtree
 
                 if (node.IsLeaf)
                 {
+                    if (item.LeafNode != null)
+                    {
+                        item.LeafNode.Polygons.Remove(item.Polygon);
+                        item.LeafNode = null;
+                    }
+
                     node.Polygons.Add(item.Polygon);
+                    item.LeafNode = node;
                 }
                 else
                 {
@@ -56,6 +63,11 @@ namespace DungeonHack.Quadtree
                     }
                 }
             }
+        }
+
+        public void RemoveItemFromLeafNode(Item item)
+        {
+
         }
 
         public QuadTreeNode FindCurrentCameraLeafNode(Camera camera)

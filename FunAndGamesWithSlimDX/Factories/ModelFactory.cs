@@ -3,6 +3,7 @@ using Assimp;
 using FunAndGamesWithSharpDX.Entities;
 using DungeonHack.Builders;
 using DungeonHack.DirectX;
+using DungeonHack.Entities;
 using SharpDX.Direct3D11;
 using FunAndGamesWithSharpDX.DirectX;
 

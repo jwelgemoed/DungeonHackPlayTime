@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using GameData;
 using System.Configuration;
+using Polygon = DungeonHack.Entities.Polygon;
 
 namespace MapEditor
 {
@@ -192,7 +193,7 @@ namespace MapEditor
             throw new NotImplementedException();
         }
 
-        List<Tuple<Shape, FunAndGamesWithSharpDX.Entities.Polygon>> ISegmentEditor.GetMeshList()
+        List<Tuple<Shape, Polygon>> ISegmentEditor.GetMeshList()
         {
             throw new NotImplementedException();
         }

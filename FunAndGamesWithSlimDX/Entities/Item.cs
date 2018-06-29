@@ -1,4 +1,5 @@
-﻿using FunAndGamesWithSharpDX.Entities;
+﻿using DungeonHack.QuadTree;
+using FunAndGamesWithSharpDX.Entities;
 using SharpDX;
 
 namespace DungeonHack.Entities
@@ -9,5 +10,6 @@ namespace DungeonHack.Entities
 
         public Vector3 Location { get; set; }
 
+        public QuadTreeNode LeafNode { get; set; }
     }
 }

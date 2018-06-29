@@ -141,11 +141,11 @@ C:\git\DungeonHackPlayTime\GameData\bin\Debug\SharpDX.Mathematics.dll
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\SharpDX.RawInput.dll
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\SpriteTextRenderer.SharpDX.dll
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\SharpDX.D3DCompiler.dll
-C:\git\DungeonHackPlayTime\GameData\bin\Debug\SharpDX.Direct3D11.Effects.dll
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\SharpDX.DXGI.dll
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\SharpDX.Desktop.dll
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\AutoMapper.dll
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\SpriteTextRenderer.dll
+C:\git\DungeonHackPlayTime\GameData\bin\Debug\SharpDX.Direct3D11.Effects.dll
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\NBidi.dll
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\DungeonHack.pdb
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\DungeonHack.dll.config
@@ -158,10 +158,10 @@ C:\git\DungeonHackPlayTime\GameData\bin\Debug\SharpDX.xml
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\SharpDX.Mathematics.xml
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\SharpDX.RawInput.xml
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\SharpDX.D3DCompiler.xml
-C:\git\DungeonHackPlayTime\GameData\bin\Debug\SharpDX.Direct3D11.Effects.xml
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\SharpDX.DXGI.xml
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\SharpDX.Desktop.xml
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\AutoMapper.xml
+C:\git\DungeonHackPlayTime\GameData\bin\Debug\SharpDX.Direct3D11.Effects.xml
 C:\git\DungeonHackPlayTime\GameData\obj\Debug\GameData.csprojAssemblyReference.cache
 C:\git\DungeonHackPlayTime\GameData\obj\Debug\GameData.csproj.CoreCompileInputs.cache
 C:\git\DungeonHackPlayTime\GameData\obj\Debug\GameData.csproj.CopyComplete

@@ -2,6 +2,7 @@
 using FunAndGamesWithSharpDX.Engine;
 using SharpDX.Direct3D11;
 using System;
+using DungeonHack.Engine;
 
 namespace FunAndGamesWithSharpDX.Entities
 {

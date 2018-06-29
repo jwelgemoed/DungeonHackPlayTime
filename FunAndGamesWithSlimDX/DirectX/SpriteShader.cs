@@ -1,4 +1,5 @@
 ﻿using DungeonHack.DirectX.ConstantBuffer;
+using DungeonHack.Engine;
 using FunAndGamesWithSharpDX.Engine;
 using FunAndGamesWithSharpDX.Entities;
 using SharpDX;
