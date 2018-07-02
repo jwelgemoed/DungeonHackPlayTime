@@ -164,6 +164,7 @@
     <Compile Include="Builders\MeshBuilder.cs" />
     <Compile Include="CollisionDetection\ICollisionDetector.cs" />
     <Compile Include="DirectX\BufferFactory.cs" />
+    <Compile Include="DirectX\ConstantBuffer\ConstantBuffer.cs" />
     <Compile Include="DirectX\ConstantBuffer\ConstantBufferPerFrame.cs" />
     <Compile Include="DirectX\ConstantBuffer\ConstantBufferPerObject.cs" />
     <Compile Include="DirectX\IShader.cs" />

@@ -55,7 +55,7 @@ namespace MazeEditor
             {
                 Ambient = new Color4(1.0f, 1.0f, 1.0f, 1.0f),
                 Diffuse = new Color4(1.0f, 1.0f, 1.0f, 1.0f),
-                Specular = new Color4(1.0f, 1.0f, 1.0f, 1.0f)
+                Specular = new Color4(1.5f, 1.5f, 1.5f, 1.0f)
             };
         }
 
@@ -121,30 +121,32 @@ namespace MazeEditor
 
             if (ConfigManager.SpotlightOn)
             {
-                var spotlight = new Spotlight(
-                    new Color4(2.0f, 2.0f, 2.0f, 2.0f),
-                    new Color4(2.0f, 2.0f, 2.0f, 2.0f),
-                    new Color4(2.0f, 2.0f, 2.0f, 2.0f),
-                    Camera.EyeAt,
-                    ConfigManager.SpotLightRange, //500.0f,
-                    Vector3.Normalize(Camera.LookAt - Camera.EyeAt),
-                    ConfigManager.SpotLightFactor, //96.0f,
+                var spotlight = new Spotlight()
+                {
+                    Ambient = new Color4(2.0f, 2.0f, 2.0f, 2.0f),
+                    Diffuse = new Color4(2.0f, 2.0f, 2.0f, 2.0f),
+                    Specular = new Color4(2.0f, 2.0f, 2.0f, 2.0f),
+                    Position = Camera.EyeAt,
+                    Range = ConfigManager.SpotLightRange, //500.0f,
+                    Direction = Vector3.Normalize(Camera.LookAt - Camera.EyeAt),
+                    Spot = ConfigManager.SpotLightFactor, //96.0f,
                     //new Vector3(1.0f, 1.0f, 1.0f)
-                    new Vector3(ConfigManager.SpotLightAttentuationA, ConfigManager.SpotLightAttentuationB,
+                    Attentuation = new Vector3(ConfigManager.SpotLightAttentuationA, ConfigManager.SpotLightAttentuationB,
                         ConfigManager.SpotLightAttentuationC)
-                );
+                };
 
                 LightEngine.AddSpotLight(spotlight);
             }
 
-            _pointLight = new PointLight(
-                new Color4(0.0f, 0.0f, 0.0f, 0.1f),
-                new Color4(10.7f, 0.7f, 0.7f, 0.1f),
-                new Color4(10.7f, 0.7f, 0.7f, 0.1f),
-                lightPos,
-                100.0f,
-                new Vector3(0.0f, 1.0f, 0.0f)
-            );
+            _pointLight = new PointLight()
+            {
+                Diffuse = new Color4(0.5f, 0.0f, 0.0f, 1.0f),
+                Ambient = new Color4(5.0f, 1.0f, 1.0f, 1.0f),
+                Specular = new Color4(5.0f, 1.0f, 1.0f, 1.0f),
+                Position = lightPos,
+                Range = 50.0f,
+                Attentuation = new Vector3(0.0f, 1.0f, 0.0f)
+            };
 
             LightEngine.AddPointLight(_pointLight);
         }
@@ -188,10 +190,10 @@ namespace MazeEditor
 
             _directionalLight = new DirectionalLight()
             {
-                Ambient = new Vector4(100.0f, 100.0f, 100.0f, 1.0f),
-                //Diffuse = new Vector4(0.0f, 0.0f, 0.0f, 0.0f),
-                //Specular = new Vector4(0.0f, 0.0f, 0.0f, 0.0f),
-                //Direction = new Vector3(1.0f, 1.0f, 1.0f)
+                Ambient = new Color4(0.1f, 0.1f, 0.1f, 0.1f),
+                Diffuse = new Color4(0.0f, 0.0f, 0.0f, 0.0f),
+                Specular = new Color4(0.0f, 0.0f, 0.0f, 0.0f),
+                Direction = new Vector3(1.0f, 1.0f, 1.0f)
             };
             LightEngine.AddDirectionalLight(_directionalLight);
 

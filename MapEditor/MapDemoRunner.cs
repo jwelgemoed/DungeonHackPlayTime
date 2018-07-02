@@ -84,16 +84,17 @@ namespace MapEditor
         {
             base.UpdateScene();
 
-            var spotlight = new Spotlight(
-                new Color4(2.0f, 2.0f, 2.0f, 2.0f),
-                new Color4(2.0f, 2.0f, 2.0f, 2.0f),
-                new Color4(2.0f, 2.0f, 2.0f, 2.0f),
-                Camera.EyeAt,
-                1000.0f,
-                Vector3.Normalize(Camera.LookAt - Camera.EyeAt),
-                96.0f,
-                new Vector3(1.0f, 1.0f, 1.0f)
-            );
+            var spotlight = new Spotlight()
+            {
+                Ambient = new Color4(2.0f, 2.0f, 2.0f, 2.0f),
+                Diffuse = new Color4(2.0f, 2.0f, 2.0f, 2.0f),
+                Specular = new Color4(2.0f, 2.0f, 2.0f, 2.0f),
+                Position = Camera.EyeAt,
+                Range = 1000.0f,
+                Direction = Vector3.Normalize(Camera.LookAt - Camera.EyeAt),
+                Spot = 96.0f,
+                Attentuation = new Vector3(1.0f, 1.0f, 1.0f)
+             };
 
             LightEngine.AddSpotLight(spotlight);
 
@@ -130,7 +131,7 @@ namespace MapEditor
 
             _directionalLight = new DirectionalLight()
             {
-                Ambient = new Vector4(0.2f, 0.2f, 0.2f, 1.0f),
+                Ambient = new Color4(0.2f, 0.2f, 0.2f, 1.0f),
                 //Diffuse = new Vector4(0.0f, 0.0f, 0.0f, 1.0f),
                 //Specular = new Vector4(0.0f, 0.0f, 0.0f, 1.0f),
                 //Direction = new Vector3(0.0f, 1.0f, 0.0f)
@@ -138,27 +139,29 @@ namespace MapEditor
 
             LightEngine.AddDirectionalLight(_directionalLight);
 
-            _pointLight = new PointLight(
-                new Color4(0.5f, 0.5f, 0.0f, 1.0f),
-                new Color4(0.2f, 0.2f, 0.2f, 1.0f),
-                new Color4(0.5f, 0.5f, 0.5f, 1.0f),
-                new Vector3(0.0f, 0.0f, 0.0f),
-                100.0f,
-                new Vector3(1.0f, 1.0f, 1.0f)
-            );
+            _pointLight = new PointLight()
+            {
+                Ambient = new Color4(0.5f, 0.5f, 0.0f, 1.0f),
+                Diffuse = new Color4(0.2f, 0.2f, 0.2f, 1.0f),
+                Specular = new Color4(0.5f, 0.5f, 0.5f, 1.0f),
+                Position = new Vector3(0.0f, 0.0f, 0.0f),
+                Range = 100.0f,
+                Attentuation = new Vector3(1.0f, 1.0f, 1.0f)
+            };
 
             LightEngine.AddPointLight(_pointLight);
 
-            _spotlight = new Spotlight(
-                new Color4(0.5f, 1.5f, 0.0f, 1.0f),
-                new Color4(0.2f, 0.2f, 0.2f, 1.0f),
-                new Color4(1.5f, 0.5f, 0.5f, 1.0f),
-                new Vector3(10.0f, 0.0f, 0.0f),
-                10.0f,
-                new Vector3(0.0f, 1.0f, 0.0f),
-                1.0f,
-                new Vector3(1.0f, 1.0f, 1.0f)
-            );
+            _spotlight = new Spotlight()
+            {
+                Ambient = new Color4(0.5f, 1.5f, 0.0f, 1.0f),
+                Diffuse = new Color4(0.2f, 0.2f, 0.2f, 1.0f),
+                Specular = new Color4(1.5f, 0.5f, 0.5f, 1.0f),
+                Position = new Vector3(10.0f, 0.0f, 0.0f),
+                Range = 10.0f,
+                Direction = new Vector3(0.0f, 1.0f, 0.0f),
+                Spot = 1.0f,
+                Attentuation = new Vector3(1.0f, 1.0f, 1.0f)
+            };
 
             LightEngine.AddSpotLight(_spotlight);
         }
