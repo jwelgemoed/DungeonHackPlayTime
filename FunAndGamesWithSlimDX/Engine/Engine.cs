@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Windows.Forms;
 using DungeonHack.DirectX;
+using DungeonHack.Entities;
 using FunAndGamesWithSharpDX.DirectX;
 using FunAndGamesWithSharpDX.Engine;
 using FunAndGamesWithSharpDX.Entities;
@@ -145,7 +146,7 @@ namespace DungeonHack.Engine
                     DisplayConsoleInformation();
                     FontRenderer.FinalizeDraw();
                     SpriteRenderer.FinalizeDraw();
-                    Renderer.SwapChain.Present(1, PresentFlags.None);
+                    Renderer.SwapChain.Present(ConfigManager.VSync, PresentFlags.None);
                     _updateTime = _stopwatch.ElapsedMilliseconds;
                     break;
 

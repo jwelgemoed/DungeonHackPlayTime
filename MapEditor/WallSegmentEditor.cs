@@ -15,6 +15,7 @@ using GameData;
 using DungeonHack.Builders;
 using DungeonHack.DirectX;
 using Point = System.Windows.Point;
+using Polygon = DungeonHack.Entities.Polygon;
 
 namespace MapEditor
 {
@@ -44,7 +45,7 @@ namespace MapEditor
         private Brush _lineBrush;
         private Brush _selectedLineBrush;
         private List<Tuple<Line, GameData.LineSegment>> lineList = new List<Tuple<Line, GameData.LineSegment>>();
-        private List<Tuple<Shape, FunAndGamesWithSharpDX.Entities.Polygon>> meshList = new List<Tuple<Shape, FunAndGamesWithSharpDX.Entities.Polygon>>();
+        private List<Tuple<Shape, Polygon>> meshList = new List<Tuple<Shape, Polygon>>();
         private Device _device;
         private Shader _shader;
         private float _midWidth;
@@ -96,7 +97,7 @@ namespace MapEditor
             MapData = new MapData();
         }
 
-        public List<Tuple<Shape, FunAndGamesWithSharpDX.Entities.Polygon>> GetMeshList()
+        public List<Tuple<Shape, Polygon>> GetMeshList()
         {
             return meshList;
         }
@@ -363,7 +364,7 @@ namespace MapEditor
                             .SetScaling(1, 1, 1)
                             .WithTransformToWorld()
                             .Build();
-            meshList.Add(new Tuple<Shape, FunAndGamesWithSharpDX.Entities.Polygon>(line, roomMesh));
+            meshList.Add(new Tuple<Shape, Polygon>(line, roomMesh));
 
             CreateNormalLine(line, normal);
         }

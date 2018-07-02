@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using GameData;
 using Geometry;
 using Poly2Tri;
+using Polygon = DungeonHack.Entities.Polygon;
 
 namespace MapEditor
 {
@@ -24,7 +25,7 @@ namespace MapEditor
     {
         private Point startPoint;
         private bool _editState = false;
-        private List<FunAndGamesWithSharpDX.Entities.Polygon> areaList = new List<FunAndGamesWithSharpDX.Entities.Polygon>();
+        private List<Polygon> areaList = new List<Polygon>();
         private List<Line> gridLines = new List<Line>();
         private List<System.Windows.Shapes.Polygon> areasList = new List<System.Windows.Shapes.Polygon>();
         private MapDemoRunner demo;

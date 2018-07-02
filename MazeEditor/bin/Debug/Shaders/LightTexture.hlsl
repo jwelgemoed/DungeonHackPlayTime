@@ -1,4 +1,8 @@
 ﻿//Frank Luna 
+#define NUM_DIRECTIONAL_LIGHTS 1
+#define NUM_POINT_LIGHTS 1
+#define NUM_SPOT_LIGHTS 1
+
 struct DirectionalLight {
 	float4 Ambient;
 	float4 Diffuse;
@@ -48,7 +52,7 @@ void ComputeDirectionalLight(Material mat, DirectionalLight L,
 	out float4 spec)
 {
 	// Initialize outputs.
-	ambient = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	ambient = L.Ambient;
 	diffuse = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	spec = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
@@ -68,11 +72,6 @@ void ComputeDirectionalLight(Material mat, DirectionalLight L,
 	if (diffuseFactor > 0.0f)
 	{
 		float3 v = reflect(-lightVec, normal);
-		float term1 = dot(v, toEye);
-		float term1max = max(term1, 0.0f);
-		float specw = mat.Specular.w;
-		float specpow = pow(term1max, specw);
-
 		float specFactor = pow(max(dot(v, toEye), 0.0f), mat.Specular.w);
 
 		diffuse = diffuseFactor * mat.Diffuse * L.Diffuse;
@@ -111,7 +110,6 @@ void ComputePointLight(Material mat, PointLight L, float3 pos, float3 normal, fl
 
 	// Add diffuse and specular term, provided the surface is in 
 	// the line of site of the light.
-
 	float diffuseFactor = dot(lightVec, normal);
 
 	// Flatten to avoid dynamic branching.
@@ -199,9 +197,9 @@ cbuffer cbPerObject : register(b0)
 
 cbuffer cbPerFrame : register(b1)
 {
-	DirectionalLight gDirLight;
-	SpotLight gSpotLight;
-	PointLight gPointLight;
+	DirectionalLight gDirLight[NUM_DIRECTIONAL_LIGHTS];
+	SpotLight gSpotLight[NUM_SPOT_LIGHTS];
+	PointLight gPointLight[NUM_POINT_LIGHTS];
 	float3 cameraPosition;
 	float fogStart;
 	float fogEnd;
@@ -255,6 +253,7 @@ PixelInputType LightVertexShader(VertexInputType input)
 
 	// Determine the viewing direction based on the position of the camera and the position of the vertex in the world.
 	output.viewDirection = cameraPosition.xyz - output.worldPosition.xyz;
+		//cameraPosition.xyz - output.worldPosition.xyz;
 
 	// Normalize the viewing direction vector.
 	output.viewDirection = normalize(output.viewDirection);
@@ -289,28 +288,38 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
 
 	float4 A, D, S;
 
-	ComputeDirectionalLight(material, gDirLight, input.normal, input.viewDirection, A, D, S);
-	
-	ambient += A;
-	diffuse += D;
-	specular += S;
+	for (uint i = 0; i < NUM_DIRECTIONAL_LIGHTS; i++)
+	{
+		ComputeDirectionalLight(material, gDirLight[i], input.normal, input.viewDirection, A, D, S);
 
-	//gPointLight.Attentuation = float3(0.0f, 100.0f, 100.0f);
-	ComputePointLight(material, gPointLight, input.worldPosition, input.normal, input.viewDirection, A, D, S);
-	
-	ambient += A;
-	diffuse += D;
-	specular += S;
+		ambient += A;
+		diffuse += D;
+		specular += S;
+	}
 
-	ComputeSpotLight(material, gSpotLight, input.worldPosition, input.normal, input.viewDirection, A, D, S);
+	for (uint i = 0; i < NUM_POINT_LIGHTS; i++)
+	{
+		//gPointLight.Attentuation = float3(0.0f, 100.0f, 100.0f);
+		ComputePointLight(material, gPointLight[i], input.worldPosition, input.normal, input.viewDirection, A, D, S);
 
-	ambient += A;
-	diffuse += D;
-	specular += S;
+		ambient += A;
+		diffuse += D;
+		specular += S;
+
+	}
+
+	for (uint i = 0; i < NUM_SPOT_LIGHTS; i++)
+	{
+		ComputeSpotLight(material, gSpotLight[i], input.worldPosition, input.normal, input.viewDirection, A, D, S);
+
+		ambient += A;
+		diffuse += D;
+		specular += S;
+	}
 
 	float4 litColor = ambient + diffuse;
 
-	//litColor.a = material.Diffuse.a;
+	litColor.a = material.Diffuse.a;
 
 	// Multiply the texture pixel and the input color to get the textured result.
 	color = litColor * textureColor;
@@ -326,51 +335,4 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
 	color = input.fogFactor * color + (1.0 - input.fogFactor) * fogColor;
 
 	return color;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// Pixel Shader
-////////////////////////////////////////////////////////////////////////////////
-float4 LightPixelShaderNoSpotLight(PixelInputType input) : SV_TARGET
-{
-	float4 textureColor;
-float3 lightDir;
-float lightIntensity;
-float4 color;
-float3 reflection;
-
-input.normal = normalize(input.normal);
-
-// Sample the pixel color from the texture using the sampler at this texture coordinate location.
-textureColor = shaderTexture.Sample(SampleType, input.tex);
-
-float4 ambient = float4(0.0f, 0.0f, 0.0f, 0.0f);
-float4 diffuse = float4(0.0f, 0.0f, 0.0f, 0.0f);
-float4 specular = float4(0.0f, 0.0f, 0.0f, 0.0f);
-
-float4 A, D, S;
-
-ComputeDirectionalLight(material, gDirLight, input.normal, input.viewDirection, A, D, S);
-
-ambient += A;
-diffuse += D;
-specular += S;
-
-/*ComputePointLight(material, gPointLight, input.position, input.normal, toEyeW, A, D, S);
-
-ambient += A;
-diffuse += D;
-specular += S;*/
-
-float4 litColor = ambient + diffuse;
-
-litColor.a = material.Diffuse.a;
-
-// Multiply the texture pixel and the input color to get the textured result.
-color = litColor * textureColor;
-
-// Add the specular component last to the output color.
-color = saturate(color + specular);
-
-return color;
 }

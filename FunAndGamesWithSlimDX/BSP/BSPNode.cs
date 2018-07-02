@@ -1,6 +1,7 @@
 ﻿using FunAndGamesWithSharpDX.Entities;
 using SharpDX;
 using System.Collections.Generic;
+using DungeonHack.Entities;
 
 namespace DungeonHack.BSP
 {

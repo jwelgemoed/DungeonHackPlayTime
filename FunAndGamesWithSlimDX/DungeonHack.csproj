@@ -47,6 +47,7 @@
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -163,6 +164,7 @@
     <Compile Include="Builders\MeshBuilder.cs" />
     <Compile Include="CollisionDetection\ICollisionDetector.cs" />
     <Compile Include="DirectX\BufferFactory.cs" />
+    <Compile Include="DirectX\ConstantBuffer\ConstantBuffer.cs" />
     <Compile Include="DirectX\ConstantBuffer\ConstantBufferPerFrame.cs" />
     <Compile Include="DirectX\ConstantBuffer\ConstantBufferPerObject.cs" />
     <Compile Include="DirectX\IShader.cs" />
@@ -179,7 +181,6 @@
     <Compile Include="Entities\PolygonType.cs" />
     <Compile Include="Factories\ModelFactory.cs" />
     <Compile Include="Builders\PortalBuilder.cs" />
-    <Compile Include="DirectX\EffectsShader.cs" />
     <Compile Include="DirectX\IncludeFX.cs" />
     <Compile Include="DirectX\ShaderTechnique.cs" />
     <Compile Include="DirectX\Util.cs" />
@@ -205,7 +206,7 @@
     <Compile Include="Entities\Vertex.cs" />
     <Compile Include="Engine\GameTimer.cs" />
     <Content Include="Shaders\Sprite.fx" />
-    <Compile Include="Lights\Directional.cs" />
+    <Compile Include="Lights\DirectionalLight.cs" />
     <Compile Include="Lights\LightEngine.cs" />
     <Compile Include="Lights\Point.cs" />
     <Compile Include="Lights\Spotlight.cs" />

@@ -2,6 +2,7 @@
 using FunAndGamesWithSharpDX.Engine;
 using SharpDX;
 using System.Collections.Generic;
+using DungeonHack.Engine;
 
 namespace DungeonHack.OcclusionCulling
 {

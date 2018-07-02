@@ -9,6 +9,7 @@ using SharpDX.Direct3D11;
 using System;
 using System.IO;
 using System.Linq;
+using DungeonHack.Engine;
 
 namespace DungeonHack.Builders
 {

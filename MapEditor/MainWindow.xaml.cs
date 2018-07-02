@@ -25,6 +25,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using DungeonHack.DirectX;
 using Point = System.Windows.Point;
+using Polygon = DungeonHack.Entities.Polygon;
 using Rectangle = System.Windows.Shapes.Rectangle;
 
 namespace MapEditor
@@ -163,7 +164,7 @@ namespace MapEditor
 
         private void btnRunMap_Click(object sender, RoutedEventArgs e)
         {
-            var meshList = new List<FunAndGamesWithSharpDX.Entities.Polygon>();
+            var meshList = new List<Polygon>();
 
             foreach (var map in _globalMapData.GetMaps())
             {
@@ -526,9 +527,9 @@ namespace MapEditor
             }
         }
 
-        private IEnumerable<FunAndGamesWithSharpDX.Entities.Polygon> CreateMeshes(GameData.MapData mapdata, GameData.Sector sector, float currentScale)
+        private IEnumerable<Polygon> CreateMeshes(GameData.MapData mapdata, GameData.Sector sector, float currentScale)
         {
-            List<FunAndGamesWithSharpDX.Entities.Polygon> meshList = new List<FunAndGamesWithSharpDX.Entities.Polygon>();
+            List<Polygon> meshList = new List<Polygon>();
 
             var lineSegments = mapdata
                 .LineSegments
@@ -590,9 +591,9 @@ namespace MapEditor
             return meshList;
         }
 
-        private List<FunAndGamesWithSharpDX.Entities.Polygon> CreateMesh(List<GameData.Vertex> triangles, float floorHeight, float ceilingHeight, int floorTextureId, int ceilingTextureId, Vector2 lowerBound, Vector2 upperBound)
+        private List<Polygon> CreateMesh(List<GameData.Vertex> triangles, float floorHeight, float ceilingHeight, int floorTextureId, int ceilingTextureId, Vector2 lowerBound, Vector2 upperBound)
         {
-            List<FunAndGamesWithSharpDX.Entities.Polygon> meshes = new List<FunAndGamesWithSharpDX.Entities.Polygon>();
+            List<Polygon> meshes = new List<Polygon>();
             PolygonBuilder meshBuilder = new PolygonBuilder(demo.Device, demo.GetShader, new BufferFactory(demo.Device));
 
             int numberOfTriangles = triangles.Count / 3;
@@ -740,7 +741,7 @@ namespace MapEditor
             return meshes;
         }
 
-        private FunAndGamesWithSharpDX.Entities.Polygon CreateMesh(GameData.LineSegment lineSegment, float currentScale)
+        private Polygon CreateMesh(GameData.LineSegment lineSegment, float currentScale)
         {
             if (lineSegment == null)
                 throw new ArgumentException(nameof(GameData.LineSegment));
@@ -896,7 +897,7 @@ namespace MapEditor
             //Task task = new Task(() =>
             {
 
-                var meshList = new List<FunAndGamesWithSharpDX.Entities.Polygon>();
+                var meshList = new List<Polygon>();
 
                 foreach (var map in _globalMapData.GetMaps())
                 {

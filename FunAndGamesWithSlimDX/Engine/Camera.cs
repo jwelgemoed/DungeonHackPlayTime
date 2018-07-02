@@ -3,6 +3,7 @@ using FunAndGamesWithSharpDX.DirectX;
 using FunAndGamesWithSharpDX.Entities;
 using SharpDX;
 using System;
+using DungeonHack.Engine;
 
 namespace FunAndGamesWithSharpDX.Engine
 {

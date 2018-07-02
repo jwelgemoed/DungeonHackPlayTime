@@ -4,17 +4,18 @@ using System.Runtime.InteropServices;
 
 namespace DungeonHack.DirectX.ConstantBuffer
 {
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, Size=272)]
     public struct ConstantBufferPerFrame
     {
-        public DirectionalLight DirectionalLight;
-        public Spotlight SpotLight;
-        public PointLight PointLight;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 1)]
+        public DirectionalLight[] DirectionalLight;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 1)]
+        public Spotlight[] SpotLight;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 1)]
+        public PointLight[] PointLight;
         public Vector3 CameraPosition;
         public float FogStart;
         public float FogEnd;
-        public Vector3 Pad;
-
-        public static readonly int Stride = Marshal.SizeOf(typeof(ConstantBufferPerFrame));
+        public Vector3 pad;
     }
 }

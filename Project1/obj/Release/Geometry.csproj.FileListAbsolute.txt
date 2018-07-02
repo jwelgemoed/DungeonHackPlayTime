@@ -36,9 +36,13 @@ C:\git\DungeonHackPlayTime\Project1\bin\Release\Geometry.dll
 C:\git\DungeonHackPlayTime\Project1\bin\Release\Geometry.pdb
 C:\git\DungeonHackPlayTime\Project1\bin\Release\GameData.dll
 C:\git\DungeonHackPlayTime\Project1\bin\Release\GameData.pdb
-C:\git\DungeonHackPlayTime\Project1\obj\Release\Geometry.csprojResolveAssemblyReference.cache
 C:\git\DungeonHackPlayTime\Project1\obj\Release\Geometry.dll
 C:\git\DungeonHackPlayTime\Project1\obj\Release\Geometry.pdb
 C:\git\DungeonHackPlayTime\Project1\bin\Release\AssimpNet.dll
 C:\git\DungeonHackPlayTime\Project1\bin\Release\AssimpNet.xml
 C:\git\DungeonHackPlayTime\Project1\bin\Release\GameData.dll.config
+C:\git\DungeonHackPlayTime\Project1\bin\Release\Shaders\LightTexture.hlsl
+C:\git\DungeonHackPlayTime\Project1\bin\Release\Shaders\Texture.hlsl
+C:\git\DungeonHackPlayTime\Project1\obj\Release\Geometry.csprojAssemblyReference.cache
+C:\git\DungeonHackPlayTime\Project1\obj\Release\Geometry.csproj.CoreCompileInputs.cache
+C:\git\DungeonHackPlayTime\Project1\obj\Release\Geometry.csproj.CopyComplete

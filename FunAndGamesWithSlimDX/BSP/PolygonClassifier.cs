@@ -1,4 +1,5 @@
-﻿using FunAndGamesWithSharpDX.Entities;
+﻿using DungeonHack.Entities;
+using FunAndGamesWithSharpDX.Entities;
 using SharpDX;
 using Plane = DungeonHack.Entities.Plane;
 

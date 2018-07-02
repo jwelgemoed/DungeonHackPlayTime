@@ -8,6 +8,7 @@ using FunAndGamesWithSharpDX.DirectX;
 using SharpDX.Direct3D11;
 using AutoMapper;
 using DungeonHack.DirectX;
+using DungeonHack.Entities;
 
 namespace DungeonHack.BSP.LeafBsp
 {

@@ -5,6 +5,7 @@ using SharpDX.RawInput;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using DungeonHack.Engine;
 using SharpDX;
 using Point = System.Drawing.Point;
 

@@ -3,6 +3,7 @@ using SharpDX;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DungeonHack.Entities;
 using Plane = DungeonHack.Entities.Plane;
 
 namespace DungeonHack.BSP

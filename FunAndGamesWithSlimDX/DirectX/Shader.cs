@@ -52,7 +52,7 @@ namespace DungeonHack.DirectX
             _currentShader.Render(context, indexCount, worldMatrix, viewMatrix, viewProjMatrix, texture, cameraPosition, material);
         }
 
-        public void RenderLights(DirectionalLight directionalLight, PointLight pointLight, Spotlight spotLight)
+        public void RenderLights(DirectionalLight[] directionalLight, PointLight[] pointLight, Spotlight[] spotLight)
         {
             _currentShader.RenderLights(directionalLight, pointLight, spotLight);
         }

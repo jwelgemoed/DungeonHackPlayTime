@@ -40,7 +40,6 @@ C:\git\DungeonHackPlayTime\GameData\bin\Release\DungeonHack.pdb
 C:\git\DungeonHackPlayTime\GameData\bin\Release\DungeonHack.dll.config
 C:\git\DungeonHackPlayTime\GameData\bin\Release\SlimDX.pdb
 C:\git\DungeonHackPlayTime\GameData\bin\Release\SlimDX.xml
-C:\git\DungeonHackPlayTime\GameData\obj\Release\GameData.csprojResolveAssemblyReference.cache
 C:\git\DungeonHackPlayTime\GameData\obj\Release\GameData.dll
 C:\git\DungeonHackPlayTime\GameData\obj\Release\GameData.pdb
 C:\git\DungeonHackPlayTime\GameData\bin\Release\AssimpNet.dll
@@ -67,3 +66,9 @@ C:\git\DungeonHackPlayTime\GameData\bin\Release\SharpDX.Direct3D11.Effects.xml
 C:\git\DungeonHackPlayTime\GameData\bin\Release\SharpDX.D3DCompiler.xml
 C:\git\DungeonHackPlayTime\GameData\bin\Release\SharpDX.xml
 C:\git\DungeonHackPlayTime\GameData\bin\Release\SharpDX.DXGI.xml
+C:\git\DungeonHackPlayTime\GameData\bin\Release\Shaders\LightTexture.hlsl
+C:\git\DungeonHackPlayTime\GameData\bin\Release\Shaders\Texture.hlsl
+C:\git\DungeonHackPlayTime\GameData\bin\Release\NBidi.dll
+C:\git\DungeonHackPlayTime\GameData\obj\Release\GameData.csprojAssemblyReference.cache
+C:\git\DungeonHackPlayTime\GameData\obj\Release\GameData.csproj.CoreCompileInputs.cache
+C:\git\DungeonHackPlayTime\GameData\obj\Release\GameData.csproj.CopyComplete

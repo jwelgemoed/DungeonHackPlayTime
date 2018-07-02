@@ -4,6 +4,7 @@ using SharpDX;
 using SharpDX.Direct3D11;
 using System;
 using System.Collections.Generic;
+using DungeonHack.Entities;
 
 namespace DungeonHack.BSP
 {

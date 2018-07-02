@@ -1,12 +1,11 @@
-﻿using DungeonHack.DirectX;
-using DungeonHack.Entities;
-using FunAndGamesWithSharpDX.DirectX;
+﻿using System;
+using DungeonHack.DirectX;
+using FunAndGamesWithSharpDX.Entities;
 using SharpDX;
-using System;
 using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
 
-namespace FunAndGamesWithSharpDX.Entities
+namespace DungeonHack.Entities
 {
     public class Polygon : IDisposable
     {

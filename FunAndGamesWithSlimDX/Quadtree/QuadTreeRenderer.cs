@@ -5,6 +5,7 @@ using SharpDX;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using DungeonHack.Entities;
 
 namespace DungeonHack.QuadTree
 {
