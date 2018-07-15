@@ -35,10 +35,6 @@ namespace DungeonHack.Entities
 
         public bool HasBeenUsedAsSplitPlane { get; set; }
 
-        public bool HasBeenProcessedForRenderingThisFrame { get; set; }
-
-        public OcclusionQuery OcclusionQuery { get; private set; }
-        
         public PolygonType PolygonType { get; set; }
 
         public Polygon(Device device, Shader shader)
@@ -47,7 +43,6 @@ namespace DungeonHack.Entities
             TranslationMatrix = Matrix.Identity;
             RotationMatrix = Matrix.Identity;
             WorldMatrix = Matrix.Identity;
-            OcclusionQuery = new OcclusionQuery(device);
         }
 
         public void Dispose()
@@ -56,8 +51,6 @@ namespace DungeonHack.Entities
                 VertexBuffer.Dispose();
             if (IndexBuffer != null)
                 IndexBuffer.Dispose();
-            if (OcclusionQuery != null)
-                OcclusionQuery.Dispose();
         }
     }
 }

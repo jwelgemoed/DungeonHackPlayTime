@@ -1,6 +1,7 @@
 ﻿using DungeonHack.DirectX.ConstantBuffer;
 using DungeonHack.Engine;
 using DungeonHack.Lights;
+using FunAndGamesWithSharpDX.DirectX;
 using FunAndGamesWithSharpDX.Entities;
 using SharpDX;
 using SharpDX.D3DCompiler;
@@ -15,6 +16,7 @@ namespace DungeonHack.DirectX
         private InputLayout _layout;
 
         private SamplerState _samplerState;
+        private SamplerState _normalMapSamplerState;
         private InputElement[] _elements;
 
         private ConstantBuffer<ConstantBufferPerObject> _objectConstantBuffer;
@@ -22,8 +24,6 @@ namespace DungeonHack.DirectX
 
         private ConstantBufferPerFrame _constantBufferPerFrame;
         private ConstantBufferPerObject _constantBufferPerObject;
-
-        private ShaderResourceView _currentTexture;
 
         public LightShader(Device device, DeviceContext context)
         {
@@ -73,6 +73,22 @@ namespace DungeonHack.DirectX
 
             _samplerState = new SamplerState(device, samplerDesc);
 
+            var normalMapSamplerDesc = new SamplerStateDescription
+            {
+                Filter = Filter.MinMagLinearMipPoint,
+                AddressU = TextureAddressMode.Wrap,
+                AddressV = TextureAddressMode.Wrap,
+                AddressW = TextureAddressMode.Wrap,
+                MipLodBias = 0.0f,
+                MaximumAnisotropy = 1,
+                ComparisonFunction = Comparison.Always,
+                BorderColor = Colors.Black,
+                MinimumLod = 0,
+                MaximumLod = 0
+            };
+
+            _normalMapSamplerState = new SamplerState(device, normalMapSamplerDesc);
+
             _context.InputAssembler.InputLayout = _layout;
             _context.InputAssembler.PrimitiveTopology = SharpDX.Direct3D.PrimitiveTopology.TriangleList;
 
@@ -82,14 +98,21 @@ namespace DungeonHack.DirectX
             _context.PixelShader.SetConstantBuffer(0, _objectConstantBuffer.Buffer);
             _context.PixelShader.SetConstantBuffer(1, _frameConstantBuffer.Buffer);
             _context.PixelShader.SetSampler(0, _samplerState);
+            _context.PixelShader.SetSampler(1, _normalMapSamplerState);
 
             _context.VertexShader.Set(vertexShader);
             _context.PixelShader.Set(pixelShader);
         }
                 
-        public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix viewProjectionMatrix, ShaderResourceView texture, Vector3 cameraPosition, Material material)
+        public void Render(DeviceContext context, 
+                            int indexCount, 
+                            Matrix worldMatrix, 
+                            Matrix viewMatrix, 
+                            Matrix viewProjectionMatrix, 
+                            Texture texture, 
+                            Vector3 cameraPosition, 
+                            Material material)
         {
-
             _constantBufferPerObject.WorldMatrix = worldMatrix;
             _constantBufferPerObject.WorldMatrix.Transpose();
             _constantBufferPerObject.ViewMatrix = viewMatrix;
@@ -104,8 +127,11 @@ namespace DungeonHack.DirectX
 
             _frameConstantBuffer.UpdateValue(_constantBufferPerFrame);
 
-            context.PixelShader.SetShaderResource(0, texture);
-            
+            context.PixelShader.SetShaderResource(0, texture.TextureData);
+
+            if (texture.NormalMapData != null)
+                context.PixelShader.SetShaderResource(1, texture.NormalMapData);
+
             context.DrawIndexed(indexCount, 0, 0);
         }
 
@@ -125,6 +151,9 @@ namespace DungeonHack.DirectX
 
             if (_samplerState != null)
                 _samplerState.Dispose();
+
+            if (_normalMapSamplerState != null)
+                _normalMapSamplerState.Dispose();
 
             if (_frameConstantBuffer != null)
                 _frameConstantBuffer.Dispose();

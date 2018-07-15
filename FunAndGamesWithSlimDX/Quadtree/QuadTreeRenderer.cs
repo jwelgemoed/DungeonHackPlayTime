@@ -1,17 +1,18 @@
 ﻿using DungeonHack.OcclusionCulling;
 using FunAndGamesWithSharpDX.Engine;
-using FunAndGamesWithSharpDX.Entities;
 using SharpDX;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using DungeonHack.Entities;
+using DungeonHack.Renderers;
 
 namespace DungeonHack.QuadTree
 {
     public class QuadTreeRenderer
     {
         private PolygonRenderer _renderer;
+        private BoundingBoxRenderer _boundingBoxRenderer;
         private Polygon[][] _renderList;
         private Stack<QuadTreeNode>[] _nodeStack;
         private int[] _endOfList;
@@ -21,7 +22,7 @@ namespace DungeonHack.QuadTree
         private Stopwatch _stopwatch;
         private DepthBuffer _depthBuffer;
 
-        public QuadTreeRenderer(PolygonRenderer renderer, Camera camera)
+        public QuadTreeRenderer(PolygonRenderer renderer, BoundingBoxRenderer boundingBoxRenderer, Camera camera)
         {
             _threadCount = 4;
             _threadCountPerThread = 4;
@@ -32,6 +33,7 @@ namespace DungeonHack.QuadTree
             _nodeStack = new Stack<QuadTreeNode>[_threadCount * _threadCountPerThread];
             _stopwatch = new Stopwatch();
             _depthBuffer = new DepthBuffer(camera, _threadCount * _threadCountPerThread);
+            _boundingBoxRenderer = boundingBoxRenderer;
 
             for (int i = 0; i < (_threadCount * _threadCountPerThread); i++)
             {
@@ -71,17 +73,6 @@ namespace DungeonHack.QuadTree
             }
 
             Task.WaitAll(_tasks);
-
-            //for (int i = 0; i < (_threadCount * _threadCountPerThread); i++)
-            //{
-            //    for (int j = 0; j < _endOfList[i]; j++)
-            //    {
-            //        var polygon = _renderList[i][j];
-            //        _renderer.Render(frustrum, _renderList[i][j], camera.RenderViewProjectionMatrix, ref meshRenderedCount);
-            //        polygon.HasBeenProcessedForRenderingThisFrame = false;
-            //    }
-            //    _endOfList[i] = 0;
-            //}
         }
 
         private void DrawQuadMultiThread(int threadNumber, QuadTreeNode node, 
@@ -135,10 +126,9 @@ namespace DungeonHack.QuadTree
                 if (!node.BoundingBox.ContainsOrIntersectsCamera(camera) &&
                     (frustrum.CheckBoundingBox(node.BoundingBox.BoundingBox) == 0
                         || node.BoundingBox.DistanceToCamera(camera) >= 2500)
-                        ||
-                        _depthBuffer.IsBoundingBoxOccluded(node.BoundingBox))
+                        || _depthBuffer.IsBoundingBoxOccluded(node.BoundingBox))
                 {
-                    _renderer.RenderBoundingBox(node.BoundingBox, Matrix.Identity, camera.RenderViewProjectionMatrix, 1, 0);
+                  //  _boundingBoxRenderer.RenderBoundingBox(node.BoundingBox, Matrix.Identity, camera.RenderViewProjectionMatrix, 1, 0);
                     continue;
                 }
 
@@ -149,11 +139,7 @@ namespace DungeonHack.QuadTree
 
                     foreach (var polygon in node.Polygons)
                     {
-                        // if (polygon.HasBeenProcessedForRenderingThisFrame)
-                        //     continue;
-
-                        if //(ConfigManager.FrustrumCullingEnabled &&
-                           ((frustrum.CheckBoundingBox(polygon.BoundingBox.BoundingBox) == 0))
+                        if (frustrum.CheckBoundingBox(polygon.BoundingBox.BoundingBox) == 0)
                         {
                             continue;
                         }
@@ -168,12 +154,9 @@ namespace DungeonHack.QuadTree
 
                         if (draw)
                         {
-                            //polygon.HasBeenProcessedForRenderingThisFrame = true;
-                            //_renderList[threadCount][_endOfList[threadCount]] = polygon;
-                            //_endOfList[threadCount]++;
                             polygonsdrawn++;
                             int meshRenderedCount = 0;
-                            _renderer.Render(polygon, camera.RenderViewProjectionMatrix, ref meshRenderedCount);
+                            _renderer.Render(polygon, ref meshRenderedCount);
                         }
                         else
                         {

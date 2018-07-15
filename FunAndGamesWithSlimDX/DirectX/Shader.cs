@@ -47,7 +47,7 @@ namespace DungeonHack.DirectX
             SetShader(ShaderTechnique.LightShader);
         }
 
-        public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix viewProjMatrix, ShaderResourceView texture, Vector3 cameraPosition, Material material)
+        public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix viewProjMatrix, Texture texture, Vector3 cameraPosition, Material material)
         {
             _currentShader.Render(context, indexCount, worldMatrix, viewMatrix, viewProjMatrix, texture, cameraPosition, material);
         }

@@ -24,9 +24,19 @@ namespace DungeonHack.DataDictionaries
         public void AddAllTextureFromPath(string path)
         {
             foreach (var file in 
-                new List<string>(Directory.GetFileSystemEntries(path, "*.png")).OrderBy(x => x))
+                new List<string>(Directory.GetFileSystemEntries(path, "*.png"))
+                        .Select(x => x.ToLower())
+                        .Where(x => !x.EndsWith("_normal.png"))
+                    .OrderBy(x => x))
             {
-                AddTextureFullPath(file);
+                if (File.Exists(file.Replace(".png", "_normal.png")))
+                {
+                    AddTextureAndNormalMapFullPath(file);
+                }
+                else
+                {
+                    AddTextureFullPath(file);
+                }
             }
         }
         
@@ -42,6 +52,15 @@ namespace DungeonHack.DataDictionaries
         public int AddTextureFullPath(string filenamePath)
         {
             var texture = LoadTextureFullPath(filenamePath);
+
+            _dictionary.Add(_dictionary.Count, new Tuple<Texture, string>(texture, filenamePath));
+
+            return _dictionary.Count - 1;
+        }
+
+        public int AddTextureAndNormalMapFullPath(string filenamePath)
+        {
+            var texture = LoadTextureAndNormalMap(filenamePath);
 
             _dictionary.Add(_dictionary.Count, new Tuple<Texture, string>(texture, filenamePath));
 
@@ -73,6 +92,18 @@ namespace DungeonHack.DataDictionaries
             texture.LoadTexture(_device, filePath);
 
             return texture;
+        }
+
+        public Texture LoadTextureAndNormalMap(string filePath)
+        {
+            var texture = new Texture();
+
+            texture.LoadTexture(_device, filePath);
+
+            texture.LoadNormalMap(_device, filePath.Replace(".png", "_normal.png"));
+
+            return texture;
+
         }
 
         public void AddAllTextureFromPath(object p)

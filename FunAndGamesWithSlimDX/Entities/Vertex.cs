@@ -11,6 +11,7 @@ namespace FunAndGamesWithSharpDX.Entities
         public Vector4 Position;
         public Vector2 Texture;
         public Vector3 Normal;
+        public Vector4 TangentU;
 
         public static int SizeOf
         {
@@ -33,6 +34,10 @@ namespace FunAndGamesWithSharpDX.Entities
                         {
                             Classification = InputClassification.PerVertexData
                         },
+                     new InputElement("TANGENT", 0, Format.R32G32B32A32_Float, 0)
+                        {
+                            Classification = InputClassification.PerVertexData
+                        }
                 };
 
             return elements;

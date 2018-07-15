@@ -1,6 +1,6 @@
 ﻿//Frank Luna 
 #define NUM_DIRECTIONAL_LIGHTS 1
-#define NUM_POINT_LIGHTS 1
+#define NUM_POINT_LIGHTS 2
 #define NUM_SPOT_LIGHTS 1
 
 struct DirectionalLight {
@@ -93,7 +93,8 @@ void ComputePointLight(Material mat, PointLight L, float3 pos, float3 normal, fl
 	spec = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
 	// The vector from the surface to the light.
-	float3 lightVec = L.Position - pos;
+	// Something's wrong I can feel it!
+	float3 lightVec = L.Position - pos;//pos - L.Position;//L.Position - pos;//pos - L.Position;//L.Position - pos;
 
 	// The distance from surface to light.
 	float d = length(lightVec);
@@ -186,6 +187,21 @@ void ComputeSpotLight(Material mat, SpotLight L, float3 pos, float3 normal, floa
 	spec *= att;
 }
 
+//--------------------------------------------------------------------- 
+// Transforms a normal map sample to world space. 
+//--------------------------------------------------------------------- 
+float3 NormalSampleToWorldSpace(float3 normalMapSample, float3 unitNormalW, float3 tangentW) 
+{ 
+	// Uncompress each component from [0,1] to [-1,1]. 
+	float3 normalT = 2.0f* normalMapSample - 1.0f; 
+	// Build orthonormal basis. 
+	float3 N = unitNormalW; 
+	float3 T = normalize( tangentW - dot( tangentW, N)* N); 
+	float3 B = cross( N, T); 
+	float3x3 TBN = float3x3( T, B, N); 
+	// Transform from tangent space to world space. 
+	float3 bumpedNormalW = mul( normalT, TBN); return bumpedNormalW; 
+}
 
 cbuffer cbPerObject : register(b0)
 {
@@ -207,13 +223,23 @@ cbuffer cbPerFrame : register(b1)
 };
 
 Texture2D shaderTexture;
+Texture2D normalMap;
+
 SamplerState SampleType;
+
+SamplerState samLinear 
+{ 
+	Filter = MIN_MAG_MIP_LINEAR; 
+	AddressU = WRAP; 
+	AddressV = WRAP; 
+};
 
 struct VertexInputType
 {
 	float4 position : POSITION;
 	float2 tex : TEXCOORD0;
 	float3 normal : NORMAL;
+	float4 tangent : TANGENT;
 };
 
 struct PixelInputType
@@ -222,6 +248,7 @@ struct PixelInputType
 	float4 worldPosition :  POSITION;
 	float2 tex : TEXCOORD0;
 	float3 normal : NORMAL;
+	float4 tangent : TANGENT;
 	float3 viewDirection : TEXCOORD1;
 	float fogFactor : FOG;
 };
@@ -238,8 +265,10 @@ PixelInputType LightVertexShader(VertexInputType input)
 	input.position.w = 1.0f;
 
 	// Calculate the position of the vertex against the world, view, and projection matrices.
-	//output.position = mul(input.position, worldMatrix);
-	output.position = mul(input.position, viewProjectionMatrix);
+	worldPos = mul(input.position, worldMatrix);
+
+	output.worldPosition = worldPos;
+	output.position = mul(worldPos, viewProjectionMatrix);
 
 	// Store the input color for the pixel shader to use.
 	output.tex = input.tex;
@@ -247,9 +276,11 @@ PixelInputType LightVertexShader(VertexInputType input)
 	output.normal = mul(input.normal, (float3x3) worldMatrix);
 	output.normal = normalize(output.normal);
 
+	output.tangent = mul(input.tangent, worldMatrix);
+
 	// Calculate the position of the vertex in the world.
 	//output.worldPosition = mul(input.position, worldMatrix);
-	output.worldPosition = input.position;
+	//output.worldPosition = input.position;
 
 	// Determine the viewing direction based on the position of the camera and the position of the vertex in the world.
 	output.viewDirection = cameraPosition.xyz - output.worldPosition.xyz;
@@ -259,7 +290,7 @@ PixelInputType LightVertexShader(VertexInputType input)
 	output.viewDirection = normalize(output.viewDirection);
 
 	// Calculate linear fog.    
-	worldPos = mul(input.position, viewMatrix);
+	worldPos = mul(worldPos, viewMatrix);
 	output.fogFactor = saturate((fogEnd - worldPos.z) / (fogEnd - fogStart));
 
 	return output;
@@ -282,6 +313,14 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
 	// Sample the pixel color from the texture using the sampler at this texture coordinate location.
 	textureColor = shaderTexture.Sample(SampleType, input.tex);
 
+	// 
+	// Normal mapping 
+	//
+	
+	float3 normalMapSample = normalMap.Sample(samLinear, input.tex).rgb; 
+	float3 bumpedNormalW = NormalSampleToWorldSpace(normalMapSample, input.normal, input.tangent);
+	//float3 bumpedNormalW = input.normal;
+
 	float4 ambient = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	float4 diffuse = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	float4 specular = float4(0.0f, 0.0f, 0.0f, 0.0f);
@@ -290,7 +329,7 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
 
 	for (uint i = 0; i < NUM_DIRECTIONAL_LIGHTS; i++)
 	{
-		ComputeDirectionalLight(material, gDirLight[i], input.normal, input.viewDirection, A, D, S);
+		ComputeDirectionalLight(material, gDirLight[i], bumpedNormalW, input.viewDirection, A, D, S);
 
 		ambient += A;
 		diffuse += D;
@@ -300,17 +339,16 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
 	for (uint i = 0; i < NUM_POINT_LIGHTS; i++)
 	{
 		//gPointLight.Attentuation = float3(0.0f, 100.0f, 100.0f);
-		ComputePointLight(material, gPointLight[i], input.worldPosition, input.normal, input.viewDirection, A, D, S);
+		ComputePointLight(material, gPointLight[i], input.worldPosition, bumpedNormalW, input.viewDirection, A, D, S);
 
 		ambient += A;
 		diffuse += D;
 		specular += S;
-
 	}
 
 	for (uint i = 0; i < NUM_SPOT_LIGHTS; i++)
 	{
-		ComputeSpotLight(material, gSpotLight[i], input.worldPosition, input.normal, input.viewDirection, A, D, S);
+		ComputeSpotLight(material, gSpotLight[i], input.worldPosition, bumpedNormalW, input.viewDirection, A, D, S);
 
 		ambient += A;
 		diffuse += D;
