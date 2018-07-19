@@ -142,6 +142,7 @@ namespace DungeonHack.DirectX
             _constantBufferPerFrame.SpotLight = spotLight;
             _constantBufferPerFrame.FogStart = ConfigManager.FogStart;
             _constantBufferPerFrame.FogEnd = ConfigManager.FogEnd;
+            _constantBufferPerFrame.UseNormalMap = ConfigManager.UseNormalMap;
         }
 
         public void Dispose()

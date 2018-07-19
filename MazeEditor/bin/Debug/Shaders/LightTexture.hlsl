@@ -219,7 +219,8 @@ cbuffer cbPerFrame : register(b1)
 	float3 cameraPosition;
 	float fogStart;
 	float fogEnd;
-	float3 pad;
+	bool useNormalMap;
+	float2 pad;
 };
 
 Texture2D shaderTexture;
@@ -312,14 +313,15 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
 
 	// Sample the pixel color from the texture using the sampler at this texture coordinate location.
 	textureColor = shaderTexture.Sample(SampleType, input.tex);
-
-	// 
-	// Normal mapping 
-	//
+	textureColor = float4(textureColor.rgb * textureColor.rgb, textureColor.a);
 	
-	float3 normalMapSample = normalMap.Sample(samLinear, input.tex).rgb; 
-	float3 bumpedNormalW = NormalSampleToWorldSpace(normalMapSample, input.normal, input.tangent);
-	//float3 bumpedNormalW = input.normal;
+	float3 bumpedNormalW = input.normal;
+
+	if (useNormalMap)
+	{
+		float3 normalMapSample = normalMap.Sample(samLinear, input.tex).rgb;
+		bumpedNormalW = NormalSampleToWorldSpace(normalMapSample, input.normal, input.tangent);
+	}
 
 	float4 ambient = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	float4 diffuse = float4(0.0f, 0.0f, 0.0f, 0.0f);

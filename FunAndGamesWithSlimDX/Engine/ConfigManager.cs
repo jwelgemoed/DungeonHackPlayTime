@@ -69,5 +69,7 @@ namespace DungeonHack.Engine
         public static bool SpotlightOn { get; set; }
         public static float FogStart { get; set; }
         public static float FogEnd { get; set; }
+
+        public static int UseNormalMap { get; set; }
     }
 }

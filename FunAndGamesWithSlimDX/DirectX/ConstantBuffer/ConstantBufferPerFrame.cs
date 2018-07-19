@@ -16,6 +16,7 @@ namespace DungeonHack.DirectX.ConstantBuffer
         public Vector3 CameraPosition;
         public float FogStart;
         public float FogEnd;
-        public Vector3 pad;
+        public int UseNormalMap;
+        public Vector2 pad;
     }
 }
