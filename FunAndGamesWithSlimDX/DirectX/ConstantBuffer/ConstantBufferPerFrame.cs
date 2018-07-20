@@ -17,6 +17,10 @@ namespace DungeonHack.DirectX.ConstantBuffer
         public float FogStart;
         public float FogEnd;
         public int UseNormalMap;
+        public float gMaxTessDistance;
+        public float gMinTessDistance;
+        public float gMinTessFactor;
+        public float gMaxTessFactor;
         public Vector2 pad;
     }
 }

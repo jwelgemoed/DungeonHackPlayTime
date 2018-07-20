@@ -17,6 +17,7 @@ namespace DungeonHack.DirectX
 
         private SamplerState _samplerState;
         private SamplerState _normalMapSamplerState;
+        private SamplerState _displacementSamplerState;
         private InputElement[] _elements;
 
         private ConstantBuffer<ConstantBufferPerObject> _objectConstantBuffer;
@@ -48,6 +49,14 @@ namespace DungeonHack.DirectX
 
             bytecode = ShaderBytecode.CompileFromFile(fileName, "LightPixelShader", "ps_5_0", ShaderFlags.Debug | ShaderFlags.SkipOptimization);
             var pixelShader = new PixelShader(device, bytecode);
+            bytecode.Dispose();
+
+            bytecode = ShaderBytecode.CompileFromFile(fileName, "LightPixelShader", "hs_5_0", ShaderFlags.Debug | ShaderFlags.SkipOptimization);
+            var hullShader = new HullShader(device, bytecode);
+            bytecode.Dispose();
+
+            bytecode = ShaderBytecode.CompileFromFile(fileName, "LightPixelShader", "ds_5_0", ShaderFlags.Debug | ShaderFlags.SkipOptimization);
+            var domainShader = new DomainShader(device, bytecode);
             bytecode.Dispose();
 
             _objectConstantBuffer = new ConstantBuffer<ConstantBufferPerObject>(device);
@@ -89,8 +98,24 @@ namespace DungeonHack.DirectX
 
             _normalMapSamplerState = new SamplerState(device, normalMapSamplerDesc);
 
+            var displacementMapSamplerDesc = new SamplerStateDescription
+            {
+                Filter = Filter.MinMagLinearMipPoint,
+                AddressU = TextureAddressMode.Wrap,
+                AddressV = TextureAddressMode.Wrap,
+                AddressW = TextureAddressMode.Wrap,
+                MipLodBias = 0.0f,
+                MaximumAnisotropy = 1,
+                ComparisonFunction = Comparison.Always,
+                BorderColor = Colors.Black,
+                MinimumLod = 0,
+                MaximumLod = 0
+            };
+
+            _displacementSamplerState = new SamplerState(device, displacementMapSamplerDesc);
+
             _context.InputAssembler.InputLayout = _layout;
-            _context.InputAssembler.PrimitiveTopology = SharpDX.Direct3D.PrimitiveTopology.TriangleList;
+            _context.InputAssembler.PrimitiveTopology = SharpDX.Direct3D.PrimitiveTopology.PatchListWith3ControlPoints;
 
             _context.VertexShader.SetConstantBuffer(0, _objectConstantBuffer.Buffer);
             _context.VertexShader.SetConstantBuffer(1, _frameConstantBuffer.Buffer);
@@ -99,9 +124,17 @@ namespace DungeonHack.DirectX
             _context.PixelShader.SetConstantBuffer(1, _frameConstantBuffer.Buffer);
             _context.PixelShader.SetSampler(0, _samplerState);
             _context.PixelShader.SetSampler(1, _normalMapSamplerState);
+            _context.DomainShader.SetSampler(0, _displacementSamplerState);
 
             _context.VertexShader.Set(vertexShader);
             _context.PixelShader.Set(pixelShader);
+            _context.HullShader.Set(hullShader);
+            _context.DomainShader.Set(domainShader);
+
+            _constantBufferPerFrame.gMaxTessDistance = 50;
+            _constantBufferPerFrame.gMinTessDistance = 100;
+            _constantBufferPerFrame.gMinTessFactor = 9;
+            _constantBufferPerFrame.gMaxTessDistance = 27;
         }
                 
         public void Render(DeviceContext context, 

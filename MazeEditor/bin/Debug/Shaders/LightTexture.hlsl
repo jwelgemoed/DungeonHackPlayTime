@@ -220,11 +220,16 @@ cbuffer cbPerFrame : register(b1)
 	float fogStart;
 	float fogEnd;
 	bool useNormalMap;
+	float gMaxTessDistance;
+	float gMinTessDistance;
+	float gMinTessFactor;
+	float gMaxTessFactor;
 	float2 pad;
 };
 
 Texture2D shaderTexture;
 Texture2D normalMap;
+Texture2D displacementMap;
 
 SamplerState SampleType;
 
@@ -243,7 +248,7 @@ struct VertexInputType
 	float4 tangent : TANGENT;
 };
 
-struct PixelInputType
+struct VertexOutputType
 {
 	float4 position : SV_POSITION;
 	float4 worldPosition :  POSITION;
@@ -252,15 +257,16 @@ struct PixelInputType
 	float4 tangent : TANGENT;
 	float3 viewDirection : TEXCOORD1;
 	float fogFactor : FOG;
+	float tessFactor : TESS;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 // Vertex Shader
 ////////////////////////////////////////////////////////////////////////////////
-PixelInputType LightVertexShader(VertexInputType input)
+VertexOutputType LightVertexShader(VertexInputType input)
 {
 	float4 worldPos;
-	PixelInputType output;
+	VertexOutputType output;
 
 	// Change the position vector to be 4 units for proper matrix calculations.
 	input.position.w = 1.0f;
@@ -285,7 +291,13 @@ PixelInputType LightVertexShader(VertexInputType input)
 
 	// Determine the viewing direction based on the position of the camera and the position of the vertex in the world.
 	output.viewDirection = cameraPosition.xyz - output.worldPosition.xyz;
-		//cameraPosition.xyz - output.worldPosition.xyz;
+	
+	float d = distance(output.worldPosition, cameraPosition);
+	float tess = saturate((gMinTessDistance - d) / (gMinTessDistance - gMaxTessDistance));
+
+	output.tessFactor = gMinTessFactor + tess * (gMaxTessFactor - gMinTessFactor);
+	
+	//cameraPosition.xyz - output.worldPosition.xyz;
 
 	// Normalize the viewing direction vector.
 	output.viewDirection = normalize(output.viewDirection);
@@ -298,9 +310,119 @@ PixelInputType LightVertexShader(VertexInputType input)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// Hull Shader
+////////////////////////////////////////////////////////////////////////////////
+struct PatchTess
+{
+	float EdgeTess[3] : SV_TessFactor;
+	float InsideTess : SV_InsideTessFactor;
+};
+
+PatchTess PatchHullShader(InputPatch<VertexOutputType, 3> patch,
+	uint patchID : SV_PrimitiveID)
+{
+	PatchTess pt;
+
+	pt.EdgeTess[0] = 0.5f*(patch[1].tessFactor + patch[2].tessFactor);
+	pt.EdgeTess[1] = 0.5f*(patch[2].tessFactor + patch[0].tessFactor);
+	pt.EdgeTess[2] = 0.5f*(patch[0].tessFactor + patch[1].tessFactor);
+
+	pt.InsideTess = pt.EdgeTess[0];
+
+	return pt;
+}
+
+struct HullOut
+{
+	float4 position : SV_POSITION;
+	float4 worldPosition :  POSITION;
+	float2 tex : TEXCOORD0;
+	float3 normal : NORMAL;
+	float4 tangent : TANGENT;
+	float3 viewDirection : TEXCOORD1;
+	float fogFactor : FOG;
+};
+
+[domain("tri")] 
+[partitioning("fractional_odd")] 
+[outputtopology("triangle_cw")] 
+[outputcontrolpoints(3)] 
+[patchconstantfunc("PatchHullShader")] 
+HullOut HS(InputPatch<VertexOutputType,3> p,
+	uint i : SV_OutputControlPointID,
+	uint patchId : SV_PrimitiveID)
+{
+	HullOut hout;
+
+	// Pass through shader. 
+	hout.position = p[i].position;
+	hout.worldPosition = p[i].position;
+	hout.tex = p[i].position;
+	hout.normal = p[i].position;
+	hout.tangent = p[i].position;
+	hout.viewDirection = p[i].viewDirection;
+	hout.fogFactor = p[i].fogFactor;
+
+	return hout;
+}
+
+struct DomainOut
+{
+	float4 position : SV_POSITION;
+	float4 worldPosition :  POSITION;
+	float2 tex : TEXCOORD0;
+	float3 normal : NORMAL;
+	float4 tangent : TANGENT;
+	float3 viewDirection : TEXCOORD1;
+	float fogFactor : FOG;
+};
+
+[domain("tri")] 
+DomainOut DS(PatchTess patchTess, 
+	float3 bary : SV_DomainLocation, const OutputPatch<HullOut,3> tri) 
+{
+	DomainOut dout; 
+	
+	// Interpolate patch attributes to generated vertices. 
+	dout.position = bary.x*tri[0].position + bary.y* tri[1].position + bary.z*tri[2].position; 
+	dout.worldPosition = bary.x*tri[0].worldPosition + bary.y* tri[1].worldPosition + bary.z*tri[2].worldPosition;
+	dout.normal = bary.x*tri[0].normal + bary.y* tri[1].normal + bary.z* tri[2].normal; 
+	dout.tangent = bary.x*tri[0].tangent + bary.y*tri[1].tangent + bary.z*tri[2].tangent; 
+	dout.tex = bary.x*tri[0].tex + bary.y*tri[1].tex + bary.z* tri[2].tex;
+	dout.viewDirection = bary.x*tri[0].viewDirection + bary.y*tri[1].viewDirection + bary.z* tri[2].viewDirection;
+	dout.fogFactor = bary.x*tri[0].fogFactor + bary.y*tri[1].fogFactor + bary.z* tri[2].fogFactor;
+	
+	// Interpolating normal can unnormalize it, so normalize it. 
+	dout.normal = normalize(dout.normal); 
+	
+	// 
+	// Displacement mapping. 
+	// 
+	// Choose the mipmap level based on distance to the eye; 
+	// specifically, choose the next miplevel every MipInterval units, 
+	// and clamp the miplevel in [0,6]. 
+	const float MipInterval = 20.0f; 
+	float mipLevel = clamp( (distance(dout.worldPosition, cameraPosition) - MipInterval) / MipInterval, 0.0f, 6.0f); 
+	
+	// Sample height map (stored in alpha channel). 
+	float h = displacementMap.SampleLevel( samLinear, dout.tex, mipLevel). a; 
+	
+	// Offset vertex along normal. 
+	float heightScale = 2;
+
+	dout.worldPosition += float4((heightScale*(h-1.0))*dout.normal, 1.0f); 
+	dout.worldPosition.w = 1.0f;
+	
+	// Project to homogeneous clip space. 
+	dout.position = mul(dout.worldPosition, viewProjectionMatrix);
+
+	return dout;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // Pixel Shader
 ////////////////////////////////////////////////////////////////////////////////
-float4 LightPixelShader(PixelInputType input) : SV_TARGET
+float4 LightPixelShader(DomainOut input) : SV_TARGET
 {
 	float4 textureColor;
 	float3 lightDir;
@@ -340,7 +462,6 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
 
 	for (uint i = 0; i < NUM_POINT_LIGHTS; i++)
 	{
-		//gPointLight.Attentuation = float3(0.0f, 100.0f, 100.0f);
 		ComputePointLight(material, gPointLight[i], input.worldPosition, bumpedNormalW, input.viewDirection, A, D, S);
 
 		ambient += A;
@@ -373,6 +494,6 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
 
 	// Calculate the final color using the fog effect equation.
 	color = input.fogFactor * color + (1.0 - input.fogFactor) * fogColor;
-
+	
 	return color;
 }

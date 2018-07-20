@@ -8,25 +8,40 @@ namespace FunAndGamesWithSharpDX.DirectX
     {
         public ShaderResourceView TextureData { get; set; }
         public ShaderResourceView NormalMapData { get; set; }
+        public ShaderResourceView DisplacementMapData { get; set; }
 
         public void LoadTexture(Device device, string fileName)
         {
-            var bitmapResource = TextureLoader.LoadBitmap(new SharpDX.WIC.ImagingFactory2(), fileName);
-            var texture = TextureLoader.CreateTexture2DFromBitmap(device, bitmapResource);
-            TextureData = new ShaderResourceView(device, texture);
+            TextureData = LoadShaderResourceView(device, fileName);
         }
 
         public void LoadNormalMap(Device device, string fileName)
         {
+            NormalMapData = LoadShaderResourceView(device, fileName);
+        }
+
+        public void LoadDisplacementMap(Device device, string fileName)
+        {
+            DisplacementMapData = LoadShaderResourceView(device, fileName);
+        }
+
+        private ShaderResourceView LoadShaderResourceView(Device device, string fileName)
+        {
             var bitmapResource = TextureLoader.LoadBitmap(new SharpDX.WIC.ImagingFactory2(), fileName);
             var texture = TextureLoader.CreateTexture2DFromBitmap(device, bitmapResource);
-            NormalMapData = new ShaderResourceView(device, texture);
+            return new ShaderResourceView(device, texture);
         }
 
         public void Dispose()
         {
             if (TextureData != null)
                 TextureData.Dispose();
+
+            if (NormalMapData != null)
+                NormalMapData.Dispose();
+
+            if (DisplacementMapData != null)
+                DisplacementMapData.Dispose();
         }
     }
 }

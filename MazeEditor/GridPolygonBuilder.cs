@@ -11,9 +11,9 @@ namespace MazeEditor
     {
         private GridBoard _gridBoard;
         private int _baseSize = 64;
-        private int _floorTextureIndex = 1;
-        private int _ceilingTextureIndex = 1;//2;
-        private int _wallTextureIndex = 1;//9;
+        private int _floorTextureIndex = 2;//1;
+        private int _ceilingTextureIndex = 2;//1;//2;
+        private int _wallTextureIndex = 2;//9;//1;//9;
         private readonly PolygonBuilder _meshBuilder;
 
         public GridPolygonBuilder(GridBoard gridboard, PolygonBuilder meshBuilder)

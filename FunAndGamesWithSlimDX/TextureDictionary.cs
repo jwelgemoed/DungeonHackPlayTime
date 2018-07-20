@@ -26,17 +26,14 @@ namespace DungeonHack.DataDictionaries
             foreach (var file in 
                 new List<string>(Directory.GetFileSystemEntries(path, "*.png"))
                         .Select(x => x.ToLower())
-                        .Where(x => !x.EndsWith("_nrm.png"))
+                        .Where(x => !x.Contains("_nrm.png"))
+                        .Where(x => !x.Contains("_disp.png"))
+                        .Where(x => !x.Contains("_color.png"))
+                        .Where(x => !x.Contains("_occ.png"))
+                        .Where(x => !x.Contains("_spec.png"))
                     .OrderBy(x => x))
             {
-                if (File.Exists(file.Replace(".png", "_nrm.png")))
-                {
-                    AddTextureAndNormalMapFullPath(file);
-                }
-                else
-                {
-                    AddTextureFullPath(file);
-                }
+                AddTextureAndNormalMapFullPath(file);
             }
         }
         
@@ -100,10 +97,13 @@ namespace DungeonHack.DataDictionaries
 
             texture.LoadTexture(_device, filePath);
 
-            texture.LoadNormalMap(_device, filePath.Replace(".png", "_nrm.png"));
+            if (File.Exists(filePath.Replace(".png", "_nrm.png")))
+                texture.LoadNormalMap(_device, filePath.Replace(".png", "_nrm.png"));
+
+            if (File.Exists(filePath.Replace(".png", "_disp.png")))
+                texture.LoadDisplacementMap(_device, filePath.Replace(".png", "_disp.png"));
 
             return texture;
-
         }
 
         public void AddAllTextureFromPath(object p)

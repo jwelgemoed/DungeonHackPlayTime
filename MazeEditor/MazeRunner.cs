@@ -152,7 +152,7 @@ namespace MazeEditor
                 //Diffuse = new Color4(0.5f, 0.0f, 0.0f, 1.0f),
                 //Ambient = new Color4(5.0f, 1.0f, 1.0f, 1.0f),
                 //Specular = new Color4(5.0f, 1.0f, 1.0f, 1.0f),
-                Diffuse = new Color4(10.0f, 0.0f, 0.0f, 10.0f),
+                Diffuse = new Color4(15.0f, 0.0f, 0.0f, 1.0f),
                 Ambient = new Color4(),
                 Specular = new Color4(),
                 Position = lightPos,
@@ -165,7 +165,7 @@ namespace MazeEditor
                 //Diffuse = new Color4(0.0f, 0.0f, 0.5f, 1.0f),
                 //Ambient = new Color4(1.0f, 1.0f, 5.0f, 1.0f),
                 //Specular = new Color4(1.0f, 1.0f, 5.0f, 1.0f),
-                Diffuse = new Color4(0.0f, 0.0f, 10.0f, 10.0f),
+                Diffuse = new Color4(0.0f, 0.0f, 15.0f, 1.0f),
                 Ambient = new Color4(),
                 Specular = new Color4(),
                 Position = lightPos2,
@@ -220,7 +220,7 @@ namespace MazeEditor
 
             _directionalLight = new DirectionalLight()
             {
-                Ambient = new Color4(0.1f, 0.1f, 0.1f, 0.1f),
+                Ambient = new Color4(0.2f, 0.2f, 0.15f, 0.1f),
                 Diffuse = new Color4(0.0f, 0.0f, 0.0f, 0.0f),
                 Specular = new Color4(0.0f, 0.0f, 0.0f, 0.0f),
                 Direction = new Vector3(1.0f, 1.0f, 1.0f)
