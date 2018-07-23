@@ -51,11 +51,11 @@ namespace DungeonHack.DirectX
             var pixelShader = new PixelShader(device, bytecode);
             bytecode.Dispose();
 
-            bytecode = ShaderBytecode.CompileFromFile(fileName, "LightPixelShader", "hs_5_0", ShaderFlags.Debug | ShaderFlags.SkipOptimization);
+            bytecode = ShaderBytecode.CompileFromFile(fileName, "HS", "hs_5_0", ShaderFlags.Debug | ShaderFlags.SkipOptimization);
             var hullShader = new HullShader(device, bytecode);
             bytecode.Dispose();
 
-            bytecode = ShaderBytecode.CompileFromFile(fileName, "LightPixelShader", "ds_5_0", ShaderFlags.Debug | ShaderFlags.SkipOptimization);
+            bytecode = ShaderBytecode.CompileFromFile(fileName, "DS", "ds_5_0", ShaderFlags.Debug | ShaderFlags.SkipOptimization);
             var domainShader = new DomainShader(device, bytecode);
             bytecode.Dispose();
 
@@ -124,7 +124,13 @@ namespace DungeonHack.DirectX
             _context.PixelShader.SetConstantBuffer(1, _frameConstantBuffer.Buffer);
             _context.PixelShader.SetSampler(0, _samplerState);
             _context.PixelShader.SetSampler(1, _normalMapSamplerState);
+
+            _context.DomainShader.SetConstantBuffer(0, _objectConstantBuffer.Buffer);
+            _context.DomainShader.SetConstantBuffer(1, _frameConstantBuffer.Buffer);
             _context.DomainShader.SetSampler(0, _displacementSamplerState);
+
+            _context.HullShader.SetConstantBuffer(0, _objectConstantBuffer.Buffer);
+            _context.HullShader.SetConstantBuffer(1, _frameConstantBuffer.Buffer);
 
             _context.VertexShader.Set(vertexShader);
             _context.PixelShader.Set(pixelShader);
@@ -132,9 +138,9 @@ namespace DungeonHack.DirectX
             _context.DomainShader.Set(domainShader);
 
             _constantBufferPerFrame.gMaxTessDistance = 50;
-            _constantBufferPerFrame.gMinTessDistance = 100;
-            _constantBufferPerFrame.gMinTessFactor = 9;
-            _constantBufferPerFrame.gMaxTessDistance = 27;
+            _constantBufferPerFrame.gMinTessDistance = 200;
+            _constantBufferPerFrame.gMinTessFactor = 18;
+            _constantBufferPerFrame.gMaxTessFactor = 54;
         }
                 
         public void Render(DeviceContext context, 
@@ -164,6 +170,9 @@ namespace DungeonHack.DirectX
 
             if (texture.NormalMapData != null)
                 context.PixelShader.SetShaderResource(1, texture.NormalMapData);
+
+            if (texture.DisplacementMapData != null)
+                context.DomainShader.SetShaderResource(0, texture.DisplacementMapData);
 
             context.DrawIndexed(indexCount, 0, 0);
         }

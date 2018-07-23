@@ -356,10 +356,10 @@ HullOut HS(InputPatch<VertexOutputType,3> p,
 
 	// Pass through shader. 
 	hout.position = p[i].position;
-	hout.worldPosition = p[i].position;
-	hout.tex = p[i].position;
-	hout.normal = p[i].position;
-	hout.tangent = p[i].position;
+	hout.worldPosition = p[i].worldPosition;
+	hout.tex = p[i].tex;
+	hout.normal = p[i].normal;
+	hout.tangent = p[i].tangent;
 	hout.viewDirection = p[i].viewDirection;
 	hout.fogFactor = p[i].fogFactor;
 
@@ -405,7 +405,7 @@ DomainOut DS(PatchTess patchTess,
 	float mipLevel = clamp( (distance(dout.worldPosition, cameraPosition) - MipInterval) / MipInterval, 0.0f, 6.0f); 
 	
 	// Sample height map (stored in alpha channel). 
-	float h = displacementMap.SampleLevel( samLinear, dout.tex, mipLevel). a; 
+	float h = displacementMap.SampleLevel( samLinear, dout.tex, mipLevel).r; 
 	
 	// Offset vertex along normal. 
 	float heightScale = 2;
