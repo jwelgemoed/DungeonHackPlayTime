@@ -44,6 +44,8 @@ namespace DungeonHack.QuadTree
 
         public void DrawQuadTree(QuadTreeNode node, Frustrum frustrum, Camera camera, ref int meshRenderedCount)
         {
+            _renderer.RenderFrame(camera);
+
             for (int i = 0; i < _threadCount; i++)
             {
                 int j = i;

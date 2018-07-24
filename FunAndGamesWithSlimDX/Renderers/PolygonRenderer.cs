@@ -31,6 +31,11 @@ namespace DungeonHack.Renderers
             _shader = shader;
         }
 
+        public void RenderFrame(Camera camera)
+        {
+            _shader.RenderFrame(camera);
+        }
+
         public void Render(Polygon polygon, ref int polygonRenderedCount)
         {
             lock (_lock)

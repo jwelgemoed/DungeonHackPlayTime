@@ -1,5 +1,6 @@
 ﻿using DungeonHack.Lights;
 using FunAndGamesWithSharpDX.DirectX;
+using FunAndGamesWithSharpDX.Engine;
 using FunAndGamesWithSharpDX.Entities;
 using SharpDX;
 using SharpDX.Direct3D11;
@@ -45,6 +46,11 @@ namespace DungeonHack.DirectX
             _lightShader = new LightShader(device, context);
 
             SetShader(ShaderTechnique.LightShader);
+        }
+
+        public void RenderFrame(Camera camera)
+        {
+            _currentShader.RenderFrame(camera);
         }
 
         public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix viewProjMatrix, Texture texture, Vector3 cameraPosition, Material material)

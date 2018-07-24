@@ -404,13 +404,13 @@ DomainOut DS(PatchTess patchTess,
 	const float MipInterval = 20.0f; 
 	float mipLevel = clamp( (distance(dout.worldPosition, cameraPosition) - MipInterval) / MipInterval, 0.0f, 6.0f); 
 	
-	// Sample height map (stored in alpha channel). 
-	float h = displacementMap.SampleLevel( samLinear, dout.tex, mipLevel).r; 
+	// Sample height map 
+	float h = displacementMap.SampleLevel(samLinear, dout.tex, mipLevel).r; 
 	
 	// Offset vertex along normal. 
 	float heightScale = 2;
 
-	dout.worldPosition += float4((heightScale*(h-1.0))*dout.normal, 1.0f); 
+	dout.worldPosition += float4((heightScale*(h-1))*dout.normal, 1.0f); 
 	dout.worldPosition.w = 1.0f;
 	
 	// Project to homogeneous clip space. 

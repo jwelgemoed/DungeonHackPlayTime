@@ -144,8 +144,8 @@ namespace DungeonHack.Engine
                     DrawScene();
                     _stopwatch.Stop();
                     DisplayConsoleInformation();
-                    FontRenderer.FinalizeDraw();
-                    SpriteRenderer.FinalizeDraw();
+                    //FontRenderer.FinalizeDraw();
+                    //SpriteRenderer.FinalizeDraw();
                     Renderer.SwapChain.Present(ConfigManager.VSync, PresentFlags.None);
                     _updateTime = _stopwatch.ElapsedMilliseconds;
                     break;
@@ -218,22 +218,22 @@ namespace DungeonHack.Engine
                 _timeElapsedForDisplay += 1.00f; //0.25 quarter of a second, 1.0 = second
 
                 Form.Text = $"FPS : {_frameRateStats.FramesPerSecond} Game Time : {(int)Timer.TotalTime()}";
-                _console.WriteLine(Form.Text);
-                _console.WriteLine("Mesh rendered : " + _meshRenderedCount + " from " + GetSceneMeshes().Count);
+                //_console.WriteLine(Form.Text);
+                //_console.WriteLine("Mesh rendered : " + _meshRenderedCount + " from " + GetSceneMeshes().Count);
 
-                var cameraPosition = Camera.GetPosition();
-                _console.WriteLine($"Camera Position: X: {cameraPosition.X}, Y: {cameraPosition.Y}, Z: {cameraPosition.Z}");
+                //var cameraPosition = Camera.GetPosition();
+                //_console.WriteLine($"Camera Position: X: {cameraPosition.X}, Y: {cameraPosition.Y}, Z: {cameraPosition.Z}");
 
-                var lookat = Vector3.Normalize(Camera.LookAt);
-                 _console.WriteLine($"Camera Lookat: X : {lookat.X}, Y: {lookat.Y}, Z: {lookat.Z}");
+                //var lookat = Vector3.Normalize(Camera.LookAt);
+                // _console.WriteLine($"Camera Lookat: X : {lookat.X}, Y: {lookat.Y}, Z: {lookat.Z}");
 
-                var meshPosition = GetSceneMeshes()[0].VertexData[0].Position;
-                _console.WriteLine($"Mesh 0 Position: X: {meshPosition.X}, Y:{meshPosition.Y}, Z: {meshPosition.Z}");
+                //var meshPosition = GetSceneMeshes()[0].VertexData[0].Position;
+                //_console.WriteLine($"Mesh 0 Position: X: {meshPosition.X}, Y:{meshPosition.Y}, Z: {meshPosition.Z}");
 
-                _console.WriteLine($"Update time in ticks: {_updateTime}");
-                _console.WriteLine($"Draw time in ticks: {_drawTime}");
+                //_console.WriteLine($"Update time in ticks: {_updateTime}");
+                //_console.WriteLine($"Draw time in ticks: {_drawTime}");
             }
-            _console.Draw();
+            //_console.Draw();
         }
 
         private void ShowOptionsMenu()

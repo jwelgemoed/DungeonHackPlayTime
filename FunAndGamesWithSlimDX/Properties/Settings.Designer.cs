@@ -43,7 +43,7 @@ namespace DungeonHack.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1200")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1280")]
         public int ScreenWidth {
             get {
                 return ((int)(this["ScreenWidth"]));
@@ -52,7 +52,7 @@ namespace DungeonHack.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("800")]
+        [global::System.Configuration.DefaultSettingValueAttribute("720")]
         public int ScreenHeight {
             get {
                 return ((int)(this["ScreenHeight"]));
@@ -61,7 +61,7 @@ namespace DungeonHack.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("10000")]
+        [global::System.Configuration.DefaultSettingValueAttribute("5000")]
         public float ScreenFar {
             get {
                 return ((float)(this["ScreenFar"]));

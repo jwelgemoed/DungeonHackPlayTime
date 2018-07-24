@@ -2,6 +2,7 @@
 using DungeonHack.Engine;
 using DungeonHack.Lights;
 using FunAndGamesWithSharpDX.DirectX;
+using FunAndGamesWithSharpDX.Engine;
 using FunAndGamesWithSharpDX.Entities;
 using SharpDX;
 using SharpDX.D3DCompiler;
@@ -101,8 +102,8 @@ namespace DungeonHack.DirectX
             var displacementMapSamplerDesc = new SamplerStateDescription
             {
                 Filter = Filter.MinMagLinearMipPoint,
-                AddressU = TextureAddressMode.Wrap,
-                AddressV = TextureAddressMode.Wrap,
+                AddressU = TextureAddressMode.Border,
+                AddressV = TextureAddressMode.Border,
                 AddressW = TextureAddressMode.Wrap,
                 MipLodBias = 0.0f,
                 MaximumAnisotropy = 1,
@@ -137,10 +138,10 @@ namespace DungeonHack.DirectX
             _context.HullShader.Set(hullShader);
             _context.DomainShader.Set(domainShader);
 
-            _constantBufferPerFrame.gMaxTessDistance = 50;
-            _constantBufferPerFrame.gMinTessDistance = 200;
-            _constantBufferPerFrame.gMinTessFactor = 18;
-            _constantBufferPerFrame.gMaxTessFactor = 54;
+            _constantBufferPerFrame.gMaxTessDistance = 100;
+            _constantBufferPerFrame.gMinTessDistance = 250;
+            _constantBufferPerFrame.gMinTessFactor = 3;
+            _constantBufferPerFrame.gMaxTessFactor = 27;
         }
                 
         public void Render(DeviceContext context, 
@@ -160,11 +161,7 @@ namespace DungeonHack.DirectX
             _constantBufferPerObject.ViewProjectionMatrix.Transpose();
             _constantBufferPerObject.Material = material;
 
-            _constantBufferPerFrame.CameraPosition = cameraPosition;
-
             _objectConstantBuffer.UpdateValue(_constantBufferPerObject);
-
-            _frameConstantBuffer.UpdateValue(_constantBufferPerFrame);
 
             context.PixelShader.SetShaderResource(0, texture.TextureData);
 
@@ -175,6 +172,12 @@ namespace DungeonHack.DirectX
                 context.DomainShader.SetShaderResource(0, texture.DisplacementMapData);
 
             context.DrawIndexed(indexCount, 0, 0);
+        }
+
+        public void RenderFrame(Camera camera)
+        {
+            _constantBufferPerFrame.CameraPosition = camera.EyeAt;
+            _frameConstantBuffer.UpdateValue(_constantBufferPerFrame);
         }
 
         public void RenderLights(DirectionalLight[] directionalLight, PointLight[] pointLight, Spotlight[] spotLight)

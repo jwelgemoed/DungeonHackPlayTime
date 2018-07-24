@@ -78,13 +78,20 @@ namespace FunAndGamesWithSharpDX.DirectX
             _context.VertexShader.SetConstantBuffer(0, _staticContantBuffer);
             _context.VertexShader.Set(vertexShader);
             _context.PixelShader.Set(pixelShader);
-            _context.PixelShader.SetSampler(0, _samplerState);           
+            _context.PixelShader.SetSampler(0, _samplerState);
+            _context.HullShader.Set(null);
+            _context.DomainShader.Set(null);
         }
 
                
         public void SetSelectedShaderEffect(Device device, string technique)
         {
             
+        }
+
+        public void RenderFrame(Camera camera)
+        {
+
         }
                 
         public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix viewProjectionMatrix,
