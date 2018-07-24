@@ -1,12 +1,11 @@
-﻿using DungeonHack.OcclusionCulling;
+﻿using DungeonHack.Entities;
+using DungeonHack.OcclusionCulling;
+using DungeonHack.Renderers;
 using FunAndGamesWithSharpDX.Engine;
-using FunAndGamesWithSharpDX.Entities;
-using SharpDX;
-using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
-using DungeonHack.Entities;
 
 namespace DungeonHack.QuadTree
 {
@@ -72,11 +71,7 @@ namespace DungeonHack.QuadTree
 
             foreach (var polygon in node.Polygons)
             {
-                // if (polygon.HasBeenProcessedForRenderingThisFrame)
-                //     continue;
-
-                if //(ConfigManager.FrustrumCullingEnabled &&
-                   (frustrum.CheckBoundingBox(polygon.BoundingBox.BoundingBox) == 0)
+                if (frustrum.CheckBoundingBox(polygon.BoundingBox.BoundingBox) == 0)
                 {
                     continue;
                 }
@@ -91,12 +86,9 @@ namespace DungeonHack.QuadTree
 
                 if (draw)
                 {
-                    //polygon.HasBeenProcessedForRenderingThisFrame = true;
-                    //_renderList[threadCount][_endOfList[threadCount]] = polygon;
-                    //_endOfList[threadCount]++;
                     polygonsdrawn++;
                     int meshRenderedCount = 0;
-                    _renderer.Render(polygon, camera.RenderViewProjectionMatrix, ref meshRenderedCount);
+                    _renderer.Render(polygon, ref meshRenderedCount);
                 }
                 else
                 {

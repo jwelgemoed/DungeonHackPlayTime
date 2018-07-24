@@ -78,7 +78,9 @@ namespace FunAndGamesWithSharpDX.DirectX
             _context.VertexShader.SetConstantBuffer(0, _staticContantBuffer);
             _context.VertexShader.Set(vertexShader);
             _context.PixelShader.Set(pixelShader);
-            _context.PixelShader.SetSampler(0, _samplerState);           
+            _context.PixelShader.SetSampler(0, _samplerState);
+            _context.HullShader.Set(null);
+            _context.DomainShader.Set(null);
         }
 
                
@@ -86,9 +88,14 @@ namespace FunAndGamesWithSharpDX.DirectX
         {
             
         }
+
+        public void RenderFrame(Camera camera)
+        {
+
+        }
                 
         public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix viewProjectionMatrix,
-                           ShaderResourceView texture, Vector3 cameraPosition, Material material)
+                           Texture texture, Vector3 cameraPosition, Material material)
         {
             _perObjectBuffer.WorldMatrix = worldMatrix;
             _perObjectBuffer.WorldMatrix.Transpose();
@@ -100,7 +107,10 @@ namespace FunAndGamesWithSharpDX.DirectX
 
             context.UpdateSubresource(ref _perObjectBuffer, _staticContantBuffer);
 
-            context.PixelShader.SetShaderResource(0, texture);
+            context.PixelShader.SetShaderResource(0, texture.TextureData);
+
+            if (texture.NormalMapData != null)
+                context.PixelShader.SetShaderResource(1, texture.NormalMapData);
             
             context.DrawIndexed(indexCount, 0, 0);
         }

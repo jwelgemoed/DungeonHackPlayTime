@@ -4,6 +4,7 @@ using SharpDX;
 using SharpDX.Direct3D11;
 using System.Collections.Generic;
 using DungeonHack.Entities;
+using DungeonHack.Renderers;
 
 namespace DungeonHack.BSP
 {
@@ -86,13 +87,8 @@ namespace DungeonHack.BSP
             for (int i=0; i < _renderList.Count; i++)
             {
                 //if (!_renderList[i].OcclusionQuery.IsComplete())
-                if (!_renderList[i].OcclusionQuery.IsIssued)
-                    _renderList[i].OcclusionQuery.Begin();
 
-                _meshRenderer.Render(_renderList[i], camera.ViewProjectionMatrix, ref meshRenderedCount);
-
-                if (_renderList[i].OcclusionQuery.IsComplete())
-                    _renderList[i].OcclusionQuery.End();
+                _meshRenderer.Render(_renderList[i], ref meshRenderedCount);
 
               //  _renderList[i].OcclusionQuery.End();
             }

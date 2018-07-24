@@ -24,9 +24,16 @@ namespace DungeonHack.DataDictionaries
         public void AddAllTextureFromPath(string path)
         {
             foreach (var file in 
-                new List<string>(Directory.GetFileSystemEntries(path, "*.png")).OrderBy(x => x))
+                new List<string>(Directory.GetFileSystemEntries(path, "*.png"))
+                        .Select(x => x.ToLower())
+                        .Where(x => !x.Contains("_nrm.png"))
+                        .Where(x => !x.Contains("_disp.png"))
+                        .Where(x => !x.Contains("_color.png"))
+                        .Where(x => !x.Contains("_occ.png"))
+                        .Where(x => !x.Contains("_spec.png"))
+                    .OrderBy(x => x))
             {
-                AddTextureFullPath(file);
+                AddTextureAndNormalMapFullPath(file);
             }
         }
         
@@ -42,6 +49,15 @@ namespace DungeonHack.DataDictionaries
         public int AddTextureFullPath(string filenamePath)
         {
             var texture = LoadTextureFullPath(filenamePath);
+
+            _dictionary.Add(_dictionary.Count, new Tuple<Texture, string>(texture, filenamePath));
+
+            return _dictionary.Count - 1;
+        }
+
+        public int AddTextureAndNormalMapFullPath(string filenamePath)
+        {
+            var texture = LoadTextureAndNormalMap(filenamePath);
 
             _dictionary.Add(_dictionary.Count, new Tuple<Texture, string>(texture, filenamePath));
 
@@ -71,6 +87,21 @@ namespace DungeonHack.DataDictionaries
             var texture = new Texture();
 
             texture.LoadTexture(_device, filePath);
+
+            return texture;
+        }
+
+        public Texture LoadTextureAndNormalMap(string filePath)
+        {
+            var texture = new Texture();
+
+            texture.LoadTexture(_device, filePath);
+
+            if (File.Exists(filePath.Replace(".png", "_nrm.png")))
+                texture.LoadNormalMap(_device, filePath.Replace(".png", "_nrm.png"));
+
+            if (File.Exists(filePath.Replace(".png", "_disp.png")))
+                texture.LoadDisplacementMap(_device, filePath.Replace(".png", "_disp.png"));
 
             return texture;
         }

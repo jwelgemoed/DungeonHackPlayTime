@@ -226,7 +226,7 @@ namespace FunAndGamesWithSharpDX.Engine
 
                 if (normals.Length > 0)
                 {
-                    direction = GetDirectionAfterCollision(direction, normals, true);
+                    direction = GetDirectionAfterCollision(direction, normals, false);
                 }
 
                 if (RestrictMovementPlaneXZ)
@@ -249,7 +249,7 @@ namespace FunAndGamesWithSharpDX.Engine
 
                 if (normals.Length > 0)
                 {
-                    direction = GetDirectionAfterCollision(direction, normals, true);
+                    direction = GetDirectionAfterCollision(direction, normals, false);
                 }
 
                 if (RestrictMovementPlaneXZ)
@@ -292,17 +292,12 @@ namespace FunAndGamesWithSharpDX.Engine
                     _leftSpeed = FrameTime * _maxSidewaysAcceleration;
                 }
 
-                if (normals.Length > 0)
-                {
-                    direction = GetDirectionAfterCollision(direction, normals);
-                }
-
                 direction = Vector3.Cross(direction, _up);
                 direction = Vector3.Normalize(direction);
 
                 if (normals.Length > 0)
                 {
-                    direction = GetDirectionAfterCollision(direction, normals);
+                    direction = GetDirectionAfterCollision(direction, normals, true);
                 }
 
                 if (RestrictMovementPlaneXZ)
@@ -325,7 +320,7 @@ namespace FunAndGamesWithSharpDX.Engine
 
                 if (normals.Length > 0)
                 {
-                    direction = GetDirectionAfterCollision(direction, normals);
+                    direction = GetDirectionAfterCollision(direction, normals, true);
                 }
 
                 if (RestrictMovementPlaneXZ)
@@ -348,7 +343,7 @@ namespace FunAndGamesWithSharpDX.Engine
 
                 if (normals.Length > 0)
                 {
-                    direction = GetDirectionAfterCollision(direction, normals, true);
+                    direction = GetDirectionAfterCollision(direction, normals, false);
                 }
 
                 if (RestrictMovementPlaneXZ)
@@ -368,7 +363,7 @@ namespace FunAndGamesWithSharpDX.Engine
 
                 if (normals.Length > 0)
                 {
-                    direction = GetDirectionAfterCollision(direction, normals, true);
+                    direction = GetDirectionAfterCollision(direction, normals, false);
                 }
 
                 if (RestrictMovementPlaneXZ)
@@ -392,7 +387,7 @@ namespace FunAndGamesWithSharpDX.Engine
 
                 if (normals.Length > 0)
                 {
-                    direction = GetDirectionAfterCollision(direction, normals);
+                    direction = GetDirectionAfterCollision(direction, normals, true);
                 }
 
                 if (RestrictMovementPlaneXZ)
@@ -412,7 +407,7 @@ namespace FunAndGamesWithSharpDX.Engine
 
                 if (normals.Length > 0)
                 {
-                    direction = GetDirectionAfterCollision(direction, normals);
+                    direction = GetDirectionAfterCollision(direction, normals, true);
                 }
 
                 if (RestrictMovementPlaneXZ)

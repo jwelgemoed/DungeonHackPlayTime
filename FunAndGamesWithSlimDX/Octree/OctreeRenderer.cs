@@ -1,4 +1,5 @@
-﻿using FunAndGamesWithSharpDX.Engine;
+﻿using DungeonHack.Renderers;
+using FunAndGamesWithSharpDX.Engine;
 
 namespace DungeonHack.Octree
 {
@@ -44,7 +45,7 @@ namespace DungeonHack.Octree
             {
                 foreach (var polygon in node.Polygons)
                 {
-                    _renderer.Render(polygon, camera.ViewProjectionMatrix, ref meshRenderedCount);
+                    _renderer.Render(polygon, ref meshRenderedCount);
                 }
             }
         }

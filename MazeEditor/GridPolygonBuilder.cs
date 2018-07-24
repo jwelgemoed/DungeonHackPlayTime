@@ -11,9 +11,9 @@ namespace MazeEditor
     {
         private GridBoard _gridBoard;
         private int _baseSize = 64;
-        private int _floorTextureIndex = 1;
-        private int _ceilingTextureIndex = 2;
-        private int _wallTextureIndex = 9;
+        private int _floorTextureIndex = 2;//1;
+        private int _ceilingTextureIndex = 2;//2;//1;//2;
+        private int _wallTextureIndex = 9;//1;//9;
         private readonly PolygonBuilder _meshBuilder;
 
         public GridPolygonBuilder(GridBoard gridboard, PolygonBuilder meshBuilder)
@@ -40,22 +40,22 @@ namespace MazeEditor
 
                     if (i > 0 && (_gridBoard.Grid[i - 1, j] == NodeType.Empty))
                     {
-                        polygons.Add(CreateMesh(startx, endy, startx, starty));
+                        polygons.Add(CreateMesh(startx, endy, startx, starty, true));
                     }
 
                     if ((i < _gridBoard.SizeX - 1) && (_gridBoard.Grid[i + 1, j] == NodeType.Empty))
                     {
-                        polygons.Add(CreateMesh(endx, starty, endx, endy));
+                        polygons.Add(CreateMesh(endx, starty, endx, endy, true));
                     }
 
                     if (j > 0 && (_gridBoard.Grid[i, j - 1] == NodeType.Empty))
                     {
-                        polygons.Add(CreateMesh(startx, starty, endx, starty));
+                        polygons.Add(CreateMesh(startx, starty, endx, starty, true));
                     }
 
                     if ((j < _gridBoard.SizeY - 1) && (_gridBoard.Grid[i, j+1] == NodeType.Empty))
                     {
-                        polygons.Add(CreateMesh(endx, endy, startx, endy));
+                        polygons.Add(CreateMesh(endx, endy, startx, endy, true));
                     }
 
                     polygons.Add(CreateFloorMesh(startx, starty, endx, endy));
@@ -187,7 +187,7 @@ namespace MazeEditor
                 0, 1, 2, 0, 2, 3
             };
 
-            Vector3 normal = Vector3.Cross(vectors[1] - vectors[0], vectors[2] - vectors[1]);//Vector3.Cross(new Vector3(vectors[0].X, vectors[0].Y, vectors[0].Z)
+            Vector3 normal = -Vector3.Cross(vectors[2] - vectors[1], vectors[1] - vectors[0]);//Vector3.Cross(new Vector3(vectors[0].X, vectors[0].Y, vectors[0].Z)
                 //, new Vector3(vectors[1].X, vectors[1].Y, vectors[1].Z));
 
             normal = Vector3.Normalize(normal);
@@ -256,7 +256,7 @@ namespace MazeEditor
                             .Build();
         }
 
-        public Polygon CreateMesh(int startx, int starty, int endx, int endy)
+        public Polygon CreateMesh(int startx, int starty, int endx, int endy, bool invertNormals)
         {
             Model[] model = new Model[6];
             Vector3[] vectors = new Vector3[4];
@@ -284,7 +284,17 @@ namespace MazeEditor
                 1, 0, 3, 1, 3, 2
             };
 
-            Vector3 normal = Vector3.Cross(vectors[1] - vectors[0], vectors[2] - vectors[1]);
+            Vector3 normal;
+
+            if (!invertNormals)
+            {
+                normal = Vector3.Cross(vectors[1] - vectors[0], vectors[2] - vectors[1]);
+            }
+            else
+            {
+                normal = Vector3.Cross(vectors[2] - vectors[1], vectors[1] - vectors[0]);
+            }
+
             normal = Vector3.Normalize(normal);
 
             model[0].x = vectors[faceIndex[0]].X;

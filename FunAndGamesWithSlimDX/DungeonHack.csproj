@@ -181,7 +181,6 @@
     <Compile Include="Entities\PolygonType.cs" />
     <Compile Include="Factories\ModelFactory.cs" />
     <Compile Include="Builders\PortalBuilder.cs" />
-    <Compile Include="DirectX\IncludeFX.cs" />
     <Compile Include="DirectX\ShaderTechnique.cs" />
     <Compile Include="DirectX\Util.cs" />
     <Compile Include="Engine\CameraEngine.cs" />
@@ -228,7 +227,8 @@
     <Compile Include="Octree\OctreeBuilder.cs" />
     <Compile Include="Octree\OctreeNode.cs" />
     <Compile Include="Octree\OctreeRenderer.cs" />
-    <Compile Include="PolygonRenderer.cs" />
+    <Compile Include="Renderers\BoundingBoxRenderer.cs" />
+    <Compile Include="Renderers\PolygonRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DirectX\Renderer.cs" />
     <Compile Include="CollisionDetection\QuadTreeCollisionDetector.cs" />

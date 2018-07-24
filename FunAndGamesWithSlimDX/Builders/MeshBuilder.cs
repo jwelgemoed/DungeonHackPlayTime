@@ -43,6 +43,7 @@ namespace DungeonHack.Builders
             {
                 TransformToWorld();
             }
+            GenerateTangentVectors();
             _mesh.VertexBuffer = _bufferFactory.GetVertexBuffer(_mesh.VertexData);
             _mesh.IndexBuffer = _bufferFactory.GetIndexBuffer(_mesh.IndexData);
             return _mesh;
@@ -293,6 +294,68 @@ namespace DungeonHack.Builders
             for (short i=0; i< _mesh.IndexData.Length; i++)
             {
                 _mesh.IndexData[i] = i;
+            }
+        }
+
+        //Lengyel, Eric. “Computing Tangent Space Basis Vectors for an Arbitrary Mesh”. Terathon Software, 2001. http://terathon.com/code/tangent.html
+        private void GenerateTangentVectors()
+        {
+            int numberOfTriangles = (_mesh.VertexData.Length / 3);
+            int vertexCount = _mesh.VertexData.Length;
+            Vector3[] tan1 = new Vector3[vertexCount];
+            Vector3[] tan2 = new Vector3[vertexCount];
+
+            for (int i = 0; i < numberOfTriangles; i++)
+            {
+                int i1 = _mesh.IndexData[i * 3];
+                int i2 = _mesh.IndexData[(i * 3) + 1];
+                int i3 = _mesh.IndexData[(i * 3) + 2];
+
+                Vector4 v1 = _mesh.VertexData[i1].Position;
+                Vector4 v2 = _mesh.VertexData[i2].Position;
+                Vector4 v3 = _mesh.VertexData[i3].Position;
+
+                Vector2 w1 = _mesh.VertexData[i1].Texture;
+                Vector2 w2 = _mesh.VertexData[i2].Texture;
+                Vector2 w3 = _mesh.VertexData[i3].Texture;
+
+                float x1 = v2.X - v1.X;
+                float x2 = v3.X - v1.X;
+                float y1 = v2.Y - v1.Y;
+                float y2 = v3.Y - v1.Y;
+                float z1 = v2.Z - v1.Z;
+                float z2 = v3.Z - v1.Z;
+
+                float s1 = w2.X - w1.X;
+                float s2 = w3.X - w1.X;
+                float t1 = w2.Y - w1.Y;
+                float t2 = w3.Y - w1.Y;
+
+                float r = 1.0F / (s1 * t2 - s2 * t1);
+                Vector3 sdir = new Vector3((t2* x1 -t1 * x2) *r, (t2 * y1 - t1 * y2) * r, (t2 * z1 - t1 * z2) * r);
+                Vector3 tdir = new Vector3((s1* x2 -s2 * x1) *r, (s1 * y2 - s2 * y1) * r, (s1 * z2 - s2 * z1) * r);
+
+                tan1[i1] += sdir;
+                tan1[i2] += sdir;
+                tan1[i3] += sdir;
+
+                tan2[i1] += tdir;
+                tan2[i2] += tdir;
+                tan2[i3] += tdir;
+            }
+
+            for (long a = 0; a < vertexCount; a++)
+            {
+                Vector3 n = _mesh.VertexData[a].Normal;
+                Vector3 t = tan1[a];
+
+                // Gram-Schmidt orthogonalize
+                Vector3 tangent = (t - n * Vector3.Dot(n, t));
+                tangent.Normalize();
+                //Handedness
+                float w = Vector3.Dot(Vector3.Cross(n, t), tan2[a]) < 0.0f ? -1.0f : 1.0f;
+
+                _mesh.VertexData[a].TangentU = new Vector4(tangent, w);
             }
         }
     }

@@ -1,3 +1,4 @@
+C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\Zuccaralo.txt
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\FX\LightHelper.fx
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\MWALL4_2.PNG
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Shaders\LightTexture.hlsl
@@ -29,7 +30,6 @@ C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\F-35_Lightning_II_P01.
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\cat.obj-model.txt
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\cat_diff.tga
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\cat_diff.dds
-C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\Zuccaralo.txt
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\Cube-Maya.txt
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\Cube.txt
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\terrain2.dds

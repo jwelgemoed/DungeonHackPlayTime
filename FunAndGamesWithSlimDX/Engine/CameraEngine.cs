@@ -173,6 +173,13 @@ namespace FunAndGamesWithSharpDX.Engine
             {
                 ConfigManager.FogEnd += 5;
             }
+            else if (e.KeyCode == Keys.D1)
+            {
+                if (ConfigManager.UseNormalMap == 1)
+                    ConfigManager.UseNormalMap = 0;
+                else
+                    ConfigManager.UseNormalMap = 1;
+            }
         }
 
         protected void KeyUp(object sender, KeyEventArgs e)

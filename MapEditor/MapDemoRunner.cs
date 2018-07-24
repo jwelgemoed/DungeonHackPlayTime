@@ -16,6 +16,7 @@ using DungeonHack.Engine;
 using DungeonHack.Entities;
 using DungeonHack.Lights;
 using DungeonHack.Octree;
+using DungeonHack.Renderers;
 
 namespace MapEditor
 {

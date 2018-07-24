@@ -33,7 +33,5 @@ namespace DungeonHack.DirectX
                                                            ResourceUsage.Default, BindFlags.IndexBuffer,
                                                            CpuAccessFlags.None, ResourceOptionFlags.None, 0);
         }
-
-
     }
 }

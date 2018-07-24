@@ -1,15 +1,13 @@
-﻿using Assimp.Configs;
-using DungeonHack.DataDictionaries;
+﻿using DungeonHack.DataDictionaries;
 using DungeonHack.DirectX;
 using DungeonHack.Entities;
-using FunAndGamesWithSharpDX.DirectX;
 using FunAndGamesWithSharpDX.Engine;
 using FunAndGamesWithSharpDX.Entities;
 using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 
-namespace DungeonHack
+namespace DungeonHack.Renderers
 {
     public class PolygonRenderer
     {
@@ -33,7 +31,12 @@ namespace DungeonHack
             _shader = shader;
         }
 
-        public void Render(Polygon polygon, Matrix viewProjectionMatrix, ref int polygonRenderedCount)
+        public void RenderFrame(Camera camera)
+        {
+            _shader.RenderFrame(camera);
+        }
+
+        public void Render(Polygon polygon, ref int polygonRenderedCount)
         {
             lock (_lock)
             {
@@ -46,8 +49,8 @@ namespace DungeonHack
                                 polygon.IndexData.Length,
                                 polygon.WorldMatrix,
                                 _camera.ViewMatrix,
-                                viewProjectionMatrix,
-                                _textureDictionary.GetTexture(polygon.TextureIndex).TextureData,
+                                _camera.RenderViewProjectionMatrix,
+                                _textureDictionary.GetTexture(polygon.TextureIndex),
                                 _camera.GetPosition(),
                                 _materialDictionary.GetMaterial(polygon.MaterialIndex));
             }
@@ -65,10 +68,15 @@ namespace DungeonHack
                                 worldMatrix,
                                 _camera.ViewMatrix,
                                 viewProjectionMatrix,
-                                _textureDictionary.GetTexture(textureIndex).TextureData,
+                                _textureDictionary.GetTexture(textureIndex),
                                 _camera.GetPosition(),
                                 _materialDictionary.GetMaterial(materialIndex));
             }
+        }
+
+        public void ItemRenderer(Item item)
+        {
+
         }
     }
 }

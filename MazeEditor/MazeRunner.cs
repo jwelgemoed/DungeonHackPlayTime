@@ -17,6 +17,7 @@ using DungeonHack.Builders;
 using DungeonHack.DirectX;
 using DungeonHack.Engine;
 using DungeonHack.Lights;
+using DungeonHack.Renderers;
 
 namespace MazeEditor
 {
@@ -26,6 +27,7 @@ namespace MazeEditor
         private Vector3 _startingPosition;
         private Material _wallMaterial;
         private PointLight _pointLight;
+        private PointLight _pointLight2;
         private DirectionalLight _directionalLight;
         private Spotlight _spotlight;
         private BspRendererOptomized _bspRenderer;
@@ -34,7 +36,8 @@ namespace MazeEditor
         private QuadTreeLeafNodeRenderer _quadTreeLeafNodeRenderer;
         private QuadTreeCollisionDetector _quadTreeCollisionDetector;
         private QuadTreeTraverser _quadTreeTraverser;
-        private PolygonRenderer _meshRenderer;
+        private PolygonRenderer _polygonRenderer;
+        private BoundingBoxRenderer _boundingBoxRenderer;
         private Matrix _viewProjectionMatrix;
         private ItemRegistry _itemRegistry;
 
@@ -55,7 +58,7 @@ namespace MazeEditor
             {
                 Ambient = new Color4(1.0f, 1.0f, 1.0f, 1.0f),
                 Diffuse = new Color4(1.0f, 1.0f, 1.0f, 1.0f),
-                Specular = new Color4(1.5f, 1.5f, 1.5f, 1.0f)
+                Specular = new Color4(1.0f, 1.0f, 1.0f, 1.0f)
             };
         }
 
@@ -95,26 +98,32 @@ namespace MazeEditor
             //Draw items in world;
             foreach (var item in _itemRegistry.GetItems())
             {
-                _meshRenderer.Render(item.Polygon, Camera.RenderViewProjectionMatrix, ref _meshRenderedCount);
+                _polygonRenderer.Render(item.Polygon, ref _meshRenderedCount);
             }
 
         }
 
         public override void UpdateScene()
         {
-            _quadTreeCollisionDetector.Camera = Camera;
+           // _quadTreeCollisionDetector.Camera = Camera;
             _quadTreeCollisionDetector.CurrentNode = _quadTreeTraverser.FindCurrentCameraLeafNode(Camera);
 
             base.UpdateScene();
 
             Vector3 lightPos = initialPos;
+            Vector3 lightPos2 = initialPos;
+            lightPos2.Y += 8.0f;
 
             //if (Timer.TotalTime() - timeupdate >= 0.1f)
             {
-                var factor = (16 * (float)Math.Sin(timeupdate));
+                var factor = (32 * (float)Math.Sin(timeupdate));
                 lightPos.X = lightPos.X + factor;
-                lightPos.Y = factor;//(timeupdate % 360) * Math.PI/180));
+                lightPos.Y = factor/2;//(timeupdate % 360) * Math.PI/180));
                 //initialPos = lightPos;
+
+                var factor2 = (32 * (float)Math.Cos(timeupdate));
+                lightPos2.X = lightPos2.X + factor2;
+                lightPos2.Y = factor2/2;
 
                 timeupdate += 0.1f;
             }
@@ -123,9 +132,9 @@ namespace MazeEditor
             {
                 var spotlight = new Spotlight()
                 {
-                    Ambient = new Color4(2.0f, 2.0f, 2.0f, 2.0f),
-                    Diffuse = new Color4(2.0f, 2.0f, 2.0f, 2.0f),
-                    Specular = new Color4(2.0f, 2.0f, 2.0f, 2.0f),
+                    Ambient = new Color4(5.0f, 4.0f, 0.0f, 5.0f),
+                    Diffuse = new Color4(5.0f, 4.0f, 0.0f, 5.0f),
+                    Specular = new Color4(1.0f, 1.0f, 1.0f, 1.0f),
                     Position = Camera.EyeAt,
                     Range = ConfigManager.SpotLightRange, //500.0f,
                     Direction = Vector3.Normalize(Camera.LookAt - Camera.EyeAt),
@@ -140,15 +149,32 @@ namespace MazeEditor
 
             _pointLight = new PointLight()
             {
-                Diffuse = new Color4(0.5f, 0.0f, 0.0f, 1.0f),
-                Ambient = new Color4(5.0f, 1.0f, 1.0f, 1.0f),
-                Specular = new Color4(5.0f, 1.0f, 1.0f, 1.0f),
+                //Diffuse = new Color4(0.5f, 0.0f, 0.0f, 1.0f),
+                //Ambient = new Color4(5.0f, 1.0f, 1.0f, 1.0f),
+                //Specular = new Color4(5.0f, 1.0f, 1.0f, 1.0f),
+                Diffuse = new Color4(15.0f, 0.0f, 0.0f, 1.0f),
+                Ambient = new Color4(),
+                Specular = new Color4(),
                 Position = lightPos,
-                Range = 50.0f,
-                Attentuation = new Vector3(0.0f, 1.0f, 0.0f)
+                Range = 48.0f,
+                Attentuation = new Vector3(0.0f, 0.1f, 0.0f)
+            };
+
+            _pointLight2 = new PointLight()
+            {
+                //Diffuse = new Color4(0.0f, 0.0f, 0.5f, 1.0f),
+                //Ambient = new Color4(1.0f, 1.0f, 5.0f, 1.0f),
+                //Specular = new Color4(1.0f, 1.0f, 5.0f, 1.0f),
+                Diffuse = new Color4(0.0f, 0.0f, 15.0f, 1.0f),
+                Ambient = new Color4(),
+                Specular = new Color4(),
+                Position = lightPos2,
+                Range = 48.0f,
+                Attentuation = new Vector3(0.0f, 0.1f, 0.0f)
             };
 
             LightEngine.AddPointLight(_pointLight);
+            LightEngine.AddPointLight(_pointLight2);
         }
 
         public override List<Polygon> GetSceneMeshes()
@@ -168,15 +194,18 @@ namespace MazeEditor
 
             Camera.SetPosition(playerStart.Item1 * 65, 16, playerStart.Item2 * 65);
 
-            _meshRenderer = new PolygonRenderer(materialDictionary, textureDictionary, base.Renderer.Context, Camera, base.Shader);
+            _polygonRenderer = new PolygonRenderer(materialDictionary, textureDictionary, base.Renderer.Context, Camera, base.Shader);
+            _boundingBoxRenderer = new BoundingBoxRenderer(materialDictionary, textureDictionary, base.Renderer.Context, Camera, base.Shader);
 
-            _bspRenderer = new BspRendererOptomized(base.Renderer.Device, _meshRenderer, new PointClassifier(), BspNodes);
-            _octreeRenderer = new OctreeRenderer(_meshRenderer);
-            _quadTreeRenderer = new QuadTreeRenderer(_meshRenderer, Camera);
-            _quadTreeLeafNodeRenderer = new QuadTreeLeafNodeRenderer(_meshRenderer, Camera, QuadTreeLeafNodes);
+            _bspRenderer = new BspRendererOptomized(base.Renderer.Device, _polygonRenderer, new PointClassifier(), BspNodes);
+            _octreeRenderer = new OctreeRenderer(_polygonRenderer);
+            _quadTreeRenderer = new QuadTreeRenderer(_polygonRenderer, _boundingBoxRenderer, Camera);
+
+            _quadTreeLeafNodeRenderer = new QuadTreeLeafNodeRenderer(_polygonRenderer, Camera, QuadTreeLeafNodes);
             _quadTreeTraverser = new QuadTreeTraverser(QuadTreeNode);
             _quadTreeCollisionDetector = new QuadTreeCollisionDetector();
             Camera.CollisionDetector = _quadTreeCollisionDetector;
+            _quadTreeCollisionDetector.Camera = Camera;
 
             base.Shader.Initialize(base.Renderer.Device, base.Renderer.Context);
 
@@ -187,10 +216,11 @@ namespace MazeEditor
             ConfigManager.SpotLightRange = 1000;
             ConfigManager.FogStart = 50;
             ConfigManager.FogEnd = 1000;
+            ConfigManager.UseNormalMap = 1;
 
             _directionalLight = new DirectionalLight()
             {
-                Ambient = new Color4(0.1f, 0.1f, 0.1f, 0.1f),
+                Ambient = new Color4(0.5f, 0.5f, 0.35f, 0.1f),
                 Diffuse = new Color4(0.0f, 0.0f, 0.0f, 0.0f),
                 Specular = new Color4(0.0f, 0.0f, 0.0f, 0.0f),
                 Direction = new Vector3(1.0f, 1.0f, 1.0f)

@@ -11,11 +11,16 @@ namespace DungeonHack.DirectX.ConstantBuffer
         public DirectionalLight[] DirectionalLight;
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 1)]
         public Spotlight[] SpotLight;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 1)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
         public PointLight[] PointLight;
         public Vector3 CameraPosition;
         public float FogStart;
         public float FogEnd;
-        public Vector3 pad;
+        public int UseNormalMap;
+        public float gMaxTessDistance;
+        public float gMinTessDistance;
+        public float gMinTessFactor;
+        public float gMaxTessFactor;
+        public Vector2 pad;
     }
 }

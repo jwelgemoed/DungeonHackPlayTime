@@ -1,10 +1,10 @@
-﻿using FunAndGamesWithSharpDX.Engine;
-using FunAndGamesWithSharpDX.Entities;
+﻿using DungeonHack.Entities;
+using DungeonHack.Renderers;
+using FunAndGamesWithSharpDX.Engine;
 using SharpDX;
 using SharpDX.Direct3D11;
 using System;
 using System.Collections.Generic;
-using DungeonHack.Entities;
 
 namespace DungeonHack.BSP
 {
@@ -45,7 +45,7 @@ namespace DungeonHack.BSP
 
             for (int i = 0; i < _renderList.Count; i++)
             {
-                _meshRenderer.Render(_renderList[i], camera.ViewProjectionMatrix, ref meshRenderedCount);
+                _meshRenderer.Render(_renderList[i], ref meshRenderedCount);
             }
 
             _renderList.Clear();
