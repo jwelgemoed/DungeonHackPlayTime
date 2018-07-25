@@ -98,7 +98,7 @@ namespace MazeEditor
             //Draw items in world;
             foreach (var item in _itemRegistry.GetItems())
             {
-                _polygonRenderer.Render(item.Polygon, ref _meshRenderedCount);
+               // _polygonRenderer.Render(0, item.Polygon, ref _meshRenderedCount);
             }
 
         }
@@ -194,7 +194,7 @@ namespace MazeEditor
 
             Camera.SetPosition(playerStart.Item1 * 65, 16, playerStart.Item2 * 65);
 
-            _polygonRenderer = new PolygonRenderer(materialDictionary, textureDictionary, base.Renderer.Context, Camera, base.Shader);
+            _polygonRenderer = new PolygonRenderer(materialDictionary, textureDictionary, base.Renderer.Context, base.Renderer.DeferredContexts, Camera, base.Shader);
             _boundingBoxRenderer = new BoundingBoxRenderer(materialDictionary, textureDictionary, base.Renderer.Context, Camera, base.Shader);
 
             _bspRenderer = new BspRendererOptomized(base.Renderer.Device, _polygonRenderer, new PointClassifier(), BspNodes);
@@ -207,7 +207,7 @@ namespace MazeEditor
             Camera.CollisionDetector = _quadTreeCollisionDetector;
             _quadTreeCollisionDetector.Camera = Camera;
 
-            base.Shader.Initialize(base.Renderer.Device, base.Renderer.Context);
+            base.Shader.Initialize(base.Renderer.Device, base.Renderer.Context, base.Renderer.DeferredContexts);
 
             ConfigManager.SpotLightAttentuationA = 1.0f;
             ConfigManager.SpotLightAttentuationB = 1.0f;//1.0f;

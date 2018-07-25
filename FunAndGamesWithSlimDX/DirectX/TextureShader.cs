@@ -27,13 +27,13 @@ namespace FunAndGamesWithSharpDX.DirectX
         private SharpDX.Direct3D11.Buffer _staticContantBuffer;
 
         
-        public TextureShader(Device device, DeviceContext context)
+        public TextureShader(Device device, DeviceContext context, DeviceContext[] deferredContexts)
         {
             _device = device;
             _context = context;
         }
 
-        public void Initialize(Device device, DeviceContext context)
+        public void Initialize(Device device, DeviceContext context, DeviceContext[] deferredContexts)
         {
             _device = device;
             _context = context;

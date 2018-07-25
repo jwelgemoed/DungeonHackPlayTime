@@ -45,7 +45,7 @@ namespace DungeonHack.Octree
             {
                 foreach (var polygon in node.Polygons)
                 {
-                    _renderer.Render(polygon, ref meshRenderedCount);
+                  //  _renderer.Render(polygon, ref meshRenderedCount);
                 }
             }
         }

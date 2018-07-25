@@ -88,7 +88,7 @@ namespace DungeonHack.BSP
             {
                 //if (!_renderList[i].OcclusionQuery.IsComplete())
 
-                _meshRenderer.Render(_renderList[i], ref meshRenderedCount);
+               // _meshRenderer.Render(_renderList[i], ref meshRenderedCount);
 
               //  _renderList[i].OcclusionQuery.End();
             }

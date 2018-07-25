@@ -97,7 +97,7 @@ namespace DungeonHack.Engine
             _frustrum = new Frustrum();
 
             Shader = new Shader();
-            Shader.Initialize(Renderer.Device, Renderer.Context);
+            Shader.Initialize(Renderer.Device, Renderer.Context, Renderer.DeferredContexts);
 
             SpriteRenderer.Initialize(Renderer.Device);
             FontRenderer.Initialize(Renderer.Device, "Arial", FontWeight.Normal, FontStyle.Normal, FontStretch.Normal, 12);

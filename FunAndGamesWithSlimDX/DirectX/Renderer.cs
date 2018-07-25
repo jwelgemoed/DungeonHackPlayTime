@@ -19,6 +19,8 @@ namespace FunAndGamesWithSharpDX.DirectX
         public SwapChain SwapChain;
         public Device Device;
         public DeviceContext Context;
+        public DeviceContext[] DeferredContexts;
+
         private Texture2D _depthStencilBuffer;
         public DepthStencilView DepthStencilView;
         private DepthStencilViewDescription _depthStencilViewDesc;
@@ -77,6 +79,8 @@ namespace FunAndGamesWithSharpDX.DirectX
         public static float ScreenNear { get; set; }
         public static float ScreenFar { get; set; }
 
+        public static int TotalNumberOfThreads { get; set; }
+
         public bool Check4XMSAAQualitySupport()
         {
             if (Device == null)
@@ -119,6 +123,8 @@ namespace FunAndGamesWithSharpDX.DirectX
 
             Device.CreateWithSwapChain(SharpDX.Direct3D.DriverType.Hardware, DeviceCreationFlags.Debug, description, out Device, out SwapChain);
 
+            TotalNumberOfThreads = 4;
+
             OnResize();
         }
 
@@ -132,8 +138,6 @@ namespace FunAndGamesWithSharpDX.DirectX
 
             if (_depthStencilBuffer != null)
                 _depthStencilBuffer.Dispose();
-
-            SetRasterizerState(FillMode.Solid, CullMode.Back);
 
             SwapChain.ResizeBuffers(1, Width, Height, Format.R8G8B8A8_UNorm, 0);
             
@@ -230,6 +234,7 @@ namespace FunAndGamesWithSharpDX.DirectX
             _depthStencilDisabledState = new DepthStencilState(Device, dsStateDisabledDesc);
 
             Context = Device.ImmediateContext;
+
             var viewport = new RawViewportF()
             {
                 X = 0,
@@ -240,13 +245,24 @@ namespace FunAndGamesWithSharpDX.DirectX
                 MaxDepth = 1.0f
             };
 
+            DeferredContexts = new DeviceContext[TotalNumberOfThreads];
+
+            for (int i = 0; i < TotalNumberOfThreads; i++)
+            {
+                DeferredContexts[i] = new DeviceContext(Device);
+                DeferredContexts[i].OutputMerger.DepthStencilState = _depthStencilState;
+                DeferredContexts[i].OutputMerger.SetTargets(DepthStencilView, RenderTarget);
+                DeferredContexts[i].Rasterizer.SetViewports(new[] { viewport });
+            }
+
             Context.OutputMerger.DepthStencilState = _depthStencilState;
             Context.OutputMerger.SetTargets(DepthStencilView, RenderTarget);
             //Context.OutputMerger.SetTargets(RenderTarget);
             Context.Rasterizer.SetViewports(new[] { viewport });
-            
+
+            SetRasterizerState(FillMode.Solid, CullMode.Back);
             //SetRenderState();
-            
+
         }
 
         public void SetRasterizerState(FillMode fillMode, CullMode cullMode)
@@ -267,6 +283,11 @@ namespace FunAndGamesWithSharpDX.DirectX
 
             RasterizerState rs = new RasterizerState(Device, rsd);
             Device.ImmediateContext.Rasterizer.State = rs;
+
+            for (int i=0; i < TotalNumberOfThreads; i++)
+            {
+                DeferredContexts[i].Rasterizer.State = rs;
+            }
         }
 
         public void SetupOcclusionQuery()

@@ -88,7 +88,7 @@ namespace DungeonHack.QuadTree
                 {
                     polygonsdrawn++;
                     int meshRenderedCount = 0;
-                    _renderer.Render(polygon, ref meshRenderedCount);
+                   // _renderer.Render(polygon, ref meshRenderedCount);
                 }
                 else
                 {

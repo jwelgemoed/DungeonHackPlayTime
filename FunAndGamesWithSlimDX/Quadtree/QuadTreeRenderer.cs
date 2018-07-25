@@ -18,14 +18,16 @@ namespace DungeonHack.QuadTree
         private int[] _endOfList;
         private int _threadCount;
         private int _threadCountPerThread;
+        private int _totalNumberOfThreads;
         private Task[] _tasks;
         private Stopwatch _stopwatch;
         private DepthBuffer _depthBuffer;
 
         public QuadTreeRenderer(PolygonRenderer renderer, BoundingBoxRenderer boundingBoxRenderer, Camera camera)
         {
-            _threadCount = 4;
+            _threadCount = 1;
             _threadCountPerThread = 4;
+            _totalNumberOfThreads = _threadCount * _threadCountPerThread;
             _renderer = renderer;
             _renderList = new Polygon[_threadCount * _threadCountPerThread][];
             _endOfList = new int[_threadCount * _threadCountPerThread];
@@ -54,7 +56,7 @@ namespace DungeonHack.QuadTree
                     switch (j)
                     {
                         case 0:
-                            DrawQuadMultiThread(0, node.Octant1, frustrum, camera);
+                            DrawQuadMultiThread(0, node, frustrum, camera);
                             break;                                       
                         case 1:                                          
                             DrawQuadMultiThread(1, node.Octant2, frustrum, camera);
@@ -75,6 +77,8 @@ namespace DungeonHack.QuadTree
             }
 
             Task.WaitAll(_tasks);
+
+            _renderer.RenderFinal(_totalNumberOfThreads);
         }
 
         private void DrawQuadMultiThread(int threadNumber, QuadTreeNode node, 
@@ -158,7 +162,7 @@ namespace DungeonHack.QuadTree
                         {
                             polygonsdrawn++;
                             int meshRenderedCount = 0;
-                            _renderer.Render(polygon, ref meshRenderedCount);
+                            _renderer.Render(threadCount, polygon, ref meshRenderedCount);
                         }
                         else
                         {
@@ -192,6 +196,8 @@ namespace DungeonHack.QuadTree
                     }
                 }
             }
+
+            _renderer.CompleteRendering(threadCount);
         }
      }
 }
