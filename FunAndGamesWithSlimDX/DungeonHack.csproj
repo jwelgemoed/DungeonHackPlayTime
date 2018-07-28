@@ -227,6 +227,7 @@
     <Compile Include="Octree\OctreeBuilder.cs" />
     <Compile Include="Octree\OctreeNode.cs" />
     <Compile Include="Octree\OctreeRenderer.cs" />
+    <Compile Include="Quadtree\QuadTreeDepthRenderer.cs" />
     <Compile Include="Renderers\BoundingBoxRenderer.cs" />
     <Compile Include="Renderers\PolygonRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

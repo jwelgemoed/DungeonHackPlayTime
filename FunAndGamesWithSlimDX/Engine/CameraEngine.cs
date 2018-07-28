@@ -246,7 +246,7 @@ namespace FunAndGamesWithSharpDX.Engine
 
         public override void UpdateScene()
         {
-            Camera.FrameTime = (float) Timer.DeltaTime * 100;
+            Camera.FrameTime = (float) Timer.DeltaTime *100.0f;
             Camera.Move(Camera.CurrentMoveState);
             Camera.Render();
         }

@@ -200,7 +200,8 @@ float3 NormalSampleToWorldSpace(float3 normalMapSample, float3 unitNormalW, floa
 	float3 B = cross( N, T); 
 	float3x3 TBN = float3x3( T, B, N); 
 	// Transform from tangent space to world space. 
-	float3 bumpedNormalW = mul( normalT, TBN); return bumpedNormalW; 
+	float3 bumpedNormalW = mul( normalT, TBN);
+	return bumpedNormalW; 
 }
 
 cbuffer cbPerObject : register(b0)
@@ -408,7 +409,7 @@ DomainOut DS(PatchTess patchTess,
 	float h = displacementMap.SampleLevel(samLinear, dout.tex, mipLevel).r; 
 	
 	// Offset vertex along normal. 
-	float heightScale = 2;
+	float heightScale = 2.0;
 
 	dout.worldPosition += float4((heightScale*(h-1))*dout.normal, 1.0f); 
 	dout.worldPosition.w = 1.0f;

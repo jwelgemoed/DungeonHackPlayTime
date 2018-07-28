@@ -174,5 +174,10 @@ namespace MapEditor
 
             Shader.Dispose();
         }
+
+        public override void PreRenderScene()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

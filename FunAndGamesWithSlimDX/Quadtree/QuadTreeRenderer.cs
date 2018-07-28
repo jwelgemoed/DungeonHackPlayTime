@@ -22,7 +22,7 @@ namespace DungeonHack.QuadTree
         private Stopwatch _stopwatch;
         private DepthBuffer _depthBuffer;
 
-        public QuadTreeRenderer(PolygonRenderer renderer, BoundingBoxRenderer boundingBoxRenderer, Camera camera)
+        public QuadTreeRenderer(PolygonRenderer renderer, BoundingBoxRenderer boundingBoxRenderer, Camera camera, DepthBuffer depthBuffer)
         {
             _threadCount = 4;
             _threadCountPerThread = 4;
@@ -32,7 +32,7 @@ namespace DungeonHack.QuadTree
             _tasks = new Task[_threadCount];
             _nodeStack = new Stack<QuadTreeNode>[_threadCount * _threadCountPerThread];
             _stopwatch = new Stopwatch();
-            _depthBuffer = new DepthBuffer(camera, _threadCount * _threadCountPerThread);
+            _depthBuffer = depthBuffer;
             _boundingBoxRenderer = boundingBoxRenderer;
 
             for (int i = 0; i < (_threadCount * _threadCountPerThread); i++)
@@ -46,6 +46,8 @@ namespace DungeonHack.QuadTree
         {
             _renderer.RenderFrame(camera);
 
+            //DrawQuadMultiThread(0, node, frustrum, camera);
+
             for (int i = 0; i < _threadCount; i++)
             {
                 int j = i;
@@ -55,14 +57,14 @@ namespace DungeonHack.QuadTree
                     {
                         case 0:
                             DrawQuadMultiThread(0, node.Octant1, frustrum, camera);
-                            break;                                       
-                        case 1:                                          
+                            break;
+                        case 1:
                             DrawQuadMultiThread(1, node.Octant2, frustrum, camera);
-                            break;                                       
-                        case 2:                                          
+                            break;
+                        case 2:
                             DrawQuadMultiThread(2, node.Octant3, frustrum, camera);
-                            break;                                       
-                        case 3:                                          
+                            break;
+                        case 3:
                             DrawQuadMultiThread(3, node.Octant4, frustrum, camera);
                             break;
                         default:
@@ -130,14 +132,12 @@ namespace DungeonHack.QuadTree
                         || node.BoundingBox.DistanceToCamera(camera) >= 2500)
                         || _depthBuffer.IsBoundingBoxOccluded(node.BoundingBox))
                 {
-                  //  _boundingBoxRenderer.RenderBoundingBox(node.BoundingBox, Matrix.Identity, camera.RenderViewProjectionMatrix, 1, 0);
                     continue;
                 }
 
                 if (node.IsLeaf)
                 {
                     int polygonsdrawn = 0;
-                    int backfaceculled = 0;
 
                     foreach (var polygon in node.Polygons)
                     {
@@ -146,27 +146,8 @@ namespace DungeonHack.QuadTree
                             continue;
                         }
 
-                        bool draw = true;
-
-                        if (polygon.WorldVectors.Length == 6)
-                        {
-                            draw = _depthBuffer.TransformPolygon(new[] { polygon.VertexData[0].Position, polygon.VertexData[1].Position, polygon.VertexData[2].Position }, threadCount);
-                            draw &= _depthBuffer.TransformPolygon(new[] { polygon.VertexData[3].Position, polygon.VertexData[4].Position, polygon.VertexData[5].Position }, threadCount);
-                        }
-
-                        if (draw)
-                        {
-                            polygonsdrawn++;
-                            int meshRenderedCount = 0;
-                            _renderer.Render(polygon, ref meshRenderedCount);
-                        }
-                        else
-                        {
-                            backfaceculled++;
-                        }
+                        _renderer.Render(polygon, ref polygonsdrawn);
                     }
-
-                    _depthBuffer.RasterizeTriangles(threadCount);
                 }
                 else
                 {

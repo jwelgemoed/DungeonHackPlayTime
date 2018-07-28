@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using DungeonHack.DirectX;
 using DungeonHack.Entities;
@@ -37,6 +38,8 @@ namespace DungeonHack.Engine
 
         private long _updateTime;
         private long _drawTime;
+
+        private bool ShutDownAllTasks;
 
         protected Stopwatch _stopwatch = new Stopwatch();
 
@@ -117,7 +120,23 @@ namespace DungeonHack.Engine
 
             Timer.Start();
 
+            Task PreRenderTask = new Task(PreRenderLoop);
+            Task UpdateSceneTask = new Task(UpdateSceneLoop);
+            Task CalcFrameStatsTask = new Task(FrameStatsLoop);
+
+            // Task RenderTask = new Task(() => RenderLoop.Run(Form, MainLoop));
+
+            PreRenderTask.Start();
+            //UpdateSceneTask.Start();
+            CalcFrameStatsTask.Start();
+
             RenderLoop.Run(Form, MainLoop);
+
+            //RenderTask.Start();
+
+            Task.WaitAll(PreRenderTask, CalcFrameStatsTask); //UpdateSceneTask, CalcFrameStatsTask);
+
+            //RenderLoop.Run(Form, MainLoop);
             
             //MessagePump.Run(Form, MainLoop);
             
@@ -126,24 +145,69 @@ namespace DungeonHack.Engine
             Shutdown();
         }
 
+        private void PreRenderLoop()
+        {
+            while (!ShutDownAllTasks)
+            {
+                switch (ApplicationStateEngine.CurrentState)
+                {
+                    case ApplicationStateEnum.Normal:
+                        PreRenderScene();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private void UpdateSceneLoop()
+        {
+            while (!ShutDownAllTasks)
+            {
+                switch (ApplicationStateEngine.CurrentState)
+                {
+                    case ApplicationStateEnum.Normal:
+                        UpdateScene();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private void FrameStatsLoop()
+        {
+            switch (ApplicationStateEngine.CurrentState)
+            {
+                case ApplicationStateEnum.Normal:
+                    _frameRateStats = CalculateFrameRateStats();
+                    DisplayConsoleInformation();
+                    break;
+                default:
+                    break;
+            }
+        }
+
         private void MainLoop()
         {
             switch (ApplicationStateEngine.CurrentState)
             {
                 case ApplicationStateEnum.Shutdown:
                     Form.Close();
+                    ShutDownAllTasks = true;
                     return;
 
                 case ApplicationStateEnum.Normal:
                     Timer.Tick();
-                    _frameRateStats = CalculateFrameRateStats();
+                    _frameCount++;
+                    // _frameRateStats = CalculateFrameRateStats();
                     Renderer.Context.ClearRenderTargetView(Renderer.RenderTarget, Colors.Black);
                     Renderer.Context.ClearDepthStencilView(Renderer.DepthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
                     UpdateScene();
                     _stopwatch.Restart();
                     DrawScene();
                     _stopwatch.Stop();
-                    DisplayConsoleInformation();
+                    //DisplayConsoleInformation();
                     //FontRenderer.FinalizeDraw();
                     //SpriteRenderer.FinalizeDraw();
                     Renderer.SwapChain.Present(ConfigManager.VSync, PresentFlags.None);
@@ -155,6 +219,8 @@ namespace DungeonHack.Engine
                     break;
             }
         }
+
+        public abstract void PreRenderScene();
 
         /// <summary>
         /// Override point to render at.
@@ -195,8 +261,6 @@ namespace DungeonHack.Engine
 
         public FrameRateStats CalculateFrameRateStats()
         {
-            _frameCount++;
-
             if ((Timer.TotalTime() - _timeElapsedForStats) >= 1.0f)
             {
                 _frameRateStats.FramesPerSecond = _frameCount;

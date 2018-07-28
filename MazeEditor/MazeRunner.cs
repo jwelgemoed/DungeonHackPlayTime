@@ -18,6 +18,7 @@ using DungeonHack.DirectX;
 using DungeonHack.Engine;
 using DungeonHack.Lights;
 using DungeonHack.Renderers;
+using DungeonHack.OcclusionCulling;
 
 namespace MazeEditor
 {
@@ -36,6 +37,7 @@ namespace MazeEditor
         private QuadTreeLeafNodeRenderer _quadTreeLeafNodeRenderer;
         private QuadTreeCollisionDetector _quadTreeCollisionDetector;
         private QuadTreeTraverser _quadTreeTraverser;
+        private QuadTreeDepthRenderer _quadTreeDepthRenderer;
         private PolygonRenderer _polygonRenderer;
         private BoundingBoxRenderer _boundingBoxRenderer;
         private Matrix _viewProjectionMatrix;
@@ -78,6 +80,14 @@ namespace MazeEditor
             }
         }
 
+        public override void PreRenderScene()
+        {
+            if (QuadTreeNode == null || _frustrum == null || Camera == null)
+                return;
+
+            _quadTreeDepthRenderer.DrawDepthQuadTree(QuadTreeNode, _frustrum, Camera);
+        }
+
         public override void DrawScene()
         {
             //Construct the frustrum
@@ -90,17 +100,13 @@ namespace MazeEditor
             _meshRenderedCount = 0;
             base._stopwatch.Restart();
 
-            //_octreeRenderer.DrawOctree(OctreeRootNode, _frustrum, Camera, ref _meshRenderedCount);
-            //_bspRenderer.DrawBspTreeFrontToBack(Camera.EyeAt, _frustrum, ref _meshRenderedCount, Camera);
             _quadTreeRenderer.DrawQuadTree(QuadTreeNode, _frustrum, Camera, ref _meshRenderedCount);
-            //_quadTreeLeafNodeRenderer.DrawQuadTree(_frustrum, Camera, ref _meshRenderedCount);
 
             //Draw items in world;
             foreach (var item in _itemRegistry.GetItems())
             {
                 _polygonRenderer.Render(item.Polygon, ref _meshRenderedCount);
             }
-
         }
 
         public override void UpdateScene()
@@ -199,7 +205,12 @@ namespace MazeEditor
 
             _bspRenderer = new BspRendererOptomized(base.Renderer.Device, _polygonRenderer, new PointClassifier(), BspNodes);
             _octreeRenderer = new OctreeRenderer(_polygonRenderer);
-            _quadTreeRenderer = new QuadTreeRenderer(_polygonRenderer, _boundingBoxRenderer, Camera);
+
+            int _threadCount = 4;
+            int _threadCountPerThread = 4;
+            DepthBuffer depthBuffer = new DepthBuffer(Camera, _threadCount * _threadCountPerThread);
+            _quadTreeRenderer = new QuadTreeRenderer(_polygonRenderer, _boundingBoxRenderer, Camera, depthBuffer);
+            _quadTreeDepthRenderer = new QuadTreeDepthRenderer(Camera, depthBuffer);
 
             _quadTreeLeafNodeRenderer = new QuadTreeLeafNodeRenderer(_polygonRenderer, Camera, QuadTreeLeafNodes);
             _quadTreeTraverser = new QuadTreeTraverser(QuadTreeNode);
