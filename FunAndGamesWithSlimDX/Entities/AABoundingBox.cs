@@ -1,5 +1,4 @@
-﻿using DungeonHack.BSP;
-using DungeonHack.DirectX;
+﻿using DungeonHack.DirectX;
 using FunAndGamesWithSharpDX.Engine;
 using FunAndGamesWithSharpDX.Entities;
 using SharpDX;

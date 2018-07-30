@@ -48,7 +48,6 @@ C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\SpriteTextRenderer.SharpDX.dll
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\SharpDX.D3DCompiler.dll
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\SharpDX.Desktop.dll
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\AssimpNet.dll
-C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\AutoMapper.dll
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\SpriteTextRenderer.dll
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\SharpDX.Direct3D11.Effects.dll
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\NBidi.dll
@@ -64,7 +63,6 @@ C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\SharpDX.RawInput.xml
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\SharpDX.D3DCompiler.xml
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\SharpDX.Desktop.xml
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\AssimpNet.xml
-C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\AutoMapper.xml
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\SharpDX.Direct3D11.Effects.xml
 C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor.csprojAssemblyReference.cache
 C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MainWindow.g.cs

@@ -10,7 +10,8 @@ namespace DungeonHack.DirectX
     public class Shader : IShader
     {
         private Device _device;
-        private DeviceContext _context;
+        private DeviceContext _immediateContext;
+        private DeviceContext[] _deferredContexts;
         private LightShader _lightShader;
         private TextureShader _textureShader;
         private IShader _currentShader;
@@ -27,35 +28,36 @@ namespace DungeonHack.DirectX
             switch (shaderTechnique)
             {
                 case ShaderTechnique.LightShader:
-                    _lightShader.Initialize(_device, _context);
+                    _lightShader.Initialize(_device, _immediateContext, _deferredContexts);
                     _currentShader = _lightShader;
                     break;
                 case ShaderTechnique.TextureShader:
-                    _textureShader.Initialize(_device, _context);
+                    _textureShader.Initialize(_device, _immediateContext, _deferredContexts);
                     _currentShader = _textureShader;
                     break;
             }
         }
 
-        public void Initialize(Device device, DeviceContext context)
+        public void Initialize(Device device, DeviceContext immediateContext, DeviceContext[] deferredContexts)
         {
             _device = device;
-            _context = context;
+            _immediateContext = immediateContext;
+            _deferredContexts = deferredContexts;
 
-            _textureShader = new TextureShader(device, context);
-            _lightShader = new LightShader(device, context);
+            _textureShader = new TextureShader(device, immediateContext, deferredContexts);
+            _lightShader = new LightShader(device, immediateContext, deferredContexts);
 
             SetShader(ShaderTechnique.LightShader);
         }
 
-        public void RenderFrame(Camera camera)
+        public void RenderFrame(int threadNumber, Camera camera)
         {
-            _currentShader.RenderFrame(camera);
+            _currentShader.RenderFrame(threadNumber, camera);
         }
 
-        public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix viewProjMatrix, Texture texture, Vector3 cameraPosition, Material material)
+        public void Render(int threadNumber, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix viewProjMatrix, Texture texture, Vector3 cameraPosition, Material material)
         {
-            _currentShader.Render(context, indexCount, worldMatrix, viewMatrix, viewProjMatrix, texture, cameraPosition, material);
+            _currentShader.Render(threadNumber, indexCount, worldMatrix, viewMatrix, viewProjMatrix, texture, cameraPosition, material);
         }
 
         public void RenderLights(DirectionalLight[] directionalLight, PointLight[] pointLight, Spotlight[] spotLight)

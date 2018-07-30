@@ -191,7 +191,6 @@ C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SharpDX.Direct2D1.dll
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SharpDX.RawInput.dll
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SpriteTextRenderer.SharpDX.dll
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SharpDX.Desktop.dll
-C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\AutoMapper.dll
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SpriteTextRenderer.dll
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\NBidi.dll
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\DungeonHack.pdb
@@ -214,7 +213,6 @@ C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SlimDX.xml
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SharpDX.Direct2D1.xml
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SharpDX.RawInput.xml
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SharpDX.Desktop.xml
-C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\AutoMapper.xml
 C:\git\DungeonHackPlayTime\MapEditor\obj\Debug\MapEditor.csprojAssemblyReference.cache
 C:\git\DungeonHackPlayTime\MapEditor\obj\Debug\RoomEditWindow.baml
 C:\git\DungeonHackPlayTime\MapEditor\obj\Debug\MainWindow.baml

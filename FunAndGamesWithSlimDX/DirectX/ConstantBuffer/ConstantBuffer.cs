@@ -32,7 +32,7 @@ namespace DungeonHack.DirectX.ConstantBuffer
             _dataStream = new DataStream(size, true, true);
         }
 
-        public void UpdateValue(T value)
+        public void UpdateValue(DeviceContext context, T value)
         {
             // If no specific marshalling is needed, can use 
             // dataStream.Write(value) for better performance.
@@ -40,7 +40,7 @@ namespace DungeonHack.DirectX.ConstantBuffer
 
             var dataBox = new DataBox(_dataStream.DataPointer, 0, 0);
 
-            _device.ImmediateContext.UpdateSubresource(dataBox, _buffer, 0);
+            context.UpdateSubresource(dataBox, _buffer, 0);
         }
 
         public void Dispose()

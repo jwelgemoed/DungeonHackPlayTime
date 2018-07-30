@@ -1,6 +1,5 @@
-﻿using DungeonHack.BSP;
-using DungeonHack.BSP.LeafBsp;
-using DungeonHack.Octree;
+﻿using DungeonHack.Builders;
+using DungeonHack.DirectX;
 using DungeonHack.QuadTree;
 using System;
 using System.Collections.Generic;
@@ -8,8 +7,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using DungeonHack.Builders;
-using DungeonHack.DirectX;
 
 namespace MazeEditor
 {
@@ -117,37 +114,20 @@ namespace MazeEditor
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            PolygonClassifier polygonClassifier = new PolygonClassifier();
-            SplitterSelector splitterSelector = new SplitterSelector(polygonClassifier, 25);
-            PointClassifier pointClassifier = new PointClassifier();
             BufferFactory bufferFactory = new BufferFactory(_mazeRunner.Device);
             PolygonBuilder polygonBuilder = new PolygonBuilder(_mazeRunner.Device, _mazeRunner.Shader, bufferFactory);
-            PolygonSplitter polygonSplitter = new PolygonSplitter(pointClassifier, polygonBuilder);
-            BspTreeBuilder bspTreeBuilder = new BspTreeBuilder(polygonClassifier, splitterSelector, polygonSplitter);
-            BspBoundingVolumeCalculator bspBoudingVolumeCalculator = new BspBoundingVolumeCalculator();
-            BoundingBoxCalculator boundingBoxCalculator = new BoundingBoxCalculator();
-            LeafBspMasterData masterData = new LeafBspMasterData();
-            LeafBspTreeBuilder leafTreeBuilder = new LeafBspTreeBuilder(polygonClassifier, polygonSplitter, splitterSelector, boundingBoxCalculator, masterData);
 
             GridPolygonBuilder builder = new GridPolygonBuilder(_dungeon.GridBoard, polygonBuilder);
             var meshList = builder.GeneratePolygons();
 
             _mazeRunner.Meshes = meshList.ToList();
-            /* var rootNode = bspTreeBuilder.BuildTree(_mazeRunner.Meshes);
-             bspBoudingVolumeCalculator.ComputeBoundingVolumes(rootNode);
 
-             _mazeRunner.BspNodes = bspTreeBuilder.TransformNodesToOptomizedNodes(rootNode);*/
             var quadTreeBuilder = new QuadTreeBuilder(_mazeRunner.Device);
             var quadtreeNode = quadTreeBuilder.BuildTree(_mazeRunner.Meshes);
             _mazeRunner.QuadTreeNode = quadtreeNode;
             _mazeRunner.QuadTreeLeafNodes = quadTreeBuilder.LeafNodeList;
             _mazeRunner.Dungeon = _dungeon;
             _mazeRunner.InitializeScene();
-
-            var octbuilder = new OctreeBuilder();
-
-            var octRootNode = octbuilder.BuildTree(_mazeRunner.Meshes);
-            _mazeRunner.OctreeRootNode = octRootNode;
 
             int numberOfNodes = quadTreeBuilder.NumberOfNodes;
             int treeDepth = quadTreeBuilder.TreeDepth;

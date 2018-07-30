@@ -1,22 +1,17 @@
-﻿using FunAndGamesWithSharpDX.Engine;
-using System;
-using System.Collections.Generic;
-using FunAndGamesWithSharpDX.Entities;
-using SharpDX;
-using SharpDX.Direct3D11;
-using FunAndGamesWithSharpDX.DirectX;
-using DungeonHack.BSP;
-using System.IO;
-using System.Diagnostics;
-using DungeonHack;
-using DungeonHack.DataDictionaries;
-using System.Configuration;
+﻿using DungeonHack.DataDictionaries;
 using DungeonHack.DirectX;
 using DungeonHack.Engine;
 using DungeonHack.Entities;
 using DungeonHack.Lights;
-using DungeonHack.Octree;
 using DungeonHack.Renderers;
+using FunAndGamesWithSharpDX.DirectX;
+using FunAndGamesWithSharpDX.Engine;
+using FunAndGamesWithSharpDX.Entities;
+using SharpDX;
+using SharpDX.Direct3D11;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
 
 namespace MapEditor
 {
@@ -28,11 +23,6 @@ namespace MapEditor
         private PointLight _pointLight;
         private DirectionalLight _directionalLight;
         private Spotlight _spotlight;
-        private BspRendererOptomized _bspRenderer;
-        private OctreeRenderer _octreeRenderer;
-
-        public BspNodeOptomized[] BspNodes { get; set; }
-        public OctreeNode OctreeRootNode { get; set; }
 
         private int _nodesVisited = 0;
 
@@ -77,7 +67,6 @@ namespace MapEditor
             _nodesVisited = 0;
 
             //_octreeRenderer.DrawOctree(OctreeRootNode, _frustrum, Camera, ref _meshRenderedCount);
-            _bspRenderer.DrawBspTreeFrontToBack(Camera.EyeAt, _frustrum, ref _meshRenderedCount, Camera);
             //DrawBspTreeBackToFront(BspRootNode, Camera.EyeAt);
         }
 
@@ -120,15 +109,13 @@ namespace MapEditor
             var materialDictionary = new MaterialDictionary();
             materialDictionary.AddMaterial(_wallMaterial);
 
-            var meshRenderer = new PolygonRenderer(materialDictionary, textureDictionary, base.Renderer.Context, Camera, Shader);
-
-            _bspRenderer = new BspRendererOptomized(base.Renderer.Device, meshRenderer, new PointClassifier(), BspNodes);
-            _octreeRenderer = new OctreeRenderer(meshRenderer);
+            var meshRenderer = new PolygonRenderer(materialDictionary, textureDictionary, 
+                Renderer.ImmediateContext, Renderer.DeferredContexts, Renderer.CommandLists, Camera, Shader);
 
             if (_startingPosition == null)
                 Camera.SetPosition(0, 0, 0);
 
-            Shader.Initialize(base.Renderer.Device, base.Renderer.Context);
+            Shader.Initialize(Renderer.Device, Renderer.ImmediateContext, Renderer.DeferredContexts);
 
             _directionalLight = new DirectionalLight()
             {

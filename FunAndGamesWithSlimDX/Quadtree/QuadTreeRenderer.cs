@@ -44,39 +44,41 @@ namespace DungeonHack.QuadTree
 
         public void DrawQuadTree(QuadTreeNode node, Frustrum frustrum, Camera camera, ref int meshRenderedCount)
         {
-            _renderer.RenderFrame(camera);
+            //_renderer.RenderFrame(camera);
 
-            //DrawQuadMultiThread(0, node, frustrum, camera);
+            DrawQuadMultiThread(0, node, frustrum, camera);
 
-            for (int i = 0; i < _threadCount; i++)
-            {
-                int j = i;
-                _tasks[i] = new Task(() =>
-                {
-                    switch (j)
-                    {
-                        case 0:
-                            DrawQuadMultiThread(0, node.Octant1, frustrum, camera);
-                            break;
-                        case 1:
-                            DrawQuadMultiThread(1, node.Octant2, frustrum, camera);
-                            break;
-                        case 2:
-                            DrawQuadMultiThread(2, node.Octant3, frustrum, camera);
-                            break;
-                        case 3:
-                            DrawQuadMultiThread(3, node.Octant4, frustrum, camera);
-                            break;
-                        default:
-                            DrawQuadMultiThread(0, node, frustrum, camera);
-                            break;
-                    }
-                });
+            //for (int i = 0; i < _threadCount; i++)
+            //{
+            //    int j = i;
+            //    _tasks[i] = new Task(() =>
+            //    {
+            //        switch (j)
+            //        {
+            //            case 0:
+            //                DrawQuadMultiThread(0, node.Octant1, frustrum, camera);
+            //                break;
+            //            case 1:
+            //                DrawQuadMultiThread(1, node.Octant2, frustrum, camera);
+            //                break;
+            //            case 2:
+            //                DrawQuadMultiThread(2, node.Octant3, frustrum, camera);
+            //                break;
+            //            case 3:
+            //                DrawQuadMultiThread(3, node.Octant4, frustrum, camera);
+            //                break;
+            //            default:
+            //                DrawQuadMultiThread(0, node, frustrum, camera);
+            //                break;
+            //        }
+            //    });
 
-                _tasks[i].Start();
-            }
+            //    _tasks[i].Start();
+            //}
 
-            Task.WaitAll(_tasks);
+            //Task.WaitAll(_tasks);
+
+            _renderer.RenderAll();
         }
 
         private void DrawQuadMultiThread(int threadNumber, QuadTreeNode node, 
@@ -121,6 +123,7 @@ namespace DungeonHack.QuadTree
             QuadTreeNode node;
             _nodeStack[threadCount].Push(root);
             int depth = 1;
+            _renderer.RenderFrame(threadCount, camera);
 
             while (_nodeStack[threadCount].Count > 0)
             {
@@ -146,7 +149,7 @@ namespace DungeonHack.QuadTree
                             continue;
                         }
 
-                        _renderer.Render(polygon, ref polygonsdrawn);
+                        _renderer.Render(threadCount, polygon, ref polygonsdrawn);
                     }
                 }
                 else
@@ -173,6 +176,8 @@ namespace DungeonHack.QuadTree
                     }
                 }
             }
+
+            _renderer.FinalizeRender(threadCount);
         }
      }
 }

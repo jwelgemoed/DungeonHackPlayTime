@@ -10,9 +10,9 @@ namespace DungeonHack.DirectX
     public interface IShader
     {
         void Dispose();
-        void Initialize(Device device, DeviceContext context);
-        void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix viewProjectionMatrix, Texture texture, Vector3 cameraPosition, Material material);
+        void Initialize(Device device, DeviceContext immediateContext, DeviceContext[] deferredContexts);
+        void Render(int threadNumber, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix viewProjectionMatrix, Texture texture, Vector3 cameraPosition, Material material);
         void RenderLights(DirectionalLight[] directionalLight, PointLight[] pointLight, Spotlight[] spotLight);
-        void RenderFrame(Camera camera);
+        void RenderFrame(int threadNumber, Camera camera);
     }
 }

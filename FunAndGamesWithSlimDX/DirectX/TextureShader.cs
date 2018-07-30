@@ -15,7 +15,8 @@ namespace FunAndGamesWithSharpDX.DirectX
     public class TextureShader : IShader
     {
         private Device _device;
-        private DeviceContext _context;
+        private DeviceContext _immediateContext;
+        private DeviceContext[] _deferredContexts;
         private InputLayout _layout;
 
         private SamplerState _samplerState;
@@ -27,16 +28,18 @@ namespace FunAndGamesWithSharpDX.DirectX
         private SharpDX.Direct3D11.Buffer _staticContantBuffer;
 
         
-        public TextureShader(Device device, DeviceContext context)
+        public TextureShader(Device device, DeviceContext immediateContext, DeviceContext[] deferredContexts)
         {
             _device = device;
-            _context = context;
+            _immediateContext = immediateContext;
+            _deferredContexts = deferredContexts;
         }
 
-        public void Initialize(Device device, DeviceContext context)
+        public void Initialize(Device device, DeviceContext immediateContext, DeviceContext[] deferredContexts)
         {
             _device = device;
-            _context = context;
+            _immediateContext = immediateContext;
+            _deferredContexts = deferredContexts;
 
             _elements = Vertex.GetInputElements();
 
@@ -73,14 +76,26 @@ namespace FunAndGamesWithSharpDX.DirectX
 
             _samplerState = new SamplerState(device, samplerDesc);
 
-            _context.InputAssembler.InputLayout = _layout;
-            _context.InputAssembler.PrimitiveTopology = SharpDX.Direct3D.PrimitiveTopology.TriangleList;
-            _context.VertexShader.SetConstantBuffer(0, _staticContantBuffer);
-            _context.VertexShader.Set(vertexShader);
-            _context.PixelShader.Set(pixelShader);
-            _context.PixelShader.SetSampler(0, _samplerState);
-            _context.HullShader.Set(null);
-            _context.DomainShader.Set(null);
+            _immediateContext.InputAssembler.InputLayout = _layout;
+            _immediateContext.InputAssembler.PrimitiveTopology = SharpDX.Direct3D.PrimitiveTopology.TriangleList;
+            _immediateContext.VertexShader.SetConstantBuffer(0, _staticContantBuffer);
+            _immediateContext.VertexShader.Set(vertexShader);
+            _immediateContext.PixelShader.Set(pixelShader);
+            _immediateContext.PixelShader.SetSampler(0, _samplerState);
+            _immediateContext.HullShader.Set(null);
+            _immediateContext.DomainShader.Set(null);
+
+            for (int i=0; i<_deferredContexts.Length; i++)
+            {
+                _deferredContexts[i].InputAssembler.InputLayout = _layout;
+                _deferredContexts[i].InputAssembler.PrimitiveTopology = SharpDX.Direct3D.PrimitiveTopology.TriangleList;
+                _deferredContexts[i].VertexShader.SetConstantBuffer(0, _staticContantBuffer);
+                _deferredContexts[i].VertexShader.Set(vertexShader);
+                _deferredContexts[i].PixelShader.Set(pixelShader);
+                _deferredContexts[i].PixelShader.SetSampler(0, _samplerState);
+                _deferredContexts[i].HullShader.Set(null);
+                _deferredContexts[i].DomainShader.Set(null);
+            }
         }
 
                
@@ -89,12 +104,12 @@ namespace FunAndGamesWithSharpDX.DirectX
             
         }
 
-        public void RenderFrame(Camera camera)
+        public void RenderFrame(int threadNumber, Camera camera)
         {
 
         }
                 
-        public void Render(DeviceContext context, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix viewProjectionMatrix,
+        public void Render(int threadNumber, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix viewProjectionMatrix,
                            Texture texture, Vector3 cameraPosition, Material material)
         {
             _perObjectBuffer.WorldMatrix = worldMatrix;
@@ -105,14 +120,14 @@ namespace FunAndGamesWithSharpDX.DirectX
             _perObjectBuffer.ViewProjectionMatrix.Transpose();
             _perObjectBuffer.Material = material;
 
-            context.UpdateSubresource(ref _perObjectBuffer, _staticContantBuffer);
+            _deferredContexts[threadNumber].UpdateSubresource(ref _perObjectBuffer, _staticContantBuffer);
 
-            context.PixelShader.SetShaderResource(0, texture.TextureData);
+            _deferredContexts[threadNumber].PixelShader.SetShaderResource(0, texture.TextureData);
 
             if (texture.NormalMapData != null)
-                context.PixelShader.SetShaderResource(1, texture.NormalMapData);
+                _deferredContexts[threadNumber].PixelShader.SetShaderResource(1, texture.NormalMapData);
             
-            context.DrawIndexed(indexCount, 0, 0);
+            _deferredContexts[threadNumber].DrawIndexed(indexCount, 0, 0);
         }
 
         public void RenderLights(DirectionalLight[] directionalLight, PointLight[] pointLight, Spotlight[] spotLight)

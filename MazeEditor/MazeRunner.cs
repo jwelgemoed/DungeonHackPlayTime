@@ -1,24 +1,20 @@
-﻿using DungeonHack;
-using DungeonHack.BSP;
+﻿using DungeonHack.Builders;
+using DungeonHack.CollisionDetection;
 using DungeonHack.DataDictionaries;
-using DungeonHack.Octree;
-using FunAndGamesWithSharpDX.DirectX;
+using DungeonHack.DirectX;
+using DungeonHack.Engine;
+using DungeonHack.Entities;
+using DungeonHack.Lights;
+using DungeonHack.OcclusionCulling;
+using DungeonHack.Quadtree;
+using DungeonHack.QuadTree;
+using DungeonHack.Renderers;
 using FunAndGamesWithSharpDX.Engine;
 using FunAndGamesWithSharpDX.Entities;
 using SharpDX;
 using SharpDX.Direct3D11;
 using System;
 using System.Collections.Generic;
-using DungeonHack.QuadTree;
-using DungeonHack.CollisionDetection;
-using DungeonHack.Quadtree;
-using DungeonHack.Entities;
-using DungeonHack.Builders;
-using DungeonHack.DirectX;
-using DungeonHack.Engine;
-using DungeonHack.Lights;
-using DungeonHack.Renderers;
-using DungeonHack.OcclusionCulling;
 
 namespace MazeEditor
 {
@@ -31,10 +27,7 @@ namespace MazeEditor
         private PointLight _pointLight2;
         private DirectionalLight _directionalLight;
         private Spotlight _spotlight;
-        private BspRendererOptomized _bspRenderer;
-        private OctreeRenderer _octreeRenderer;
         private QuadTreeRenderer _quadTreeRenderer;
-        private QuadTreeLeafNodeRenderer _quadTreeLeafNodeRenderer;
         private QuadTreeCollisionDetector _quadTreeCollisionDetector;
         private QuadTreeTraverser _quadTreeTraverser;
         private QuadTreeDepthRenderer _quadTreeDepthRenderer;
@@ -43,8 +36,6 @@ namespace MazeEditor
         private Matrix _viewProjectionMatrix;
         private ItemRegistry _itemRegistry;
 
-        public BspNodeOptomized[] BspNodes { get; set; }
-        public OctreeNode OctreeRootNode { get; set; }
         public QuadTreeNode QuadTreeNode { get; internal set; }
         public IEnumerable<QuadTreeNode> QuadTreeLeafNodes { get; internal set; }
 
@@ -105,7 +96,7 @@ namespace MazeEditor
             //Draw items in world;
             foreach (var item in _itemRegistry.GetItems())
             {
-                _polygonRenderer.Render(item.Polygon, ref _meshRenderedCount);
+                //_polygonRenderer.Render(item.Polygon, ref _meshRenderedCount);
             }
         }
 
@@ -200,11 +191,11 @@ namespace MazeEditor
 
             Camera.SetPosition(playerStart.Item1 * 65, 16, playerStart.Item2 * 65);
 
-            _polygonRenderer = new PolygonRenderer(materialDictionary, textureDictionary, base.Renderer.Context, Camera, base.Shader);
-            _boundingBoxRenderer = new BoundingBoxRenderer(materialDictionary, textureDictionary, base.Renderer.Context, Camera, base.Shader);
+            _polygonRenderer = new PolygonRenderer(materialDictionary, textureDictionary,
+                Renderer.ImmediateContext, Renderer.DeferredContexts, Renderer.CommandLists, Camera, base.Shader);
 
-            _bspRenderer = new BspRendererOptomized(base.Renderer.Device, _polygonRenderer, new PointClassifier(), BspNodes);
-            _octreeRenderer = new OctreeRenderer(_polygonRenderer);
+            _boundingBoxRenderer = new BoundingBoxRenderer(materialDictionary, textureDictionary, 
+                Renderer.ImmediateContext, Renderer.DeferredContexts, Camera, base.Shader);
 
             int _threadCount = 4;
             int _threadCountPerThread = 4;
@@ -212,13 +203,12 @@ namespace MazeEditor
             _quadTreeRenderer = new QuadTreeRenderer(_polygonRenderer, _boundingBoxRenderer, Camera, depthBuffer);
             _quadTreeDepthRenderer = new QuadTreeDepthRenderer(Camera, depthBuffer);
 
-            _quadTreeLeafNodeRenderer = new QuadTreeLeafNodeRenderer(_polygonRenderer, Camera, QuadTreeLeafNodes);
             _quadTreeTraverser = new QuadTreeTraverser(QuadTreeNode);
             _quadTreeCollisionDetector = new QuadTreeCollisionDetector();
             Camera.CollisionDetector = _quadTreeCollisionDetector;
             _quadTreeCollisionDetector.Camera = Camera;
 
-            base.Shader.Initialize(base.Renderer.Device, base.Renderer.Context);
+            base.Shader.Initialize(Renderer.Device, Renderer.ImmediateContext, Renderer.DeferredContexts);
 
             ConfigManager.SpotLightAttentuationA = 1.0f;
             ConfigManager.SpotLightAttentuationB = 1.0f;//1.0f;

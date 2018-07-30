@@ -13,39 +13,64 @@ namespace DungeonHack.Renderers
     {
         private readonly MaterialDictionary _materialDictionary;
         private readonly TextureDictionary _textureDictionary;
-        private readonly DeviceContext _deviceContext;
+        private readonly DeviceContext _immediateContext;
+        private readonly DeviceContext[] _deferredContexts;
+        private CommandList[] _commandLists;
         private readonly Camera _camera;
         private readonly Shader _shader;
         private readonly object _lock = new object() ;
 
-        public PolygonRenderer(MaterialDictionary materialDictionary, 
+        public PolygonRenderer(MaterialDictionary materialDictionary,
                             TextureDictionary textureDictionary,
                             DeviceContext deviceContext,
+                            DeviceContext[] deferredContexts,
+                            CommandList[] commandLists,
                             Camera camera,
                             Shader shader)
         {
             _materialDictionary = materialDictionary;
             _textureDictionary = textureDictionary;
-            _deviceContext = deviceContext;
+            _immediateContext = deviceContext;
+            _deferredContexts = deferredContexts;
+            _commandLists = commandLists;
             _camera = camera;
             _shader = shader;
         }
 
-        public void RenderFrame(Camera camera)
+        public void RenderFrame(int threadNumber, Camera camera)
         {
-            _shader.RenderFrame(camera);
+            _shader.RenderFrame(threadNumber, camera);
         }
 
-        public void Render(Polygon polygon, ref int polygonRenderedCount)
+        public void FinalizeRender(int threadNumber)
+        {
+            _commandLists[threadNumber] = _deferredContexts[threadNumber].FinishCommandList(true);
+        }
+
+        public void RenderAll()
+        {
+            for (int i = 0; i < _deferredContexts.Length; i++)
+            {
+                var commandList = _commandLists[i];
+                // Execute the deferred command list on the immediate context
+                _immediateContext.ExecuteCommandList(commandList, false);
+
+                // Release the command list
+                commandList.Dispose();
+                _commandLists[i] = null;
+            }
+        }
+
+        public void Render(int threadNumber, Polygon polygon, ref int polygonRenderedCount)
         {
             lock (_lock)
             {
                 polygonRenderedCount++;
 
-                _deviceContext.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(polygon.VertexBuffer, Vertex.SizeOf, 0));
-                _deviceContext.InputAssembler.SetIndexBuffer(polygon.IndexBuffer, Format.R16_UInt, 0);
+                _deferredContexts[threadNumber].InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(polygon.VertexBuffer, Vertex.SizeOf, 0));
+                _deferredContexts[threadNumber].InputAssembler.SetIndexBuffer(polygon.IndexBuffer, Format.R16_UInt, 0);
 
-                _shader.Render(_deviceContext,
+                _shader.Render(threadNumber,
                                 polygon.IndexData.Length,
                                 polygon.WorldMatrix,
                                 _camera.ViewMatrix,
@@ -56,14 +81,14 @@ namespace DungeonHack.Renderers
             }
         }
 
-        public void RenderBoundingBox(AABoundingBox boundingBox, Matrix worldMatrix, Matrix viewProjectionMatrix, int textureIndex, int materialIndex)
+        public void RenderBoundingBox(int threadNumber, AABoundingBox boundingBox, Matrix worldMatrix, Matrix viewProjectionMatrix, int textureIndex, int materialIndex)
         {
             lock (_lock)
             {
-                _deviceContext.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(boundingBox.BoundingBoxVertexBuffer, Vertex.SizeOf, 0));
-                _deviceContext.InputAssembler.SetIndexBuffer(boundingBox.BoundingBoxIndexBuffer, Format.R16_UInt, 0);
+                _deferredContexts[threadNumber].InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(boundingBox.BoundingBoxVertexBuffer, Vertex.SizeOf, 0));
+                _deferredContexts[threadNumber].InputAssembler.SetIndexBuffer(boundingBox.BoundingBoxIndexBuffer, Format.R16_UInt, 0);
 
-                _shader.Render(_deviceContext,
+                _shader.Render(threadNumber,
                                 boundingBox.Indexes.Length,
                                 worldMatrix,
                                 _camera.ViewMatrix,

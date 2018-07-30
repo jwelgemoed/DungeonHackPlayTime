@@ -100,7 +100,7 @@ namespace DungeonHack.Engine
             _frustrum = new Frustrum();
 
             Shader = new Shader();
-            Shader.Initialize(Renderer.Device, Renderer.Context);
+            Shader.Initialize(Renderer.Device, Renderer.ImmediateContext, Renderer.DeferredContexts);
 
             SpriteRenderer.Initialize(Renderer.Device);
             FontRenderer.Initialize(Renderer.Device, "Arial", FontWeight.Normal, FontStyle.Normal, FontStretch.Normal, 12);
@@ -200,14 +200,14 @@ namespace DungeonHack.Engine
                 case ApplicationStateEnum.Normal:
                     Timer.Tick();
                     _frameCount++;
-                    // _frameRateStats = CalculateFrameRateStats();
-                    Renderer.Context.ClearRenderTargetView(Renderer.RenderTarget, Colors.Black);
-                    Renderer.Context.ClearDepthStencilView(Renderer.DepthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
+                    _frameRateStats = CalculateFrameRateStats();
+                    Renderer.ImmediateContext.ClearRenderTargetView(Renderer.RenderTarget, Colors.Black);
+                    Renderer.ImmediateContext.ClearDepthStencilView(Renderer.DepthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
                     UpdateScene();
                     _stopwatch.Restart();
                     DrawScene();
                     _stopwatch.Stop();
-                    //DisplayConsoleInformation();
+                    DisplayConsoleInformation();
                     //FontRenderer.FinalizeDraw();
                     //SpriteRenderer.FinalizeDraw();
                     Renderer.SwapChain.Present(ConfigManager.VSync, PresentFlags.None);

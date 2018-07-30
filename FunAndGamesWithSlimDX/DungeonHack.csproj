@@ -140,27 +140,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BSP\BoundingBoxCalculator.cs" />
-    <Compile Include="BSP\BspBoundingVolumeCalculator.cs" />
-    <Compile Include="BSP\BspNode.cs" />
-    <Compile Include="BSP\BspNodeOptomized.cs" />
-    <Compile Include="BSP\BspRendererOptomized.cs" />
-    <Compile Include="BSP\BspRenderer.cs" />
-    <Compile Include="BSP\BspTreeBuilder.cs" />
-    <Compile Include="BSP\LeafBspMasterData.cs" />
-    <Compile Include="BSP\LeafBsp\Leaf.cs" />
-    <Compile Include="BSP\LeafBsp\LeafBspTreeBuilder.cs" />
-    <Compile Include="BSP\LeafBsp\LeafStackItem.cs" />
-    <Compile Include="BSP\LeafBsp\Node.cs" />
-    <Compile Include="BSP\LeafBsp\Portal.cs" />
-    <Compile Include="BSP\LeafBsp\PortalStackItem.cs" />
-    <Compile Include="BSP\PointClassifier.cs" />
-    <Compile Include="BSP\PolygonClassifier.cs" />
-    <Compile Include="BSP\PolygonSplitter.cs" />
-    <Compile Include="BSP\PortalSplitter.cs" />
-    <Compile Include="BSP\PVS\ClipPlanes.cs" />
-    <Compile Include="BSP\PVS\PVSCalculator.cs" />
-    <Compile Include="BSP\SplitterSelector.cs" />
     <Compile Include="Builders\MeshBuilder.cs" />
     <Compile Include="CollisionDetection\ICollisionDetector.cs" />
     <Compile Include="DirectX\BufferFactory.cs" />
@@ -180,7 +159,6 @@
     <Compile Include="Entities\ItemRegistry.cs" />
     <Compile Include="Entities\PolygonType.cs" />
     <Compile Include="Factories\ModelFactory.cs" />
-    <Compile Include="Builders\PortalBuilder.cs" />
     <Compile Include="DirectX\ShaderTechnique.cs" />
     <Compile Include="DirectX\Util.cs" />
     <Compile Include="Engine\CameraEngine.cs" />
@@ -224,9 +202,6 @@
       <DependentUpon>SaveWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="OcclusionCulling\DepthBuffer.cs" />
-    <Compile Include="Octree\OctreeBuilder.cs" />
-    <Compile Include="Octree\OctreeNode.cs" />
-    <Compile Include="Octree\OctreeRenderer.cs" />
     <Compile Include="Quadtree\QuadTreeDepthRenderer.cs" />
     <Compile Include="Renderers\BoundingBoxRenderer.cs" />
     <Compile Include="Renderers\PolygonRenderer.cs" />
@@ -235,7 +210,6 @@
     <Compile Include="CollisionDetection\QuadTreeCollisionDetector.cs" />
     <Compile Include="Quadtree\QuadTreeBuilder.cs" />
     <Compile Include="Quadtree\QuadTreeNode.cs" />
-    <Compile Include="Quadtree\QuadTreeLeafNodeRenderer.cs" />
     <Compile Include="Quadtree\QuadTreeRenderer.cs" />
     <Compile Include="Quadtree\QuadTreeTraverser.cs" />
     <Compile Include="Settings.cs" />

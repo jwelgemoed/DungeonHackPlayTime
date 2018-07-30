@@ -1,11 +1,7 @@
-﻿using DungeonHack.BSP;
-using DungeonHack.BSP.LeafBsp;
-using DungeonHack.Builders;
-using DungeonHack.Octree;
-using FunAndGamesWithSharpDX;
+﻿using DungeonHack.Builders;
+using DungeonHack.DirectX;
 using FunAndGamesWithSharpDX.Entities;
 using GameData;
-using Geometry;
 using log4net;
 using Poly2Tri;
 using SharpDX;
@@ -15,15 +11,12 @@ using System.ComponentModel;
 using System.Configuration;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using DungeonHack.DirectX;
 using Point = System.Windows.Point;
 using Polygon = DungeonHack.Entities.Polygon;
 using Rectangle = System.Windows.Shapes.Rectangle;
@@ -179,29 +172,11 @@ namespace MapEditor
             if (_playerStart != null)
                 demo.SetStartingPosition(_playerStart.TranslateToRealSpace(1, (float) canvasXZ.Width / 2, (float) canvasXZ.Height / 2));
 
-            PolygonClassifier polygonClassifier = new PolygonClassifier();
-            SplitterSelector splitterSelector = new SplitterSelector(polygonClassifier, 25);
-            PointClassifier pointClassifier = new PointClassifier();
             BufferFactory bufferFactory = new BufferFactory(demo.Device);
             PolygonBuilder polygonBuilder = new PolygonBuilder(demo.Device, demo.GetShader, bufferFactory);
-            PolygonSplitter polygonSplitter = new PolygonSplitter(pointClassifier, polygonBuilder);
-            BspTreeBuilder bspTreeBuilder = new BspTreeBuilder(polygonClassifier, splitterSelector, polygonSplitter);
-            BspBoundingVolumeCalculator bspBoudingVolumeCalculator = new BspBoundingVolumeCalculator();
-            BoundingBoxCalculator boundingBoxCalculator = new BoundingBoxCalculator();
-            LeafBspMasterData masterData = new LeafBspMasterData();
-            LeafBspTreeBuilder leafTreeBuilder = new LeafBspTreeBuilder(polygonClassifier, polygonSplitter, splitterSelector, boundingBoxCalculator, masterData);
-
-            var rootNode = bspTreeBuilder.BuildTree(demo.Meshes);
-            bspBoudingVolumeCalculator.ComputeBoundingVolumes(rootNode);
-
-            demo.BspNodes = bspTreeBuilder.TransformNodesToOptomizedNodes(rootNode);
 
             demo.InitializeScene();
 
-            var octbuilder = new OctreeBuilder();
-
-            var octRootNode = octbuilder.BuildTree(demo.Meshes);
-            demo.OctreeRootNode = octRootNode;
             /*var leafTreeMasterData = leafTreeBuilder.BuildTree(0, demo.Meshes);
             var portalGenerator = new PortalGenerator(leafTreeMasterData, demo.Device, demo.GetShader);
 
@@ -909,48 +884,11 @@ namespace MapEditor
 
                 demo.Meshes = meshList;
 
-                PolygonClassifier polygonClassifier = new PolygonClassifier();
-                PointClassifier pointClassifier = new PointClassifier();
-                SplitterSelector splitterSelector = new SplitterSelector(polygonClassifier, 25);
                 BufferFactory bufferFactory = new BufferFactory(demo.Device);
                 PolygonBuilder polygonBuilder = new PolygonBuilder(demo.Device, demo.GetShader, bufferFactory);
-                PolygonSplitter polygonSplitter = new PolygonSplitter(pointClassifier, polygonBuilder);
-                BspTreeBuilder bspTreeBuilder = new BspTreeBuilder(polygonClassifier, splitterSelector, polygonSplitter);
-                BspBoundingVolumeCalculator bspBoudingVolumeCalculator = new BspBoundingVolumeCalculator();
-
-                var bspRootNode = bspTreeBuilder.BuildTree(demo.Meshes);
-                bspBoudingVolumeCalculator.ComputeBoundingVolumes(bspRootNode);
-                              
 
                 Rectangle lastRectangle = null;
 
-                bspTreeBuilder.TraverseBspTreeAndPerformActionOnNode(bspRootNode, x =>
-                {
-                    if (!x.BoundingVolume.HasValue)
-                    {
-                        return;
-                    }
-
-                    if (lastRectangle != null)
-                    {
-                        canvasXZ.Children.Remove(lastRectangle);
-                    }
-
-                    SharpDX.Matrix invWorld;
-
-                    var world = x.Splitter.WorldMatrix;
-
-                    SharpDX.Matrix.Invert(ref world, out invWorld);
-
-                    var boundingBox = new BoundingBox(
-                        Vector3.TransformCoordinate(x.BoundingVolume.Value.Minimum, invWorld),
-                        Vector3.TransformCoordinate(x.BoundingVolume.Value.Maximum, invWorld));
-
-                    var rectangle = CreateAndAddRectangle(boundingBox);
-
-                    //lastRectangle = rectangle;
-                    //System.Threading.Thread.Sleep(1000);
-                });
             };
 
            // task.Start();

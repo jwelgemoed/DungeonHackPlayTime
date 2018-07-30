@@ -13,7 +13,8 @@ namespace DungeonHack.DirectX
 {
     public class LightShader : IShader
     {
-        private DeviceContext _context;
+        private DeviceContext _immediateContext;
+        private DeviceContext[] _deferredContexts;
         private InputLayout _layout;
 
         private SamplerState _samplerState;
@@ -27,14 +28,16 @@ namespace DungeonHack.DirectX
         private ConstantBufferPerFrame _constantBufferPerFrame;
         private ConstantBufferPerObject _constantBufferPerObject;
 
-        public LightShader(Device device, DeviceContext context)
+        public LightShader(Device device, DeviceContext immediateContext, DeviceContext[] deferredContexts)
         {
-            _context = context;
+            _immediateContext = immediateContext;
+            _deferredContexts = deferredContexts;
         }
 
-        public void Initialize(Device device, DeviceContext context)
+        public void Initialize(Device device, DeviceContext immediateContext, DeviceContext[] deviceContexts)
         {
-            _context = context;
+            _immediateContext = immediateContext;
+            _deferredContexts = deviceContexts;
 
             _elements = Vertex.GetInputElements();
 
@@ -115,36 +118,57 @@ namespace DungeonHack.DirectX
 
             _displacementSamplerState = new SamplerState(device, displacementMapSamplerDesc);
 
-            _context.InputAssembler.InputLayout = _layout;
-            _context.InputAssembler.PrimitiveTopology = SharpDX.Direct3D.PrimitiveTopology.PatchListWith3ControlPoints;
+            _immediateContext.InputAssembler.InputLayout = _layout;
+            _immediateContext.InputAssembler.PrimitiveTopology = SharpDX.Direct3D.PrimitiveTopology.PatchListWith3ControlPoints;
 
-            _context.VertexShader.SetConstantBuffer(0, _objectConstantBuffer.Buffer);
-            _context.VertexShader.SetConstantBuffer(1, _frameConstantBuffer.Buffer);
+            _immediateContext.VertexShader.SetConstantBuffer(0, _objectConstantBuffer.Buffer);
+            _immediateContext.VertexShader.SetConstantBuffer(1, _frameConstantBuffer.Buffer);
 
-            _context.PixelShader.SetConstantBuffer(0, _objectConstantBuffer.Buffer);
-            _context.PixelShader.SetConstantBuffer(1, _frameConstantBuffer.Buffer);
-            _context.PixelShader.SetSampler(0, _samplerState);
-            _context.PixelShader.SetSampler(1, _normalMapSamplerState);
+            _immediateContext.PixelShader.SetConstantBuffer(0, _objectConstantBuffer.Buffer);
+            _immediateContext.PixelShader.SetConstantBuffer(1, _frameConstantBuffer.Buffer);
+            _immediateContext.PixelShader.SetSampler(0, _samplerState);
+            _immediateContext.PixelShader.SetSampler(1, _normalMapSamplerState);
 
-            _context.DomainShader.SetConstantBuffer(0, _objectConstantBuffer.Buffer);
-            _context.DomainShader.SetConstantBuffer(1, _frameConstantBuffer.Buffer);
-            _context.DomainShader.SetSampler(0, _displacementSamplerState);
+            _immediateContext.DomainShader.SetConstantBuffer(0, _objectConstantBuffer.Buffer);
+            _immediateContext.DomainShader.SetConstantBuffer(1, _frameConstantBuffer.Buffer);
+            _immediateContext.DomainShader.SetSampler(0, _displacementSamplerState);
 
-            _context.HullShader.SetConstantBuffer(0, _objectConstantBuffer.Buffer);
-            _context.HullShader.SetConstantBuffer(1, _frameConstantBuffer.Buffer);
+            _immediateContext.HullShader.SetConstantBuffer(0, _objectConstantBuffer.Buffer);
+            _immediateContext.HullShader.SetConstantBuffer(1, _frameConstantBuffer.Buffer);
 
-            _context.VertexShader.Set(vertexShader);
-            _context.PixelShader.Set(pixelShader);
-            _context.HullShader.Set(hullShader);
-            _context.DomainShader.Set(domainShader);
+            _immediateContext.VertexShader.Set(vertexShader);
+            _immediateContext.PixelShader.Set(pixelShader);
+            _immediateContext.HullShader.Set(hullShader);
+            _immediateContext.DomainShader.Set(domainShader);
 
             _constantBufferPerFrame.gMaxTessDistance = 100;
             _constantBufferPerFrame.gMinTessDistance = 250;
             _constantBufferPerFrame.gMinTessFactor = 3;
             _constantBufferPerFrame.gMaxTessFactor = 27;
+
+            for (int i=0; i<_deferredContexts.Length; i++)
+            {
+                _deferredContexts[i].InputAssembler.InputLayout = _layout;
+                _deferredContexts[i].InputAssembler.PrimitiveTopology = SharpDX.Direct3D.PrimitiveTopology.PatchListWith3ControlPoints;
+                _deferredContexts[i].VertexShader.SetConstantBuffer(0, _objectConstantBuffer.Buffer);
+                _deferredContexts[i].VertexShader.SetConstantBuffer(1, _frameConstantBuffer.Buffer);
+                _deferredContexts[i].PixelShader.SetConstantBuffer(0, _objectConstantBuffer.Buffer);
+                _deferredContexts[i].PixelShader.SetConstantBuffer(1, _frameConstantBuffer.Buffer);
+                _deferredContexts[i].PixelShader.SetSampler(0, _samplerState);
+                _deferredContexts[i].PixelShader.SetSampler(1, _normalMapSamplerState);
+                _deferredContexts[i].DomainShader.SetConstantBuffer(0, _objectConstantBuffer.Buffer);
+                _deferredContexts[i].DomainShader.SetConstantBuffer(1, _frameConstantBuffer.Buffer);
+                _deferredContexts[i].DomainShader.SetSampler(0, _displacementSamplerState);
+                _deferredContexts[i].HullShader.SetConstantBuffer(0, _objectConstantBuffer.Buffer);
+                _deferredContexts[i].HullShader.SetConstantBuffer(1, _frameConstantBuffer.Buffer);
+                _deferredContexts[i].VertexShader.Set(vertexShader);
+                _deferredContexts[i].PixelShader.Set(pixelShader);
+                _deferredContexts[i].HullShader.Set(hullShader);
+                _deferredContexts[i].DomainShader.Set(domainShader);
+            }
         }
                 
-        public void Render(DeviceContext context, 
+        public void Render(int threadNumber, 
                             int indexCount, 
                             Matrix worldMatrix, 
                             Matrix viewMatrix, 
@@ -161,23 +185,23 @@ namespace DungeonHack.DirectX
             _constantBufferPerObject.ViewProjectionMatrix.Transpose();
             _constantBufferPerObject.Material = material;
 
-            _objectConstantBuffer.UpdateValue(_constantBufferPerObject);
+            _objectConstantBuffer.UpdateValue(_deferredContexts[threadNumber], _constantBufferPerObject);
 
-            context.PixelShader.SetShaderResource(0, texture.TextureData);
+            _deferredContexts[threadNumber].PixelShader.SetShaderResource(0, texture.TextureData);
 
             if (texture.NormalMapData != null)
-                context.PixelShader.SetShaderResource(1, texture.NormalMapData);
+                _deferredContexts[threadNumber].PixelShader.SetShaderResource(1, texture.NormalMapData);
 
             if (texture.DisplacementMapData != null)
-                context.DomainShader.SetShaderResource(0, texture.DisplacementMapData);
+                _deferredContexts[threadNumber].DomainShader.SetShaderResource(0, texture.DisplacementMapData);
 
-            context.DrawIndexed(indexCount, 0, 0);
+            _deferredContexts[threadNumber].DrawIndexed(indexCount, 0, 0);
         }
 
-        public void RenderFrame(Camera camera)
+        public void RenderFrame(int threadNumber, Camera camera)
         {
             _constantBufferPerFrame.CameraPosition = camera.EyeAt;
-            _frameConstantBuffer.UpdateValue(_constantBufferPerFrame);
+            _frameConstantBuffer.UpdateValue(_deferredContexts[threadNumber], _constantBufferPerFrame);
         }
 
         public void RenderLights(DirectionalLight[] directionalLight, PointLight[] pointLight, Spotlight[] spotLight)
