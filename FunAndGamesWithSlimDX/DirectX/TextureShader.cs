@@ -104,7 +104,7 @@ namespace FunAndGamesWithSharpDX.DirectX
             
         }
 
-        public void RenderFrame(int threadNumber, Camera camera)
+        public void RenderFrame(Camera camera)
         {
 
         }

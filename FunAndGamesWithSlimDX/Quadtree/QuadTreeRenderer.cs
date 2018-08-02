@@ -44,7 +44,7 @@ namespace DungeonHack.QuadTree
 
         public void DrawQuadTree(QuadTreeNode node, Frustrum frustrum, Camera camera, ref int meshRenderedCount)
         {
-            //_renderer.RenderFrame(camera);
+            _renderer.RenderFrame(camera);
 
             DrawQuadMultiThread(0, node, frustrum, camera);
 
@@ -123,7 +123,6 @@ namespace DungeonHack.QuadTree
             QuadTreeNode node;
             _nodeStack[threadCount].Push(root);
             int depth = 1;
-            _renderer.RenderFrame(threadCount, camera);
 
             while (_nodeStack[threadCount].Count > 0)
             {

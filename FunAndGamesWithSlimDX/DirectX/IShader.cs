@@ -13,6 +13,6 @@ namespace DungeonHack.DirectX
         void Initialize(Device device, DeviceContext immediateContext, DeviceContext[] deferredContexts);
         void Render(int threadNumber, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix viewProjectionMatrix, Texture texture, Vector3 cameraPosition, Material material);
         void RenderLights(DirectionalLight[] directionalLight, PointLight[] pointLight, Spotlight[] spotLight);
-        void RenderFrame(int threadNumber, Camera camera);
+        void RenderFrame(Camera camera);
     }
 }

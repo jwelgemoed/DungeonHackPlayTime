@@ -50,9 +50,9 @@ namespace DungeonHack.DirectX
             SetShader(ShaderTechnique.LightShader);
         }
 
-        public void RenderFrame(int threadNumber, Camera camera)
+        public void RenderFrame(Camera camera)
         {
-            _currentShader.RenderFrame(threadNumber, camera);
+            _currentShader.RenderFrame(camera);
         }
 
         public void Render(int threadNumber, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix viewProjMatrix, Texture texture, Vector3 cameraPosition, Material material)
