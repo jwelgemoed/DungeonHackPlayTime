@@ -1,22 +1,21 @@
-﻿using DungeonHack.DirectX.ConstantBuffer;
+﻿using DungeonHack.DirectX;
+using DungeonHack.DirectX.ConstantBuffer;
+using DungeonHack.Engine;
+using DungeonHack.Lights;
 using FunAndGamesWithSharpDX.Engine;
 using FunAndGamesWithSharpDX.Entities;
 using SharpDX;
 using SharpDX.D3DCompiler;
 using SharpDX.Direct3D11;
-using System;
-using DungeonHack.DirectX;
-using DungeonHack.Engine;
-using DungeonHack.Lights;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace FunAndGamesWithSharpDX.DirectX
 {
     public class TextureShader : IShader
     {
-        private Device _device;
-        private DeviceContext _immediateContext;
-        private DeviceContext[] _deferredContexts;
+        private readonly Device _device;
+        private readonly DeviceContext _immediateContext;
+        private readonly DeviceContext[] _deferredContexts;
         private InputLayout _layout;
 
         private SamplerState _samplerState;
@@ -26,21 +25,16 @@ namespace FunAndGamesWithSharpDX.DirectX
         private ShaderResourceView _currentTexture;
 
         private SharpDX.Direct3D11.Buffer _staticContantBuffer;
-
         
-        public TextureShader(Device device, DeviceContext immediateContext, DeviceContext[] deferredContexts)
+        public TextureShader(Renderer renderer)
         {
-            _device = device;
-            _immediateContext = immediateContext;
-            _deferredContexts = deferredContexts;
+            _device = renderer.Device;
+            _immediateContext = renderer.ImmediateContext;
+            _deferredContexts = renderer.DeferredContexts;
         }
 
-        public void Initialize(Device device, DeviceContext immediateContext, DeviceContext[] deferredContexts)
+        public void Initialize()
         {
-            _device = device;
-            _immediateContext = immediateContext;
-            _deferredContexts = deferredContexts;
-
             _elements = Vertex.GetInputElements();
 
             var basePath = ConfigManager.ResourcePath;
@@ -48,16 +42,16 @@ namespace FunAndGamesWithSharpDX.DirectX
             var fileName = basePath + @"\Shaders\Texture.hlsl";
 
             var bytecode = ShaderBytecode.CompileFromFile(fileName, "TextureVertexShader", "vs_4_0");
-            var vertexShader = new VertexShader(device, bytecode);
+            var vertexShader = new VertexShader(_device, bytecode);
 
-            _layout = new InputLayout(device, bytecode, _elements);
+            _layout = new InputLayout(_device, bytecode, _elements);
             bytecode.Dispose();
 
             bytecode = ShaderBytecode.CompileFromFile(fileName, "TexturePixelShader", "ps_4_0");
-            var pixelShader = new PixelShader(device, bytecode);
+            var pixelShader = new PixelShader(_device, bytecode);
             bytecode.Dispose();
 
-            _staticContantBuffer = new SharpDX.Direct3D11.Buffer(device, Utilities.SizeOf<ConstantBufferPerObject>(), 
+            _staticContantBuffer = new SharpDX.Direct3D11.Buffer(_device, Utilities.SizeOf<ConstantBufferPerObject>(), 
                 ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, ConstantBufferPerObject.Stride);
 
             var samplerDesc = new SamplerStateDescription
@@ -74,7 +68,7 @@ namespace FunAndGamesWithSharpDX.DirectX
                 MaximumLod = 0
             };
 
-            _samplerState = new SamplerState(device, samplerDesc);
+            _samplerState = new SamplerState(_device, samplerDesc);
 
             _immediateContext.InputAssembler.InputLayout = _layout;
             _immediateContext.InputAssembler.PrimitiveTopology = SharpDX.Direct3D.PrimitiveTopology.TriangleList;

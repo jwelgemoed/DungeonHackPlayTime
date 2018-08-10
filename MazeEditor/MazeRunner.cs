@@ -91,7 +91,9 @@ namespace MazeEditor
             _meshRenderedCount = 0;
             base._stopwatch.Restart();
 
-            _quadTreeRenderer.DrawQuadTree(QuadTreeNode, _frustrum, Camera, ref _meshRenderedCount);
+            _quadTreeRenderer.DrawQuadTree(QuadTreeNode, _frustrum, Camera);
+
+            _meshRenderedCount = _quadTreeRenderer.MeshesRendered;
 
             //Draw items in world;
             foreach (var item in _itemRegistry.GetItems())
@@ -200,6 +202,7 @@ namespace MazeEditor
             int _threadCount = 4;
             int _threadCountPerThread = 4;
             DepthBuffer depthBuffer = new DepthBuffer(Camera, _threadCount * _threadCountPerThread);
+            DepthBufferRenderer.DepthBuffer = depthBuffer;
             _quadTreeRenderer = new QuadTreeRenderer(_polygonRenderer, _boundingBoxRenderer, Camera, depthBuffer);
             _quadTreeDepthRenderer = new QuadTreeDepthRenderer(Camera, depthBuffer);
 
@@ -208,7 +211,7 @@ namespace MazeEditor
             Camera.CollisionDetector = _quadTreeCollisionDetector;
             _quadTreeCollisionDetector.Camera = Camera;
 
-            base.Shader.Initialize(Renderer.Device, Renderer.ImmediateContext, Renderer.DeferredContexts);
+            Shader.Initialize();
 
             ConfigManager.SpotLightAttentuationA = 1.0f;
             ConfigManager.SpotLightAttentuationB = 1.0f;//1.0f;

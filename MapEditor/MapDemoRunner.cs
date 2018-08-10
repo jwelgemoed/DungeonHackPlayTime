@@ -56,7 +56,7 @@ namespace MapEditor
         {
             //Construct the frustrum
             if (ConfigManager.FrustrumCullingEnabled)
-                _frustrum.ConstructFrustrum(Camera.FirstPersonViewMatrix * Renderer.ProjectionMatrix);
+                _frustrum.ConstructFrustrum(Camera.FirstPersonViewMatrix * Camera.ProjectionMatrix);
 
             //Do the light rendering
             LightEngine.RenderLights(Shader);
@@ -115,7 +115,7 @@ namespace MapEditor
             if (_startingPosition == null)
                 Camera.SetPosition(0, 0, 0);
 
-            Shader.Initialize(Renderer.Device, Renderer.ImmediateContext, Renderer.DeferredContexts);
+            Shader.Initialize();
 
             _directionalLight = new DirectionalLight()
             {

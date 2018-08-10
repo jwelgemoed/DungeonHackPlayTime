@@ -3,15 +3,11 @@ using FunAndGamesWithSharpDX.DirectX;
 using FunAndGamesWithSharpDX.Engine;
 using FunAndGamesWithSharpDX.Entities;
 using SharpDX;
-using SharpDX.Direct3D11;
 
 namespace DungeonHack.DirectX
 {
     public class Shader : IShader
     {
-        private Device _device;
-        private DeviceContext _immediateContext;
-        private DeviceContext[] _deferredContexts;
         private LightShader _lightShader;
         private TextureShader _textureShader;
         private IShader _currentShader;
@@ -23,30 +19,31 @@ namespace DungeonHack.DirectX
             _textureShader?.Dispose();
         }
 
+        public Shader(Renderer renderer)
+        {
+            _textureShader = new TextureShader(renderer);
+            _lightShader = new LightShader(renderer);
+
+            SetShader(ShaderTechnique.LightShader);
+        }
+
         public void SetShader(ShaderTechnique shaderTechnique)
         {
             switch (shaderTechnique)
             {
                 case ShaderTechnique.LightShader:
-                    _lightShader.Initialize(_device, _immediateContext, _deferredContexts);
+                    _lightShader.Initialize();
                     _currentShader = _lightShader;
                     break;
                 case ShaderTechnique.TextureShader:
-                    _textureShader.Initialize(_device, _immediateContext, _deferredContexts);
+                    _textureShader.Initialize();
                     _currentShader = _textureShader;
                     break;
             }
         }
 
-        public void Initialize(Device device, DeviceContext immediateContext, DeviceContext[] deferredContexts)
+        public void Initialize()
         {
-            _device = device;
-            _immediateContext = immediateContext;
-            _deferredContexts = deferredContexts;
-
-            _textureShader = new TextureShader(device, immediateContext, deferredContexts);
-            _lightShader = new LightShader(device, immediateContext, deferredContexts);
-
             SetShader(ShaderTechnique.LightShader);
         }
 

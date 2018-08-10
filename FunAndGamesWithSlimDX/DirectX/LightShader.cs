@@ -13,6 +13,7 @@ namespace DungeonHack.DirectX
 {
     public class LightShader : IShader
     {
+        private Device _device;
         private DeviceContext _immediateContext;
         private DeviceContext[] _deferredContexts;
         private InputLayout _layout;
@@ -28,17 +29,15 @@ namespace DungeonHack.DirectX
         private ConstantBufferPerFrame _constantBufferPerFrame;
         private ConstantBufferPerObject _constantBufferPerObject;
 
-        public LightShader(Device device, DeviceContext immediateContext, DeviceContext[] deferredContexts)
+        public LightShader(Renderer renderer)
         {
-            _immediateContext = immediateContext;
-            _deferredContexts = deferredContexts;
+            _device = renderer.Device;
+            _immediateContext = renderer.ImmediateContext;
+            _deferredContexts = renderer.DeferredContexts;
         }
 
-        public void Initialize(Device device, DeviceContext immediateContext, DeviceContext[] deviceContexts)
+        public void Initialize()
         {
-            _immediateContext = immediateContext;
-            _deferredContexts = deviceContexts;
-
             _elements = Vertex.GetInputElements();
 
             var basePath = ConfigManager.ResourcePath;
@@ -46,31 +45,55 @@ namespace DungeonHack.DirectX
             var fileName = basePath + @"\Shaders\LightTexture.hlsl";
 
             var bytecode = ShaderBytecode.CompileFromFile(fileName, "LightVertexShader", "vs_5_0", ShaderFlags.Debug | ShaderFlags.SkipOptimization);
-            var vertexShader = new VertexShader(device, bytecode);
+            var vertexShader = new VertexShader(_device, bytecode);
 
-            _layout = new InputLayout(device, bytecode, _elements);
+            _layout = new InputLayout(_device, bytecode, _elements);
             bytecode.Dispose();
 
             bytecode = ShaderBytecode.CompileFromFile(fileName, "LightPixelShader", "ps_5_0", ShaderFlags.Debug | ShaderFlags.SkipOptimization);
-            var pixelShader = new PixelShader(device, bytecode);
+            var pixelShader = new PixelShader(_device, bytecode);
             bytecode.Dispose();
 
             bytecode = ShaderBytecode.CompileFromFile(fileName, "HS", "hs_5_0", ShaderFlags.Debug | ShaderFlags.SkipOptimization);
-            var hullShader = new HullShader(device, bytecode);
+            var hullShader = new HullShader(_device, bytecode);
             bytecode.Dispose();
 
             bytecode = ShaderBytecode.CompileFromFile(fileName, "DS", "ds_5_0", ShaderFlags.Debug | ShaderFlags.SkipOptimization);
-            var domainShader = new DomainShader(device, bytecode);
+            var domainShader = new DomainShader(_device, bytecode);
             bytecode.Dispose();
 
-            _objectConstantBuffer = new ConstantBuffer<ConstantBufferPerObject>(device);
+            _objectConstantBuffer = new ConstantBuffer<ConstantBufferPerObject>(_device);
 
-            _frameConstantBuffer = new ConstantBuffer<ConstantBufferPerFrame>(device);
+            _frameConstantBuffer = new ConstantBuffer<ConstantBufferPerFrame>(_device);
 
             _constantBufferPerFrame = new ConstantBufferPerFrame();
             _constantBufferPerObject = new ConstantBufferPerObject();
 
-            var samplerDesc = new SamplerStateDescription
+            SamplerStateDescription samplerDesc = CreateSamplerStateDescription();
+
+            _samplerState = new SamplerState(_device, samplerDesc);
+
+            var normalMapSamplerDesc = CreateSamplerStateDescription();
+
+            _normalMapSamplerState = new SamplerState(_device, normalMapSamplerDesc);
+
+            var displacementMapSamplerDesc = CreateSamplerStateDescription();
+
+            _displacementSamplerState = new SamplerState(_device, displacementMapSamplerDesc);
+
+            BindImmediateContext(vertexShader, pixelShader, hullShader, domainShader);
+
+            _constantBufferPerFrame.gMaxTessDistance = 100;
+            _constantBufferPerFrame.gMinTessDistance = 250;
+            _constantBufferPerFrame.gMinTessFactor = 3;
+            _constantBufferPerFrame.gMaxTessFactor = 27;
+
+            BindDeferredContexts(vertexShader, pixelShader, hullShader, domainShader);
+        }
+
+        private static SamplerStateDescription CreateSamplerStateDescription()
+        {
+            return new SamplerStateDescription
             {
                 Filter = Filter.MinMagLinearMipPoint,
                 AddressU = TextureAddressMode.Wrap,
@@ -83,41 +106,10 @@ namespace DungeonHack.DirectX
                 MinimumLod = 0,
                 MaximumLod = 0
             };
+        }
 
-            _samplerState = new SamplerState(device, samplerDesc);
-
-            var normalMapSamplerDesc = new SamplerStateDescription
-            {
-                Filter = Filter.MinMagLinearMipPoint,
-                AddressU = TextureAddressMode.Wrap,
-                AddressV = TextureAddressMode.Wrap,
-                AddressW = TextureAddressMode.Wrap,
-                MipLodBias = 0.0f,
-                MaximumAnisotropy = 1,
-                ComparisonFunction = Comparison.Always,
-                BorderColor = Colors.Black,
-                MinimumLod = 0,
-                MaximumLod = 0
-            };
-
-            _normalMapSamplerState = new SamplerState(device, normalMapSamplerDesc);
-
-            var displacementMapSamplerDesc = new SamplerStateDescription
-            {
-                Filter = Filter.MinMagLinearMipPoint,
-                AddressU = TextureAddressMode.Border,
-                AddressV = TextureAddressMode.Border,
-                AddressW = TextureAddressMode.Wrap,
-                MipLodBias = 0.0f,
-                MaximumAnisotropy = 1,
-                ComparisonFunction = Comparison.Always,
-                BorderColor = Colors.Black,
-                MinimumLod = 0,
-                MaximumLod = 0
-            };
-
-            _displacementSamplerState = new SamplerState(device, displacementMapSamplerDesc);
-
+        private void BindImmediateContext(VertexShader vertexShader, PixelShader pixelShader, HullShader hullShader, DomainShader domainShader)
+        {
             _immediateContext.InputAssembler.InputLayout = _layout;
             _immediateContext.InputAssembler.PrimitiveTopology = SharpDX.Direct3D.PrimitiveTopology.PatchListWith3ControlPoints;
 
@@ -140,13 +132,11 @@ namespace DungeonHack.DirectX
             _immediateContext.PixelShader.Set(pixelShader);
             _immediateContext.HullShader.Set(hullShader);
             _immediateContext.DomainShader.Set(domainShader);
+        }
 
-            _constantBufferPerFrame.gMaxTessDistance = 100;
-            _constantBufferPerFrame.gMinTessDistance = 250;
-            _constantBufferPerFrame.gMinTessFactor = 3;
-            _constantBufferPerFrame.gMaxTessFactor = 27;
-
-            for (int i=0; i<_deferredContexts.Length; i++)
+        private void BindDeferredContexts(VertexShader vertexShader, PixelShader pixelShader, HullShader hullShader, DomainShader domainShader)
+        {
+            for (int i = 0; i < _deferredContexts.Length; i++)
             {
                 _deferredContexts[i].InputAssembler.InputLayout = _layout;
                 _deferredContexts[i].InputAssembler.PrimitiveTopology = SharpDX.Direct3D.PrimitiveTopology.PatchListWith3ControlPoints;
@@ -167,7 +157,7 @@ namespace DungeonHack.DirectX
                 _deferredContexts[i].DomainShader.Set(domainShader);
             }
         }
-                
+
         public void Render(int threadNumber, 
                             int indexCount, 
                             Matrix worldMatrix, 

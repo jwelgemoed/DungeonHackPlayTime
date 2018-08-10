@@ -26,7 +26,7 @@ namespace FunAndGamesWithSharpDX.Engine
 
         public static void FinalizeDraw()
         {
-          //  _spriteRenderer.Flush();
+           // _spriteRenderer.Flush();
         }
     }
 }

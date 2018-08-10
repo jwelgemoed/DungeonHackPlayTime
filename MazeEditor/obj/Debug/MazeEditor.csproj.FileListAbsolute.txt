@@ -1,19 +1,10 @@
-C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\FX\LightHelper.fx
+C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\Zuccaralo.txt
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\MWALL4_2.PNG
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Shaders\LightTexture.hlsl
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Shaders\Texture.hlsl
-C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\FX\Shaders\Texture.fx
-C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\FX\colorShader.fx
-C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\FX\color.fx
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\cat2.obj-model.txt
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\crate2_diffuse.png
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\GridColour.bmp
-C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\FX\Light.fx
-C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\FX\ShaderEffects.fx
-C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\FX\texture.fx
-C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\FX\triangle.fx
-C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\FX\Shaders\Texture.vs
-C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\FX\Shaders\Texture.ps
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\terrain.dds
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\VMaskCol.jpg
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\vmask.obj-model.txt
@@ -29,7 +20,6 @@ C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\F-35_Lightning_II_P01.
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\cat.obj-model.txt
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\cat_diff.tga
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\cat_diff.dds
-C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\Zuccaralo.txt
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\Cube-Maya.txt
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\Cube.txt
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\terrain2.dds
@@ -77,3 +67,5 @@ C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor.csproj.CoreCompileInp
 C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor.csproj.CopyComplete
 C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor.exe
 C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor.pdb
+C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\sharpdx_direct3d11_effects_x64.dll
+C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\sharpdx_direct3d11_1_effects_x64.dll

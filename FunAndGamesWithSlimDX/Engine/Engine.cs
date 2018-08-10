@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using DungeonHack.DirectX;
 using DungeonHack.Entities;
+using DungeonHack.OcclusionCulling;
 using FunAndGamesWithSharpDX.DirectX;
 using FunAndGamesWithSharpDX.Engine;
 using FunAndGamesWithSharpDX.Entities;
@@ -23,6 +24,7 @@ namespace DungeonHack.Engine
     {
         protected RenderForm Form = new RenderForm();
         protected Renderer Renderer = new Renderer();
+        protected Renderer2D Renderer2D = new Renderer2D();
         protected Shader Shader;
         protected readonly GameTimer Timer = new GameTimer();
         protected Camera Camera;
@@ -50,6 +52,8 @@ namespace DungeonHack.Engine
         public event MouseEventHandler OnMouseMove;
 
         public event KeyEventHandler OnKeyDown;
+
+        private Sprite sprite;
 
         public struct FrameRateStats
         {
@@ -95,20 +99,25 @@ namespace DungeonHack.Engine
             Renderer.Height = ConfigManager.ScreenHeight;
             Renderer.Use4XMSAA = ConfigManager.Use4XMSAA;
             Renderer.FullScreen = ConfigManager.FullScreen;
-            Renderer.Initialize(Form.Handle);
+            Renderer.Initialize(Form.Handle, 4);
+
+            Renderer2D.Initialize(Renderer);
 
             _frustrum = new Frustrum();
 
-            Shader = new Shader();
-            Shader.Initialize(Renderer.Device, Renderer.ImmediateContext, Renderer.DeferredContexts);
+            Shader = new Shader(Renderer);
+            Shader.Initialize();
 
             SpriteRenderer.Initialize(Renderer.Device);
             FontRenderer.Initialize(Renderer.Device, "Arial", FontWeight.Normal, FontStyle.Normal, FontStretch.Normal, 12);
 
-            _console = new Console(null, new Vector2(Form.Width - 500, -250), new Vector2(400, 400), 100, Colors.White);
+            _console = new Console(null, new Vector2(Form.Width - 300, -250),
+                new Vector2(400, 400), 100, Colors.White, Renderer2D);
 
             ApplicationStateEngine.CurrentState = ApplicationStateEnum.Normal;
             _hasInitialized = true;
+
+            sprite = new Sprite(Renderer.Device, "crate2_diffuse.bmp", 0, 0, 100, 100);
         }
 
         public virtual void Run()
@@ -117,6 +126,8 @@ namespace DungeonHack.Engine
                 Initialize();
 
             InitializeScene();
+
+            DepthBufferRenderer.Setup(Renderer);
 
             Timer.Start();
 
@@ -168,6 +179,7 @@ namespace DungeonHack.Engine
                 {
                     case ApplicationStateEnum.Normal:
                         UpdateScene();
+                        DepthBufferRenderer.RenderToScreen(Renderer);
                         break;
                     default:
                         break;
@@ -209,7 +221,9 @@ namespace DungeonHack.Engine
                     _stopwatch.Stop();
                     DisplayConsoleInformation();
                     //FontRenderer.FinalizeDraw();
-                    //SpriteRenderer.FinalizeDraw();
+                  //  DepthBufferRenderer.RenderToScreen(Renderer);
+                 //   sprite.Draw();
+                  //  SpriteRenderer.FinalizeDraw();
                     Renderer.SwapChain.Present(ConfigManager.VSync, PresentFlags.None);
                     _updateTime = _stopwatch.ElapsedMilliseconds;
                     break;
@@ -282,8 +296,8 @@ namespace DungeonHack.Engine
                 _timeElapsedForDisplay += 1.00f; //0.25 quarter of a second, 1.0 = second
 
                 Form.Text = $"FPS : {_frameRateStats.FramesPerSecond} Game Time : {(int)Timer.TotalTime()}";
-                //_console.WriteLine(Form.Text);
-                //_console.WriteLine("Mesh rendered : " + _meshRenderedCount + " from " + GetSceneMeshes().Count);
+                _console.WriteLine(Form.Text);
+                _console.WriteLine("Mesh rendered : " + _meshRenderedCount + " from " + GetSceneMeshes().Count);
 
                 //var cameraPosition = Camera.GetPosition();
                 //_console.WriteLine($"Camera Position: X: {cameraPosition.X}, Y: {cameraPosition.Y}, Z: {cameraPosition.Z}");
@@ -297,7 +311,7 @@ namespace DungeonHack.Engine
                 //_console.WriteLine($"Update time in ticks: {_updateTime}");
                 //_console.WriteLine($"Draw time in ticks: {_drawTime}");
             }
-            //_console.Draw();
+            _console.Draw();
         }
 
         private void ShowOptionsMenu()

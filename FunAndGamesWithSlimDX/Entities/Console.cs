@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using DungeonHack.DirectX;
 
 namespace FunAndGamesWithSharpDX.Entities
 {
@@ -23,8 +24,10 @@ namespace FunAndGamesWithSharpDX.Entities
         private int _currentLine = 0;
         private int _windowSize = 10;
         private Color4 _consoleColor;
+        private Renderer2D _renderer;
 
-        public Console(ShaderResourceView backgroundTexture, Vector2 position, Vector2 size, int bufferSize, Color4 consoleColor)
+        public Console(ShaderResourceView backgroundTexture, Vector2 position, Vector2 size, int bufferSize, Color4 consoleColor,
+            Renderer2D renderer)
         {
             _size = size;
             _backgroundTexture = backgroundTexture;
@@ -34,6 +37,7 @@ namespace FunAndGamesWithSharpDX.Entities
             _bottomRight = new Vector2(position.X + size.X, position.Y + size.Y);
             _buffer = new List<string>(bufferSize);
             _consoleColor = consoleColor;
+            _renderer = renderer;
         }
 
         public void WriteLine(string message)
@@ -64,6 +68,8 @@ namespace FunAndGamesWithSharpDX.Entities
             if (endLine >= _buffer.Count)
                 endLine = _buffer.Count;
 
+            _renderer.BeginDraw();
+
             for (int i=endLine-1; i >= startLine; i--)
             {
                 counter++;
@@ -72,8 +78,10 @@ namespace FunAndGamesWithSharpDX.Entities
                 int index = i - 1;
 
                 if (index >= 0)
-                    FontRenderer.DrawText(_buffer[index], position, _consoleColor);
+                    _renderer.RenderText(_buffer[index], position.X, position.Y);
             }
+
+            _renderer.EndDraw();
         }
 
         public void Dispose()

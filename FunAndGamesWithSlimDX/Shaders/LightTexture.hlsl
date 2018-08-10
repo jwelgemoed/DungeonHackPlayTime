@@ -409,7 +409,7 @@ DomainOut DS(PatchTess patchTess,
 	float h = displacementMap.SampleLevel(samLinear, dout.tex, mipLevel).r; 
 	
 	// Offset vertex along normal. 
-	float heightScale = 2.0;
+	float heightScale = 1.5;
 
 	dout.worldPosition += float4((heightScale*(h-1))*dout.normal, 1.0f); 
 	dout.worldPosition.w = 1.0f;

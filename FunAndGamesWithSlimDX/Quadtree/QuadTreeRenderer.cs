@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using DungeonHack.Entities;
 using DungeonHack.Renderers;
+using System.Threading;
 
 namespace DungeonHack.QuadTree
 {
@@ -21,6 +22,8 @@ namespace DungeonHack.QuadTree
         private Task[] _tasks;
         private Stopwatch _stopwatch;
         private DepthBuffer _depthBuffer;
+
+        public int MeshesRendered;
 
         public QuadTreeRenderer(PolygonRenderer renderer, BoundingBoxRenderer boundingBoxRenderer, Camera camera, DepthBuffer depthBuffer)
         {
@@ -42,8 +45,10 @@ namespace DungeonHack.QuadTree
             }
         }
 
-        public void DrawQuadTree(QuadTreeNode node, Frustrum frustrum, Camera camera, ref int meshRenderedCount)
+        public void DrawQuadTree(QuadTreeNode node, Frustrum frustrum, Camera camera)
         {
+            MeshesRendered = 0;
+
             _renderer.RenderFrame(camera);
 
             DrawQuadMultiThread(0, node, frustrum, camera);
@@ -114,8 +119,9 @@ namespace DungeonHack.QuadTree
 
                 tasks[i].Start();
             }
-
             Task.WaitAll(tasks);
+
+           
         }
 
         private void DrawQuadTreeIterative(int threadCount, QuadTreeNode root, Camera camera, Frustrum frustrum)
@@ -149,6 +155,8 @@ namespace DungeonHack.QuadTree
                         }
 
                         _renderer.Render(threadCount, polygon, ref polygonsdrawn);
+
+                        Interlocked.Increment(ref MeshesRendered);
                     }
                 }
                 else

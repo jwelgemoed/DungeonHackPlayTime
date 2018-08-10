@@ -1,10 +1,9 @@
-﻿using DungeonHack.Entities;
-using FunAndGamesWithSharpDX.Entities;
+﻿using DungeonHack.DirectX;
+using DungeonHack.Entities;
 using SharpDX;
+using SharpDX.Direct3D11;
 using System.Collections.Generic;
 using System.Linq;
-using DungeonHack.DirectX;
-using SharpDX.Direct3D11;
 
 namespace DungeonHack.QuadTree
 {
