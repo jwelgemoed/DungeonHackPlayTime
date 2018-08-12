@@ -140,6 +140,8 @@ C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\Shaders\Texture.hlsl
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\Resources\cat2.obj-model.txt
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\Resources\crate2_diffuse.png
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\Resources\GridColour.bmp
+C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\sharpdx_direct3d11_1_effects_x64.dll
+C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\sharpdx_direct3d11_effects_x64.dll
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\Resources\terrain.dds
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\Resources\VMaskCol.jpg
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\Resources\vmask.obj-model.txt
@@ -222,5 +224,3 @@ C:\git\DungeonHackPlayTime\MapEditor\obj\Debug\MapEditor.application
 C:\git\DungeonHackPlayTime\MapEditor\obj\Debug\MapEditor.csproj.CopyComplete
 C:\git\DungeonHackPlayTime\MapEditor\obj\Debug\MapEditor.exe
 C:\git\DungeonHackPlayTime\MapEditor\obj\Debug\MapEditor.pdb
-C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\sharpdx_direct3d11_effects_x64.dll
-C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\sharpdx_direct3d11_1_effects_x64.dll

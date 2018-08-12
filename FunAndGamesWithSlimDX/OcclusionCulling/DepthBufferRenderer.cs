@@ -6,6 +6,7 @@ using SharpDX.Direct2D1;
 using System;
 using SharpDX.DXGI;
 using SharpDX.DirectWrite;
+using DungeonHack.DirectX;
 
 namespace DungeonHack.OcclusionCulling
 {
@@ -26,33 +27,7 @@ namespace DungeonHack.OcclusionCulling
 
         private static BitmapProperties1 _bitmapProperties1;
 
-        public static void SaveToFile()
-        {
-            string outputFileName = "c:\\textures\\output.bmp";
-            // Create Drawing.Bitmap
-            var bitmap = new System.Drawing.Bitmap(DepthBuffer.Width, DepthBuffer.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            var boundsRect = new System.Drawing.Rectangle(0, 0, DepthBuffer.Width, DepthBuffer.Height);
-
-            // Copy pixels from screen capture Texture to GDI bitmap
-            for (int y = 0; y < DepthBuffer.Height; y++)
-                for (int x = 0; x < DepthBuffer.Width; x++)
-                {
-                    int depthBufferEntry = (y * DepthBuffer.Width) + x;
-                    byte value = (byte) ((255 - (Math.Abs(DepthBuffer.Buffer[depthBufferEntry]) / 10)));
-                    //value = (byte) (value / 3);
-
-                    var color = System.Drawing.Color.FromArgb(value, 0, 0);
-
-                    bitmap.SetPixel(x, y, color);
-                }
-
-            // Release source and dest locks
-
-            // Save the output
-            bitmap.Save(outputFileName);
-        }
-
-        public static void RenderToScreen(Renderer renderer)
+        public static void RenderToScreen(Renderer2D renderer)
         {
             var buffer = new byte[DepthBuffer.Width * DepthBuffer.Height * 4];
             var backBufferBmp = new Bitmap(_deviceContext, new SharpDX.Size2(DepthBuffer.Width, DepthBuffer.Height), 

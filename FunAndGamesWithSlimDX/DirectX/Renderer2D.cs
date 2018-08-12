@@ -20,6 +20,9 @@ namespace DungeonHack.DirectX
 
         private BitmapProperties1 _bitmapProperties1;
 
+        private bool _beginDrawCalled = false;
+        private bool _endDrawCalled = false;
+
         public void Initialize(Renderer renderer)
         {
             _device = new SharpDX.Direct2D1.Device(renderer.DXGIDevice);
@@ -47,11 +50,23 @@ namespace DungeonHack.DirectX
 
         public void BeginDraw()
         {
+            if (_beginDrawCalled)
+                return;
+
+            _beginDrawCalled = true;
+            _endDrawCalled = false;
+
             _deviceContext.BeginDraw();
         }
 
         public void EndDraw()
         {
+            if (_endDrawCalled)
+                return;
+
+            _endDrawCalled = true;
+            _beginDrawCalled = false;
+
             _deviceContext.EndDraw();
         }
 
@@ -64,6 +79,11 @@ namespace DungeonHack.DirectX
                 new SharpDX.Mathematics.Interop.RawVector2(posX, posY),
                 new TextLayout(_factoryDW, text,
                 new TextFormat(_factoryDW, fontFamily, fontSize), 1000, 500), _redBrush);
+        }
+
+        public void RenderBitmap(Bitmap bitmap)
+        {
+            _deviceContext.DrawBitmap(bitmap, 1.0f, BitmapInterpolationMode.Linear);
         }
     }
 }

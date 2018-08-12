@@ -133,24 +133,13 @@ namespace DungeonHack.Engine
 
             Task PreRenderTask = new Task(PreRenderLoop);
             Task UpdateSceneTask = new Task(UpdateSceneLoop);
-            Task CalcFrameStatsTask = new Task(FrameStatsLoop);
-
-            // Task RenderTask = new Task(() => RenderLoop.Run(Form, MainLoop));
 
             PreRenderTask.Start();
-            //UpdateSceneTask.Start();
-            CalcFrameStatsTask.Start();
 
             RenderLoop.Run(Form, MainLoop);
 
-            //RenderTask.Start();
+            Task.WaitAll(PreRenderTask); 
 
-            Task.WaitAll(PreRenderTask, CalcFrameStatsTask); //UpdateSceneTask, CalcFrameStatsTask);
-
-            //RenderLoop.Run(Form, MainLoop);
-            
-            //MessagePump.Run(Form, MainLoop);
-            
             Timer.Stop();
 
             Shutdown();
@@ -179,24 +168,11 @@ namespace DungeonHack.Engine
                 {
                     case ApplicationStateEnum.Normal:
                         UpdateScene();
-                        DepthBufferRenderer.RenderToScreen(Renderer);
+                        DepthBufferRenderer.RenderToScreen(Renderer2D);
                         break;
                     default:
                         break;
                 }
-            }
-        }
-
-        private void FrameStatsLoop()
-        {
-            switch (ApplicationStateEngine.CurrentState)
-            {
-                case ApplicationStateEnum.Normal:
-                    _frameRateStats = CalculateFrameRateStats();
-                    DisplayConsoleInformation();
-                    break;
-                default:
-                    break;
             }
         }
 
@@ -210,21 +186,39 @@ namespace DungeonHack.Engine
                     return;
 
                 case ApplicationStateEnum.Normal:
-                    Timer.Tick();
-                    _frameCount++;
-                    _frameRateStats = CalculateFrameRateStats();
-                    Renderer.ImmediateContext.ClearRenderTargetView(Renderer.RenderTarget, Colors.Black);
-                    Renderer.ImmediateContext.ClearDepthStencilView(Renderer.DepthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
-                    UpdateScene();
-                    _stopwatch.Restart();
-                    DrawScene();
-                    _stopwatch.Stop();
-                    DisplayConsoleInformation();
-                    //FontRenderer.FinalizeDraw();
-                  //  DepthBufferRenderer.RenderToScreen(Renderer);
-                 //   sprite.Draw();
-                  //  SpriteRenderer.FinalizeDraw();
-                    Renderer.SwapChain.Present(ConfigManager.VSync, PresentFlags.None);
+                    //Timer.Tick();
+                    //_frameCount++;
+                    //_frameRateStats = CalculateFrameRateStats();
+
+                    //Task updateTask = new Task(() => UpdateScene());
+
+                    Task drawSceneTask = new Task(() =>
+                    {
+                        Timer.Tick();
+                        _frameCount++;
+                        _frameRateStats = CalculateFrameRateStats();
+
+                        UpdateScene();
+
+                        Renderer.ImmediateContext.ClearRenderTargetView(Renderer.RenderTarget, Colors.Black);
+                        Renderer.ImmediateContext.ClearDepthStencilView(Renderer.DepthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
+
+                        _stopwatch.Restart();
+
+                        DrawScene();
+
+                        DisplayConsoleInformation();
+                        DepthBufferRenderer.RenderToScreen(Renderer2D);
+                        Renderer.SwapChain.Present(ConfigManager.VSync, PresentFlags.None);
+
+                        _stopwatch.Stop();
+                    });
+
+                    //updateTask.Start();
+                    drawSceneTask.Start();
+
+                    Task.WaitAll(drawSceneTask);//updateTask, drawSceneTask);
+
                     _updateTime = _stopwatch.ElapsedMilliseconds;
                     break;
 
@@ -295,7 +289,7 @@ namespace DungeonHack.Engine
             {
                 _timeElapsedForDisplay += 1.00f; //0.25 quarter of a second, 1.0 = second
 
-                Form.Text = $"FPS : {_frameRateStats.FramesPerSecond} Game Time : {(int)Timer.TotalTime()}";
+                //Form.Text = $"FPS : {_frameRateStats.FramesPerSecond} Game Time : {(int)Timer.TotalTime()}";
                 _console.WriteLine(Form.Text);
                 _console.WriteLine("Mesh rendered : " + _meshRenderedCount + " from " + GetSceneMeshes().Count);
 

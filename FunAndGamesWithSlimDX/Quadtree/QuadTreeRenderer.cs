@@ -137,8 +137,8 @@ namespace DungeonHack.QuadTree
 
                 if (!node.BoundingBox.ContainsOrIntersectsCamera(camera) &&
                     (frustrum.CheckBoundingBox(node.BoundingBox.BoundingBox) == 0
-                        || node.BoundingBox.DistanceToCamera(camera) >= 2500)
-                        || _depthBuffer.IsBoundingBoxOccluded(node.BoundingBox))
+                        || node.BoundingBox.DistanceToCamera(camera) >= 2500
+                        || _depthBuffer.IsBoundingBoxOccluded(node.BoundingBox)))
                 {
                     continue;
                 }

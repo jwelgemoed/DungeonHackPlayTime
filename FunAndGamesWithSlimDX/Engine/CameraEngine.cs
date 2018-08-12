@@ -229,10 +229,6 @@ namespace FunAndGamesWithSharpDX.Engine
             {
                 Camera.IncreaseTopdownviewHeight();
             }
-            else if (e.KeyCode == Keys.Enter)
-            {
-                DepthBufferRenderer.SaveToFile();
-            }
         }
 
         protected void MoveMouse(object sender, MouseInputEventArgs e)

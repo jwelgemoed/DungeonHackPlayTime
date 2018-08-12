@@ -99,6 +99,8 @@ C:\git\DungeonHackPlayTime\GameData\bin\Debug\Shaders\Texture.hlsl
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\Resources\cat2.obj-model.txt
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\Resources\crate2_diffuse.png
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\Resources\GridColour.bmp
+C:\git\DungeonHackPlayTime\GameData\bin\Debug\sharpdx_direct3d11_1_effects_x64.dll
+C:\git\DungeonHackPlayTime\GameData\bin\Debug\sharpdx_direct3d11_effects_x64.dll
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\Resources\terrain.dds
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\Resources\VMaskCol.jpg
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\Resources\vmask.obj-model.txt
@@ -153,5 +155,3 @@ C:\git\DungeonHackPlayTime\GameData\obj\Debug\GameData.csproj.CoreCompileInputs.
 C:\git\DungeonHackPlayTime\GameData\obj\Debug\GameData.csproj.CopyComplete
 C:\git\DungeonHackPlayTime\GameData\obj\Debug\GameData.dll
 C:\git\DungeonHackPlayTime\GameData\obj\Debug\GameData.pdb
-C:\git\DungeonHackPlayTime\GameData\bin\Debug\sharpdx_direct3d11_effects_x64.dll
-C:\git\DungeonHackPlayTime\GameData\bin\Debug\sharpdx_direct3d11_1_effects_x64.dll
