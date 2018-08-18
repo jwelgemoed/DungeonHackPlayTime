@@ -45,11 +45,8 @@ struct Material {
 // from a directional light.  We need to output the terms separately because
 // later we will modify the individual terms.
 //---------------------------------------------------------------------------------------
-void ComputeDirectionalLight(Material mat, DirectionalLight L,
-	float3 normal, float3 toEye,
-	out float4 ambient,
-	out float4 diffuse,
-	out float4 spec)
+void ComputeDirectionalLight(Material mat, DirectionalLight L, float3 normal, float3 toEye,
+	out float4 ambient, out float4 diffuse, out float4 spec)
 {
 	// Initialize outputs.
 	ambient = L.Ambient;
@@ -84,7 +81,7 @@ void ComputeDirectionalLight(Material mat, DirectionalLight L,
 // from a point light.  We need to output the terms separately because
 // later we will modify the individual terms.
 //---------------------------------------------------------------------------------------
-void ComputePointLight(Material mat, PointLight L, float3 pos, float3 normal, float3 toEye,
+void ComputePointLight(float4 specIntensity, Material mat, PointLight L, float3 pos, float3 normal, float3 toEye,
 	out float4 ambient, out float4 diffuse, out float4 spec)
 {
 	// Initialize outputs.
@@ -118,10 +115,16 @@ void ComputePointLight(Material mat, PointLight L, float3 pos, float3 normal, fl
 	if (diffuseFactor > 0.0f)
 	{
 		float3 v = reflect(-lightVec, normal);
-		float specFactor = pow(max(dot(v, toEye), 0.0f), mat.Specular.w);
+
+		// Determine the amount of specular light based on the reflection vector, viewing direction, and specular power.
+		//specular = pow(saturate(dot(reflection, input.viewDirection)), specularPower);
+		//float specFactor = pow(max(dot(v, toEye), 0.0f), mat.Specular.w);
+		float specFactor = pow(saturate(dot(v, toEye)), L.Specular);
 
 		diffuse = diffuseFactor * mat.Diffuse * L.Diffuse;
-		spec = specFactor * mat.Specular * L.Specular;
+		//spec = specFactor * mat.Specular * L.Specular;
+		spec = specFactor * mat.Specular * specIntensity;
+
 	}
 
 	// Attenuate
@@ -136,7 +139,7 @@ void ComputePointLight(Material mat, PointLight L, float3 pos, float3 normal, fl
 // from a spotlight.  We need to output the terms separately because
 // later we will modify the individual terms.
 //---------------------------------------------------------------------------------------
-void ComputeSpotLight(Material mat, SpotLight L, float3 pos, float3 normal, float3 toEye,
+void ComputeSpotLight(float4 specIntensity, Material mat, SpotLight L, float3 pos, float3 normal, float3 toEye,
 	out float4 ambient, out float4 diffuse, out float4 spec)
 {
 	// Initialize outputs.
@@ -170,10 +173,12 @@ void ComputeSpotLight(Material mat, SpotLight L, float3 pos, float3 normal, floa
 	if (diffuseFactor > 0.0f)
 	{
 		float3 v = reflect(-lightVec, normal);
-		float specFactor = pow(max(dot(v, toEye), 0.0f), mat.Specular.w);
+		//float specFactor = pow(max(dot(v, toEye), 0.0f), mat.Specular.w);
+		float specFactor = pow(saturate(dot(v, toEye)), L.Specular);
 
 		diffuse = diffuseFactor * mat.Diffuse * L.Diffuse;
-		spec = specFactor * mat.Specular * L.Specular;
+		//spec = specFactor * mat.Specular * L.Specular;
+		spec = specFactor * mat.Specular * specIntensity;
 	}
 
 	// Scale by spotlight factor and attenuate.
@@ -230,6 +235,7 @@ cbuffer cbPerFrame : register(b1)
 
 Texture2D shaderTexture;
 Texture2D normalMap;
+Texture2D specularMap;
 Texture2D displacementMap;
 
 SamplerState SampleType;
@@ -450,6 +456,8 @@ float4 LightPixelShader(DomainOut input) : SV_TARGET
 	float4 diffuse = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	float4 specular = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
+	float4 specIntensity = specularMap.Sample(samLinear, input.tex);
+
 	float4 A, D, S;
 
 	for (uint i = 0; i < NUM_DIRECTIONAL_LIGHTS; i++)
@@ -463,7 +471,7 @@ float4 LightPixelShader(DomainOut input) : SV_TARGET
 
 	for (uint i = 0; i < NUM_POINT_LIGHTS; i++)
 	{
-		ComputePointLight(material, gPointLight[i], input.worldPosition, bumpedNormalW, input.viewDirection, A, D, S);
+		ComputePointLight(specIntensity, material, gPointLight[i], input.worldPosition, bumpedNormalW, input.viewDirection, A, D, S);
 
 		ambient += A;
 		diffuse += D;
@@ -472,7 +480,7 @@ float4 LightPixelShader(DomainOut input) : SV_TARGET
 
 	for (uint i = 0; i < NUM_SPOT_LIGHTS; i++)
 	{
-		ComputeSpotLight(material, gSpotLight[i], input.worldPosition, bumpedNormalW, input.viewDirection, A, D, S);
+		ComputeSpotLight(specIntensity, material, gSpotLight[i], input.worldPosition, bumpedNormalW, input.viewDirection, A, D, S);
 
 		ambient += A;
 		diffuse += D;
@@ -490,7 +498,7 @@ float4 LightPixelShader(DomainOut input) : SV_TARGET
 	color = saturate(color + specular);
 
 	// Set the color of the fog to grey.
-	fogColor = float4(0.2f, 0.2f, 0.2f, 0.5f);
+	fogColor = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	//The fog color equation then does a linear interpolation between the texture color and the fog color based on the fog factor.
 
 	// Calculate the final color using the fog effect equation.

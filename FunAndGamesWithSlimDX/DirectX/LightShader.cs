@@ -28,6 +28,7 @@ namespace DungeonHack.DirectX
 
         private ConstantBufferPerFrame _constantBufferPerFrame;
         private ConstantBufferPerObject _constantBufferPerObject;
+        private SamplerState _specularMapSamplerState;
 
         public LightShader(Renderer renderer)
         {
@@ -76,6 +77,10 @@ namespace DungeonHack.DirectX
             var normalMapSamplerDesc = CreateSamplerStateDescription();
 
             _normalMapSamplerState = new SamplerState(_device, normalMapSamplerDesc);
+
+            var specularMapSamplerDesc = CreateSamplerStateDescription();
+
+            _specularMapSamplerState = new SamplerState(_device, specularMapSamplerDesc);
 
             var displacementMapSamplerDesc = CreateSamplerStateDescription();
 
@@ -181,6 +186,9 @@ namespace DungeonHack.DirectX
 
             if (texture.NormalMapData != null)
                 _deferredContexts[threadNumber].PixelShader.SetShaderResource(1, texture.NormalMapData);
+
+            if (texture.SpecularMapData != null)
+                _deferredContexts[threadNumber].PixelShader.SetShaderResource(2, texture.SpecularMapData);
 
             if (texture.DisplacementMapData != null)
                 _deferredContexts[threadNumber].DomainShader.SetShaderResource(0, texture.DisplacementMapData);

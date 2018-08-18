@@ -192,7 +192,7 @@ namespace DungeonHack.Engine
 
                     //Task updateTask = new Task(() => UpdateScene());
 
-                    Task drawSceneTask = new Task(() =>
+                    //Task drawSceneTask = new Task(() =>
                     {
                         Timer.Tick();
                         _frameCount++;
@@ -212,12 +212,13 @@ namespace DungeonHack.Engine
                         Renderer.SwapChain.Present(ConfigManager.VSync, PresentFlags.None);
 
                         _stopwatch.Stop();
-                    });
+                    }
+                   // );
 
                     //updateTask.Start();
-                    drawSceneTask.Start();
+                    //drawSceneTask.Start();
 
-                    Task.WaitAll(drawSceneTask);//updateTask, drawSceneTask);
+                    //Task.WaitAll(drawSceneTask);//updateTask, drawSceneTask);
 
                     _updateTime = _stopwatch.ElapsedMilliseconds;
                     break;

@@ -75,6 +75,7 @@ namespace DungeonHack.DirectX
             string fontFamily = "Arial";
             float fontSize = 10;
 
+            //MEMORY LEAK
             _deviceContext.DrawTextLayout(
                 new SharpDX.Mathematics.Interop.RawVector2(posX, posY),
                 new TextLayout(_factoryDW, text,

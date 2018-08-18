@@ -348,13 +348,13 @@ namespace DungeonHack.OcclusionCulling
             }
 
             //backface culling
-            //Vector3 u = rasterVectors[1] - rasterVectors[0];
-            //Vector3 v = rasterVectors[2] - rasterVectors[0];
+            Vector3 u = rasterVectors[1] - rasterVectors[0];
+            Vector3 v = rasterVectors[2] - rasterVectors[0];
 
-            //if (((u.X * v.Y - u.Y * v.X) < 0) && rasterVectors[0].Z > 100)
-            //{
-            //    return false;
-            //}
+            if (((u.X * v.Y - u.Y * v.X) < 0) && rasterVectors[0].Z > 100)
+            {
+                return false;
+            }
 
             Triangle triangle = new Triangle()
             {

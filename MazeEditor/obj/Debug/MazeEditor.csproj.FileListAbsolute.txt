@@ -1,4 +1,4 @@
-C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\SharpDX.Direct3D11.xml
+C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\rock.obj-model.txt
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\MWALL4_2.PNG
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Shaders\LightTexture.hlsl
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Shaders\Texture.hlsl
@@ -16,7 +16,6 @@ C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\wiz.obj-model.txt
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\wiz1.dds
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\wiz2.dds
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\Cube - Room.txt
-C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\rock.obj-model.txt
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\F-35_Lightning_II.obj-model.txt
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\F-35_Lightning_II_P01.dds
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\cat.obj-model.txt
@@ -47,6 +46,7 @@ C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\NBidi.dll
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\DungeonHack.pdb
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\DungeonHack.dll.config
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\SharpDX.xml
+C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\SharpDX.Direct3D11.xml
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\SharpDX.DirectSound.xml
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\SharpDX.DXGI.xml
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\SharpDX.Mathematics.xml

@@ -14,10 +14,10 @@ namespace FunAndGamesWithSharpDX.Entities
 
         public Sprite(Device device, string spriteFileName, int x, int y, int sizeX, int sizeY)
         {
-            _texture = new Texture();
+            _texture = new Texture(device);
             var basePath = ConfigManager.ResourcePath;
             var fileNamePath = basePath + @"\Resources\" + spriteFileName;
-            _texture.LoadTexture(device, fileNamePath);
+            _texture.LoadTexture(fileNamePath);
             _position = new SharpDX.Vector2(x, y);
             _size = new SharpDX.Vector2(sizeX, sizeY);
         }

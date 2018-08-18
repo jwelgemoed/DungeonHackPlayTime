@@ -71,37 +71,40 @@ namespace DungeonHack.DataDictionaries
         
         private Texture LoadTexture(string fileName)
         {
-            var texture = new Texture();
+            var texture = new Texture(_device);
 
             var basePath = ConfigManager.ResourcePath;
 
             var fileNamePath = basePath + @"\Resources\" + fileName;
 
-            texture.LoadTexture(_device, fileNamePath);
+            texture.LoadTexture(fileNamePath);
 
             return texture;
         }
 
         public Texture LoadTextureFullPath(string filePath)
         {
-            var texture = new Texture();
+            var texture = new Texture(_device);
 
-            texture.LoadTexture(_device, filePath);
+            texture.LoadTexture(filePath);
 
             return texture;
         }
 
         public Texture LoadTextureAndNormalMap(string filePath)
         {
-            var texture = new Texture();
+            var texture = new Texture(_device);
 
-            texture.LoadTexture(_device, filePath);
+            texture.LoadTexture(filePath);
 
             if (File.Exists(filePath.Replace(".png", "_nrm.png")))
-                texture.LoadNormalMap(_device, filePath.Replace(".png", "_nrm.png"));
+                texture.LoadNormalMap(filePath.Replace(".png", "_nrm.png"));
 
             if (File.Exists(filePath.Replace(".png", "_disp.png")))
-                texture.LoadDisplacementMap(_device, filePath.Replace(".png", "_disp.png"));
+                texture.LoadDisplacementMap(filePath.Replace(".png", "_disp.png"));
+
+            if (File.Exists(filePath.Replace(".png", "_spec.png")))
+                texture.LoadSpecularMap(filePath.Replace(".png", "_spec.png"));
 
             return texture;
         }

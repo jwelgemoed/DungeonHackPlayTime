@@ -51,7 +51,7 @@ namespace MazeEditor
             {
                 Ambient = new Color4(1.0f, 1.0f, 1.0f, 1.0f),
                 Diffuse = new Color4(1.0f, 1.0f, 1.0f, 1.0f),
-                Specular = new Color4(1.0f, 1.0f, 1.0f, 1.0f)
+                Specular = new Color4(0.1f, 0.1f, 0.1f, 0.1f)
             };
         }
 
@@ -133,7 +133,7 @@ namespace MazeEditor
                 {
                     Ambient = new Color4(5.0f, 4.0f, 0.0f, 5.0f),
                     Diffuse = new Color4(5.0f, 4.0f, 0.0f, 5.0f),
-                    Specular = new Color4(1.0f, 1.0f, 1.0f, 1.0f),
+                    Specular = new Color4(0.1f, 0.1f, 0.1f, 1.0f),
                     Position = Camera.EyeAt,
                     Range = ConfigManager.SpotLightRange, //500.0f,
                     Direction = Vector3.Normalize(Camera.LookAt - Camera.EyeAt),
@@ -153,7 +153,7 @@ namespace MazeEditor
                 //Specular = new Color4(5.0f, 1.0f, 1.0f, 1.0f),
                 Diffuse = new Color4(15.0f, 0.0f, 0.0f, 1.0f),
                 Ambient = new Color4(),
-                Specular = new Color4(),
+                Specular = new Color4(0.1f, 0.1f, 0.1f, 0.1f),
                 Position = lightPos,
                 Range = 48.0f,
                 Attentuation = new Vector3(0.0f, 0.1f, 0.0f)
@@ -166,7 +166,7 @@ namespace MazeEditor
                 //Specular = new Color4(1.0f, 1.0f, 5.0f, 1.0f),
                 Diffuse = new Color4(0.0f, 0.0f, 15.0f, 1.0f),
                 Ambient = new Color4(),
-                Specular = new Color4(),
+                Specular = new Color4(0.1f, 0.1f, 0.1f, 0.1f),
                 Position = lightPos2,
                 Range = 48.0f,
                 Attentuation = new Vector3(0.0f, 0.1f, 0.0f)

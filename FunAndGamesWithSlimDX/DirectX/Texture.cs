@@ -6,30 +6,46 @@ namespace FunAndGamesWithSharpDX.DirectX
 {
     public class Texture : IDisposable
     {
-        public ShaderResourceView TextureData { get; set; }
-        public ShaderResourceView NormalMapData { get; set; }
-        public ShaderResourceView DisplacementMapData { get; set; }
+        public ShaderResourceView TextureData { get; private set; }
+        public ShaderResourceView NormalMapData { get; private set; }
+        public ShaderResourceView DisplacementMapData { get; private set; }
+        public ShaderResourceView SpecularMapData { get; private set; }
 
-        public void LoadTexture(Device device, string fileName)
+        private readonly Device _device;
+
+        public Texture(Device device)
         {
-            TextureData = LoadShaderResourceView(device, fileName);
+            _device = device;
+        }
+        
+        public void LoadTexture(string fileName)
+        {
+            TextureData = LoadShaderResourceView(fileName);
         }
 
-        public void LoadNormalMap(Device device, string fileName)
+        public void LoadNormalMap(string fileName)
         {
-            NormalMapData = LoadShaderResourceView(device, fileName);
+            NormalMapData = LoadShaderResourceView(fileName);
         }
 
-        public void LoadDisplacementMap(Device device, string fileName)
+        public void LoadDisplacementMap(string fileName)
         {
-            DisplacementMapData = LoadShaderResourceView(device, fileName);
+            DisplacementMapData = LoadShaderResourceView(fileName);
         }
 
-        private ShaderResourceView LoadShaderResourceView(Device device, string fileName)
+        public void LoadSpecularMap(string fileName)
         {
-            var bitmapResource = TextureLoader.LoadBitmap(new SharpDX.WIC.ImagingFactory2(), fileName);
-            var texture = TextureLoader.CreateTexture2DFromBitmap(device, bitmapResource);
-            return new ShaderResourceView(device, texture);
+            SpecularMapData = LoadShaderResourceView(fileName);
+        }
+
+        private ShaderResourceView LoadShaderResourceView(string fileName)
+        {
+            using (var factory = new SharpDX.WIC.ImagingFactory2())
+            {
+                var bitmapResource = TextureLoader.LoadBitmap(new SharpDX.WIC.ImagingFactory2(), fileName);
+                var texture = TextureLoader.CreateTexture2DFromBitmap(_device, bitmapResource);
+                return new ShaderResourceView(_device, texture);
+            }
         }
 
         public void Dispose()
@@ -42,6 +58,9 @@ namespace FunAndGamesWithSharpDX.DirectX
 
             if (DisplacementMapData != null)
                 DisplacementMapData.Dispose();
+
+            if (SpecularMapData != null)
+                SpecularMapData.Dispose();
         }
     }
 }
