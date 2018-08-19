@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -30,7 +31,7 @@ namespace DungeonHack.Engine
         protected Camera Camera;
         private bool _hasInitialized = false;
         protected int MouseSensitivity;
-        protected Console _console;
+        protected FunAndGamesWithSharpDX.Entities.Console _console;
         protected Frustrum _frustrum;
         protected int _meshRenderedCount = 0;
 
@@ -111,7 +112,7 @@ namespace DungeonHack.Engine
             SpriteRenderer.Initialize(Renderer.Device);
             FontRenderer.Initialize(Renderer.Device, "Arial", FontWeight.Normal, FontStyle.Normal, FontStretch.Normal, 12);
 
-            _console = new Console(null, new Vector2(Form.Width - 300, -250),
+            _console = new FunAndGamesWithSharpDX.Entities.Console(null, new Vector2(Form.Width - 300, -250),
                 new Vector2(400, 400), 100, Colors.White, Renderer2D);
 
             ApplicationStateEngine.CurrentState = ApplicationStateEnum.Normal;
@@ -226,7 +227,15 @@ namespace DungeonHack.Engine
                 case ApplicationStateEnum.OpenSettings:
                     ShowOptionsMenu();
                     break;
+                case ApplicationStateEnum.Interactive:
+                    Timer.Tick();
+                    break;
             }
+        }
+
+        private void ShowMouseCursor()
+        {
+            Cursor.Show();
         }
 
         public abstract void PreRenderScene();

@@ -9,6 +9,7 @@ using DungeonHack.Engine;
 using SharpDX;
 using Point = System.Drawing.Point;
 using DungeonHack.OcclusionCulling;
+using FunAndGamesWithSharpDX.Entities;
 
 namespace FunAndGamesWithSharpDX.Engine
 {
@@ -181,6 +182,23 @@ namespace FunAndGamesWithSharpDX.Engine
                 else
                     ConfigManager.UseNormalMap = 1;
             }
+            else if (e.KeyCode == Keys.Space)
+            {
+                if (ApplicationStateEngine.CurrentState != ApplicationStateEnum.Interactive)
+                {
+                    ApplicationStateEngine.CurrentState = ApplicationStateEnum.Interactive;
+                    SharpDX.RawInput.Device.MouseInput -= MoveMouse;
+                    SharpDX.RawInput.Device.MouseInput += MoveMouseInteractive;
+                    Cursor.Show();
+                }
+                else
+                {
+                    Cursor.Hide();
+                    SharpDX.RawInput.Device.MouseInput -= MoveMouseInteractive;
+                    SharpDX.RawInput.Device.MouseInput += MoveMouse;
+                    ApplicationStateEngine.CurrentState = ApplicationStateEnum.Normal;
+                }
+            }
         }
 
         protected void KeyUp(object sender, KeyEventArgs e)
@@ -242,6 +260,11 @@ namespace FunAndGamesWithSharpDX.Engine
 
             //Player.Rotate();
             Camera.Rotate(Camera.RelativeX, Camera.RelativeY);
+        }
+
+        protected void MoveMouseInteractive(object sender, MouseInputEventArgs e)
+        {
+            
         }
 
         public override void UpdateScene()

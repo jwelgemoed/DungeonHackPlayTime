@@ -8,6 +8,7 @@
         Shutdown = 4,
         Dead = 5,
         OpenSettings = 6,
-        EditSettings = 7
+        EditSettings = 7,
+        Interactive = 8
     }
 }
