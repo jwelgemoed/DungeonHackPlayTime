@@ -20,7 +20,7 @@ namespace FunAndGamesWithSharpDX.Engine
         private readonly Point _centerPoint;
         private int currentTechId = 0;
         private bool _flashLightOn = true;
-
+        
         public CameraEngine(float cameraHeight, bool restrictMovementPlaneXZ)
         {
             Camera = new Camera()
@@ -264,7 +264,17 @@ namespace FunAndGamesWithSharpDX.Engine
 
         protected void MoveMouseInteractive(object sender, MouseInputEventArgs e)
         {
-            
+            if (e.ButtonFlags == MouseButtonFlags.Button1Down)
+            {
+                var polygons = GetSceneMeshes();
+
+                var point = Cursor.Position;
+
+                var pickedPolygon = InteractiveEngine.GetPickedPolygon(new SharpDX.Point(point.X, point.Y), Camera, polygons);
+
+                if (pickedPolygon != null)
+                    pickedPolygon.TextureIndex = 9;
+            }
         }
 
         public override void UpdateScene()

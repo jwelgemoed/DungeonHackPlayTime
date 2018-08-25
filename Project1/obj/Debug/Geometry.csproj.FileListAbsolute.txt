@@ -80,6 +80,7 @@ C:\temp\DungeonHackPlayTime-master\Project1\bin\Debug\GameData.pdb
 C:\temp\DungeonHackPlayTime-master\Project1\obj\Debug\Geometry.csprojResolveAssemblyReference.cache
 C:\temp\DungeonHackPlayTime-master\Project1\obj\Debug\Geometry.dll
 C:\temp\DungeonHackPlayTime-master\Project1\obj\Debug\Geometry.pdb
+C:\git\DungeonHackPlayTime\Project1\obj\Debug\Geometry.csproj.CoreCompileInputs.cache
 C:\git\DungeonHackPlayTime\Project1\bin\Debug\Resources\MWALL4_2.PNG
 C:\git\DungeonHackPlayTime\Project1\bin\Debug\Shaders\LightTexture.hlsl
 C:\git\DungeonHackPlayTime\Project1\bin\Debug\Shaders\Texture.hlsl
@@ -116,7 +117,6 @@ C:\git\DungeonHackPlayTime\Project1\bin\Debug\GameData.pdb
 C:\git\DungeonHackPlayTime\Project1\bin\Debug\GameData.dll.config
 C:\git\DungeonHackPlayTime\Project1\bin\Debug\AssimpNet.xml
 C:\git\DungeonHackPlayTime\Project1\obj\Debug\Geometry.csprojAssemblyReference.cache
-C:\git\DungeonHackPlayTime\Project1\obj\Debug\Geometry.csproj.CoreCompileInputs.cache
 C:\git\DungeonHackPlayTime\Project1\obj\Debug\Geometry.csproj.CopyComplete
 C:\git\DungeonHackPlayTime\Project1\obj\Debug\Geometry.dll
 C:\git\DungeonHackPlayTime\Project1\obj\Debug\Geometry.pdb

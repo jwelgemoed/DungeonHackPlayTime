@@ -26,6 +26,7 @@ namespace DungeonHack.Engine
         protected RenderForm Form = new RenderForm();
         protected Renderer Renderer = new Renderer();
         protected Renderer2D Renderer2D = new Renderer2D();
+        protected InteractiveEngine InteractiveEngine = new InteractiveEngine();
         protected Shader Shader;
         protected readonly GameTimer Timer = new GameTimer();
         protected Camera Camera;
@@ -103,6 +104,8 @@ namespace DungeonHack.Engine
             Renderer.Initialize(Form.Handle, 4);
 
             Renderer2D.Initialize(Renderer);
+
+            InteractiveEngine.Initialize(Renderer);
 
             _frustrum = new Frustrum();
 
@@ -209,7 +212,7 @@ namespace DungeonHack.Engine
                         DrawScene();
 
                         DisplayConsoleInformation();
-                        DepthBufferRenderer.RenderToScreen(Renderer2D);
+                       // DepthBufferRenderer.RenderToScreen(Renderer2D);
                         Renderer.SwapChain.Present(ConfigManager.VSync, PresentFlags.None);
 
                         _stopwatch.Stop();

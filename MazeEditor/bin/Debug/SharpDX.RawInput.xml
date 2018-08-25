@@ -1054,7 +1054,7 @@
             <remarks>
             <p><strong>GetRawInputData</strong> gets the raw input one <strong><see cref = "T:SharpDX.RawInput.RawInput"/></strong> structure at a time. In contrast, <strong>GetRawInputBuffer</strong> gets an array of <strong><see cref = "T:SharpDX.RawInput.RawInput"/></strong> structures.</p>
             </remarks>
-            <msdn-id>ms645596</msdn-id>
+            <doc-id>ms645596</doc-id>
             <unmanaged>unsigned int GetRawInputData([In] HRAWINPUT hRawInput,[In] unsigned int uiCommand,[Out, Buffer, Optional] void* pData,[InOut] unsigned int* pcbSize,[In] unsigned int cbSizeHeader)</unmanaged>
             <unmanaged-short>GetRawInputData</unmanaged-short>
         </member>
@@ -1067,7 +1067,7 @@
             <param name = "dataRef"><dd>  <p>A reference to a buffer that contains the information specified by  <em>uiCommand</em>. If  <em>uiCommand</em> is <strong>RIDI_DEVICEINFO</strong>, set the <strong>cbSize</strong> member of <strong><see cref = "T:SharpDX.RawInput.RawDeviceInformation"/></strong> to <code>sizeof(<see cref = "T:SharpDX.RawInput.RawDeviceInformation"/>)</code> before calling <strong>GetRawInputDeviceInfo</strong>. </p> </dd></param>
             <param name = "cbSizeRef"><dd>  <p>The size, in bytes, of the data in  <em>pData</em>. </p> </dd></param>
             <returns><p>If successful, this function returns a non-negative number indicating the number of bytes copied to  <em>pData</em>. </p><p>If  <em>pData</em> is not large enough for the data, the function returns -1. If  <em>pData</em> is <strong><c>null</c></strong>, the function returns a value of zero. In both of these cases,  <em>pcbSize</em> is set to the minimum size required for the  <em>pData</em> buffer.</p><p>Call <strong>GetLastError</strong> to identify any other errors.</p></returns>
-            <msdn-id>ms645597</msdn-id>
+            <doc-id>ms645597</doc-id>
             <unmanaged>unsigned int GetRawInputDeviceInfoW([In, Optional] void* hDevice,[In] unsigned int uiCommand,[Out, Buffer, Optional] void* pData,[InOut] unsigned int* pcbSize)</unmanaged>
             <unmanaged-short>GetRawInputDeviceInfoW</unmanaged-short>
         </member>
@@ -1086,7 +1086,7 @@
             }
             </pre>?
             </remarks>
-            <msdn-id>ms645595</msdn-id>
+            <doc-id>ms645595</doc-id>
             <unmanaged>unsigned int GetRawInputBuffer([Out, Buffer, Optional] RAWINPUT* pData,[InOut] unsigned int* pcbSize,[In] unsigned int cbSizeHeader)</unmanaged>
             <unmanaged-short>GetRawInputBuffer</unmanaged-short>
         </member>
@@ -1101,7 +1101,7 @@
             <remarks>
             <p>To receive <strong>WM_INPUT</strong> messages, an application must first register the raw input devices using <strong>RegisterRawInputDevices</strong>. By default, an application does not receive raw input.</p><p>To receive <strong>WM_INPUT_DEVICE_CHANGE</strong> messages, an application must specify the  RIDEV_DEVNOTIFY flag for each device class that is specified by the usUsagePage and usUsage fields of the  <strong><see cref = "T:SharpDX.RawInput.RawInputDevice"/></strong> structure  .  By default, an application does not receive  <strong>WM_INPUT_DEVICE_CHANGE</strong> notifications for raw input device arrival and removal.</p><p>If a <strong><see cref = "T:SharpDX.RawInput.RawInputDevice"/></strong> structure has the RIDEV_REMOVE flag set and the hwndTarget parameter is not set to <c>null</c>, then parameter validation will fail. </p>
             </remarks>
-            <msdn-id>ms645600</msdn-id>
+            <doc-id>ms645600</doc-id>
             <unmanaged>BOOL RegisterRawInputDevices([In, Buffer] const RAWINPUTDEVICE* pRawInputDevices,[In] unsigned int uiNumDevices,[In] unsigned int cbSize)</unmanaged>
             <unmanaged-short>RegisterRawInputDevices</unmanaged-short>
         </member>
@@ -1116,7 +1116,7 @@
             <remarks>
             <p>To receive raw input from a device, an application must register it by using <strong>RegisterRawInputDevices</strong>. </p>
             </remarks>
-            <msdn-id>ms645599</msdn-id>
+            <doc-id>ms645599</doc-id>
             <unmanaged>unsigned int GetRegisteredRawInputDevices([Out, Buffer, Optional] RAWINPUTDEVICE* pRawInputDevices,[InOut] unsigned int* puiNumDevices,[In] unsigned int cbSize)</unmanaged>
             <unmanaged-short>GetRegisteredRawInputDevices</unmanaged-short>
         </member>
@@ -1131,7 +1131,7 @@
             <remarks>
             <p>The devices returned from this function are the mouse, the keyboard, and other Human Interface Device (HID) devices.</p><p>To get more detailed information about the attached devices, call <strong>GetRawInputDeviceInfo</strong> using the hDevice from <strong><see cref = "T:SharpDX.RawInput.RawInputDevicelist"/></strong>. </p>
             </remarks>
-            <msdn-id>ms645598</msdn-id>
+            <doc-id>ms645598</doc-id>
             <unmanaged>unsigned int GetRawInputDeviceList([Out, Buffer, Optional] RAWINPUTDEVICELIST* pRawInputDeviceList,[InOut] unsigned int* puiNumDevices,[In] unsigned int cbSize)</unmanaged>
             <unmanaged-short>GetRawInputDeviceList</unmanaged-short>
         </member>
@@ -1139,7 +1139,7 @@
             <summary>
             <p>Defines the raw input data coming from any device. </p>
             </summary>
-            <msdn-id>ms645581</msdn-id>
+            <doc-id>ms645581</doc-id>
             <unmanaged>RID_DEVICE_INFO</unmanaged>
             <unmanaged-short>RID_DEVICE_INFO</unmanaged-short>
         </member>
@@ -1147,7 +1147,7 @@
             <summary>
             <dd> <p>The size, in bytes, of the <strong><see cref = "T:SharpDX.RawInput.RawDeviceInformation"/></strong> structure. </p> </dd>
             </summary>
-            <msdn-id>ms645581</msdn-id>
+            <doc-id>ms645581</doc-id>
             <unmanaged>cbSize</unmanaged>
             <unmanaged-short>cbSize</unmanaged-short>
         </member>
@@ -1155,7 +1155,7 @@
             <summary>
             <dd> <p>The type of raw input data. This member can be one of the following values. </p> <table> <tr><th>Value</th><th>Meaning</th></tr> <tr><td><dl> <dt><strong>RIM_TYPEHID</strong></dt> <dt>2</dt> </dl> </td><td> <p>Data comes from an HID that is not a keyboard or a mouse.</p> </td></tr> <tr><td><dl> <dt><strong>RIM_TYPEKEYBOARD</strong></dt> <dt>1</dt> </dl> </td><td> <p>Data comes from a keyboard.</p> </td></tr> <tr><td><dl> <dt><strong>RIM_TYPEMOUSE</strong></dt> <dt>0</dt> </dl> </td><td> <p>Data comes from a mouse.</p> </td></tr> </table> <p>?</p> </dd>
             </summary>
-            <msdn-id>ms645581</msdn-id>
+            <doc-id>ms645581</doc-id>
             <unmanaged>dwType</unmanaged>
             <unmanaged-short>dwType</unmanaged-short>
         </member>
@@ -1163,7 +1163,7 @@
             <summary>
             <dd> <p>If <strong>dwType</strong> is <strong>RIM_TYPEMOUSE</strong>, this is the <strong><see cref = "T:SharpDX.RawInput.RawDeviceInformationMouse"/></strong> structure that defines the mouse. </p> </dd>
             </summary>
-            <msdn-id>ms645581</msdn-id>
+            <doc-id>ms645581</doc-id>
             <unmanaged>mouse</unmanaged>
             <unmanaged-short>mouse</unmanaged-short>
         </member>
@@ -1171,7 +1171,7 @@
             <summary>
             <dd> <p>If <strong>dwType</strong> is <strong>RIM_TYPEKEYBOARD</strong>, this is the <strong><see cref = "T:SharpDX.RawInput.RawDeviceInformationKeyboard"/></strong> structure that defines the keyboard. </p> </dd>
             </summary>
-            <msdn-id>ms645581</msdn-id>
+            <doc-id>ms645581</doc-id>
             <unmanaged>keyboard</unmanaged>
             <unmanaged-short>keyboard</unmanaged-short>
         </member>
@@ -1179,7 +1179,7 @@
             <summary>
             <dd> <p>If <strong>dwType</strong> is <strong>RIM_TYPEHID</strong>, this is the <strong><see cref = "T:SharpDX.RawInput.RawDeviceInformationHid"/></strong> structure that defines the HID device. </p> </dd>
             </summary>
-            <msdn-id>ms645581</msdn-id>
+            <doc-id>ms645581</doc-id>
             <unmanaged>hid</unmanaged>
             <unmanaged-short>hid</unmanaged-short>
         </member>
@@ -1187,7 +1187,7 @@
             <summary>
             <p>Defines the raw input data coming from the specified Human Interface Device (HID). </p>
             </summary>
-            <msdn-id>ms645584</msdn-id>
+            <doc-id>ms645584</doc-id>
             <unmanaged>RID_DEVICE_INFO_HID</unmanaged>
             <unmanaged-short>RID_DEVICE_INFO_HID</unmanaged-short>
         </member>
@@ -1195,7 +1195,7 @@
             <summary>
             <dd> <p>The vendor identifier for the HID. </p> </dd>
             </summary>
-            <msdn-id>ms645584</msdn-id>
+            <doc-id>ms645584</doc-id>
             <unmanaged>dwVendorId</unmanaged>
             <unmanaged-short>dwVendorId</unmanaged-short>
         </member>
@@ -1203,7 +1203,7 @@
             <summary>
             <dd> <p>The product identifier for the HID. </p> </dd>
             </summary>
-            <msdn-id>ms645584</msdn-id>
+            <doc-id>ms645584</doc-id>
             <unmanaged>dwProductId</unmanaged>
             <unmanaged-short>dwProductId</unmanaged-short>
         </member>
@@ -1211,7 +1211,7 @@
             <summary>
             <dd> <p>The version number for the HID. </p> </dd>
             </summary>
-            <msdn-id>ms645584</msdn-id>
+            <doc-id>ms645584</doc-id>
             <unmanaged>dwVersionNumber</unmanaged>
             <unmanaged-short>dwVersionNumber</unmanaged-short>
         </member>
@@ -1219,7 +1219,7 @@
             <summary>
             <dd> <p>The top-level collection Usage Page for the device. </p> </dd>
             </summary>
-            <msdn-id>ms645584</msdn-id>
+            <doc-id>ms645584</doc-id>
             <unmanaged>usUsagePage</unmanaged>
             <unmanaged-short>usUsagePage</unmanaged-short>
         </member>
@@ -1227,7 +1227,7 @@
             <summary>
             <dd> <p>The top-level collection Usage for the device. </p> </dd>
             </summary>
-            <msdn-id>ms645584</msdn-id>
+            <doc-id>ms645584</doc-id>
             <unmanaged>usUsage</unmanaged>
             <unmanaged-short>usUsage</unmanaged-short>
         </member>
@@ -1238,7 +1238,7 @@
             <remarks>
             <p>For the keyboard, the Usage Page is 1 and the Usage is 6. </p>
             </remarks>
-            <msdn-id>ms645587</msdn-id>
+            <doc-id>ms645587</doc-id>
             <unmanaged>RID_DEVICE_INFO_KEYBOARD</unmanaged>
             <unmanaged-short>RID_DEVICE_INFO_KEYBOARD</unmanaged-short>
         </member>
@@ -1246,7 +1246,7 @@
             <summary>
             <dd> <p>The type of the keyboard. </p> </dd>
             </summary>
-            <msdn-id>ms645587</msdn-id>
+            <doc-id>ms645587</doc-id>
             <unmanaged>dwType</unmanaged>
             <unmanaged-short>dwType</unmanaged-short>
         </member>
@@ -1254,7 +1254,7 @@
             <summary>
             <dd> <p>The subtype of the keyboard. </p> </dd>
             </summary>
-            <msdn-id>ms645587</msdn-id>
+            <doc-id>ms645587</doc-id>
             <unmanaged>dwSubType</unmanaged>
             <unmanaged-short>dwSubType</unmanaged-short>
         </member>
@@ -1262,7 +1262,7 @@
             <summary>
             <dd> <p>The  scan code mode. </p> </dd>
             </summary>
-            <msdn-id>ms645587</msdn-id>
+            <doc-id>ms645587</doc-id>
             <unmanaged>dwKeyboardMode</unmanaged>
             <unmanaged-short>dwKeyboardMode</unmanaged-short>
         </member>
@@ -1270,7 +1270,7 @@
             <summary>
             <dd> <p>The number of function keys on the keyboard.</p> </dd>
             </summary>
-            <msdn-id>ms645587</msdn-id>
+            <doc-id>ms645587</doc-id>
             <unmanaged>dwNumberOfFunctionKeys</unmanaged>
             <unmanaged-short>dwNumberOfFunctionKeys</unmanaged-short>
         </member>
@@ -1278,7 +1278,7 @@
             <summary>
             <dd> <p>The number of LED indicators on the keyboard.</p> </dd>
             </summary>
-            <msdn-id>ms645587</msdn-id>
+            <doc-id>ms645587</doc-id>
             <unmanaged>dwNumberOfIndicators</unmanaged>
             <unmanaged-short>dwNumberOfIndicators</unmanaged-short>
         </member>
@@ -1286,7 +1286,7 @@
             <summary>
             <dd> <p>The total number of keys on the keyboard. </p> </dd>
             </summary>
-            <msdn-id>ms645587</msdn-id>
+            <doc-id>ms645587</doc-id>
             <unmanaged>dwNumberOfKeysTotal</unmanaged>
             <unmanaged-short>dwNumberOfKeysTotal</unmanaged-short>
         </member>
@@ -1297,7 +1297,7 @@
             <remarks>
             <p>For the mouse, the Usage Page is 1 and the Usage is 2.</p>
             </remarks>
-            <msdn-id>ms645589</msdn-id>
+            <doc-id>ms645589</doc-id>
             <unmanaged>RID_DEVICE_INFO_MOUSE</unmanaged>
             <unmanaged-short>RID_DEVICE_INFO_MOUSE</unmanaged-short>
         </member>
@@ -1305,7 +1305,7 @@
             <summary>
             <dd> <p>The identifier of the mouse device.</p> </dd>
             </summary>
-            <msdn-id>ms645589</msdn-id>
+            <doc-id>ms645589</doc-id>
             <unmanaged>dwId</unmanaged>
             <unmanaged-short>dwId</unmanaged-short>
         </member>
@@ -1313,7 +1313,7 @@
             <summary>
             <dd> <p>The number of buttons for the mouse.</p> </dd>
             </summary>
-            <msdn-id>ms645589</msdn-id>
+            <doc-id>ms645589</doc-id>
             <unmanaged>dwNumberOfButtons</unmanaged>
             <unmanaged-short>dwNumberOfButtons</unmanaged-short>
         </member>
@@ -1321,7 +1321,7 @@
             <summary>
             <dd> <p>The number of data points per second. This information may not be applicable for every mouse device.</p> </dd>
             </summary>
-            <msdn-id>ms645589</msdn-id>
+            <doc-id>ms645589</doc-id>
             <unmanaged>dwSampleRate</unmanaged>
             <unmanaged-short>dwSampleRate</unmanaged-short>
         </member>
@@ -1329,7 +1329,7 @@
             <summary>
             <dd> <p><strong>TRUE</strong> if the mouse has a wheel for horizontal scrolling; otherwise, <strong><see cref = "F:SharpDX.Result.False"/></strong>. </p> <p><strong>Windows?XP:??</strong>This member is only supported starting with Windows?Vista.</p> </dd>
             </summary>
-            <msdn-id>ms645589</msdn-id>
+            <doc-id>ms645589</doc-id>
             <unmanaged>fHasHorizontalWheel</unmanaged>
             <unmanaged-short>fHasHorizontalWheel</unmanaged-short>
         </member>
@@ -1340,7 +1340,7 @@
             <remarks>
             <p>Each <strong>WM_INPUT</strong> can indicate several inputs, but all of the inputs come from the same HID. The size of the <strong>bRawData</strong> array is <strong>dwSizeHid</strong> *	<strong>dwCount</strong>.</p>
             </remarks>
-            <msdn-id>ms645549</msdn-id>
+            <doc-id>ms645549</doc-id>
             <unmanaged>RAWHID</unmanaged>
             <unmanaged-short>RAWHID</unmanaged-short>
         </member>
@@ -1348,7 +1348,7 @@
             <summary>
             <dd> <p>The size, in bytes, of each HID input in <strong>bRawData</strong>. </p> </dd>
             </summary>
-            <msdn-id>ms645549</msdn-id>
+            <doc-id>ms645549</doc-id>
             <unmanaged>dwSizeHid</unmanaged>
             <unmanaged-short>dwSizeHid</unmanaged-short>
         </member>
@@ -1356,7 +1356,7 @@
             <summary>
             <dd> <p>The number of HID inputs in <strong>bRawData</strong>.</p> </dd>
             </summary>
-            <msdn-id>ms645549</msdn-id>
+            <doc-id>ms645549</doc-id>
             <unmanaged>dwCount</unmanaged>
             <unmanaged-short>dwCount</unmanaged-short>
         </member>
@@ -1364,7 +1364,7 @@
             <summary>
             <dd> <p>The raw input data, as an array of bytes. </p> </dd>
             </summary>
-            <msdn-id>ms645549</msdn-id>
+            <doc-id>ms645549</doc-id>
             <unmanaged>bRawData</unmanaged>
             <unmanaged-short>bRawData</unmanaged-short>
         </member>
@@ -1372,7 +1372,7 @@
             <summary>
             <p>This section describes how the system provides raw input to your application and how an application receives and processes that input. Raw input is sometimes referred to as generic input. </p>
             </summary>
-            <msdn-id>ms645536</msdn-id>
+            <doc-id>ms645536</doc-id>
             <unmanaged>RAWINPUT</unmanaged>
             <unmanaged-short>RAWINPUT</unmanaged-short>
         </member>
@@ -1380,7 +1380,7 @@
             <summary>
             No documentation.
             </summary>
-            <msdn-id>ms645536</msdn-id>
+            <doc-id>ms645536</doc-id>
             <unmanaged>header</unmanaged>
             <unmanaged-short>header</unmanaged-short>
         </member>
@@ -1388,7 +1388,7 @@
             <summary>
             No documentation.
             </summary>
-            <msdn-id>ms645536</msdn-id>
+            <doc-id>ms645536</doc-id>
             <unmanaged>data</unmanaged>
             <unmanaged-short>data</unmanaged-short>
         </member>
@@ -1399,7 +1399,7 @@
             <remarks>
             <p>If <strong>RIDEV_NOLEGACY</strong> is set for a mouse or a keyboard, the system does not generate any legacy message for that device for the application. For example, if the mouse TLC is set with <strong>RIDEV_NOLEGACY</strong>, <strong>WM_LBUTTONDOWN</strong> and related legacy mouse messages are not generated. Likewise, if the keyboard TLC is set with <strong>RIDEV_NOLEGACY</strong>, <strong>WM_KEYDOWN</strong> and related legacy keyboard messages are not generated.</p><p>If <strong>RIDEV_REMOVE</strong> is set and the <strong>hwndTarget</strong> member is not set to <strong><c>null</c></strong>, then parameter validation will fail.</p>
             </remarks>
-            <msdn-id>ms645565</msdn-id>
+            <doc-id>ms645565</doc-id>
             <unmanaged>RAWINPUTDEVICE</unmanaged>
             <unmanaged-short>RAWINPUTDEVICE</unmanaged-short>
         </member>
@@ -1407,7 +1407,7 @@
             <summary>
             <dd> <p>Top level collection Usage page for the raw input device. </p> </dd>
             </summary>
-            <msdn-id>ms645565</msdn-id>
+            <doc-id>ms645565</doc-id>
             <unmanaged>usUsagePage</unmanaged>
             <unmanaged-short>usUsagePage</unmanaged-short>
         </member>
@@ -1415,7 +1415,7 @@
             <summary>
             <dd> <p>Top level collection Usage for the raw input device. </p> </dd>
             </summary>
-            <msdn-id>ms645565</msdn-id>
+            <doc-id>ms645565</doc-id>
             <unmanaged>usUsage</unmanaged>
             <unmanaged-short>usUsage</unmanaged-short>
         </member>
@@ -1423,7 +1423,7 @@
             <summary>
             <dd> <p>Mode flag that specifies how to interpret the information provided by <strong>usUsagePage</strong> and <strong>usUsage</strong>. It can be zero (the default) or one of the following values. By default, the operating system sends raw input from devices with the specified top level collection (TLC) to the registered application as long as it has the window focus. </p> <table> <tr><th>Value</th><th>Meaning</th></tr> <tr><td><dl> <dt><strong>RIDEV_APPKEYS</strong></dt> <dt>0x00000400</dt> </dl> </td><td> <p>If set, the application command keys are handled. <strong>RIDEV_APPKEYS</strong> can be specified only if <strong>RIDEV_NOLEGACY</strong> is specified for a keyboard device.</p> </td></tr> <tr><td><dl> <dt><strong>RIDEV_CAPTUREMOUSE</strong></dt> <dt>0x00000200</dt> </dl> </td><td> <p>If set, the mouse button click does not activate the other window.</p> </td></tr> <tr><td><dl> <dt><strong>RIDEV_DEVNOTIFY</strong></dt> <dt>0x00002000</dt> </dl> </td><td> <p>If set, this enables the caller to receive <strong>WM_INPUT_DEVICE_CHANGE</strong> notifications for device arrival and device removal.</p> <p><strong>Windows?XP:??</strong>This flag is not supported until Windows?Vista</p> </td></tr> <tr><td><dl> <dt><strong>RIDEV_EXCLUDE</strong></dt> <dt>0x00000010</dt> </dl> </td><td> <p>If set, this specifies the top level collections to exclude when reading a complete usage page. This flag only affects a TLC whose usage page is already specified with <strong>RIDEV_PAGEONLY</strong>. </p> </td></tr> <tr><td><dl> <dt><strong>RIDEV_EXINPUTSINK</strong></dt> <dt>0x00001000</dt> </dl> </td><td> <p>If set, this enables the caller to receive input in the background only if the foreground application does not process it. In other words, if the foreground application is not registered for raw input, then the background application that is registered will receive the input.</p> <p><strong>Windows?XP:??</strong>This flag is not supported until Windows?Vista</p> </td></tr> <tr><td><dl> <dt><strong>RIDEV_INPUTSINK</strong></dt> <dt>0x00000100</dt> </dl> </td><td> <p>If set, this enables the caller to receive the input even when the caller is not in the foreground.  Note that <strong>hwndTarget</strong> must be specified.</p> </td></tr> <tr><td><dl> <dt><strong>RIDEV_NOHOTKEYS</strong></dt> <dt>0x00000200</dt> </dl> </td><td> <p>If set, the application-defined keyboard device hotkeys are not handled. However, the system hotkeys; for example, ALT+TAB and CTRL+ALT+DEL, are still handled. By default, all keyboard hotkeys are handled. <strong>RIDEV_NOHOTKEYS</strong> can be specified even if <strong>RIDEV_NOLEGACY</strong> is not specified and <strong>hwndTarget</strong> is <strong><c>null</c></strong>.</p> </td></tr> <tr><td><dl> <dt><strong>RIDEV_NOLEGACY</strong></dt> <dt>0x00000030</dt> </dl> </td><td> <p>If set, this prevents any devices specified by <strong>usUsagePage</strong> or <strong>usUsage</strong> from generating legacy messages. This is only for the mouse and keyboard. See Remarks.</p> </td></tr> <tr><td><dl> <dt><strong>RIDEV_PAGEONLY</strong></dt> <dt>0x00000020</dt> </dl> </td><td> <p>If set, this specifies all devices whose top level collection is from the specified <strong>usUsagePage</strong>. Note that <strong>usUsage</strong> must be zero. To exclude a particular top level collection, use <strong>RIDEV_EXCLUDE</strong>.</p> </td></tr> <tr><td><dl> <dt><strong>RIDEV_REMOVE</strong></dt> <dt>0x00000001</dt> </dl> </td><td> <p>If set, this removes the top level collection from the inclusion list. This tells the operating system to stop reading from a device which matches the top level collection.</p> </td></tr> </table> <p>?</p> </dd>
             </summary>
-            <msdn-id>ms645565</msdn-id>
+            <doc-id>ms645565</doc-id>
             <unmanaged>dwFlags</unmanaged>
             <unmanaged-short>dwFlags</unmanaged-short>
         </member>
@@ -1431,7 +1431,7 @@
             <summary>
             <dd> <p>A handle to the target window. If <strong><c>null</c></strong> it follows the keyboard focus.</p> </dd>
             </summary>
-            <msdn-id>ms645565</msdn-id>
+            <doc-id>ms645565</doc-id>
             <unmanaged>hwndTarget</unmanaged>
             <unmanaged-short>hwndTarget</unmanaged-short>
         </member>
@@ -1439,7 +1439,7 @@
             <summary>
             <p>Contains information about a raw input device.</p>
             </summary>
-            <msdn-id>ms645568</msdn-id>
+            <doc-id>ms645568</doc-id>
             <unmanaged>RAWINPUTDEVICELIST</unmanaged>
             <unmanaged-short>RAWINPUTDEVICELIST</unmanaged-short>
         </member>
@@ -1447,7 +1447,7 @@
             <summary>
             <dd> <p>A handle to the raw input device. </p> </dd>
             </summary>
-            <msdn-id>ms645568</msdn-id>
+            <doc-id>ms645568</doc-id>
             <unmanaged>hDevice</unmanaged>
             <unmanaged-short>hDevice</unmanaged-short>
         </member>
@@ -1455,7 +1455,7 @@
             <summary>
             <dd> <p>The type of device. This can be one of the following values. </p> <table> <tr><th>Value</th><th>Meaning</th></tr> <tr><td><dl> <dt><strong>RIM_TYPEHID</strong></dt> <dt>2</dt> </dl> </td><td> <p>The device is an HID that is not a keyboard and not a mouse.</p> </td></tr> <tr><td><dl> <dt><strong>RIM_TYPEKEYBOARD</strong></dt> <dt>1</dt> </dl> </td><td> <p>The device is a keyboard.</p> </td></tr> <tr><td><dl> <dt><strong>RIM_TYPEMOUSE</strong></dt> <dt>0</dt> </dl> </td><td> <p>The device is a mouse.</p> </td></tr> </table> <p>?</p> </dd>
             </summary>
-            <msdn-id>ms645568</msdn-id>
+            <doc-id>ms645568</doc-id>
             <unmanaged>dwType</unmanaged>
             <unmanaged-short>dwType</unmanaged-short>
         </member>
@@ -1466,7 +1466,7 @@
             <remarks>
             <p>To get more information on the device, use <strong>hDevice</strong> in a call to <strong>GetRawInputDeviceInfo</strong>.</p>
             </remarks>
-            <msdn-id>ms645571</msdn-id>
+            <doc-id>ms645571</doc-id>
             <unmanaged>RAWINPUTHEADER</unmanaged>
             <unmanaged-short>RAWINPUTHEADER</unmanaged-short>
         </member>
@@ -1474,7 +1474,7 @@
             <summary>
             <dd> <p>The type of raw input. It can be one of the following values. </p> <table> <tr><th>Value</th><th>Meaning</th></tr> <tr><td><dl> <dt><strong>RIM_TYPEHID</strong></dt> <dt>2</dt> </dl> </td><td> <p>Raw input comes from some device that is not a keyboard or a mouse.</p> </td></tr> <tr><td><dl> <dt><strong>RIM_TYPEKEYBOARD</strong></dt> <dt>1</dt> </dl> </td><td> <p>Raw input comes from the keyboard.</p> </td></tr> <tr><td><dl> <dt><strong>RIM_TYPEMOUSE</strong></dt> <dt>0</dt> </dl> </td><td> <p>Raw input comes from the mouse.</p> </td></tr> </table> <p>?</p> </dd>
             </summary>
-            <msdn-id>ms645571</msdn-id>
+            <doc-id>ms645571</doc-id>
             <unmanaged>dwType</unmanaged>
             <unmanaged-short>dwType</unmanaged-short>
         </member>
@@ -1482,7 +1482,7 @@
             <summary>
             <dd> <p>The size, in bytes, of the entire input packet of data. This includes <strong><see cref = "T:SharpDX.RawInput.RawInput"/></strong> plus possible extra input reports in the <strong><see cref = "T:SharpDX.RawInput.RawHid"/></strong> variable length array. </p> </dd>
             </summary>
-            <msdn-id>ms645571</msdn-id>
+            <doc-id>ms645571</doc-id>
             <unmanaged>dwSize</unmanaged>
             <unmanaged-short>dwSize</unmanaged-short>
         </member>
@@ -1490,7 +1490,7 @@
             <summary>
             <dd> <p>A handle to the device generating the raw input data. </p> </dd>
             </summary>
-            <msdn-id>ms645571</msdn-id>
+            <doc-id>ms645571</doc-id>
             <unmanaged>hDevice</unmanaged>
             <unmanaged-short>hDevice</unmanaged-short>
         </member>
@@ -1498,7 +1498,7 @@
             <summary>
             <dd> <p>The value passed in the  <em>wParam</em> parameter of the <strong>WM_INPUT</strong> message. </p> </dd>
             </summary>
-            <msdn-id>ms645571</msdn-id>
+            <doc-id>ms645571</doc-id>
             <unmanaged>wParam</unmanaged>
             <unmanaged-short>wParam</unmanaged-short>
         </member>
@@ -1534,7 +1534,7 @@
             <summary>
             <p>Contains information about the state of the keyboard. </p>
             </summary>
-            <msdn-id>ms645575</msdn-id>
+            <doc-id>ms645575</doc-id>
             <unmanaged>RAWKEYBOARD</unmanaged>
             <unmanaged-short>RAWKEYBOARD</unmanaged-short>
         </member>
@@ -1542,7 +1542,7 @@
             <summary>
             <dd> <p>The scan code from the key depression. The scan code for keyboard overrun is <strong>KEYBOARD_OVERRUN_MAKE_CODE</strong>. </p> </dd>
             </summary>
-            <msdn-id>ms645575</msdn-id>
+            <doc-id>ms645575</doc-id>
             <unmanaged>MakeCode</unmanaged>
             <unmanaged-short>MakeCode</unmanaged-short>
         </member>
@@ -1552,7 +1552,7 @@
             </p> </td></tr> <tr><td><dl> <dt><strong>RI_KEY_E1</strong></dt> <dt>4</dt> </dl> </td><td> <p>The scan code has the E1 prefix.
             </p> </td></tr> <tr><td><dl> <dt><strong>RI_KEY_MAKE</strong></dt> <dt>0</dt> </dl> </td><td> <p>The key is down.</p> </td></tr> </table> <p>?</p> </dd>
             </summary>
-            <msdn-id>ms645575</msdn-id>
+            <doc-id>ms645575</doc-id>
             <unmanaged>Flags</unmanaged>
             <unmanaged-short>Flags</unmanaged-short>
         </member>
@@ -1560,7 +1560,7 @@
             <summary>
             <dd> <p>Reserved; must be zero. </p> </dd>
             </summary>
-            <msdn-id>ms645575</msdn-id>
+            <doc-id>ms645575</doc-id>
             <unmanaged>Reserved</unmanaged>
             <unmanaged-short>Reserved</unmanaged-short>
         </member>
@@ -1568,7 +1568,7 @@
             <summary>
             <dd> <p>Windows message compatible virtual-key code. For more information, see Virtual Key Codes. </p> </dd>
             </summary>
-            <msdn-id>ms645575</msdn-id>
+            <doc-id>ms645575</doc-id>
             <unmanaged>VKey</unmanaged>
             <unmanaged-short>VKey</unmanaged-short>
         </member>
@@ -1576,7 +1576,7 @@
             <summary>
             <dd> <p>The corresponding window message, for example <strong>WM_KEYDOWN</strong>, <strong>WM_SYSKEYDOWN</strong>, and so forth. </p> </dd>
             </summary>
-            <msdn-id>ms645575</msdn-id>
+            <doc-id>ms645575</doc-id>
             <unmanaged>Message</unmanaged>
             <unmanaged-short>Message</unmanaged-short>
         </member>
@@ -1584,7 +1584,7 @@
             <summary>
             <dd> <p>The device-specific additional information for the event. </p> </dd>
             </summary>
-            <msdn-id>ms645575</msdn-id>
+            <doc-id>ms645575</doc-id>
             <unmanaged>ExtraInformation</unmanaged>
             <unmanaged-short>ExtraInformation</unmanaged-short>
         </member>
