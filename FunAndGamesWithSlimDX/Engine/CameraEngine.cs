@@ -266,11 +266,9 @@ namespace FunAndGamesWithSharpDX.Engine
         {
             if (e.ButtonFlags == MouseButtonFlags.Button1Down)
             {
-                var polygons = GetSceneMeshes();
-
                 var point = Cursor.Position;
 
-                var pickedPolygon = InteractiveEngine.GetPickedPolygon(new SharpDX.Point(point.X, point.Y), Camera, polygons);
+                var pickedPolygon = InteractiveEngine.GetPickedPolygon(new SharpDX.Point(point.X, point.Y), Camera, GetRenderedItems());
 
                 if (pickedPolygon != null)
                     pickedPolygon.TextureIndex = 9;

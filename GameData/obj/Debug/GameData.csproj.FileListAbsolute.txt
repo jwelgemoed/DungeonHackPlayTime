@@ -93,7 +93,6 @@ C:\temp\DungeonHackPlayTime-master\GameData\bin\Debug\nunit.framework.xml
 C:\temp\DungeonHackPlayTime-master\GameData\obj\Debug\GameData.csprojResolveAssemblyReference.cache
 C:\temp\DungeonHackPlayTime-master\GameData\obj\Debug\GameData.dll
 C:\temp\DungeonHackPlayTime-master\GameData\obj\Debug\GameData.pdb
-C:\git\DungeonHackPlayTime\GameData\obj\Debug\GameData.csproj.CoreCompileInputs.cache
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\Resources\MWALL4_2.PNG
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\Shaders\LightTexture.hlsl
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\Shaders\Texture.hlsl
@@ -160,6 +159,7 @@ C:\git\DungeonHackPlayTime\GameData\bin\Debug\SharpDX.DXGI.xml
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\SharpDX.Desktop.pdb
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\SharpDX.Desktop.xml
 C:\git\DungeonHackPlayTime\GameData\obj\Debug\GameData.csprojAssemblyReference.cache
+C:\git\DungeonHackPlayTime\GameData\obj\Debug\GameData.csproj.CoreCompileInputs.cache
 C:\git\DungeonHackPlayTime\GameData\obj\Debug\GameData.csproj.CopyComplete
 C:\git\DungeonHackPlayTime\GameData\obj\Debug\GameData.dll
 C:\git\DungeonHackPlayTime\GameData\obj\Debug\GameData.pdb

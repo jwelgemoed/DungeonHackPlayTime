@@ -23,13 +23,13 @@ namespace DungeonHack.Engine
             _aspectRatio = renderer.AspectRatio();
         }
 
-        public Polygon GetPickedPolygon(Point sc, Camera camera, IEnumerable<Polygon> polygons)
+        public Polygon GetPickedPolygon(Point sc, Camera camera, RenderedItems renderedItems)
         {
             float vX = (+2.0f * sc.X / _width - 1.0f) / camera.ProjectionMatrix.M11;
             float vY = (-2.0f * sc.Y / _height + 1.0f) / camera.ProjectionMatrix.M22;
             
-            Vector3 rayOrigin = new Vector3(0.0f, 0.0f, 0.0f);
-            Vector3 rayDirection = new Vector3(vX, vY, 1.0f);
+           // Vector3 rayOrigin = new Vector3(0.0f, 0.0f, 0.0f);
+           // Vector3 rayDirection = new Vector3(vX, vY, 1.0f);
 
             Matrix v = camera.ViewMatrix;
             Matrix invV = Matrix.Invert(v);
@@ -38,42 +38,48 @@ namespace DungeonHack.Engine
 
             float tmin = 100000;
 
-            foreach (var polygon in polygons)
+            for (int i = 0; i < renderedItems.RenderedItemLists.Length; i++)
             {
-                Matrix world = polygon.WorldMatrix;
-                Matrix invWorld = Matrix.Invert(world);
-
-                Matrix toLocal = Matrix.Multiply(invV, invWorld);
-
-                rayOrigin = Vector3.TransformCoordinate(rayOrigin, toLocal);
-                rayDirection = Vector3.TransformNormal(rayDirection, toLocal);
-                rayDirection.Normalize();
-
-                int pickedTriangle = -1;
-
-                Ray ray = new Ray(rayOrigin, rayDirection);
-
-                if (polygon.BoundingBox.BoundingBox.Intersects(ref ray, out tmin))
+                foreach (var polygon in renderedItems.RenderedItemLists[i])
                 {
-                    for (int i = 0; i < polygon.VertexData.Length / 3; i++)
+                    Matrix world = polygon.WorldMatrix;
+                    Matrix invWorld = Matrix.Invert(world);
+
+                    Matrix toLocal = Matrix.Multiply(invV, invWorld);
+
+                    Vector3 rayOrigin = new Vector3(0.0f, 0.0f, 0.0f);
+                    Vector3 rayDirection = new Vector3(vX, vY, 1.0f);
+
+                    rayOrigin = Vector3.TransformCoordinate(rayOrigin, toLocal);
+                    rayDirection = Vector3.TransformNormal(rayDirection, toLocal);
+                    rayDirection.Normalize();
+
+                    int pickedTriangle = -1;
+
+                    Ray ray = new Ray(rayOrigin, rayDirection);
+
+                    if (polygon.BoundingBox.BoundingBox.Intersects(ref ray, out tmin))
                     {
-                        int i0 = polygon.IndexData[i * 3 + 0];
-                        int i1 = polygon.IndexData[i * 3 + 1];
-                        int i2 = polygon.IndexData[i * 3 + 2];
-
-                        Vector3 v0 = new Vector3(polygon.VertexData[i0].Position.X, polygon.VertexData[i0].Position.Y, polygon.VertexData[i0].Position.Z);
-                        Vector3 v1 = new Vector3(polygon.VertexData[i1].Position.X, polygon.VertexData[i1].Position.Y, polygon.VertexData[i1].Position.Z);
-                        Vector3 v2 = new Vector3(polygon.VertexData[i2].Position.X, polygon.VertexData[i2].Position.Y, polygon.VertexData[i2].Position.Z);
-
-                        float t = 0.0f;
-
-                        if (ray.Intersects(ref v0, ref v1, ref v2, out t))
+                        for (int j = 0; j < polygon.VertexData.Length / 3; j++)
                         {
-                            if (t < tmin)
+                            int i0 = polygon.IndexData[j * 3 + 0];
+                            int i1 = polygon.IndexData[j * 3 + 1];
+                            int i2 = polygon.IndexData[j * 3 + 2];
+
+                            Vector3 v0 = new Vector3(polygon.VertexData[i0].Position.X, polygon.VertexData[i0].Position.Y, polygon.VertexData[i0].Position.Z);
+                            Vector3 v1 = new Vector3(polygon.VertexData[i1].Position.X, polygon.VertexData[i1].Position.Y, polygon.VertexData[i1].Position.Z);
+                            Vector3 v2 = new Vector3(polygon.VertexData[i2].Position.X, polygon.VertexData[i2].Position.Y, polygon.VertexData[i2].Position.Z);
+
+                            float t = 0.0f;
+
+                            if (ray.Intersects(ref v0, ref v1, ref v2, out t))
                             {
-                                tmin = t;
-                                pickedTriangle = i;
-                                pickedPolygon = polygon;
+                                if (t <= tmin)
+                                {
+                                    tmin = t;
+                                    pickedTriangle = i;
+                                    pickedPolygon = polygon;
+                                }
                             }
                         }
                     }

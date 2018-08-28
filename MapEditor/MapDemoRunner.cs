@@ -166,5 +166,10 @@ namespace MapEditor
         {
             throw new NotImplementedException();
         }
+
+        public override RenderedItems GetRenderedItems()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

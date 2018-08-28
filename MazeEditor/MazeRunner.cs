@@ -33,6 +33,7 @@ namespace MazeEditor
         private QuadTreeDepthRenderer _quadTreeDepthRenderer;
         private PolygonRenderer _polygonRenderer;
         private BoundingBoxRenderer _boundingBoxRenderer;
+        private RenderedItems _renderedItems;
         private Matrix _viewProjectionMatrix;
         private ItemRegistry _itemRegistry;
 
@@ -181,6 +182,11 @@ namespace MazeEditor
             return Meshes;
         }
 
+        public override RenderedItems GetRenderedItems()
+        {
+            return _renderedItems;
+        }
+
         public override void InitializeScene()
         {
             var textureDictionary = new TextureDictionary(base.Renderer.Device);
@@ -201,9 +207,10 @@ namespace MazeEditor
 
             int _threadCount = 4;
             int _threadCountPerThread = 4;
+            _renderedItems = new RenderedItems(_threadCount);
             DepthBuffer depthBuffer = new DepthBuffer(Camera, _threadCount * _threadCountPerThread);
             DepthBufferRenderer.DepthBuffer = depthBuffer;
-            _quadTreeRenderer = new QuadTreeRenderer(_polygonRenderer, _boundingBoxRenderer, Camera, depthBuffer);
+            _quadTreeRenderer = new QuadTreeRenderer(_polygonRenderer, _boundingBoxRenderer, Camera, depthBuffer, _renderedItems);
             _quadTreeDepthRenderer = new QuadTreeDepthRenderer(Camera, depthBuffer);
 
             _quadTreeTraverser = new QuadTreeTraverser(QuadTreeNode);

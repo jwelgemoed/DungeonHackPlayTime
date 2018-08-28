@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using DungeonHack.Entities;
 using DungeonHack.Renderers;
 using System.Threading;
+using DungeonHack.Engine;
 
 namespace DungeonHack.QuadTree
 {
@@ -22,13 +23,16 @@ namespace DungeonHack.QuadTree
         private Task[] _tasks;
         private Stopwatch _stopwatch;
         private DepthBuffer _depthBuffer;
+        private RenderedItems _renderedItems;
 
         public int MeshesRendered;
 
-        public QuadTreeRenderer(PolygonRenderer renderer, BoundingBoxRenderer boundingBoxRenderer, Camera camera, DepthBuffer depthBuffer)
+        public QuadTreeRenderer(PolygonRenderer renderer, BoundingBoxRenderer boundingBoxRenderer, Camera camera, DepthBuffer depthBuffer,
+            RenderedItems renderedItems)
         {
             _threadCount = 4;
             _threadCountPerThread = 4;
+            _renderedItems = renderedItems;
             _renderer = renderer;
             _renderList = new Polygon[_threadCount * _threadCountPerThread][];
             _endOfList = new int[_threadCount * _threadCountPerThread];
@@ -129,6 +133,7 @@ namespace DungeonHack.QuadTree
             QuadTreeNode node;
             _nodeStack[threadCount].Push(root);
             int depth = 1;
+            _renderedItems.RenderedItemLists[threadCount].Clear();
 
             while (_nodeStack[threadCount].Count > 0)
             {
@@ -155,6 +160,7 @@ namespace DungeonHack.QuadTree
                         }
 
                         _renderer.Render(threadCount, polygon, ref polygonsdrawn);
+                        _renderedItems.RenderedItemLists[threadCount].Add(polygon);
 
                         Interlocked.Increment(ref MeshesRendered);
                     }

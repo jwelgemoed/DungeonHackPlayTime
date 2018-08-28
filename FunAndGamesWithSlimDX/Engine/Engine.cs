@@ -264,6 +264,8 @@ namespace DungeonHack.Engine
         /// <returns></returns>
         public abstract List<Polygon> GetSceneMeshes();
 
+        public abstract RenderedItems GetRenderedItems();
+
         /// <summary>
         /// Start the engine's timer.
         /// </summary>

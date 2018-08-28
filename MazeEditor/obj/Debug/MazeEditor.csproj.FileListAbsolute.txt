@@ -1,7 +1,3 @@
-C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MainWindow.g.cs
-C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\App.g.cs
-C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor_MarkupCompile.cache
-C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor_MarkupCompile.lref
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Resources\MWALL4_2.PNG
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Shaders\LightTexture.hlsl
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Shaders\Texture.hlsl
@@ -70,6 +66,10 @@ C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\SharpDX.Desktop.xml
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\SharpDX.Direct3D11.Effects.pdb
 C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\SharpDX.Direct3D11.Effects.xml
 C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor.csprojAssemblyReference.cache
+C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MainWindow.g.cs
+C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\App.g.cs
+C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor_MarkupCompile.cache
+C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor_MarkupCompile.lref
 C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MainWindow.baml
 C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor.g.resources
 C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor.Properties.Resources.resources
