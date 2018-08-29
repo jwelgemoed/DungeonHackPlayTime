@@ -2,7 +2,6 @@
 using FunAndGamesWithSharpDX.DirectX;
 using FunAndGamesWithSharpDX.Engine;
 using SharpDX;
-using System.Collections.Generic;
 
 namespace DungeonHack.Engine
 {
@@ -25,12 +24,11 @@ namespace DungeonHack.Engine
 
         public Polygon GetPickedPolygon(Point sc, Camera camera, RenderedItems renderedItems)
         {
+            int numberOfThreads = renderedItems.RenderedItemLists.Length;
+
             float vX = (+2.0f * sc.X / _width - 1.0f) / camera.ProjectionMatrix.M11;
             float vY = (-2.0f * sc.Y / _height + 1.0f) / camera.ProjectionMatrix.M22;
             
-           // Vector3 rayOrigin = new Vector3(0.0f, 0.0f, 0.0f);
-           // Vector3 rayDirection = new Vector3(vX, vY, 1.0f);
-
             Matrix v = camera.ViewMatrix;
             Matrix invV = Matrix.Invert(v);
 
@@ -38,8 +36,14 @@ namespace DungeonHack.Engine
 
             float tmin = 100000;
 
-            for (int i = 0; i < renderedItems.RenderedItemLists.Length; i++)
+            float[] threadMin = new float[numberOfThreads];
+            Polygon[] threadPicked = new Polygon[numberOfThreads];
+
+            for (int i = 0; i < numberOfThreads; i++)
             {
+                threadMin[i] = 10000.0f;
+                threadPicked[i] = null;
+
                 foreach (var polygon in renderedItems.RenderedItemLists[i])
                 {
                     Matrix world = polygon.WorldMatrix;
@@ -53,8 +57,6 @@ namespace DungeonHack.Engine
                     rayOrigin = Vector3.TransformCoordinate(rayOrigin, toLocal);
                     rayDirection = Vector3.TransformNormal(rayDirection, toLocal);
                     rayDirection.Normalize();
-
-                    int pickedTriangle = -1;
 
                     Ray ray = new Ray(rayOrigin, rayDirection);
 
@@ -77,12 +79,23 @@ namespace DungeonHack.Engine
                                 if (t <= tmin)
                                 {
                                     tmin = t;
-                                    pickedTriangle = i;
-                                    pickedPolygon = polygon;
+                                    threadMin[i] = tmin;
+                                    threadPicked[i] = polygon;
                                 }
                             }
                         }
                     }
+                }
+            }
+
+            tmin = 10000.0f;
+
+            for (int i=0; i<numberOfThreads; i++)
+            {
+                if (threadMin[i] <= tmin)
+                {
+                    tmin = threadMin[i];
+                    pickedPolygon = threadPicked[i];
                 }
             }
 
