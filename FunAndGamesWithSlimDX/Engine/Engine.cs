@@ -204,7 +204,10 @@ namespace DungeonHack.Engine
 
                         UpdateScene();
 
-                        Renderer.ImmediateContext.ClearRenderTargetView(Renderer.RenderTarget, Colors.Black);
+                        for (int i = 0; i < Renderer.RenderTargets.Length; i++)
+                        {
+                            Renderer.ImmediateContext.ClearRenderTargetView(Renderer.RenderTargets[i], Colors.Black);
+                        }
                         Renderer.ImmediateContext.ClearDepthStencilView(Renderer.DepthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
 
                         _stopwatch.Restart();

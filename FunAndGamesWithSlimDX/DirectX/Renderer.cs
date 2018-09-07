@@ -28,6 +28,11 @@ namespace FunAndGamesWithSharpDX.DirectX
         private DepthStencilState _depthStencilState;
         private DepthStencilState _depthStencilDisabledState;
 
+        //Deferred Shading Buffers
+        public RenderTargetView[] RenderTargets;
+        public Texture2D[] RenderTargetBuffers;
+        public ShaderResourceView[] ShaderResourceViews;
+
         public static int Width { get; set; }
         public static int Height { get; set; }
         public static bool Use4XMSAA { get; set; }
@@ -35,6 +40,8 @@ namespace FunAndGamesWithSharpDX.DirectX
 
         public static float ScreenNear { get; set; }
         public static float ScreenFar { get; set; }
+
+        private int _numberOfBuffers = 3;
 
         public bool Check4XMSAAQualitySupport()
         {
@@ -106,6 +113,8 @@ namespace FunAndGamesWithSharpDX.DirectX
 
             RenderTarget = CreateRenderTarget();
 
+            CreateDeferredShadingRenderTargetsAndBuffers();
+
             DepthStencilView = CreatDepthStencil();
 
             DepthStencilOperationDescription frontFace = CreateFrontFaceDepthStencilDescription();
@@ -124,6 +133,67 @@ namespace FunAndGamesWithSharpDX.DirectX
             SetRasterizerState(FillMode.Solid, CullMode.Back);
         }
 
+        private void CreateDeferredShadingRenderTargetsAndBuffers()
+        {
+            var renderTargets = new RenderTargetView[_numberOfBuffers];
+            var renderBuffers = new Texture2D[_numberOfBuffers];
+            var renderShaderViews = new ShaderResourceView[_numberOfBuffers];
+
+            var textureDescription = new Texture2DDescription()
+            {
+                Width = Width,
+                Height = Height,
+                MipLevels = 1,
+                ArraySize = 1,
+                Format = Format.R8G8B8A8_UNorm,
+                SampleDescription = new SampleDescription() { Count = 1 },
+                BindFlags = BindFlags.RenderTarget | BindFlags.ShaderResource,
+                CpuAccessFlags = 0,
+                Usage = ResourceUsage.Default,
+                OptionFlags = ResourceOptionFlags.None
+            };
+
+            renderBuffers[0] = new Texture2D(Device, textureDescription);
+            textureDescription.Format = Format.R11G11B10_Float;
+            renderBuffers[1] = new Texture2D(Device, textureDescription);
+            textureDescription.Format = Format.R8G8B8A8_UNorm;
+            renderBuffers[2] = new Texture2D(Device, textureDescription);
+
+            var renderTargetViewDescription = new RenderTargetViewDescription()
+            {
+                Format = textureDescription.Format,
+                Dimension = RenderTargetViewDimension.Texture2D,
+                Texture2D = new RenderTargetViewDescription.Texture2DResource() { MipSlice = 0 }
+            };
+
+            for (int i = 0; i < _numberOfBuffers; i++)
+            {
+                renderTargetViewDescription.Format = renderBuffers[i].Description.Format;
+                renderTargets[i] = new RenderTargetView(Device, renderBuffers[i], renderTargetViewDescription);
+            }
+
+            var shaderResourceViewDescription = new ShaderResourceViewDescription()
+            {
+                Format = textureDescription.Format,
+                Dimension = SharpDX.Direct3D.ShaderResourceViewDimension.Texture2D,
+                Texture2D = new ShaderResourceViewDescription.Texture2DResource()
+                {
+                    MipLevels = 1,
+                    MostDetailedMip = 0
+                }
+            };
+
+            for (int i=0; i< _numberOfBuffers; i++)
+            {
+                shaderResourceViewDescription.Format = renderBuffers[i].Description.Format;
+                renderShaderViews[i] = new ShaderResourceView(Device, renderBuffers[i], shaderResourceViewDescription);
+            }
+
+            RenderTargetBuffers = renderBuffers;
+            RenderTargets = renderTargets;
+            ShaderResourceViews = renderShaderViews;
+        }
+
         private void CreateDeferredContexts(RawViewportF viewport)
         {
             DeferredContexts = new DeviceContext[_numberOfRenderingThreads];
@@ -133,7 +203,7 @@ namespace FunAndGamesWithSharpDX.DirectX
             {
                 DeferredContexts[i] = new DeviceContext(Device);
                 DeferredContexts[i].OutputMerger.DepthStencilState = _depthStencilState;
-                DeferredContexts[i].OutputMerger.SetTargets(DepthStencilView, RenderTarget);
+                DeferredContexts[i].OutputMerger.SetTargets(DepthStencilView, RenderTargets);
                 DeferredContexts[i].Rasterizer.SetViewports(new[] { viewport });
             }
         }
@@ -142,7 +212,7 @@ namespace FunAndGamesWithSharpDX.DirectX
         {
             ImmediateContext = Device.ImmediateContext;
             ImmediateContext.OutputMerger.DepthStencilState = _depthStencilState;
-            ImmediateContext.OutputMerger.SetTargets(DepthStencilView, RenderTarget);
+            ImmediateContext.OutputMerger.SetTargets(DepthStencilView, RenderTargets);
             ImmediateContext.Rasterizer.SetViewports(new[] { viewport });
         }
 
@@ -278,6 +348,13 @@ namespace FunAndGamesWithSharpDX.DirectX
             DepthStencilView.Dispose();
            
             RenderTarget.Dispose();
+
+            for (int i=0; i<_numberOfBuffers; i++)
+            {
+                ShaderResourceViews[i]?.Dispose();
+                RenderTargets[i]?.Dispose();
+                RenderTargetBuffers[i]?.Dispose();
+            }
 
             SwapChain.IsFullScreen = false;
             SwapChain.Dispose();
