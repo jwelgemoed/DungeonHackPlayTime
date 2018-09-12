@@ -150,6 +150,8 @@
     <Compile Include="DirectX\ConstantBuffer\ConstantBuffer.cs" />
     <Compile Include="DirectX\ConstantBuffer\ConstantBufferPerFrame.cs" />
     <Compile Include="DirectX\ConstantBuffer\ConstantBufferPerObject.cs" />
+    <Compile Include="DirectX\DeferredShadingRenderer.cs" />
+    <Compile Include="DirectX\FileIncludeHandler.cs" />
     <Compile Include="DirectX\IShader.cs" />
     <Compile Include="DirectX\LightShader.cs" />
     <Compile Include="DirectX\Renderer2D.cs" />
@@ -189,6 +191,24 @@
     <Compile Include="Entities\Model.cs" />
     <Compile Include="Entities\Vertex.cs" />
     <Compile Include="Engine\GameTimer.cs" />
+    <Content Include="Shaders\LightTextureDS.hlsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\LightTextureHS.hlsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\DeferredPS.hlsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\LightTexturePS.hlsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\DeferredVS.hlsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\LightTextureVS.hlsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Shaders\Sprite.fx" />
     <Compile Include="Lights\DirectionalLight.cs" />
     <Compile Include="Lights\LightEngine.cs" />
@@ -227,10 +247,13 @@
     <Content Include="Resources\MWALL4_2.PNG">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Shaders\LightTexture.hlsl">
+    <Content Include="Shaders\Texture.hlsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Shaders\Texture.hlsl">
+    <Content Include="Shaders\DeferredUtilities.hlsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Utilities.hlsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="sharpdx_direct3d11_1_effects_x64.dll">

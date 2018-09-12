@@ -1,0 +1,15 @@
+﻿#include "Utilities.hlsl"
+
+////////////////////////////////////////////////////////////////////////////////
+// Vertex Shader
+////////////////////////////////////////////////////////////////////////////////
+VS_OUTPUT LightVertexShader(uint VertexID : SV_VertexID)
+{
+	VS_OUTPUT output;
+
+	output.Position = float4(arrPos[VertexID].xy, 0.0, 1.0);
+	output.cpPos = output.Position.xy;
+
+	return output;
+}
+

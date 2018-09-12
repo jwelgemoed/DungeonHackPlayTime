@@ -43,23 +43,34 @@ namespace DungeonHack.DirectX
 
             var basePath = ConfigManager.ResourcePath;
 
-            var fileName = basePath + @"\Shaders\LightTexture.hlsl";
+            var vsShaderName = basePath + @"\Shaders\LightTextureVS.hlsl";
+            var psShaderName = basePath + @"\Shaders\LightTexturePS.hlsl";
+            var hsShaderName = basePath + @"\Shaders\LightTextureHS.hlsl";
+            var dsShaderName = basePath + @"\Shaders\LightTextureDS.hlsl";
+            
+            var bytecode = ShaderBytecode.CompileFromFile(vsShaderName, "LightVertexShader", "vs_5_0", ShaderFlags.Debug | ShaderFlags.SkipOptimization,
+                include: FileIncludeHandler.Default);
 
-            var bytecode = ShaderBytecode.CompileFromFile(fileName, "LightVertexShader", "vs_5_0", ShaderFlags.Debug | ShaderFlags.SkipOptimization);
             var vertexShader = new VertexShader(_device, bytecode);
 
             _layout = new InputLayout(_device, bytecode, _elements);
             bytecode.Dispose();
 
-            bytecode = ShaderBytecode.CompileFromFile(fileName, "LightPixelShader", "ps_5_0", ShaderFlags.Debug | ShaderFlags.SkipOptimization);
+            bytecode = ShaderBytecode.CompileFromFile(psShaderName, "LightPixelShader", "ps_5_0", ShaderFlags.Debug | ShaderFlags.SkipOptimization,
+                include: FileIncludeHandler.Default);
+
             var pixelShader = new PixelShader(_device, bytecode);
             bytecode.Dispose();
 
-            bytecode = ShaderBytecode.CompileFromFile(fileName, "HS", "hs_5_0", ShaderFlags.Debug | ShaderFlags.SkipOptimization);
+            bytecode = ShaderBytecode.CompileFromFile(hsShaderName, "HS", "hs_5_0", ShaderFlags.Debug | ShaderFlags.SkipOptimization,
+                include: FileIncludeHandler.Default);
+
             var hullShader = new HullShader(_device, bytecode);
             bytecode.Dispose();
 
-            bytecode = ShaderBytecode.CompileFromFile(fileName, "DS", "ds_5_0", ShaderFlags.Debug | ShaderFlags.SkipOptimization);
+            bytecode = ShaderBytecode.CompileFromFile(dsShaderName, "DS", "ds_5_0", ShaderFlags.Debug | ShaderFlags.SkipOptimization,
+                include: FileIncludeHandler.Default);
+
             var domainShader = new DomainShader(_device, bytecode);
             bytecode.Dispose();
 
