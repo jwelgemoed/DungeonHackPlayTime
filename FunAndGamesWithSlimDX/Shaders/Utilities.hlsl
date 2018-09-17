@@ -122,7 +122,7 @@ struct DomainOut
 
 struct PS_GBUFFER_OUT
 {
-	float4 ColorSpecInt: SV_TARGER0;
+	float4 ColorSpecInt: SV_TARGET0;
 	float4 Normal: SV_TARGET1;
 	float4 SpecPow: SV_TARGET2;
 };

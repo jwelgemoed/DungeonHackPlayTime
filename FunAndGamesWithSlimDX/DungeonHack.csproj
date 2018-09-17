@@ -153,6 +153,7 @@
     <Compile Include="DirectX\DeferredShadingRenderer.cs" />
     <Compile Include="DirectX\FileIncludeHandler.cs" />
     <Compile Include="DirectX\IShader.cs" />
+    <Compile Include="DirectX\DeferredShader.cs" />
     <Compile Include="DirectX\LightShader.cs" />
     <Compile Include="DirectX\Renderer2D.cs" />
     <Compile Include="DirectX\Shader.cs" />
@@ -191,10 +192,10 @@
     <Compile Include="Entities\Model.cs" />
     <Compile Include="Entities\Vertex.cs" />
     <Compile Include="Engine\GameTimer.cs" />
-    <Content Include="Shaders\LightTextureDS.hlsl">
+    <Content Include="Shaders\DeferredDS.hlsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Shaders\LightTextureHS.hlsl">
+    <Content Include="Shaders\DeferredHS.hlsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Shaders\DeferredPS.hlsl">

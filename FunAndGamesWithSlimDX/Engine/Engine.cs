@@ -204,8 +204,8 @@ namespace DungeonHack.Engine
 
                         UpdateScene();
 
-                        Renderer.ImmediateContext.ClearRenderTargetView(Renderer.RenderTarget, Colors.Black);
-                        Renderer.ImmediateContext.ClearDepthStencilView(Renderer.DepthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
+                      //  Renderer.ImmediateContext.ClearRenderTargetView(Renderer.RenderTarget, Colors.Black);
+                      //  Renderer.ImmediateContext.ClearDepthStencilView(Renderer.DepthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
 
                         _stopwatch.Restart();
 
@@ -213,7 +213,7 @@ namespace DungeonHack.Engine
 
                         DisplayConsoleInformation();
                        // DepthBufferRenderer.RenderToScreen(Renderer2D);
-                        Renderer.SwapChain.Present(ConfigManager.VSync, PresentFlags.None);
+                       // Renderer.SwapChain.Present(ConfigManager.VSync, PresentFlags.None);
 
                         _stopwatch.Stop();
                     }

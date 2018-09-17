@@ -28,6 +28,8 @@ namespace FunAndGamesWithSharpDX.DirectX
         private DepthStencilState _depthStencilState;
         private DepthStencilState _depthStencilDisabledState;
 
+        private RawViewportF _viewport;
+
         ////Deferred Shading Buffers
         //public RenderTargetView[] RenderTargets;
         //public Texture2D[] RenderTargetBuffers;
@@ -122,18 +124,28 @@ namespace FunAndGamesWithSharpDX.DirectX
 
             _depthStencilDisabledState = CreateDisableDepthStencil(frontFace, backFace);
 
-            RawViewportF viewport = CreateViewPort();
+            _viewport = CreateViewPort();
 
-            BindImmediateContext(viewport);
+            BindImmediateContext();
 
             //SetRenderState();
 
-            CreateDeferredContexts(viewport);
+            CreateDeferredContexts();
 
             SetRasterizerState(FillMode.Solid, CullMode.Back);
         }
 
-        private void CreateDeferredContexts(RawViewportF viewport)
+        public void SetBackBufferRenderTarget(DeviceContext context)
+        {
+            context.OutputMerger.SetRenderTargets(DepthStencilView, RenderTarget);
+        }
+
+        public void ResetViewport(DeviceContext context)
+        {
+            context.Rasterizer.SetViewports(new[] { _viewport });
+        }
+
+        private void CreateDeferredContexts()
         {
             DeferredContexts = new DeviceContext[_numberOfRenderingThreads];
             CommandLists = new CommandList[_numberOfRenderingThreads];
@@ -143,16 +155,16 @@ namespace FunAndGamesWithSharpDX.DirectX
                 DeferredContexts[i] = new DeviceContext(Device);
                 DeferredContexts[i].OutputMerger.DepthStencilState = _depthStencilState;
                 DeferredContexts[i].OutputMerger.SetTargets(DepthStencilView, RenderTarget);
-                DeferredContexts[i].Rasterizer.SetViewports(new[] { viewport });
+                DeferredContexts[i].Rasterizer.SetViewports(new[] { _viewport });
             }
         }
 
-        private void BindImmediateContext(RawViewportF viewport)
+        private void BindImmediateContext()
         {
             ImmediateContext = Device.ImmediateContext;
             ImmediateContext.OutputMerger.DepthStencilState = _depthStencilState;
             ImmediateContext.OutputMerger.SetTargets(DepthStencilView, RenderTarget);
-            ImmediateContext.Rasterizer.SetViewports(new[] { viewport });
+            ImmediateContext.Rasterizer.SetViewports(new[] { _viewport });
         }
 
         private static DepthStencilOperationDescription CreateBackFaceDepthStencilDescription()
