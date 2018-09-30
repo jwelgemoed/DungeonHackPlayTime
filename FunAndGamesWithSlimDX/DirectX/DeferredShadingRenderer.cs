@@ -1,4 +1,5 @@
-﻿using SharpDX;
+﻿using FunAndGamesWithSharpDX.DirectX;
+using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
@@ -23,11 +24,14 @@ namespace DungeonHack.DirectX
         public RenderTargetView[] RenderTargets;
         public Texture2D[] RenderTargetBuffers;
         public ShaderResourceView[] ShaderResourceViews;
+        public ShaderResourceView DepthShaderResourceView;
 
         private int _numberOfBuffers = 3;
 
-        public void Initialize()
+        public void Initialize(Renderer renderer)
         {
+            Device = renderer.Device;
+
             DepthStencilView = CreatDepthStencil();
 
             CreateDeferredShadingRenderTargetsAndBuffers();
@@ -70,10 +74,11 @@ namespace DungeonHack.DirectX
                 Height = Height,
                 MipLevels = 1,
                 ArraySize = 1,
-                Format = Format.D32_Float,
+                Format = Format.R24G8_Typeless,
+               // Format = Format.R24G8_Typeless,
                 SampleDescription = sampleDesc,
                 Usage = ResourceUsage.Default,
-                BindFlags = BindFlags.DepthStencil,
+                BindFlags = BindFlags.DepthStencil| BindFlags.ShaderResource,
                 CpuAccessFlags = CpuAccessFlags.None,
             };
 
@@ -93,8 +98,20 @@ namespace DungeonHack.DirectX
 
             _depthStencilViewDesc = new DepthStencilViewDescription()
             {
+                Format = Format.D24_UNorm_S8_UInt,
                 Dimension = DepthStencilViewDimension.Texture2D
             };
+
+            DepthShaderResourceView = new ShaderResourceView(Device, _depthStencilBuffer, new ShaderResourceViewDescription()
+            {
+                Format = Format.R24_UNorm_X8_Typeless,
+                Dimension = SharpDX.Direct3D.ShaderResourceViewDimension.Texture2D,
+                Texture2D = new ShaderResourceViewDescription.Texture2DResource()
+                {
+                    MipLevels = -1,
+                    MostDetailedMip = 0
+                }
+            });
 
             return new DepthStencilView(Device, _depthStencilBuffer, _depthStencilViewDesc);
         }
@@ -175,8 +192,10 @@ namespace DungeonHack.DirectX
 
         public void Dispose()
         {
-            _depthStencilBuffer?.Dispose();
+            DepthShaderResourceView?.Dispose();
 
+            _depthStencilBuffer?.Dispose();
+            
             DepthStencilView?.Dispose();
 
             for (int i = 0; i < _numberOfBuffers; i++)

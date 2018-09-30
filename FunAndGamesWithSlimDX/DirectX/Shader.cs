@@ -27,15 +27,16 @@ namespace DungeonHack.DirectX
             _textureShader?.Dispose();
         }
 
-        public Shader(Renderer renderer, DeferredShadingRenderer deferredRenderer)
+        public Shader(Renderer renderer, DeferredShadingRenderer deferredRenderer, Camera camera)
         {
             _renderer = renderer;
             _deferredShadingRenderer = deferredRenderer;
             _textureShader = new TextureShader(renderer);
-            _lightShader = new LightShader(renderer);
+            _lightShader = new LightShader(renderer, camera, deferredRenderer);
             _deferredShader = new DeferredShader(renderer);
             _numberOfDeferredContexts = _renderer.DeferredContexts.Length;
 
+            _deferredShader.Initialize();
             SetShader(ShaderTechnique.LightShader);
         }
 
@@ -92,6 +93,8 @@ namespace DungeonHack.DirectX
 
         private void SetupFrameRender()
         {
+            _deferredShader.SwitchShader();
+
             _deferredShadingRenderer.SetRenderTargets(_renderer.ImmediateContext);
             _deferredShadingRenderer.ClearRenderTargets(_renderer.ImmediateContext, Color.Black);
 
@@ -106,8 +109,14 @@ namespace DungeonHack.DirectX
             }
         }
 
+        public void SwitchShader()
+        {
+            
+        }
+
         private void ResetFrame()
         {
+            _currentShader.SwitchShader();
             _renderer.SetBackBufferRenderTarget(_renderer.ImmediateContext);
             _renderer.ResetViewport(_renderer.ImmediateContext);
 

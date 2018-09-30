@@ -142,5 +142,9 @@ namespace FunAndGamesWithSharpDX.DirectX
         
         }
 
-     }
+        public void SwitchShader()
+        {
+            throw new System.NotImplementedException();
+        }
+    }
 }

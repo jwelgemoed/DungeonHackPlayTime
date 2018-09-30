@@ -119,7 +119,8 @@ namespace MapEditor
 
             _directionalLight = new DirectionalLight()
             {
-                Ambient = new Color4(0.2f, 0.2f, 0.2f, 1.0f),
+                Color = new Color4(0.2f, 0.2f, 0.2f, 1.0f),
+                Direction = new Vector3(0.0f, 1.0f, 0.0f)
                 //Diffuse = new Vector4(0.0f, 0.0f, 0.0f, 1.0f),
                 //Specular = new Vector4(0.0f, 0.0f, 0.0f, 1.0f),
                 //Direction = new Vector3(0.0f, 1.0f, 0.0f)

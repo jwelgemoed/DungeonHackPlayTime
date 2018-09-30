@@ -1,83 +1,91 @@
-﻿#include "Utilities.hlsl"
+﻿#include "DeferredUtilities.hlsl"
 
+#define EyePosition ViewInv[3].xyz;
+
+Texture2D DepthTexture : register(t0);
+Texture2D ColorSpecIntTexture : register(t1);
+Texture2D NormalTexture : register(t2);
+Texture2D SpecPowerTexture : register(t3);
+
+SURFACE_DATA UnpackGBuffer(int2 location)
+{
+	SURFACE_DATA output;
+
+	int3 location3 = int3(location, 0);
+
+	float depth = DepthTexture.Load(location3).x;
+	output.LinearDepth = ConvertDepthToLinear(depth);
+
+	float4 baseColorSpecInt = ColorSpecIntTexture.Load(location3);
+	output.Color = baseColorSpecInt.xyz;
+	output.SpecInt = baseColorSpecInt.w;
+
+	output.Normal = NormalTexture.Load(location3);
+	output.Normal = normalize(output.Normal * 2.0 - 1.0);
+
+	float specPowerNorm = SpecPowerTexture.Load(location3).x;
+	output.SpecPow = specPowerNorm.x + specPowerNorm * g_SpecPowerRange.y;
+
+	return output;
+}
+
+float3 CalcWorldPosition(float2 csPos, float linearDepth)
+{
+	float4 position;
+
+	position.xy = csPos.xy * PerspectiveValues.xy * linearDepth;
+	position.z = linearDepth;
+	position.w = 1.0;
+
+	position = mul(position, ViewInv);
+
+	return position.xyz;
+}
+
+float3 CalcAmbient(float3 normal, float3 color)
+{
+	float up = normal.y * 0.5 + 0.5;
+	float3 ambient = gAmbientLight.AmbientDown + up * gAmbientLight.AmbientUp;
+
+	return ambient * color;
+}
+
+float3 CalcDirectional(float3 position, Material material)
+{
+	// Phong diffuse
+	float NDotL = dot(gDirLight[0].Direction, material.normal);
+	float3 finalColor = gDirLight[0].Color.rgb * saturate(NDotL);
+
+	// Blinn specular
+	float3 ToEye = EyePosition - position;
+	ToEye = normalize(ToEye);
+	float3 HalfWay = normalize(ToEye + gDirLight[0].Direction);
+	float NDotH = saturate(dot(HalfWay, material.normal));
+	finalColor += gDirLight[0].Color.rgb * pow(NDotH, material.specPower) * material.specIntensity;
+
+	return finalColor * material.diffuseColor.rgb;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Pixel Shader
 ////////////////////////////////////////////////////////////////////////////////
-float4 LightPixelShader(DomainOut input) : SV_TARGET
+float4 LightPixelShader(VS_OUTPUT input) : SV_TARGET
 {
-	float4 textureColor;
-	float3 lightDir;
-	float lightIntensity;
-	float4 color;
-	float3 reflection;
-	float4 fogColor;
+	SURFACE_DATA gbd = UnpackGBuffer(input.Position.xy);
 
-	input.normal = normalize(input.normal);
+	Material mat;
+	mat.normal = gbd.Normal;
+	mat.diffuseColor.xyz = gbd.Color;
+	mat.diffuseColor.w = 1.0;
+	mat.specPower = g_SpecPowerRange.x + g_SpecPowerRange.y * gbd.SpecPow;
+	mat.specIntensity = gbd.SpecInt;
 
-	// Sample the pixel color from the texture using the sampler at this texture coordinate location.
-	textureColor = shaderTexture.Sample(SampleType, input.tex);
-	textureColor = float4(textureColor.rgb * textureColor.rgb, textureColor.a);
-	
-	float3 bumpedNormalW = input.normal;
+	float3 position = CalcWorldPosition(input.cpPosition, gbd.LinearDepth);
 
-	if (useNormalMap)
-	{
-		float3 normalMapSample = normalMap.Sample(samLinear, input.tex).rgb;
-		bumpedNormalW = NormalSampleToWorldSpace(normalMapSample, input.normal, input.tangent);
-	}
+	float4 finalColor;
+	finalColor.xyz = CalcAmbient(mat.normal, mat.diffuseColor.xyz);
+	finalColor.xyz += CalcDirectional(position, mat);
+	finalColor.w = 1.0;
 
-	float4 ambient = float4(0.0f, 0.0f, 0.0f, 0.0f);
-	float4 diffuse = float4(0.0f, 0.0f, 0.0f, 0.0f);
-	float4 specular = float4(0.0f, 0.0f, 0.0f, 0.0f);
-
-	float4 specIntensity = specularMap.Sample(samLinear, input.tex);
-
-	float4 A, D, S;
-
-	for (uint i = 0; i < NUM_DIRECTIONAL_LIGHTS; i++)
-	{
-		ComputeDirectionalLight(material, gDirLight[i], bumpedNormalW, input.viewDirection, A, D, S);
-
-		ambient += A;
-		diffuse += D;
-		specular += S;
-	}
-
-	for (uint i = 0; i < NUM_POINT_LIGHTS; i++)
-	{
-		ComputePointLight(specIntensity, material, gPointLight[i], input.worldPosition, bumpedNormalW, input.viewDirection, A, D, S);
-
-		ambient += A;
-		diffuse += D;
-		specular += S;
-	}
-
-	for (uint i = 0; i < NUM_SPOT_LIGHTS; i++)
-	{
-		ComputeSpotLight(specIntensity, material, gSpotLight[i], input.worldPosition, bumpedNormalW, input.viewDirection, A, D, S);
-
-		ambient += A;
-		diffuse += D;
-		specular += S;
-	}
-
-	float4 litColor = ambient + diffuse;
-
-	litColor.a = material.Diffuse.a;
-
-	// Multiply the texture pixel and the input color to get the textured result.
-	color = litColor * textureColor;
-
-	// Add the specular component last to the output color.
-	color = saturate(color + specular);
-
-	// Set the color of the fog to grey.
-	fogColor = float4(0.0f, 0.0f, 0.0f, 0.0f);
-	//The fog color equation then does a linear interpolation between the texture color and the fog color based on the fog factor.
-
-	// Calculate the final color using the fog effect equation.
-	color = input.fogFactor * color + (1.0 - input.fogFactor) * fogColor;
-	
-	return color;
+	return finalColor;
 }

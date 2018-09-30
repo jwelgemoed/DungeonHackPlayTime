@@ -107,10 +107,10 @@ namespace DungeonHack.DirectX
             _constantBufferPerFrame.gMinTessFactor = 3;
             _constantBufferPerFrame.gMaxTessFactor = 27;
 
-            SwitchRenderer();
+            SwitchShader();
         }
 
-        public void SwitchRenderer()
+        public void SwitchShader()
         {
             BindImmediateContext(_vertexShader, _pixelShader, _hullShader, _domainShader);
             BindDeferredContexts(_vertexShader, _pixelShader, _hullShader, _domainShader);

@@ -148,6 +148,7 @@
     <Compile Include="CollisionDetection\ICollisionDetector.cs" />
     <Compile Include="DirectX\BufferFactory.cs" />
     <Compile Include="DirectX\ConstantBuffer\ConstantBuffer.cs" />
+    <Compile Include="DirectX\ConstantBuffer\ConstantBufferDeferredInfo.cs" />
     <Compile Include="DirectX\ConstantBuffer\ConstantBufferPerFrame.cs" />
     <Compile Include="DirectX\ConstantBuffer\ConstantBufferPerObject.cs" />
     <Compile Include="DirectX\DeferredShadingRenderer.cs" />
@@ -211,6 +212,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Shaders\Sprite.fx" />
+    <Compile Include="Lights\AmbientLight.cs" />
     <Compile Include="Lights\DirectionalLight.cs" />
     <Compile Include="Lights\LightEngine.cs" />
     <Compile Include="Lights\Point.cs" />

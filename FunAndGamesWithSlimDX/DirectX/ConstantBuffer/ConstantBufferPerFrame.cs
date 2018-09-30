@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 namespace DungeonHack.DirectX.ConstantBuffer
 {
-    [StructLayout(LayoutKind.Sequential, Size=272)]
+    [StructLayout(LayoutKind.Sequential, Size=304)]
     public struct ConstantBufferPerFrame
     {
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 1)]
@@ -21,6 +21,7 @@ namespace DungeonHack.DirectX.ConstantBuffer
         public float gMinTessDistance;
         public float gMinTessFactor;
         public float gMaxTessFactor;
+        public AmbientLight AmbientLight;
         public Vector2 pad;
     }
 }

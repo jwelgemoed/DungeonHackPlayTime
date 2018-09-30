@@ -26,6 +26,7 @@ namespace DungeonHack.Engine
         protected RenderForm Form = new RenderForm();
         protected Renderer Renderer = new Renderer();
         protected Renderer2D Renderer2D = new Renderer2D();
+        protected DeferredShadingRenderer DeferredShadingRenderer = new DeferredShadingRenderer();
         protected InteractiveEngine InteractiveEngine = new InteractiveEngine();
         protected Shader Shader;
         protected readonly GameTimer Timer = new GameTimer();
@@ -105,11 +106,16 @@ namespace DungeonHack.Engine
 
             Renderer2D.Initialize(Renderer);
 
+            DeferredShadingRenderer.Width = ConfigManager.ScreenWidth;
+            DeferredShadingRenderer.Height = ConfigManager.ScreenHeight;
+
+            DeferredShadingRenderer.Initialize(Renderer);
+
             InteractiveEngine.Initialize(Renderer);
 
             _frustrum = new Frustrum();
 
-            Shader = new Shader(Renderer);
+            Shader = new Shader(Renderer, DeferredShadingRenderer, Camera);
             Shader.Initialize();
 
             SpriteRenderer.Initialize(Renderer.Device);

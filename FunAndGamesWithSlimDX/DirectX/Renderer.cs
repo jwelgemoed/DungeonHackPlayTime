@@ -114,9 +114,6 @@ namespace FunAndGamesWithSharpDX.DirectX
             SwapChain.ResizeBuffers(1, Width, Height, Format.R8G8B8A8_UNorm, 0);
 
             RenderTarget = CreateRenderTarget();
-
-            //CreateDeferredShadingRenderTargetsAndBuffers();
-
             DepthStencilView = CreatDepthStencil();
 
             DepthStencilOperationDescription frontFace = CreateFrontFaceDepthStencilDescription();

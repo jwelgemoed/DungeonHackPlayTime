@@ -3,12 +3,10 @@ using SharpDX;
 
 namespace DungeonHack.Lights
 {
-    [StructLayout(LayoutKind.Sequential, Size=64)]
+    [StructLayout(LayoutKind.Sequential)]
     public struct DirectionalLight
     {
-        public Color4 Ambient;
-        public Color4 Diffuse;
-        public Color4 Specular;
+        public Color4 Color;
         public Vector3 Direction;
         public float pad;
     }

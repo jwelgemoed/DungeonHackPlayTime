@@ -86,9 +86,6 @@ namespace MazeEditor
             if (ConfigManager.FrustrumCullingEnabled)
                 _frustrum.ConstructFrustrum(Camera.ViewProjectionMatrix);
 
-            //Do the light rendering
-            LightEngine.RenderLights(base.Shader);
-
             _meshRenderedCount = 0;
             base._stopwatch.Restart();
 
@@ -101,6 +98,8 @@ namespace MazeEditor
             {
                 //_polygonRenderer.Render(item.Polygon, ref _meshRenderedCount);
             }
+
+            LightEngine.RenderLights(base.Shader);
         }
 
         public override void UpdateScene()
@@ -231,9 +230,7 @@ namespace MazeEditor
 
             _directionalLight = new DirectionalLight()
             {
-                Ambient = new Color4(0.5f, 0.5f, 0.35f, 0.1f),
-                Diffuse = new Color4(0.0f, 0.0f, 0.0f, 0.0f),
-                Specular = new Color4(0.0f, 0.0f, 0.0f, 0.0f),
+                Color = new Color4(0.5f, 0.5f, 0.35f, 0.1f),
                 Direction = new Vector3(1.0f, 1.0f, 1.0f)
             };
             LightEngine.AddDirectionalLight(_directionalLight);

@@ -1,5 +1,7 @@
 ﻿#include "Utilities.hlsl"
 
+Texture2D displacementMap;
+
 [domain("tri")] 
 DomainOut DS(PatchTess patchTess, 
 	float3 bary : SV_DomainLocation, const OutputPatch<HullOut,3> tri) 
