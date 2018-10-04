@@ -21,7 +21,6 @@ SURFACE_DATA UnpackGBuffer(int2 location)
 	output.SpecInt = baseColorSpecInt.w;
 
 	output.Normal = NormalTexture.Load(location3);
-	output.Normal = normalize(output.Normal * 2.0 - 1.0);
 
 	float specPowerNorm = SpecPowerTexture.Load(location3).x;
 	output.SpecPow = specPowerNorm.x + specPowerNorm * g_SpecPowerRange.y;
@@ -87,5 +86,6 @@ float4 LightPixelShader(VS_OUTPUT input) : SV_TARGET
 	finalColor.xyz += CalcDirectional(position, mat);
 	finalColor.w = 1.0;
 
+	//finalColor.xyz = gbd.Color;
 	return finalColor;
 }

@@ -56,6 +56,8 @@ namespace DungeonHack.QuadTree
 
             _renderer.RenderFrame(camera);
 
+            //DrawQuadTreeIterative(0, node, camera, frustrum);
+
             for (int i = 0; i < _threadCountPerThread; i++)
             {
                 int j = i;
@@ -101,10 +103,11 @@ namespace DungeonHack.QuadTree
                 depth--;
                 node = _nodeStack[threadCount].Pop();
 
-                if (!node.BoundingBox.ContainsOrIntersectsCamera(camera) &&
-                    (frustrum.CheckBoundingBox(node.BoundingBox.BoundingBox) == 0
-                        || node.BoundingBox.DistanceToCamera(camera) >= 2500
-                        || _depthBuffer.IsBoundingBoxOccluded(node.BoundingBox)))
+                if
+                   (!node.BoundingBox.ContainsOrIntersectsCamera(camera) &&
+                (frustrum.CheckBoundingBox(node.BoundingBox.BoundingBox) == 0
+                || node.BoundingBox.DistanceToCamera(camera) >= 2500
+                || _depthBuffer.IsBoundingBoxOccluded(node.BoundingBox)))
                 {
                     continue;
                 }

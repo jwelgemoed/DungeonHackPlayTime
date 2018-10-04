@@ -49,7 +49,7 @@ namespace DungeonHack.Renderers
 
         public void RenderAll()
         {
-            for (int i = 0; i < _deferredContexts.Length; i++)
+            for (int i = 0; i < _deferredContexts.Length; i++)// _deferredContexts.Length; i++)
             {
                 var commandList = _commandLists[i];
                 // Execute the deferred command list on the immediate context
@@ -63,13 +63,15 @@ namespace DungeonHack.Renderers
 
         public void Render(int threadNumber, Polygon polygon, ref int polygonRenderedCount)
         {
-            lock (_lock)
+            //lock (_lock)
             {
                 polygonRenderedCount++;
 
-                _deferredContexts[threadNumber].InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(polygon.VertexBuffer, Vertex.SizeOf, 0));
-                _deferredContexts[threadNumber].InputAssembler.SetIndexBuffer(polygon.IndexBuffer, Format.R16_UInt, 0);
-
+                lock (_lock)
+                {
+                    _deferredContexts[threadNumber].InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(polygon.VertexBuffer, Vertex.SizeOf, 0));
+                    _deferredContexts[threadNumber].InputAssembler.SetIndexBuffer(polygon.IndexBuffer, Format.R16_UInt, 0);
+                }
                 _shader.Render(threadNumber,
                                 polygon.IndexData.Length,
                                 polygon.WorldMatrix,

@@ -35,6 +35,8 @@ namespace DungeonHack.DirectX
         private DomainShader _domainShader;
         private HullShader _hullShader;
 
+        private object _lock = new object();
+
         public DeferredShader(Renderer renderer)
         {
             _device = renderer.Device;
@@ -192,15 +194,17 @@ namespace DungeonHack.DirectX
                             Vector3 cameraPosition, 
                             Material material)
         {
-            _constantBufferPerObject.WorldMatrix = worldMatrix;
-            _constantBufferPerObject.WorldMatrix.Transpose();
-            _constantBufferPerObject.ViewMatrix = viewMatrix;
-            _constantBufferPerObject.ViewMatrix.Transpose();
-            _constantBufferPerObject.ViewProjectionMatrix = viewProjectionMatrix;
-            _constantBufferPerObject.ViewProjectionMatrix.Transpose();
-            _constantBufferPerObject.Material = material;
-
-            _objectConstantBuffer.UpdateValue(_deferredContexts[threadNumber], _constantBufferPerObject);
+            lock (_lock)
+            {
+                _constantBufferPerObject.WorldMatrix = worldMatrix;
+                _constantBufferPerObject.WorldMatrix.Transpose();
+                _constantBufferPerObject.ViewMatrix = viewMatrix;
+                _constantBufferPerObject.ViewMatrix.Transpose();
+                _constantBufferPerObject.ViewProjectionMatrix = viewProjectionMatrix;
+                _constantBufferPerObject.ViewProjectionMatrix.Transpose();
+                _constantBufferPerObject.Material = material;
+                _objectConstantBuffer.UpdateValue(_deferredContexts[threadNumber], _constantBufferPerObject);
+            }
 
             _deferredContexts[threadNumber].PixelShader.SetShaderResource(0, texture.TextureData);
 
@@ -220,6 +224,11 @@ namespace DungeonHack.DirectX
         {
             _constantBufferPerFrame.CameraPosition = camera.EyeAt;
             _frameConstantBuffer.UpdateValue(_immediateContext, _constantBufferPerFrame);
+
+            for (int i=0; i<_deferredContexts.Length; i++)
+            {
+                _frameConstantBuffer.UpdateValue(_deferredContexts[i], _constantBufferPerFrame);
+            }
         }
         
         public void Dispose()

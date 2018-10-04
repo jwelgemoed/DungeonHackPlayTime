@@ -122,7 +122,7 @@ namespace DungeonHack.DirectX
 
             DeviceContext context;
 
-            for (int i=0; i < _numberOfDeferredContexts; i++)
+            for (int i = 0; i < _numberOfDeferredContexts; i++)
             {
                 context = _renderer.DeferredContexts[i];
 

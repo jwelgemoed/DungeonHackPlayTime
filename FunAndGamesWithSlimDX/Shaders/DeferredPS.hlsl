@@ -33,7 +33,7 @@ PS_GBUFFER_OUT LightPixelShader(DomainOut input)
 
 	// Sample the pixel color from the texture using the sampler at this texture coordinate location.
 	textureColor = shaderTexture.Sample(SampleType, input.tex);
-	textureColor = float4(textureColor.rgb * textureColor.rgb, textureColor.a);
+	//textureColor = float4(textureColor.rgb * textureColor.rgb, textureColor.a);
 	
 	float3 bumpedNormalW = input.normal;
 

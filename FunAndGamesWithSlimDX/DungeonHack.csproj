@@ -151,10 +151,10 @@
     <Compile Include="DirectX\ConstantBuffer\ConstantBufferDeferredInfo.cs" />
     <Compile Include="DirectX\ConstantBuffer\ConstantBufferPerFrame.cs" />
     <Compile Include="DirectX\ConstantBuffer\ConstantBufferPerObject.cs" />
+    <Compile Include="DirectX\DeferredShader.cs" />
     <Compile Include="DirectX\DeferredShadingRenderer.cs" />
     <Compile Include="DirectX\FileIncludeHandler.cs" />
     <Compile Include="DirectX\IShader.cs" />
-    <Compile Include="DirectX\DeferredShader.cs" />
     <Compile Include="DirectX\LightShader.cs" />
     <Compile Include="DirectX\Renderer2D.cs" />
     <Compile Include="DirectX\Shader.cs" />
