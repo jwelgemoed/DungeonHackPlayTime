@@ -178,7 +178,6 @@ C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SharpDX.Direct3D11.Effects.dll
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SharpDX.dll
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SharpDX.DXGI.dll
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SharpDX.Mathematics.dll
-C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SlimDX.dll
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SharpDX.Direct2D1.dll
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SharpDX.RawInput.dll
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SpriteTextRenderer.SharpDX.dll
@@ -205,8 +204,6 @@ C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SharpDX.DXGI.pdb
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SharpDX.DXGI.xml
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SharpDX.Mathematics.pdb
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SharpDX.Mathematics.xml
-C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SlimDX.pdb
-C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SlimDX.xml
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SharpDX.Direct2D1.pdb
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SharpDX.Direct2D1.xml
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SharpDX.RawInput.pdb

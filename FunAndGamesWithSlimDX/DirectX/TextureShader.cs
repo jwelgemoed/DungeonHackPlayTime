@@ -25,6 +25,8 @@ namespace FunAndGamesWithSharpDX.DirectX
         private ShaderResourceView _currentTexture;
 
         private SharpDX.Direct3D11.Buffer _staticContantBuffer;
+
+        private object _lock = new object();
         
         public TextureShader(Renderer renderer)
         {
@@ -106,13 +108,16 @@ namespace FunAndGamesWithSharpDX.DirectX
         public void Render(int threadNumber, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix viewProjectionMatrix,
                            Texture texture, Vector3 cameraPosition, Material material)
         {
-            _perObjectBuffer.WorldMatrix = worldMatrix;
-            _perObjectBuffer.WorldMatrix.Transpose();
-            _perObjectBuffer.ViewMatrix = viewMatrix;
-            _perObjectBuffer.ViewMatrix.Transpose();
-            _perObjectBuffer.ViewProjectionMatrix = viewProjectionMatrix;
-            _perObjectBuffer.ViewProjectionMatrix.Transpose();
-            _perObjectBuffer.Material = material;
+            lock (_lock)
+            {
+                _perObjectBuffer.WorldMatrix = worldMatrix;
+                _perObjectBuffer.WorldMatrix.Transpose();
+                _perObjectBuffer.ViewMatrix = viewMatrix;
+                _perObjectBuffer.ViewMatrix.Transpose();
+                _perObjectBuffer.ViewProjectionMatrix = viewProjectionMatrix;
+                _perObjectBuffer.ViewProjectionMatrix.Transpose();
+                _perObjectBuffer.Material = material;
+            }
 
             _deferredContexts[threadNumber].UpdateSubresource(ref _perObjectBuffer, _staticContantBuffer);
 

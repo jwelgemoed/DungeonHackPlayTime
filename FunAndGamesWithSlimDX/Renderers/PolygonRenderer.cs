@@ -63,22 +63,22 @@ namespace DungeonHack.Renderers
 
         public void Render(int threadNumber, Polygon polygon, ref int polygonRenderedCount)
         {
+            polygonRenderedCount++;
+
             lock (_lock)
             {
-                polygonRenderedCount++;
-
                 _deferredContexts[threadNumber].InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(polygon.VertexBuffer, Vertex.SizeOf, 0));
                 _deferredContexts[threadNumber].InputAssembler.SetIndexBuffer(polygon.IndexBuffer, Format.R16_UInt, 0);
-
-                _shader.Render(threadNumber,
-                                polygon.IndexData.Length,
-                                polygon.WorldMatrix,
-                                _camera.ViewMatrix,
-                                _camera.RenderViewProjectionMatrix,
-                                _textureDictionary.GetTexture(polygon.TextureIndex),
-                                _camera.GetPosition(),
-                                _materialDictionary.GetMaterial(polygon.MaterialIndex));
             }
+
+            _shader.Render(threadNumber,
+                            polygon.IndexData.Length,
+                            polygon.WorldMatrix,
+                            _camera.ViewMatrix,
+                            _camera.RenderViewProjectionMatrix,
+                            _textureDictionary.GetTexture(polygon.TextureIndex),
+                            _camera.GetPosition(),
+                            _materialDictionary.GetMaterial(polygon.MaterialIndex));
         }
 
         public void RenderBoundingBox(int threadNumber, AABoundingBox boundingBox, Matrix worldMatrix, Matrix viewProjectionMatrix, int textureIndex, int materialIndex)
