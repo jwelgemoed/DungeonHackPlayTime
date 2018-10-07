@@ -21,3 +21,4 @@
 /Project1/obj/Debug
 /GameData/obj/Debug
 /.vs/DungeonHackPlayTime/v15/Server/sqlite3
+*.opendb

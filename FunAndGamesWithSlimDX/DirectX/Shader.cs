@@ -88,7 +88,7 @@ namespace DungeonHack.DirectX
             _renderer.TurnZBufferOn();
 
             //Present
-            _renderer.SwapChain.Present(ConfigManager.VSync, PresentFlags.None);
+            //_renderer.SwapChain.Present(ConfigManager.VSync, PresentFlags.None);
         }
 
         private void SetupFrameRender()

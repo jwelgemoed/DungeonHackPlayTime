@@ -56,38 +56,43 @@ namespace DungeonHack.QuadTree
 
             _renderer.RenderFrame(camera);
 
-            //DrawQuadTreeIterative(0, node, camera, frustrum);
+            _depthBuffer.LockShadowBuffer();
 
-            for (int i = 0; i < _threadCountPerThread; i++)
-            {
-                int j = i;
-                _renderTasks[i] = new Task(() =>
-                {
-                    switch (j)
-                    {
-                        case 0:
-                            DrawQuadTreeIterative(0, node.Octant1, camera, frustrum);
-                            break;
-                        case 1:
-                            DrawQuadTreeIterative(1, node.Octant2, camera, frustrum);
-                            break;
-                        case 2:
-                            DrawQuadTreeIterative(2, node.Octant3, camera, frustrum);
-                            break;
-                        case 3:
-                            DrawQuadTreeIterative(3, node.Octant4, camera, frustrum);
-                            break;
-                        default:
-                            DrawQuadTreeIterative(0, node, camera, frustrum);
-                            break;
-                    }
-                });
+            DrawQuadTreeIterative(0, node, camera, frustrum);
 
-                _renderTasks[i].Start();
-            }
+            //_depthBuffer.UnlockShadowBuffer();
 
-            Task.WaitAll(_renderTasks);
+            //for (int i = 0; i < _threadCountPerThread; i++)
+            //{
+            //    int j = i;
+            //    _renderTasks[i] = new Task(() =>
+            //    {
+            //        switch (j)
+            //        {
+            //            case 0:
+            //                DrawQuadTreeIterative(0, node.Octant1, camera, frustrum);
+            //                break;
+            //            case 1:
+            //                DrawQuadTreeIterative(1, node.Octant2, camera, frustrum);
+            //                break;
+            //            case 2:
+            //                DrawQuadTreeIterative(2, node.Octant3, camera, frustrum);
+            //                break;
+            //            case 3:
+            //                DrawQuadTreeIterative(3, node.Octant4, camera, frustrum);
+            //                break;
+            //            default:
+            //                DrawQuadTreeIterative(0, node, camera, frustrum);
+            //                break;
+            //        }
+            //    });
 
+            //    _renderTasks[i].Start();
+            //}
+
+            //Task.WaitAll(_renderTasks);
+
+            _depthBuffer.UnlockShadowBuffer();
             _renderer.RenderAll();
         }
 
@@ -118,7 +123,8 @@ namespace DungeonHack.QuadTree
 
                     foreach (var polygon in node.Polygons)
                     {
-                        if (frustrum.CheckBoundingBox(polygon.BoundingBox.BoundingBox) == 0)
+                        if (frustrum.CheckBoundingBox(polygon.BoundingBox.BoundingBox) == 0
+                            /*|| _depthBuffer.IsBoundingBoxOccluded(polygon.BoundingBox)*/)
                         {
                             continue;
                         }

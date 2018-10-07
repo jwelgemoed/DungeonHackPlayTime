@@ -61,11 +61,21 @@ namespace FunAndGamesWithSharpDX.DirectX
         public void TurnZBufferOff()
         {
             ImmediateContext.OutputMerger.DepthStencilState = _depthStencilDisabledState;
+
+            for (int i=0; i<DeferredContexts.Length; i++)
+            {
+                DeferredContexts[i].OutputMerger.DepthStencilState = _depthStencilDisabledState;
+            }
         }
 
         public void TurnZBufferOn()
         {
             ImmediateContext.OutputMerger.DepthStencilState = _depthStencilState;
+
+            for (int i = 0; i < DeferredContexts.Length; i++)
+            {
+                DeferredContexts[i].OutputMerger.DepthStencilState = _depthStencilState;
+            }
         }
 
         public void Initialize(IntPtr formHandle, int numberOfRenderingThreads)

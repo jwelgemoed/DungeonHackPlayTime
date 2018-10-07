@@ -39,7 +39,7 @@ namespace DungeonHack.OcclusionCulling
                 {
                     int depthBufferEntry = (y * DepthBuffer.Width) + (x);
                     int bufferLocation = depthBufferEntry * 4;
-                    byte value = (byte)(((Math.Abs(DepthBuffer.Buffer[depthBufferEntry]) / 1)));
+                    byte value = (byte)(((Math.Abs(DepthBuffer.ShadowBuffer[depthBufferEntry]) / 1)));
                     //value = (byte) (value / 3);
 
                     var color = System.Drawing.Color.FromArgb(value, 0, 0);

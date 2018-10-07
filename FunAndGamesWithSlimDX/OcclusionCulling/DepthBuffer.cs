@@ -21,10 +21,12 @@ namespace DungeonHack.OcclusionCulling
 
         private List<Triangle>[] triangles;
         public float[] Buffer;
+        public float[] ShadowBuffer;
         private float _nearClipPane;
         private Camera _camera;
         private float l, r, t, b;
         private float termX1, termX2, termY1, termY2, halfWidth, halfHeight;
+        private bool _shadowBufferLock;
 
         public DepthBuffer(Camera camera, int numberOfThreads)
         {
@@ -37,10 +39,13 @@ namespace DungeonHack.OcclusionCulling
             Height = ConfigManager.ScreenHeight / 4;
             MaxDepth = 10000;
             Buffer = new float[Width * Height];
+            ShadowBuffer = new float[Width * Height];
+            _shadowBufferLock = false;
 
             for (int i=0; i<Buffer.Length; i++)
             {
                 Buffer[i] = MaxDepth;
+                ShadowBuffer[i] = MaxDepth;
             }
 
             termX1 = 2 / (r - l);
@@ -65,6 +70,30 @@ namespace DungeonHack.OcclusionCulling
             }
         }
 
+        public void ClearShadowBuffer()
+        {
+            for (int i = 0; i < Buffer.Length; i++)
+            {
+                ShadowBuffer[i] = MaxDepth;
+            }
+        }
+
+        public void LockShadowBuffer()
+        {
+            _shadowBufferLock = true;
+        }
+
+        public void UnlockShadowBuffer()
+        {
+            _shadowBufferLock = false;
+        }
+
+        public void CopyBufferToShadow()
+        {
+            if (!_shadowBufferLock)
+                ShadowBuffer = (float[]) Buffer.Clone();
+        }
+
         public void SaveBufferToFile()
         {
             //System.Drawing.ImageConverter ic = new System.Drawing.ImageConverter();
@@ -74,64 +103,6 @@ namespace DungeonHack.OcclusionCulling
             //System.Drawing.Bitmap bitmap1 = new System.Drawing.Bitmap(img);
 
             //bitmap1.Save(@"c:\buffer.bmp");
-        }
-
-        public bool IsBoundingBoxOccluded(BoundingBox box)
-        {
-            var corners = box.GetCorners();
-            bool occludedBox = true;
-
-            for (int i=0; i<corners.Length;i++)
-            {
-                Vector4 vector = new Vector4(corners[i], 1.0f);
-                Vector4 camVec = Multiply(_camera.ViewProjectionMatrix, vector);
-
-                float ndcX = camVec.X / camVec.W;
-                float ndcY = camVec.Y / camVec.W;
-
-                float rasterVecX = (int) ((ndcX + 1) * halfWidth);/// 2 * Width);
-                float rasterVecY = (int) ((1 - ndcY) * halfHeight);/// 2 * Height);
-
-                //if (rasterVecX > Width || rasterVecX < 0)
-                //{
-                //    occludedBox = false;
-                //    break;
-                //}
-
-                //if (rasterVecY > Height || rasterVecY < 0)
-                //{
-                //    occludedBox = false;
-                //    break;
-                //}
-
-                if (rasterVecX < 0)
-                    rasterVecX = 0;
-
-                if (rasterVecX > Width)
-                    rasterVecX = Width;
-
-                if (rasterVecY < 0)
-                    rasterVecY = 0;
-
-                if (rasterVecY > Height)
-                    rasterVecY = Height;
-
-                int bufferLocation = ((int) rasterVecY * Width) + (int) rasterVecX;
-
-                if (bufferLocation >= Buffer.Length)
-                {
-                    occludedBox = false;
-                    break;
-                }
-
-                if (camVec.Z < Buffer[bufferLocation])
-                {
-                    occludedBox = false;
-                    break;
-                }
-            }
-
-            return occludedBox;
         }
 
         public bool IsBoundingBoxOccluded(AABoundingBox box)
@@ -265,7 +236,7 @@ namespace DungeonHack.OcclusionCulling
                             float interZ = (triangle.Vectors[0].Z * w0 + triangle.Vectors[1].Z * w1 + triangle.Vectors[2].Z * w2) / area;
                             int bufLocation = (y * Width) + x;
 
-                            if (interZ < Buffer[bufLocation])
+                            if (interZ < ShadowBuffer[bufLocation])
                             {
                                 return false;
                             }
