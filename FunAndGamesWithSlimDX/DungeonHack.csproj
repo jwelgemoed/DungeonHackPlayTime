@@ -202,12 +202,14 @@
     <Content Include="Shaders\DeferredPS.hlsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Shaders\LightTextureHS.hlsl" />
     <Content Include="Shaders\LightTexturePS.hlsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Shaders\DeferredVS.hlsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Shaders\LightTextureDS.hlsl" />
     <Content Include="Shaders\LightTextureVS.hlsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

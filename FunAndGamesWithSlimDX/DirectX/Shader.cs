@@ -77,7 +77,7 @@ namespace DungeonHack.DirectX
             ResetFrame();
 
             _renderer.ImmediateContext.ClearRenderTargetView(_renderer.RenderTarget, Colors.Black);
-            _renderer.ImmediateContext.ClearDepthStencilView(_renderer.DepthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
+            _renderer.ImmediateContext.ClearDepthStencilView(_lightShader.DepthStencilLightShader, DepthStencilClearFlags.Depth, 1.0f, 0);
 
             _renderer.TurnZBufferOff();
 
@@ -117,18 +117,18 @@ namespace DungeonHack.DirectX
         private void ResetFrame()
         {
             _currentShader.SwitchShader();
-            _renderer.SetBackBufferRenderTarget(_renderer.ImmediateContext);
+            _renderer.SetBackBufferRenderTarget(_lightShader.DepthStencilLightShader, _renderer.ImmediateContext);
             _renderer.ResetViewport(_renderer.ImmediateContext);
 
-            DeviceContext context;
+            //DeviceContext context;
 
-            for (int i = 0; i < _numberOfDeferredContexts; i++)
-            {
-                context = _renderer.DeferredContexts[i];
+            //for (int i = 0; i < _numberOfDeferredContexts; i++)
+            //{
+            //    context = _renderer.DeferredContexts[i];
 
-                _renderer.SetBackBufferRenderTarget(context);
-                _renderer.ResetViewport(context);
-            }
+            //    _renderer.SetBackBufferRenderTarget(context);
+            //    _renderer.ResetViewport(context);
+            //}
         }
     }
 }

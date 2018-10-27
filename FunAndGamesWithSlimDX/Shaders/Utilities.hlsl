@@ -21,6 +21,7 @@ struct PointLight {
 	float Range;
 	float3 Attentuation;
 	float pad;
+	matrix LightCalculations;
 };
 
 struct SpotLight {

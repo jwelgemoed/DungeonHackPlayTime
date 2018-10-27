@@ -3,16 +3,20 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Vertex Shader
 ////////////////////////////////////////////////////////////////////////////////
-VS_OUTPUT LightVertexShader(uint VertexID : SV_VertexID)
+//VS_OUTPUT LightVertexShader(uint VertexID : SV_VertexID)
+//{
+//	VS_OUTPUT output;
+//
+//	output.UV = float2((VertexID << 1) & 2, VertexID & 2);
+//	output.Position = float4(output.UV * float2(2, -2) + float2(-1, 1), 0, 1);
+//
+//	//output.Position = float4(arrBasePos[VertexID].xy, 0.0, 1.0);
+//	output.cpPosition = output.Position.xy;
+//
+//	return output;
+//}
+
+float4 PointLightVertexShader() : SV_POSITION
 {
-	VS_OUTPUT output;
-
-	output.UV = float2((VertexID << 1) & 2, VertexID & 2);
-	output.Position = float4(output.UV * float2(2, -2) + float2(-1, 1), 0, 1);
-
-	//output.Position = float4(arrBasePos[VertexID].xy, 0.0, 1.0);
-	output.cpPosition = output.Position.xy;
-
-	return output;
+	return float4(0.0, 0.0, 0.0, 1.0);
 }
-

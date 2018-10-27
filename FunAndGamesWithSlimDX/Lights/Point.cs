@@ -13,5 +13,6 @@ namespace DungeonHack.Lights
         public float Range;
         public Vector3 Attentuation;
         public float pad;
+        public Matrix LightCalculations;
     }
 }

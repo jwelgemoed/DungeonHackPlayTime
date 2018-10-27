@@ -147,6 +147,11 @@ namespace FunAndGamesWithSharpDX.DirectX
             context.OutputMerger.SetRenderTargets(DepthStencilView, RenderTarget);
         }
 
+        public void SetBackBufferRenderTarget(DepthStencilView depthStencilView, DeviceContext context)
+        {
+            context.OutputMerger.SetRenderTargets(DepthStencilView, RenderTarget);
+        }
+
         public void ResetViewport(DeviceContext context)
         {
             context.Rasterizer.SetViewports(new[] { _viewport });

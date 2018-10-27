@@ -7,6 +7,7 @@ using FunAndGamesWithSharpDX.Entities;
 using SharpDX;
 using SharpDX.D3DCompiler;
 using SharpDX.Direct3D11;
+using SharpDX.DXGI;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace DungeonHack.DirectX
@@ -29,6 +30,13 @@ namespace DungeonHack.DirectX
 
         private ConstantBufferPerFrame _constantBufferPerFrame;
         private ConstantBufferDeferredInfo _constantBufferDeferredInfo;
+        private DepthStencilState DepthStencilState;
+        private Texture2D _depthStencilBuffer;
+        private DepthStencilViewDescription _depthStencilViewDesc;
+        private bool Use4XMSAA;
+        private int Width;
+        private int Height;
+        public DepthStencilView DepthStencilLightShader;
 
         public LightShader(Renderer renderer, Camera camera, DeferredShadingRenderer deferredShadingRenderer)
         {
@@ -83,6 +91,8 @@ namespace DungeonHack.DirectX
             _constantBufferDeferredInfo.PerspectiveValues.Z = _camera.ProjectionMatrix.M32;
             _constantBufferDeferredInfo.PerspectiveValues.W = _camera.ProjectionMatrix.M22;
 
+            DepthStencilLightShader = CreateDepthStencil();
+
             BindImmediateContext(_vertexShader, _pixelShader);
         }
 
@@ -111,7 +121,7 @@ namespace DungeonHack.DirectX
         private void BindImmediateContext(VertexShader vertexShader, PixelShader pixelShader)
         {
             _immediateContext.InputAssembler.InputLayout = _layout;
-            _immediateContext.InputAssembler.PrimitiveTopology = SharpDX.Direct3D.PrimitiveTopology.TriangleList;
+            _immediateContext.InputAssembler.PrimitiveTopology = SharpDX.Direct3D.PrimitiveTopology.PatchListWith1ControlPoints;
 
             _immediateContext.PixelShader.SetConstantBuffer(0, _deferredInfoConstantBuffer.Buffer);
             _immediateContext.PixelShader.SetConstantBuffer(1, _frameConstantBuffer.Buffer);
@@ -125,6 +135,8 @@ namespace DungeonHack.DirectX
         {
             _immediateContext.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(null, 0, 0));
             _immediateContext.InputAssembler.SetIndexBuffer(null, SharpDX.DXGI.Format.R32_UInt, 0);
+
+            CreatePointLightTransformMatrix(ref pointLight);
 
             _constantBufferPerFrame.DirectionalLight = directionalLight;
             _constantBufferPerFrame.PointLight = pointLight;
@@ -145,6 +157,86 @@ namespace DungeonHack.DirectX
             _immediateContext.Draw(4, 0);
         }
 
+        private void CreatePointLightTransformMatrix(ref PointLight[] pointlights)
+        {
+            var translationViewMatrix = new Matrix()
+            {
+                M11 = 1.0f,
+                M22 = 1.0f,
+                M33 = 1.0f,
+                M44 = 1.0f,
+                M41 = _camera.ViewMatrix.M41,
+                M42 = _camera.ViewMatrix.M42,
+                M43 = _camera.ViewMatrix.M43
+            };
+
+            for (int i=0; i<pointlights.Length; i++)
+            {
+                var rangeMatrix = new Matrix()
+                {
+                    M11 = pointlights[i].Range,
+                    M22 = pointlights[i].Range,
+                    M33 = pointlights[i].Range,
+                    M44 = 1.0f
+                };
+
+                var translationMatrix = new Matrix()
+                {
+                    M11 = 1.0f,
+                    M22 = 1.0f,
+                    M33 = 1.0f,
+                    M44 = 1.0f,
+                    M41 = pointlights[i].Position.X,
+                    M42 = pointlights[i].Position.Y,
+                    M43 = pointlights[i].Position.Z
+                };
+                                
+                pointlights[i].LightCalculations = rangeMatrix * translationMatrix * translationViewMatrix * _camera.ProjectionMatrix;
+            }
+        }
+
+        private DepthStencilView CreateDepthStencil()
+        {
+            var sampleDesc = Use4XMSAA ?
+                                       new SampleDescription(4, _device.CheckMultisampleQualityLevels(Format.R8G8B8A8_UNorm, 4))
+                                       : new SampleDescription(1, 0);
+
+            //Create a depth stencil
+            var depthStencilDesc = new Texture2DDescription()
+            {
+                Width = Width,
+                Height = Height,
+                MipLevels = 1,
+                ArraySize = 1,
+                Format = Format.D32_Float,
+                SampleDescription = sampleDesc,
+                Usage = ResourceUsage.Default,
+                BindFlags = BindFlags.DepthStencil,
+                CpuAccessFlags = CpuAccessFlags.None,
+            };
+
+            _depthStencilBuffer = new Texture2D(_device, depthStencilDesc);
+
+            var dsStateDesc = new DepthStencilStateDescription()
+            {
+                IsDepthEnabled = true,
+                IsStencilEnabled = false,
+                DepthWriteMask = DepthWriteMask.Zero,
+                DepthComparison = Comparison.GreaterEqual,
+            };
+
+            DepthStencilState = new DepthStencilState(_device, dsStateDesc);
+
+            _depthStencilBuffer = new Texture2D(_device, depthStencilDesc);
+
+            _depthStencilViewDesc = new DepthStencilViewDescription()
+            {
+                Dimension = DepthStencilViewDimension.Texture2D
+            };
+
+            return new DepthStencilView(_device, _depthStencilBuffer, _depthStencilViewDesc);
+        }
+
         public void Dispose()
         {
             _layout?.Dispose();
@@ -153,6 +245,8 @@ namespace DungeonHack.DirectX
             _frameConstantBuffer?.Dispose();
             _vertexShader?.Dispose();
             _pixelShader?.Dispose();
+            _depthStencilBuffer?.Dispose();
+            DepthStencilLightShader?.Dispose();
         }
 
         public void Render(int threadNumber, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix viewProjectionMatrix, Texture texture, Vector3 cameraPosition, Material material)
