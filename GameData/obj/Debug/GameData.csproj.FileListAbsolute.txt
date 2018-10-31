@@ -167,3 +167,4 @@ C:\git\DungeonHackPlayTime\GameData\obj\Debug\GameData.csproj.CoreCompileInputs.
 C:\git\DungeonHackPlayTime\GameData\obj\Debug\GameData.csproj.CopyComplete
 C:\git\DungeonHackPlayTime\GameData\obj\Debug\GameData.dll
 C:\git\DungeonHackPlayTime\GameData\obj\Debug\GameData.pdb
+C:\git\DungeonHackPlayTime\GameData\bin\Debug\Shaders\LightTextureHS.hlsl

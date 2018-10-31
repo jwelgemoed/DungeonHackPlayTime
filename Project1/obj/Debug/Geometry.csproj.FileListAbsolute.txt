@@ -127,3 +127,4 @@ C:\git\DungeonHackPlayTime\Project1\obj\Debug\Geometry.csproj.CoreCompileInputs.
 C:\git\DungeonHackPlayTime\Project1\obj\Debug\Geometry.csproj.CopyComplete
 C:\git\DungeonHackPlayTime\Project1\obj\Debug\Geometry.dll
 C:\git\DungeonHackPlayTime\Project1\obj\Debug\Geometry.pdb
+C:\git\DungeonHackPlayTime\Project1\bin\Debug\Shaders\LightTextureHS.hlsl

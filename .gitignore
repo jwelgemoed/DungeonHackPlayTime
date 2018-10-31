@@ -2,22 +2,32 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
+\bin\*
+\obj\*
+*.diagsession
 /MapEditor/obj/Debug/MapEditor_MarkupCompile.i.lref
 /.vs/DungeonHackPlayTime/v15/.suo
+/.vs/DungeonHackPlayTime/v15/Browse.VC.db
 /FunAndGamesWithSlimDX/obj/Debug/DungeonHack.application
 /FunAndGamesWithSlimDX/obj/Debug/DungeonHack.csproj.FileListAbsolute.txt
 *.Cache
 *.exe
 *.manifest
 *.pdb
-/FunAndGamesWithSlimDX/obj/Debug/DungeonHack.Properties.Resources.resources
-/FunAndGamesWithSlimDX/obj/Debug/FunAndGamesWithSlimDX.Menus.OptionsWindow.resources
-/FunAndGamesWithSlimDX/obj/Debug/FunAndGamesWithSlimDX.Menus.SaveWindow.resources
+/FunAndGamesWithSlimDX/obj/Debug
+/FunAndGamesWithSlimDX/bin/Debug
+/FunAndGamesWithSlimDX/obj/Release
+/FunAndGamesWithSlimDX/bin/Release
 /GameData/bin/Debug
 /MapEditor/bin/Debug
-/Project1/bin/Debug
 /MapEditor/obj/Debug
+/MapEditor/bin/Release
+/MapEditor/obj/Release
+/Project1/bin/Debug
+/MazeEditor/bin/Debug
+/MazeEditor/obj/Debug
 /MeshCreator/bin/Debug
+/MeshCreator/obj/Debug
 /Project1/obj/Debug
 /GameData/obj/Debug
 /.vs/DungeonHackPlayTime/v15/Server/sqlite3

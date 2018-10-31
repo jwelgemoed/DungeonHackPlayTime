@@ -85,3 +85,4 @@ C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor.csproj.CoreCompileInp
 C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor.csproj.CopyComplete
 C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor.exe
 C:\git\DungeonHackPlayTime\MazeEditor\obj\Debug\MazeEditor.pdb
+C:\git\DungeonHackPlayTime\MazeEditor\bin\Debug\Shaders\LightTextureHS.hlsl
