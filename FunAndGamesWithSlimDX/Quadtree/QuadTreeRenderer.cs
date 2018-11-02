@@ -55,6 +55,9 @@ namespace DungeonHack.QuadTree
 
             _renderer.RenderFrame(camera);
 
+            _depthBuffer.LockShadowBuffer();
+
+            //DrawQuadTreeIterative(0, node, camera, frustrum);
             DrawQuadMultiThread(0, node, frustrum, camera);
 
             //for (int i = 0; i < _threadCount; i++)
@@ -87,6 +90,7 @@ namespace DungeonHack.QuadTree
 
             //Task.WaitAll(_tasks);
 
+            _depthBuffer.UnlockShadowBuffer();
             _renderer.RenderAll();
         }
 

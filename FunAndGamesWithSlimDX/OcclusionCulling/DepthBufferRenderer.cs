@@ -30,7 +30,7 @@ namespace DungeonHack.OcclusionCulling
         public static void RenderToScreen(Renderer2D renderer)
         {
             var buffer = new byte[DepthBuffer.Width * DepthBuffer.Height * 4];
-            var backBufferBmp = new Bitmap(_deviceContext, new SharpDX.Size2(DepthBuffer.Width, DepthBuffer.Height), 
+            var backBufferBmp = new Bitmap(_deviceContext, new SharpDX.Size2(DepthBuffer.Width, DepthBuffer.Height),
                 new BitmapProperties(_deviceContext.PixelFormat));
 
             // Copy pixels from screen capture Texture to GDI bitmap
@@ -39,7 +39,7 @@ namespace DungeonHack.OcclusionCulling
                 {
                     int depthBufferEntry = (y * DepthBuffer.Width) + (x);
                     int bufferLocation = depthBufferEntry * 4;
-                    byte value = (byte)(((Math.Abs(DepthBuffer.Buffer[depthBufferEntry]) / 1)));
+                    byte value = (byte)(((Math.Abs(DepthBuffer.ShadowBuffer[depthBufferEntry]) / 1)));
                     //value = (byte) (value / 3);
 
                     var color = System.Drawing.Color.FromArgb(value, 0, 0);
@@ -65,7 +65,7 @@ namespace DungeonHack.OcclusionCulling
             //    new SharpDX.Vector2(0, 0), new SharpDX.Vector2(DepthBuffer.Width, DepthBuffer.Height));
 
         }
-        
+
         public static void Setup(Renderer renderer)
         {
             _device = new SharpDX.Direct2D1.Device(renderer.DXGIDevice);
@@ -74,12 +74,12 @@ namespace DungeonHack.OcclusionCulling
 
             var factory = new SharpDX.Direct2D1.Factory(SharpDX.Direct2D1.FactoryType.MultiThreaded, DebugLevel.Information);
 
-            _renderTarget = new RenderTarget(factory, _surface, 
+            _renderTarget = new RenderTarget(factory, _surface,
                 new RenderTargetProperties(
                     new PixelFormat(Format.R8G8B8A8_UNorm, SharpDX.Direct2D1.AlphaMode.Premultiplied)));
 
             _bitmapProperties1 = new BitmapProperties1(
-                new PixelFormat(Format.R8G8B8A8_UNorm, 
+                new PixelFormat(Format.R8G8B8A8_UNorm,
                         SharpDX.Direct2D1.AlphaMode.Premultiplied), 120, 120, BitmapOptions.Target | BitmapOptions.CannotDraw);
 
             _target = new Bitmap1(_deviceContext, _surface, _bitmapProperties1);

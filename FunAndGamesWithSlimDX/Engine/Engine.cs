@@ -212,7 +212,7 @@ namespace DungeonHack.Engine
                         DrawScene();
 
                         DisplayConsoleInformation();
-                       // DepthBufferRenderer.RenderToScreen(Renderer2D);
+                        DepthBufferRenderer.RenderToScreen(Renderer2D);
                         Renderer.SwapChain.Present(ConfigManager.VSync, PresentFlags.None);
 
                         _stopwatch.Stop();

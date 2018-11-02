@@ -34,7 +34,12 @@ namespace DungeonHack.Quadtree
 
         public void DrawDepthQuadTree(QuadTreeNode node, Frustrum frustrum, Camera camera)
         {
+            _depthBuffer.ClearBuffer();
+
             DrawQuadMultiThread(0, node, frustrum, camera);
+
+            _depthBuffer.CopyBufferToShadow();
+
             //for (int i = 0; i < _threadCount; i++)
             //{
             //    int j = i;
