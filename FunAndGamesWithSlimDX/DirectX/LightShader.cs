@@ -59,7 +59,7 @@ namespace DungeonHack.DirectX
             var hsShaderName = basePath + @"\Shaders\LightTextureHS.hlsl";
             var dsShaderName = basePath + @"\Shaders\LightTextureDS.hlsl";
             
-            var bytecode = ShaderBytecode.CompileFromFile(vsShaderName, "LightVertexShader", "vs_5_0", ShaderFlags.Debug | ShaderFlags.SkipOptimization,
+            var bytecode = ShaderBytecode.CompileFromFile(vsShaderName, "PointLightVertexShader", "vs_5_0", ShaderFlags.Debug | ShaderFlags.SkipOptimization,
                 include: FileIncludeHandler.Default);
 
             _vertexShader = new VertexShader(_device, bytecode);
@@ -72,12 +72,12 @@ namespace DungeonHack.DirectX
 
             _pixelShader = new PixelShader(_device, bytecode);
 
-            bytecode = ShaderBytecode.CompileFromFile(hsShaderName, "PointLightHS", "ps_5_0", ShaderFlags.Debug | ShaderFlags.SkipOptimization,
+            bytecode = ShaderBytecode.CompileFromFile(hsShaderName, "PointLightHS", "hs_5_0", ShaderFlags.Debug | ShaderFlags.SkipOptimization,
                include: FileIncludeHandler.Default);
 
             _hullShader = new HullShader(_device, bytecode);
 
-            bytecode = ShaderBytecode.CompileFromFile(dsShaderName, "PointLightDS", "ps_5_0", ShaderFlags.Debug | ShaderFlags.SkipOptimization,
+            bytecode = ShaderBytecode.CompileFromFile(dsShaderName, "PointLightDS", "ds_5_0", ShaderFlags.Debug | ShaderFlags.SkipOptimization,
                include: FileIncludeHandler.Default);
 
             _domainShader = new DomainShader(_device, bytecode);
@@ -140,8 +140,16 @@ namespace DungeonHack.DirectX
 
             _immediateContext.PixelShader.SetConstantBuffer(0, _deferredInfoConstantBuffer.Buffer);
             _immediateContext.PixelShader.SetConstantBuffer(1, _frameConstantBuffer.Buffer);
+
+            _immediateContext.DomainShader.SetConstantBuffer(0, _deferredInfoConstantBuffer.Buffer);
+            _immediateContext.DomainShader.SetConstantBuffer(1, _frameConstantBuffer.Buffer);
+
+            _immediateContext.HullShader.SetConstantBuffer(0, _deferredInfoConstantBuffer.Buffer);
+            _immediateContext.HullShader.SetConstantBuffer(1, _frameConstantBuffer.Buffer);
             //_immediateContext.PixelShader.SetSampler(0, _samplerState);
 
+            _immediateContext.HullShader.Set(_hullShader);
+            _immediateContext.DomainShader.Set(_domainShader);
             _immediateContext.VertexShader.Set(vertexShader);
             _immediateContext.PixelShader.Set(pixelShader);
         }

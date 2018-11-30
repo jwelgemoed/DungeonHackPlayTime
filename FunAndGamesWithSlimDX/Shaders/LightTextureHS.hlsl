@@ -1,22 +1,5 @@
 ﻿#include "DeferredUtilities.hlsl"
 
-static const float3 HemiDir[2] = 
-{
-	float3(1.0, 1.0, 1.0),
-	float3(-1.0, 1.0, -1.0)
-}
-
-struct HS_OUTPUT
-{
-	HemiDir HemiDir;
-};
-
-struct HS_CONSTANT_DATA_OUTPUT
-{
-	float Edges[4] : SV_TessFactor;
-	float Inside[2] : SV_InsideTessFactor;
-};
-
 HS_CONSTANT_DATA_OUTPUT PointLightConstantHS()
 {
 	HS_CONSTANT_DATA_OUTPUT output;
@@ -28,17 +11,16 @@ HS_CONSTANT_DATA_OUTPUT PointLightConstantHS()
 	return output;
 }
 
-
 [domain("quad")]
 [partitioning("integer")]
 [outputtopology("triangle_ccw")]
 [outputcontrolpoints(4)]
 [patchconstantfunc("PointLightConstantHS")]
-float3 PointLightHS(uint PatchId: SV_PrimitiveID): POSITION
+HS_OUTPUT PointLightHS(uint PatchId: SV_PrimitiveID): POSITION
 {
 	HS_OUTPUT output;
 
-	output.HemiDir = HemiDir[PatchID];
+	output.HemiDir = HemiDir[PatchId];
 
 	return output;
 }

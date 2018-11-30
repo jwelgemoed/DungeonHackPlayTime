@@ -20,7 +20,7 @@ SURFACE_DATA UnpackGBuffer(int2 location)
 	output.Color = baseColorSpecInt.xyz;
 	output.SpecInt = baseColorSpecInt.w;
 
-	output.Normal = NormalTexture.Load(location3);
+	output.Normal = NormalTexture.Load(location3).xyz;
 
 	float specPowerNorm = SpecPowerTexture.Load(location3).x;
 	output.SpecPow = specPowerNorm.x + specPowerNorm * g_SpecPowerRange.y;
@@ -74,18 +74,18 @@ float3 CalcPoint(float3 position, Material material)
 	//Phong diffuse
 	toLight /= distToLight;
 	float NDotL = saturate(dot(toLight, material.normal));
-	float3 finalColor = gPointLight[0].Color * NdotL;
+	float3 finalColor = gPointLight[0].Color.rgb * NDotL;
 
 	//Blinn specular
 	toEye = normalize(toEye);
 	float3 halfway = normalize(toEye + toLight);
 	float NDotH = saturate(dot(halfway, material.normal));
-	finalColor += gPointLight[0].Color * pow(NDotH, material.specPower)*material.specIntensity;
+	finalColor += gPointLight[0].Color.rgb * pow(NDotH, material.specPower)*material.specIntensity;
 
 	//Attentuation	
-	float distToLightNorm = 1.0 - saturate(disToLight * gPointLight[0].Range);
+	float distToLightNorm = 1.0 - saturate(distToLight * gPointLight[0].Range);
 	float attn = distToLightNorm * distToLightNorm;
-	finalColor *= material.diffuseColor * attn;
+	finalColor *= material.diffuseColor.rgb * attn;
 
 	return finalColor;
 }
@@ -109,7 +109,7 @@ float4 LightPixelShader(VS_OUTPUT input) : SV_TARGET
 	float4 finalColor;
 	finalColor.xyz = CalcAmbient(mat.normal, mat.diffuseColor.xyz);
 	finalColor.xyz += CalcDirectional(position, mat);
-	finalColor.xyz += CalPoint(position, mat);
+	finalColor.xyz += CalcPoint(position, mat);
 	finalColor.w = 1.0;
 
 	//finalColor.xyz = gbd.Color;

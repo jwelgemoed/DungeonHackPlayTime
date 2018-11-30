@@ -3,11 +3,12 @@
 struct DS_OUTPUT 
 {
 	float4 Position : SV_POSITION;
-	float4 cpPos : TEXCOORD0;
+	float2 cpPos : TEXCOORD0;
 };
 
 [domain("quad")]
-DS_OUTPUT PointLightDS(HS_CONSTANT_DATA_OUTPUT input, float2 UV : SV_DomainLocation, constOutputPatch<HS_OUTPUT, 4> quad)
+DS_OUTPUT PointLightDS(HS_CONSTANT_DATA_OUTPUT input, float2 UV : SV_DomainLocation, 
+	const OutputPatch<HS_OUTPUT, 4> quad)
 {
 	// Transform the UV's into clip-space
 	float2 posClipSpace = UV.xy * 2.0 - 1.0;

@@ -68,6 +68,24 @@ struct VS_OUTPUT
 	float2 cpPosition : POSITION;
 };
 
+struct HS_CONSTANT_DATA_OUTPUT
+{
+	float Edges[4] : SV_TessFactor;
+	float Inside[2] : SV_InsideTessFactor;
+};
+
+static const float3 HemiDir[2] =
+{
+	float3(1.0, 1.0, 1.0),
+	float3(-1.0, 1.0, -1.0)
+};
+
+
+struct HS_OUTPUT
+{
+	float3 HemiDir : HEMIDIR;
+};
+
 cbuffer cbGBufferUnpack: register(b0)
 {
 	float4 PerspectiveValues : packoffset(c0);
