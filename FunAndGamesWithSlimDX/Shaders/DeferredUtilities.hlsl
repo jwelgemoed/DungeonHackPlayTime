@@ -24,13 +24,12 @@ struct DirectionalLight {
 };
 
 struct PointLight {
-	float4 Ambient;
-	float4 Diffuse;
-	float4 Specular;
+	float4 Color;
 	float3 Position;
 	float Range;
 	float3 Attentuation;
 	float pad;
+	matrix LightCalculations;
 };
 
 struct SpotLight {

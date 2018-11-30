@@ -23,6 +23,8 @@ namespace DungeonHack.DirectX
         private InputElement[] _elements;
         private VertexShader _vertexShader;
         private PixelShader _pixelShader;
+        private DomainShader _domainShader;
+        private HullShader _hullShader;
         private Camera _camera;
 
         private ConstantBuffer<ConstantBufferPerFrame> _frameConstantBuffer;
@@ -54,6 +56,8 @@ namespace DungeonHack.DirectX
 
             var vsShaderName = basePath + @"\Shaders\LightTextureVS.hlsl";
             var psShaderName = basePath + @"\Shaders\LightTexturePS.hlsl";
+            var hsShaderName = basePath + @"\Shaders\LightTextureHS.hlsl";
+            var dsShaderName = basePath + @"\Shaders\LightTextureDS.hlsl";
             
             var bytecode = ShaderBytecode.CompileFromFile(vsShaderName, "LightVertexShader", "vs_5_0", ShaderFlags.Debug | ShaderFlags.SkipOptimization,
                 include: FileIncludeHandler.Default);
@@ -67,6 +71,17 @@ namespace DungeonHack.DirectX
                 include: FileIncludeHandler.Default);
 
             _pixelShader = new PixelShader(_device, bytecode);
+
+            bytecode = ShaderBytecode.CompileFromFile(hsShaderName, "PointLightHS", "ps_5_0", ShaderFlags.Debug | ShaderFlags.SkipOptimization,
+               include: FileIncludeHandler.Default);
+
+            _hullShader = new HullShader(_device, bytecode);
+
+            bytecode = ShaderBytecode.CompileFromFile(dsShaderName, "PointLightDS", "ps_5_0", ShaderFlags.Debug | ShaderFlags.SkipOptimization,
+               include: FileIncludeHandler.Default);
+
+            _domainShader = new DomainShader(_device, bytecode);
+
             bytecode.Dispose();
 
             _frameConstantBuffer = new ConstantBuffer<ConstantBufferPerFrame>(_device);

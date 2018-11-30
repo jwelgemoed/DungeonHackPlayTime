@@ -1,10 +1,5 @@
 ﻿#include "DeferredUtilities.hlsl"
 
-cbuffer cbPointLightDomain : register(b0)
-{
-	float4x4 LightProjection : packoffset(c0);
-}
-
 static const float3 HemiDir[2] = 
 {
 	float3(1.0, 1.0, 1.0),
@@ -22,7 +17,7 @@ struct HS_CONSTANT_DATA_OUTPUT
 	float Inside[2] : SV_InsideTessFactor;
 };
 
-HS_CONSTANT_DATA_OUTPUT PoitLightConstantHS()
+HS_CONSTANT_DATA_OUTPUT PointLightConstantHS()
 {
 	HS_CONSTANT_DATA_OUTPUT output;
 

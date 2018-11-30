@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 namespace DungeonHack.DirectX.ConstantBuffer
 {
-    [StructLayout(LayoutKind.Sequential, Size=304)]
+    [StructLayout(LayoutKind.Sequential)]
     public struct ConstantBufferPerFrame
     {
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 1)]

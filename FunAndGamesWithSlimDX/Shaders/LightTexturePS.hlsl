@@ -65,6 +65,31 @@ float3 CalcDirectional(float3 position, Material material)
 	return finalColor * material.diffuseColor.rgb;
 }
 
+float3 CalcPoint(float3 position, Material material)
+{
+	float3 toLight = gPointLight[0].Position - position;
+	float3 toEye = EyePosition - position;
+	float distToLight = length(toLight);
+
+	//Phong diffuse
+	toLight /= distToLight;
+	float NDotL = saturate(dot(toLight, material.normal));
+	float3 finalColor = gPointLight[0].Color * NdotL;
+
+	//Blinn specular
+	toEye = normalize(toEye);
+	float3 halfway = normalize(toEye + toLight);
+	float NDotH = saturate(dot(halfway, material.normal));
+	finalColor += gPointLight[0].Color * pow(NDotH, material.specPower)*material.specIntensity;
+
+	//Attentuation	
+	float distToLightNorm = 1.0 - saturate(disToLight * gPointLight[0].Range);
+	float attn = distToLightNorm * distToLightNorm;
+	finalColor *= material.diffuseColor * attn;
+
+	return finalColor;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // Pixel Shader
 ////////////////////////////////////////////////////////////////////////////////
@@ -84,6 +109,7 @@ float4 LightPixelShader(VS_OUTPUT input) : SV_TARGET
 	float4 finalColor;
 	finalColor.xyz = CalcAmbient(mat.normal, mat.diffuseColor.xyz);
 	finalColor.xyz += CalcDirectional(position, mat);
+	finalColor.xyz += CalPoint(position, mat);
 	finalColor.w = 1.0;
 
 	//finalColor.xyz = gbd.Color;

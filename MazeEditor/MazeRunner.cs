@@ -151,9 +151,7 @@ namespace MazeEditor
                 //Diffuse = new Color4(0.5f, 0.0f, 0.0f, 1.0f),
                 //Ambient = new Color4(5.0f, 1.0f, 1.0f, 1.0f),
                 //Specular = new Color4(5.0f, 1.0f, 1.0f, 1.0f),
-                Diffuse = new Color4(15.0f, 0.0f, 0.0f, 1.0f),
-                Ambient = new Color4(),
-                Specular = new Color4(0.1f, 0.1f, 0.1f, 0.1f),
+                Color = new Color4(15.0f, 0.0f, 0.0f, 1.0f),
                 Position = lightPos,
                 Range = 48.0f,
                 Attentuation = new Vector3(0.0f, 0.1f, 0.0f)
@@ -164,9 +162,7 @@ namespace MazeEditor
                 //Diffuse = new Color4(0.0f, 0.0f, 0.5f, 1.0f),
                 //Ambient = new Color4(1.0f, 1.0f, 5.0f, 1.0f),
                 //Specular = new Color4(1.0f, 1.0f, 5.0f, 1.0f),
-                Diffuse = new Color4(0.0f, 0.0f, 15.0f, 1.0f),
-                Ambient = new Color4(),
-                Specular = new Color4(0.1f, 0.1f, 0.1f, 0.1f),
+                Color = new Color4(0.0f, 0.0f, 15.0f, 1.0f),
                 Position = lightPos2,
                 Range = 48.0f,
                 Attentuation = new Vector3(0.0f, 0.1f, 0.0f)
