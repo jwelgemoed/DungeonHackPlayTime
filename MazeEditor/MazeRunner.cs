@@ -230,6 +230,11 @@ namespace MazeEditor
                 Direction = new Vector3(1.0f, 1.0f, 1.0f)
             };
             LightEngine.AddDirectionalLight(_directionalLight);
+            LightEngine.AddDirectionalLight(new DirectionalLight()
+            {
+                Color = new Color4(1.0f, 0.5f, 0.5f, 0.1f),
+                Direction = new Vector3(0.0f, 1.0f, 0.0f)
+            });
 
             //_pointLight = new PointLight(
             //    new Color4(0.0f, 0.0f, 0.0f, 1.0f),

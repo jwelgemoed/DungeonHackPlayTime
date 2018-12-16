@@ -12,7 +12,7 @@ using Device = SharpDX.Direct3D11.Device;
 
 namespace DungeonHack.DirectX
 {
-    public class LightShader : IShader
+    public class PointLightShader : IShader
     {
         private Device _device;
         private DeviceContext _immediateContext;
@@ -40,7 +40,7 @@ namespace DungeonHack.DirectX
         private int Height;
         public DepthStencilView DepthStencilLightShader;
 
-        public LightShader(Renderer renderer, Camera camera, DeferredShadingRenderer deferredShadingRenderer)
+        public PointLightShader(Renderer renderer, Camera camera, DeferredShadingRenderer deferredShadingRenderer)
         {
             _camera = camera;
             _device = renderer.Device;

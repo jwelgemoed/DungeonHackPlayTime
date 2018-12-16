@@ -14,9 +14,12 @@ namespace DungeonHack.DirectX
         private DeferredShadingRenderer _deferredShadingRenderer;
         private Renderer _renderer;
         private DeferredShader _deferredShader;
-        private LightShader _lightShader;
+        private AmbientLightShader _ambientLightShader;
+        private DirectionalLightShader _directionalLightShader;
+        private PointLightShader _lightShader;
         private TextureShader _textureShader;
         private IShader _currentShader;
+        private BlendState _blendState;
 
         private int _numberOfDeferredContexts;
 
@@ -25,6 +28,14 @@ namespace DungeonHack.DirectX
             _lightShader?.Dispose();
 
             _textureShader?.Dispose();
+
+            _deferredShader?.Dispose();
+
+            _directionalLightShader?.Dispose();
+
+            _ambientLightShader?.Dispose();
+
+            _blendState?.Dispose();
         }
 
         public Shader(Renderer renderer, DeferredShadingRenderer deferredRenderer, Camera camera)
@@ -32,11 +43,19 @@ namespace DungeonHack.DirectX
             _renderer = renderer;
             _deferredShadingRenderer = deferredRenderer;
             _textureShader = new TextureShader(renderer);
-            _lightShader = new LightShader(renderer, camera, deferredRenderer);
+            _lightShader = new PointLightShader(renderer, camera, deferredRenderer);
             _deferredShader = new DeferredShader(renderer);
+            _ambientLightShader = new AmbientLightShader(renderer, camera, deferredRenderer);
+            _directionalLightShader = new DirectionalLightShader(renderer, camera, deferredRenderer);
+
             _numberOfDeferredContexts = _renderer.DeferredContexts.Length;
 
             _deferredShader.Initialize();
+            _ambientLightShader.Initialize();
+            _directionalLightShader.Initialize();
+
+            _blendState = CreateBlendState();
+
             SetShader(ShaderTechnique.LightShader);
         }
 
@@ -45,7 +64,7 @@ namespace DungeonHack.DirectX
             switch (shaderTechnique)
             {
                 case ShaderTechnique.LightShader:
-                    _lightShader.Initialize();
+                   // _lightShader.Initialize();
                     _currentShader = _lightShader;
                     break;
                 case ShaderTechnique.TextureShader:
@@ -77,18 +96,63 @@ namespace DungeonHack.DirectX
             ResetFrame();
 
             _renderer.ImmediateContext.ClearRenderTargetView(_renderer.RenderTarget, Colors.Black);
-            _renderer.ImmediateContext.ClearDepthStencilView(_lightShader.DepthStencilLightShader, DepthStencilClearFlags.Depth, 1.0f, 0);
+            _renderer.ImmediateContext.ClearDepthStencilView(_renderer.DepthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
 
             _renderer.TurnZBufferOff();
 
             //Do render fullscreen quad?
 
-            _currentShader.RenderLights(directionalLight, pointLight, spotLight);
+            //Enabled Blending TODO
+
+            TurnOnAlphaBlending();
+
+            _directionalLightShader.RenderLights(directionalLight);
+
+            TurnOffAlphaBlending();
+
+            //Disable Blending TODO
+
+            //_currentShader.RenderLights(directionalLight, pointLight, spotLight);
 
             _renderer.TurnZBufferOn();
 
             //Present
             //_renderer.SwapChain.Present(ConfigManager.VSync, PresentFlags.None);
+        }
+
+        private void TurnOnAlphaBlending()
+        {
+            _renderer.ImmediateContext.OutputMerger.SetBlendState(_blendState, 
+               null);
+        }
+
+        private void TurnOffAlphaBlending()
+        {
+            _renderer.ImmediateContext.OutputMerger.SetBlendState(null);
+        }
+
+        private BlendState CreateBlendState()
+        {
+            RenderTargetBlendDescription rendBlendDesc = new RenderTargetBlendDescription()
+            {
+                SourceAlphaBlend = BlendOption.One,
+                DestinationAlphaBlend = BlendOption.One,
+                BlendOperation = BlendOperation.Add,
+                SourceBlend = BlendOption.One,
+                DestinationBlend = BlendOption.One,
+                AlphaBlendOperation = BlendOperation.Add,
+                RenderTargetWriteMask = ColorWriteMaskFlags.All
+            };
+
+            BlendStateDescription blendDesc = new BlendStateDescription()
+            {
+                AlphaToCoverageEnable = false,
+                IndependentBlendEnable = false,
+            };
+
+            blendDesc.RenderTarget[0] = rendBlendDesc;
+
+            return new BlendState(_renderer.Device, blendDesc);
         }
 
         private void SetupFrameRender()
@@ -116,8 +180,8 @@ namespace DungeonHack.DirectX
 
         private void ResetFrame()
         {
-            _currentShader.SwitchShader();
-            _renderer.SetBackBufferRenderTarget(_lightShader.DepthStencilLightShader, _renderer.ImmediateContext);
+            _directionalLightShader.SwitchShader();
+            _renderer.SetBackBufferRenderTarget(_renderer.DepthStencilView, _renderer.ImmediateContext);
             _renderer.ResetViewport(_renderer.ImmediateContext);
 
             //DeviceContext context;

@@ -147,15 +147,19 @@
     <Compile Include="Builders\MeshBuilder.cs" />
     <Compile Include="CollisionDetection\ICollisionDetector.cs" />
     <Compile Include="DirectX\BufferFactory.cs" />
+    <Compile Include="DirectX\ConstantBuffer\ConstantBufferDirectionalLight.cs" />
     <Compile Include="DirectX\ConstantBuffer\ConstantBuffer.cs" />
+    <Compile Include="DirectX\ConstantBuffer\ConstantBufferAmbientLight.cs" />
     <Compile Include="DirectX\ConstantBuffer\ConstantBufferDeferredInfo.cs" />
     <Compile Include="DirectX\ConstantBuffer\ConstantBufferPerFrame.cs" />
     <Compile Include="DirectX\ConstantBuffer\ConstantBufferPerObject.cs" />
     <Compile Include="DirectX\DeferredShader.cs" />
     <Compile Include="DirectX\DeferredShadingRenderer.cs" />
+    <Compile Include="DirectX\AmbientLightShader.cs" />
+    <Compile Include="DirectX\DirectionalLightShader.cs" />
     <Compile Include="DirectX\FileIncludeHandler.cs" />
     <Compile Include="DirectX\IShader.cs" />
-    <Compile Include="DirectX\LightShader.cs" />
+    <Compile Include="DirectX\PointLightShader.cs" />
     <Compile Include="DirectX\Renderer2D.cs" />
     <Compile Include="DirectX\Shader.cs" />
     <Compile Include="DirectX\SpriteShader.cs" />
@@ -202,7 +206,16 @@
     <Content Include="Shaders\DeferredPS.hlsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Shaders\AmbientLightPS.hlsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\AmbientLightVS.hlsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Shaders\LightTextureHS.hlsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\DirectionalLightPS.hlsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Shaders\LightTexturePS.hlsl">
@@ -212,6 +225,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Shaders\LightTextureDS.hlsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\DirectionalLightVS.hlsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Shaders\LightTextureVS.hlsl">

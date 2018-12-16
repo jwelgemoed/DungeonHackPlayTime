@@ -83,10 +83,14 @@ C:\temp\DungeonHackPlayTime-master\Project1\obj\Debug\Geometry.pdb
 C:\git\DungeonHackPlayTime\Project1\bin\Debug\Shaders\DeferredDS.hlsl
 C:\git\DungeonHackPlayTime\Project1\bin\Debug\Shaders\DeferredHS.hlsl
 C:\git\DungeonHackPlayTime\Project1\bin\Debug\Shaders\DeferredPS.hlsl
+C:\git\DungeonHackPlayTime\Project1\bin\Debug\Shaders\AmbientLightPS.hlsl
+C:\git\DungeonHackPlayTime\Project1\bin\Debug\Shaders\AmbientLightVS.hlsl
 C:\git\DungeonHackPlayTime\Project1\bin\Debug\Shaders\LightTextureHS.hlsl
+C:\git\DungeonHackPlayTime\Project1\bin\Debug\Shaders\DirectionalLightPS.hlsl
 C:\git\DungeonHackPlayTime\Project1\bin\Debug\Shaders\LightTexturePS.hlsl
 C:\git\DungeonHackPlayTime\Project1\bin\Debug\Shaders\DeferredVS.hlsl
 C:\git\DungeonHackPlayTime\Project1\bin\Debug\Shaders\LightTextureDS.hlsl
+C:\git\DungeonHackPlayTime\Project1\bin\Debug\Shaders\DirectionalLightVS.hlsl
 C:\git\DungeonHackPlayTime\Project1\bin\Debug\Shaders\LightTextureVS.hlsl
 C:\git\DungeonHackPlayTime\Project1\bin\Debug\Resources\MWALL4_2.PNG
 C:\git\DungeonHackPlayTime\Project1\bin\Debug\Shaders\Texture.hlsl

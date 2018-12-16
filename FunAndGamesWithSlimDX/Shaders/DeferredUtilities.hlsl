@@ -17,11 +17,11 @@ struct AmbientLight {
 	float3 AmbientUp;
 };
 
-struct DirectionalLight {
-	float4 Color;
-	float3 Direction;
-	float pad;
-};
+//struct DirectionalLight {
+//	float4 Color;
+//	float3 Direction;
+//	float pad;
+//};
 
 struct PointLight {
 	float4 Color;
@@ -92,22 +92,22 @@ cbuffer cbGBufferUnpack: register(b0)
 	matrix ViewInv : packoffset(c1);
 };
 
-cbuffer cbPerFrame : register(b1)
-{
-	DirectionalLight gDirLight[NUM_DIRECTIONAL_LIGHTS];
-	SpotLight gSpotLight[NUM_SPOT_LIGHTS];
-	PointLight gPointLight[NUM_POINT_LIGHTS];
-	float3 cameraPosition;
-	float fogStart;
-	float fogEnd;
-	bool useNormalMap;
-	float gMaxTessDistance;
-	float gMinTessDistance;
-	float gMinTessFactor;
-	float gMaxTessFactor;
-	float2 pad;
-	AmbientLight gAmbientLight;
-};
+//cbuffer cbPerFrame : register(b1)
+//{
+//	DirectionalLight gDirLight[NUM_DIRECTIONAL_LIGHTS];
+//	SpotLight gSpotLight[NUM_SPOT_LIGHTS];
+//	PointLight gPointLight[NUM_POINT_LIGHTS];
+//	float3 cameraPosition;
+//	float fogStart;
+//	float fogEnd;
+//	bool useNormalMap;
+//	float gMaxTessDistance;
+//	float gMinTessDistance;
+//	float gMinTessFactor;
+//	float gMaxTessFactor;
+//	float2 pad;
+//	AmbientLight gAmbientLight;
+//};
 
 float ConvertDepthToLinear(float depth)
 {
