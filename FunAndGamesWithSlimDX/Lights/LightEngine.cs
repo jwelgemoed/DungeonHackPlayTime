@@ -9,7 +9,7 @@ namespace DungeonHack.Lights
         private static readonly Spotlight[] SpotLight = new Spotlight[NumberOfSpotLights];
 
         //MUST BE THE SAME VALUE AS DEFINED IN HLSL
-        private const int NumberOfDirectionalLights = 1;
+        private const int NumberOfDirectionalLights = 2;
         private const int NumberOfPointLights = 2;
         private const int NumberOfSpotLights = 1;
 

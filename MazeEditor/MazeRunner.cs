@@ -245,7 +245,7 @@ namespace MazeEditor
             //    new Vector3(0.0f, 1.0f, 0.0f)
             //);
 
-           // LightEngine.AddPointLight(_pointLight);
+            // LightEngine.AddPointLight(_pointLight);
 
             initialPos = Camera.EyeAt;
 

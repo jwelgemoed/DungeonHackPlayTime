@@ -253,7 +253,7 @@ namespace FunAndGamesWithSharpDX.DirectX
         {
             var dsStateDisabledDesc = new DepthStencilStateDescription()
             {
-                IsDepthEnabled = true,
+                IsDepthEnabled = false,
                 IsStencilEnabled = true,
                 DepthWriteMask = DepthWriteMask.All,
                 DepthComparison = Comparison.Less,

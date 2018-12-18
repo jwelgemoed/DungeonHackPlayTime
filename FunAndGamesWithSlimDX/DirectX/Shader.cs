@@ -102,15 +102,13 @@ namespace DungeonHack.DirectX
 
             //Do render fullscreen quad?
 
-            //Enabled Blending TODO
-
             TurnOnAlphaBlending();
 
+            _directionalLightShader.SwitchShader();
+
             _directionalLightShader.RenderLights(directionalLight);
-
+            
             TurnOffAlphaBlending();
-
-            //Disable Blending TODO
 
             //_currentShader.RenderLights(directionalLight, pointLight, spotLight);
 
@@ -135,6 +133,7 @@ namespace DungeonHack.DirectX
         {
             RenderTargetBlendDescription rendBlendDesc = new RenderTargetBlendDescription()
             {
+                IsBlendEnabled = true,
                 SourceAlphaBlend = BlendOption.One,
                 DestinationAlphaBlend = BlendOption.One,
                 BlendOperation = BlendOperation.Add,
@@ -180,7 +179,7 @@ namespace DungeonHack.DirectX
 
         private void ResetFrame()
         {
-            _directionalLightShader.SwitchShader();
+            //_directionalLightShader.SwitchShader();
             _renderer.SetBackBufferRenderTarget(_renderer.DepthStencilView, _renderer.ImmediateContext);
             _renderer.ResetViewport(_renderer.ImmediateContext);
 
