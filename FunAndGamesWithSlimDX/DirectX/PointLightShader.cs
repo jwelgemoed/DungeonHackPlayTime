@@ -154,7 +154,7 @@ namespace DungeonHack.DirectX
             _immediateContext.PixelShader.Set(pixelShader);
         }
 
-        public void RenderLights(DirectionalLight[] directionalLight, PointLight[] pointLight, Spotlight[] spotLight)
+        public void RenderLights(AmbientLight[] ambientLights, DirectionalLight[] directionalLight, PointLight[] pointLight, Spotlight[] spotLight)
         {
             _immediateContext.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(null, 0, 0));
             _immediateContext.InputAssembler.SetIndexBuffer(null, SharpDX.DXGI.Format.R32_UInt, 0);

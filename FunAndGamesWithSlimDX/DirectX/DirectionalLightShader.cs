@@ -129,17 +129,12 @@ namespace DungeonHack.DirectX
 
             for (int i = 0; i < directionalLights.Length; i++)
             {
-                RenderLight(directionalLights[i]);
+                _constantBufferDirectionalLight.DirectionalLight = directionalLights[i];
+
+                _directionalLightConstantBuffer.UpdateValue(_immediateContext, _constantBufferDirectionalLight);
+
+                _immediateContext.Draw(4, 0);
             }
-        }
-
-        private void RenderLight(DirectionalLight directionalLight)
-        {
-            _constantBufferDirectionalLight.DirectionalLight = directionalLight;
-
-            _directionalLightConstantBuffer.UpdateValue(_immediateContext, _constantBufferDirectionalLight);
-
-            _immediateContext.Draw(4, 0);
         }
 
         public void Dispose()

@@ -124,7 +124,7 @@ namespace FunAndGamesWithSharpDX.DirectX
             _deferredContexts[threadNumber].DrawIndexed(indexCount, 0, 0);
         }
 
-        public void RenderLights(DirectionalLight[] directionalLight, PointLight[] pointLight, Spotlight[] spotLight)
+        public void RenderLights(AmbientLight[] ambientLights, DirectionalLight[] directionalLight, PointLight[] pointLight, Spotlight[] spotLight)
         {
             
         }

@@ -11,7 +11,7 @@ namespace DungeonHack.DirectX
         void Dispose();
         void Initialize();
         void Render(int threadNumber, int indexCount, Matrix worldMatrix, Matrix viewMatrix, Matrix viewProjectionMatrix, Texture texture, Vector3 cameraPosition, Material material);
-        void RenderLights(DirectionalLight[] directionalLight, PointLight[] pointLight, Spotlight[] spotLight);
+        void RenderLights(AmbientLight[] ambientLights, DirectionalLight[] directionalLight, PointLight[] pointLight, Spotlight[] spotLight);
         void RenderFrame(Camera camera);
         void SwitchShader();
     }

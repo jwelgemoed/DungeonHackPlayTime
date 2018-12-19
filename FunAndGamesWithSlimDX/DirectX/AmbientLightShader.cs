@@ -115,23 +115,24 @@ namespace DungeonHack.DirectX
             _immediateContext.PixelShader.Set(pixelShader);
         }
 
-        public void RenderAmbientLight(AmbientLight ambientLight)
+        public void RenderLights(AmbientLight[] ambientLights)
         {
             _immediateContext.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(null, 0, 0));
             _immediateContext.InputAssembler.SetIndexBuffer(null, SharpDX.DXGI.Format.R32_UInt, 0);
-
-            _constantBufferAmbientLight.AmbientLight = ambientLight;
-
-            _ambientLightConstantBuffer.UpdateValue(_immediateContext, _constantBufferAmbientLight);
-
             _constantBufferDeferredInfo.ViewInv = Matrix.Invert(_camera.ViewMatrix);
-
-            _deferredInfoConstantBuffer.UpdateValue(_immediateContext, _constantBufferDeferredInfo);
-
             _immediateContext.PixelShader.SetShaderResource(0, _deferredShadingRenderer.DepthShaderResourceView);
             _immediateContext.PixelShader.SetShaderResources(1, _deferredShadingRenderer.ShaderResourceViews);
+            
+            for (int i=0; i<ambientLights.Length; i++)
+            {
+                _constantBufferAmbientLight.AmbientLight = ambientLights[i];
 
-            _immediateContext.Draw(4, 0);
+                _ambientLightConstantBuffer.UpdateValue(_immediateContext, _constantBufferAmbientLight);
+
+                _deferredInfoConstantBuffer.UpdateValue(_immediateContext, _constantBufferDeferredInfo);
+
+                _immediateContext.Draw(4, 0);
+            }
         }
 
         public void Dispose()

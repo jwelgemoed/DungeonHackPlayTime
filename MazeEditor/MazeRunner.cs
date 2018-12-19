@@ -224,17 +224,30 @@ namespace MazeEditor
             ConfigManager.FogEnd = 1000;
             ConfigManager.UseNormalMap = 1;
 
+
+            LightEngine.AddAmbientLight(new AmbientLight()
+            {
+                AmbientDown = new Vector3(0.5f, 0.5f, 0.5f),
+                AmbientUp = new Vector3(0.1f, 0.1f, 0.1f)
+            });
+
             _directionalLight = new DirectionalLight()
             {
                 Color = new Color4(0.5f, 0.5f, 0.35f, 0.1f),
                 Direction = new Vector3(1.0f, 1.0f, 1.0f)
             };
-            LightEngine.AddDirectionalLight(_directionalLight);
-            LightEngine.AddDirectionalLight(new DirectionalLight()
-            {
-                Color = new Color4(1.0f, 0.5f, 0.5f, 0.1f),
-                Direction = new Vector3(0.0f, 1.0f, 0.0f)
-            });
+
+            //LightEngine.AddDirectionalLight(_directionalLight);
+            //LightEngine.AddDirectionalLight(new DirectionalLight()
+            //{
+            //    Color = new Color4(1.0f, 0.5f, 0.5f, 0.1f),
+            //    Direction = new Vector3(0.0f, 1.0f, 0.0f)
+            //});
+            //LightEngine.AddDirectionalLight(new DirectionalLight()
+            //{
+            //    Color = new Color4(0.5f, 0.5f, 2.5f, 1.0f),
+            //    Direction = new Vector3(0.0f, 0.0f, 1.0f)
+            //});
 
             //_pointLight = new PointLight(
             //    new Color4(0.0f, 0.0f, 0.0f, 1.0f),

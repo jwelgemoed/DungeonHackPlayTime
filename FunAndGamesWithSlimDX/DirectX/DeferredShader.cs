@@ -249,7 +249,7 @@ namespace DungeonHack.DirectX
                 _objectConstantBuffer.Dispose();
         }
 
-        public void RenderLights(DirectionalLight[] directionalLight, PointLight[] pointLight, Spotlight[] spotLight)
+        public void RenderLights(AmbientLight[] ambientLights, DirectionalLight[] directionalLight, PointLight[] pointLight, Spotlight[] spotLight)
         {
             throw new System.NotImplementedException();
         }

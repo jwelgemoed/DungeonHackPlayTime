@@ -1,43 +1,51 @@
 ﻿using DungeonHack.DirectX;
+using System.Collections.Generic;
 
 namespace DungeonHack.Lights
 {
     public static class LightEngine
     {
-        private static readonly DirectionalLight[] DirectionalLights = new DirectionalLight[NumberOfDirectionalLights];
-        private static readonly PointLight[] PointLights = new PointLight[NumberOfPointLights];
-        private static readonly Spotlight[] SpotLight = new Spotlight[NumberOfSpotLights];
+        private static readonly List<AmbientLight> AmbientLights = new List<AmbientLight>();
+        private static readonly List<DirectionalLight> DirectionalLights = new List<DirectionalLight>();
+        private static readonly List<PointLight> PointLights = new List<PointLight>();
+        private static readonly List<Spotlight> SpotLights = new List<Spotlight>();
 
-        //MUST BE THE SAME VALUE AS DEFINED IN HLSL
-        private const int NumberOfDirectionalLights = 2;
-        private const int NumberOfPointLights = 2;
-        private const int NumberOfSpotLights = 1;
+        private static AmbientLight[] _ambientLightArray = new AmbientLight[1];
+        private static DirectionalLight[] _directionalLightArray = new DirectionalLight[1];
+        private static Spotlight[] _spotlightArray = new Spotlight[1];
+        private static PointLight[] _pointLightArray = new PointLight[1];
 
-        private static int _currentDirectionalLight;
-        private static int _currentPointLight;
-        private static int _currentSpotLight;
+        public static void AddAmbientLight(AmbientLight ambient)
+        {
+            AmbientLights.Add(ambient);
+            _ambientLightArray = null;
+            _ambientLightArray = AmbientLights.ToArray();
+        }
 
         public static void AddDirectionalLight(DirectionalLight directional)
         {
-            DirectionalLights[_currentDirectionalLight] = directional;
-            _currentDirectionalLight = (_currentDirectionalLight + 1) % NumberOfDirectionalLights;
+            DirectionalLights.Add(directional);
+            _directionalLightArray = null;
+            _directionalLightArray = DirectionalLights.ToArray();
         }
 
         public static void AddPointLight(PointLight point)
         {
-            PointLights[_currentPointLight] = point;
-            _currentPointLight = (_currentPointLight + 1) % NumberOfPointLights;
+            PointLights.Add(point);
+            _pointLightArray = null;
+            _pointLightArray = PointLights.ToArray();
         }
 
-        public static void AddSpotLight(Spotlight spotlight)
+        public static void AddSpotLight(Spotlight spotLight)
         {
-            SpotLight[_currentSpotLight] = spotlight;
-            _currentSpotLight = (_currentSpotLight + 1) % NumberOfSpotLights;
+            SpotLights.Add(spotLight);
+            _spotlightArray = null;
+            _spotlightArray = SpotLights.ToArray();
         }
 
         public static void RenderLights(Shader shader)
         {
-            shader.RenderLights(DirectionalLights, PointLights, SpotLight);
+            shader.RenderLights(_ambientLightArray, _directionalLightArray, _pointLightArray, _spotlightArray);
         }
     }
 }

@@ -91,7 +91,7 @@ namespace DungeonHack.DirectX
             _deferredShader.Render(threadNumber, indexCount, worldMatrix, viewMatrix, viewProjMatrix, texture, cameraPosition, material);
         }
 
-        public void RenderLights(DirectionalLight[] directionalLight, PointLight[] pointLight, Spotlight[] spotLight)
+        public void RenderLights(AmbientLight[] ambientLight, DirectionalLight[] directionalLight, PointLight[] pointLight, Spotlight[] spotLight)
         {
             ResetFrame();
 
@@ -104,8 +104,10 @@ namespace DungeonHack.DirectX
 
             TurnOnAlphaBlending();
 
-            _directionalLightShader.SwitchShader();
+            _ambientLightShader.SwitchShader();
+            _ambientLightShader.RenderLights(ambientLight);
 
+            _directionalLightShader.SwitchShader();
             _directionalLightShader.RenderLights(directionalLight);
             
             TurnOffAlphaBlending();

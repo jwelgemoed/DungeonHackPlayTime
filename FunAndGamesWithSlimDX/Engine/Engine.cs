@@ -312,7 +312,7 @@ namespace DungeonHack.Engine
             {
                 _timeElapsedForDisplay += 1.00f; //0.25 quarter of a second, 1.0 = second
 
-                //Form.Text = $"FPS : {_frameRateStats.FramesPerSecond} Game Time : {(int)Timer.TotalTime()}";
+                Form.Text = $"FPS : {_frameRateStats.FramesPerSecond} Game Time : {(int)Timer.TotalTime()}";
                 _console.WriteLine(Form.Text);
                 _console.WriteLine("Mesh rendered : " + _meshRenderedCount + " from " + GetSceneMeshes().Count);
 
