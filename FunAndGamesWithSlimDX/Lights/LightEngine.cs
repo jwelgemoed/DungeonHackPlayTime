@@ -36,6 +36,13 @@ namespace DungeonHack.Lights
             _pointLightArray = PointLights.ToArray();
         }
 
+        public static void UpdatePointLight(int index, PointLight point)
+        {
+            PointLights[index] = point;
+            _pointLightArray = null;
+            _pointLightArray = PointLights.ToArray();
+        }
+
         public static void AddSpotLight(Spotlight spotLight)
         {
             SpotLights.Add(spotLight);

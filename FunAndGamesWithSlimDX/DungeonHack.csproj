@@ -153,6 +153,7 @@
     <Compile Include="DirectX\ConstantBuffer\ConstantBufferDeferredInfo.cs" />
     <Compile Include="DirectX\ConstantBuffer\ConstantBufferPerFrame.cs" />
     <Compile Include="DirectX\ConstantBuffer\ConstantBufferPerObject.cs" />
+    <Compile Include="DirectX\ConstantBuffer\ConstantBufferPointLight.cs" />
     <Compile Include="DirectX\DeferredShader.cs" />
     <Compile Include="DirectX\DeferredShadingRenderer.cs" />
     <Compile Include="DirectX\AmbientLightShader.cs" />
@@ -212,25 +213,25 @@
     <Content Include="Shaders\AmbientLightVS.hlsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Shaders\LightTextureHS.hlsl">
+    <Content Include="Shaders\PointLightHS.hlsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Shaders\DirectionalLightPS.hlsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Shaders\LightTexturePS.hlsl">
+    <Content Include="Shaders\PointLightPS.hlsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Shaders\DeferredVS.hlsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Shaders\LightTextureDS.hlsl">
+    <Content Include="Shaders\PointLightDS.hlsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Shaders\DirectionalLightVS.hlsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Shaders\LightTextureVS.hlsl">
+    <Content Include="Shaders\PointLightVS.hlsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Shaders\Sprite.fx" />

@@ -143,7 +143,7 @@ namespace MazeEditor
                         ConfigManager.SpotLightAttentuationC)
                 };
 
-                LightEngine.AddSpotLight(spotlight);
+                //LightEngine.AddSpotLight(spotlight);
             }
 
             _pointLight = new PointLight()
@@ -168,8 +168,8 @@ namespace MazeEditor
                 Attentuation = new Vector3(0.0f, 0.1f, 0.0f)
             };
 
-            LightEngine.AddPointLight(_pointLight);
-            LightEngine.AddPointLight(_pointLight2);
+            LightEngine.UpdatePointLight(0, _pointLight);
+            LightEngine.UpdatePointLight(1, _pointLight2);
         }
 
         public override List<Polygon> GetSceneMeshes()
@@ -237,7 +237,7 @@ namespace MazeEditor
                 Direction = new Vector3(1.0f, 1.0f, 1.0f)
             };
 
-            //LightEngine.AddDirectionalLight(_directionalLight);
+            LightEngine.AddDirectionalLight(_directionalLight);
             //LightEngine.AddDirectionalLight(new DirectionalLight()
             //{
             //    Color = new Color4(1.0f, 0.5f, 0.5f, 0.1f),
@@ -248,6 +248,9 @@ namespace MazeEditor
             //    Color = new Color4(0.5f, 0.5f, 2.5f, 1.0f),
             //    Direction = new Vector3(0.0f, 0.0f, 1.0f)
             //});
+
+            LightEngine.AddPointLight(new PointLight());
+            LightEngine.AddPointLight(new PointLight());
 
             //_pointLight = new PointLight(
             //    new Color4(0.0f, 0.0f, 0.0f, 1.0f),

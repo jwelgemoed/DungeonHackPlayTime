@@ -16,7 +16,7 @@ namespace DungeonHack.DirectX
         private DeferredShader _deferredShader;
         private AmbientLightShader _ambientLightShader;
         private DirectionalLightShader _directionalLightShader;
-        private PointLightShader _lightShader;
+        private PointLightShader _pointLightShader;
         private TextureShader _textureShader;
         private IShader _currentShader;
         private BlendState _blendState;
@@ -25,7 +25,7 @@ namespace DungeonHack.DirectX
 
         public void Dispose()
         {
-            _lightShader?.Dispose();
+            _pointLightShader?.Dispose();
 
             _textureShader?.Dispose();
 
@@ -43,7 +43,7 @@ namespace DungeonHack.DirectX
             _renderer = renderer;
             _deferredShadingRenderer = deferredRenderer;
             _textureShader = new TextureShader(renderer);
-            _lightShader = new PointLightShader(renderer, camera, deferredRenderer);
+            _pointLightShader = new PointLightShader(renderer, camera, deferredRenderer);
             _deferredShader = new DeferredShader(renderer);
             _ambientLightShader = new AmbientLightShader(renderer, camera, deferredRenderer);
             _directionalLightShader = new DirectionalLightShader(renderer, camera, deferredRenderer);
@@ -53,6 +53,7 @@ namespace DungeonHack.DirectX
             _deferredShader.Initialize();
             _ambientLightShader.Initialize();
             _directionalLightShader.Initialize();
+            _pointLightShader.Initialize();
 
             _blendState = CreateBlendState();
 
@@ -65,7 +66,7 @@ namespace DungeonHack.DirectX
             {
                 case ShaderTechnique.LightShader:
                    // _lightShader.Initialize();
-                    _currentShader = _lightShader;
+                    //_currentShader = _pointLightShader;
                     break;
                 case ShaderTechnique.TextureShader:
                     _textureShader.Initialize();
@@ -109,6 +110,9 @@ namespace DungeonHack.DirectX
 
             _directionalLightShader.SwitchShader();
             _directionalLightShader.RenderLights(directionalLight);
+
+            _pointLightShader.SwitchShader();
+            _pointLightShader.RenderLights(pointLight);
             
             TurnOffAlphaBlending();
 

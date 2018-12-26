@@ -124,7 +124,7 @@ namespace DungeonHack.QuadTree
                     foreach (var polygon in node.Polygons)
                     {
                         if (frustrum.CheckBoundingBox(polygon.BoundingBox.BoundingBox) == 0
-                            /*|| _depthBuffer.IsBoundingBoxOccluded(polygon.BoundingBox)*/)
+                           /* || _depthBuffer.IsBoundingBoxOccluded(polygon.BoundingBox)*/)
                         {
                             continue;
                         }
