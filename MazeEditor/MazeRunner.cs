@@ -227,13 +227,13 @@ namespace MazeEditor
 
             LightEngine.AddAmbientLight(new AmbientLight()
             {
-                AmbientDown = new Vector3(0.5f, 0.5f, 0.5f),
-                AmbientUp = new Vector3(0.1f, 0.1f, 0.1f)
+                AmbientDown = new Vector3(0.05f, 0.05f, 0.05f),
+                AmbientUp = new Vector3(0.01f, 0.01f, 0.01f)
             });
 
             _directionalLight = new DirectionalLight()
             {
-                Color = new Color4(0.5f, 0.5f, 0.35f, 0.1f),
+                Color = new Color4(0.05f, 0.05f, 0.035f, 0.01f),
                 Direction = new Vector3(1.0f, 1.0f, 1.0f)
             };
 

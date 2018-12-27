@@ -184,9 +184,9 @@ namespace DungeonHack.DirectX
             {
                 var rangeMatrix = new Matrix()
                 {
-                    M11 = pointLight[i].Range,
-                    M22 = pointLight[i].Range,
-                    M33 = pointLight[i].Range,
+                    M11 = pointLight[i].Range * 1.1f,
+                    M22 = pointLight[i].Range * 1.1f,
+                    M33 = pointLight[i].Range * 1.1f,
                     M44 = 1.0f
                 };
 
@@ -238,7 +238,6 @@ namespace DungeonHack.DirectX
             var dsStateDesc = new DepthStencilStateDescription()
             {
                 IsDepthEnabled = true,
-                IsStencilEnabled = false,
                 DepthWriteMask = DepthWriteMask.Zero,
                 DepthComparison = Comparison.GreaterEqual,
             };
