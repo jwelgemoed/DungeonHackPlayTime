@@ -27,6 +27,7 @@ namespace DungeonHack.OcclusionCulling
         private float l, r, t, b;
         private float termX1, termX2, termY1, termY2, halfWidth, halfHeight;
         private bool _shadowBufferLock;
+        private int _bufferSize;
 
         public DepthBuffer(Camera camera, int numberOfThreads)
         {
@@ -41,6 +42,7 @@ namespace DungeonHack.OcclusionCulling
             Buffer = new float[Width * Height];
             ShadowBuffer = new float[Width * Height];
             _shadowBufferLock = false;
+            _bufferSize = Buffer.Length * sizeof(float);
 
             for (int i=0; i<Buffer.Length; i++)
             {
@@ -91,7 +93,10 @@ namespace DungeonHack.OcclusionCulling
         public void CopyBufferToShadow()
         {
             if (!_shadowBufferLock)
-                ShadowBuffer = (float[]) Buffer.Clone();
+            {
+                System.Buffer.BlockCopy(Buffer, 0, ShadowBuffer, 0, _bufferSize);
+            }
+               // ShadowBuffer = (float[]) Buffer.Clone();
         }
 
         public void SaveBufferToFile()

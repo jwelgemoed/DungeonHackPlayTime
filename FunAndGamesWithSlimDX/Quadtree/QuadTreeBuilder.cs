@@ -1,4 +1,5 @@
 ﻿using DungeonHack.DirectX;
+using DungeonHack.Engine;
 using DungeonHack.Entities;
 using SharpDX;
 using SharpDX.Direct3D11;
@@ -17,9 +18,14 @@ namespace DungeonHack.QuadTree
 
         private readonly Device _device;
 
+        private int _maxDepth;
+        private int _minPolygonsInNode;
+
         public QuadTreeBuilder(Device device)
         {
             _device = device;
+            _maxDepth = ConfigManager.MaxTreeDepth;
+            _minPolygonsInNode = ConfigManager.MinPolygonsInNode;
         }
 
         public QuadTreeNode BuildTree(IEnumerable<Polygon> polygons)
@@ -158,8 +164,8 @@ namespace DungeonHack.QuadTree
 
             node.Polygons = containedPolygons.ToList();
 
-            if ((node.Polygons.Count() > 64) &&
-                    (treeDepth < 2))
+            if ((node.Polygons.Count() > _minPolygonsInNode) &&
+                    (treeDepth < _maxDepth))
             {
                 BuildQuadTree(node, containedPolygons, treeDepth + 1);
             }

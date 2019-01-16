@@ -106,7 +106,11 @@ namespace FunAndGamesWithSharpDX.DirectX
                 SwapEffect = SwapEffect.Discard,
             };
 
-            Device.CreateWithSwapChain(SharpDX.Direct3D.DriverType.Hardware, DeviceCreationFlags.Debug | DeviceCreationFlags.BgraSupport
+            SharpDX.DXGI.Factory f = new SharpDX.DXGI.Factory1();
+
+            var adapters = f.Adapters;
+
+            Device.CreateWithSwapChain(adapters[1], DeviceCreationFlags.Debug | DeviceCreationFlags.BgraSupport
                 , description, out Device, out SwapChain);
         }
 

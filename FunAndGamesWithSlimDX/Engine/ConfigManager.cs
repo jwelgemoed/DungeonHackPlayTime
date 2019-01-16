@@ -71,5 +71,9 @@ namespace DungeonHack.Engine
         public static float FogEnd { get; set; }
 
         public static int UseNormalMap { get; set; }
+
+        public static int MaxTreeDepth => Settings.Default.MaxTreeDepth;
+
+        public static int MinPolygonsInNode => Settings.Default.MinPolygonsInNode;
     }
 }

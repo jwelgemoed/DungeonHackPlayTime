@@ -32,3 +32,5 @@
 /GameData/obj/Debug
 /.vs/DungeonHackPlayTime/v15/Server/sqlite3
 *.opendb
+*.psess
+*.vsp
