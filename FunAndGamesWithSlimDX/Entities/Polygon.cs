@@ -21,7 +21,7 @@ namespace DungeonHack.Entities
 
         public Model[] Model { get; set; }
 
-        public Vector3 Normal { get { return VertexData[0].Normal; } }
+        public Vector3 Normal => VertexData[0].Normal;
 
         public AABoundingBox BoundingBox { get; set; }
 
@@ -32,8 +32,6 @@ namespace DungeonHack.Entities
         public Matrix TranslationMatrix { get; set; }
         public Matrix RotationMatrix { get; set; }
         public Matrix WorldMatrix { get; set; }
-
-        public bool HasBeenUsedAsSplitPlane { get; set; }
 
         public PolygonType PolygonType { get; set; }
 
@@ -47,10 +45,9 @@ namespace DungeonHack.Entities
 
         public void Dispose()
         {
-            if (VertexBuffer != null)
-                VertexBuffer.Dispose();
-            if (IndexBuffer != null)
-                IndexBuffer.Dispose();
+            VertexBuffer?.Dispose();
+            IndexBuffer?.Dispose();
+            BoundingBox?.Dispose();
         }
     }
 }

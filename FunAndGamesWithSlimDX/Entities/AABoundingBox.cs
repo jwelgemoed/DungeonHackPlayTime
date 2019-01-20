@@ -1,12 +1,13 @@
-﻿using DungeonHack.DirectX;
+﻿using System;
+using DungeonHack.DirectX;
 using FunAndGamesWithSharpDX.Engine;
 using FunAndGamesWithSharpDX.Entities;
 using SharpDX;
-using SharpDX.Direct3D11;
+using Buffer = SharpDX.Direct3D11.Buffer;
 
 namespace DungeonHack.Entities
 {
-    public class AABoundingBox
+    public class AABoundingBox : IDisposable
     {
         public BoundingBox BoundingBox { get; set; }
 
@@ -123,6 +124,12 @@ namespace DungeonHack.Entities
             var bottom = new SharpDX.Plane(corners[Indexes[3]], corners[Indexes[2]], corners[Indexes[6]]);
             var left = new SharpDX.Plane(corners[Indexes[0]], corners[Indexes[4]], corners[Indexes[7]]);
             var right = new SharpDX.Plane(corners[Indexes[6]], corners[Indexes[5]], corners[Indexes[1]]);
+        }
+
+        public void Dispose()
+        {
+            BoundingBoxVertexBuffer?.Dispose();
+            BoundingBoxIndexBuffer?.Dispose();
         }
     }
 }

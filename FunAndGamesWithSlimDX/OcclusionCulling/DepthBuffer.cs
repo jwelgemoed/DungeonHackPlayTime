@@ -3,6 +3,7 @@ using FunAndGamesWithSharpDX.Engine;
 using SharpDX;
 using System.Collections.Generic;
 using DungeonHack.Engine;
+using System;
 
 namespace DungeonHack.OcclusionCulling
 {
@@ -25,7 +26,12 @@ namespace DungeonHack.OcclusionCulling
         private float _nearClipPane;
         private Camera _camera;
         private float l, r, t, b;
-        private float termX1, termX2, termY1, termY2, halfWidth, halfHeight;
+        private float termX1;
+        private float termX2;
+        private float termY1;
+        private readonly float termY2;
+        private float halfWidth;
+        private float halfHeight;
         private bool _shadowBufferLock;
         private int _bufferSize;
 
@@ -42,7 +48,7 @@ namespace DungeonHack.OcclusionCulling
             Buffer = new float[Width * Height];
             ShadowBuffer = new float[Width * Height];
             _shadowBufferLock = false;
-            _bufferSize = Buffer.Length * sizeof(float);
+            _bufferSize = Buffer.Length;
 
             for (int i=0; i<Buffer.Length; i++)
             {
@@ -72,14 +78,6 @@ namespace DungeonHack.OcclusionCulling
             }
         }
 
-        public void ClearShadowBuffer()
-        {
-            for (int i = 0; i < Buffer.Length; i++)
-            {
-                ShadowBuffer[i] = MaxDepth;
-            }
-        }
-
         public void LockShadowBuffer()
         {
             _shadowBufferLock = true;
@@ -94,20 +92,8 @@ namespace DungeonHack.OcclusionCulling
         {
             if (!_shadowBufferLock)
             {
-                System.Buffer.BlockCopy(Buffer, 0, ShadowBuffer, 0, _bufferSize);
+                Array.Copy(Buffer, ShadowBuffer, _bufferSize);
             }
-               // ShadowBuffer = (float[]) Buffer.Clone();
-        }
-
-        public void SaveBufferToFile()
-        {
-            //System.Drawing.ImageConverter ic = new System.Drawing.ImageConverter();
-
-            //System.Drawing.Image img = (System.Drawing.Image)ic.ConvertFrom(_depthBuffer);
-
-            //System.Drawing.Bitmap bitmap1 = new System.Drawing.Bitmap(img);
-
-            //bitmap1.Save(@"c:\buffer.bmp");
         }
 
         public bool IsBoundingBoxOccluded(AABoundingBox box)
@@ -265,11 +251,10 @@ namespace DungeonHack.OcclusionCulling
         {
             Vector4[] cameraVectors = new Vector4[vectors.Length];
             Vector3[] rasterVectors = new Vector3[vectors.Length];
-            Vector4[] projectedVectors = new Vector4[vectors.Length];
-            int minx, maxx, miny, maxy;
-            maxx = maxy = 0;
-            miny = Height;
-            minx = Width;
+            int maxy;
+            var maxx = maxy = 0;
+            var miny = Height;
+            var minx = Width;
 
             for (int i=0; i<vectors.Length; i++)
             {
