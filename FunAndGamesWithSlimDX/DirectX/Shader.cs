@@ -172,9 +172,7 @@ namespace DungeonHack.DirectX
             for (int i = 0; i < _numberOfDeferredContexts; i++)
             {
                 context = _renderer.DeferredContexts[i];
-
                 _deferredShadingRenderer.SetRenderTargets(context);
-                _deferredShadingRenderer.ClearRenderTargets(context, Color.Black);
             }
         }
 
