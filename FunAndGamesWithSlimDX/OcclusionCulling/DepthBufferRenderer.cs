@@ -26,46 +26,37 @@ namespace DungeonHack.OcclusionCulling
         private static Surface _surface;
 
         private static BitmapProperties1 _bitmapProperties1;
+        private static byte[] _buffer;
+
+        private static Bitmap _backBufferBmp;
 
         public static void RenderToScreen(Renderer2D renderer)
         {
-            var buffer = new byte[DepthBuffer.Width * DepthBuffer.Height * 4];
-            var backBufferBmp = new Bitmap(_deviceContext, new SharpDX.Size2(DepthBuffer.Width, DepthBuffer.Height), 
-                new BitmapProperties(_deviceContext.PixelFormat));
-
             // Copy pixels from screen capture Texture to GDI bitmap
             for (int y = 0; y < DepthBuffer.Height; y++)
-                for (int x = 0; x < DepthBuffer.Width; x++)
-                {
-                    int depthBufferEntry = (y * DepthBuffer.Width) + (x);
-                    int bufferLocation = depthBufferEntry * 4;
-                    byte value = (byte)(((Math.Abs(DepthBuffer.ShadowBuffer[depthBufferEntry]) / 1)));
-                    //value = (byte) (value / 3);
+            for (int x = 0; x < DepthBuffer.Width; x++)
+            {
+                int depthBufferEntry = (y * DepthBuffer.Width) + (x);
+                int bufferLocation = depthBufferEntry * 4;
+                byte value = (byte) (((Math.Abs(DepthBuffer.ShadowBuffer[depthBufferEntry]) / 1)));
+                //value = (byte) (value / 3);
 
-                    var color = System.Drawing.Color.FromArgb(value, 0, 0);
+                var color = System.Drawing.Color.FromArgb(value, 0, 0);
 
-                    buffer[bufferLocation] = color.R;
-                    buffer[bufferLocation + 1] = color.G;
-                    buffer[bufferLocation + 2] = color.B;
-                    buffer[bufferLocation + 3] = color.A;
-                }
+                _buffer[bufferLocation] = color.R;
+                _buffer[bufferLocation + 1] = color.G;
+                _buffer[bufferLocation + 2] = color.B;
+                _buffer[bufferLocation + 3] = color.A;
+            }
 
-            //var bitmap = new Bitmap1(_deviceContext, new SharpDX.Size2(DepthBuffer.Width, DepthBuffer.Height));
-            backBufferBmp.CopyFromMemory(buffer, DepthBuffer.Width * 4);
+            _backBufferBmp.CopyFromMemory(_buffer, DepthBuffer.Width * 4);
 
             _deviceContext.Target = _target;
             _deviceContext.BeginDraw();
-            _deviceContext.DrawText("HALLO WORLD", new TextFormat(_factoryDW, "Arial", 20),
-                new SharpDX.Mathematics.Interop.RawRectangleF(0, 0, 500, 500), _redBrush);
-            // _deviceContext.FillRectangle(new SharpDX.Mathematics.Interop.RawRectangleF(0, 0, 100, 100), _redBrush);
-            _deviceContext.DrawBitmap(backBufferBmp, 1.0f, BitmapInterpolationMode.Linear);
+            _deviceContext.DrawBitmap(_backBufferBmp, 1.0f, BitmapInterpolationMode.Linear);
             _deviceContext.EndDraw();
-
-            //SpriteRenderer.Draw(new ShaderResourceView(renderer.Device, texture2d),
-            //    new SharpDX.Vector2(0, 0), new SharpDX.Vector2(DepthBuffer.Width, DepthBuffer.Height));
-
         }
-        
+
         public static void Setup(Renderer renderer)
         {
             _device = new SharpDX.Direct2D1.Device(renderer.DXGIDevice);
@@ -89,6 +80,12 @@ namespace DungeonHack.OcclusionCulling
             _redBrush = new SolidColorBrush(_deviceContext, new SharpDX.Mathematics.Interop.RawColor4(10, 0, 0, 10));
 
             _factoryDW = new SharpDX.DirectWrite.Factory();
+
+            _buffer = new byte[DepthBuffer.Width * DepthBuffer.Height * 4];
+
+            _backBufferBmp = new Bitmap(_deviceContext,
+                new SharpDX.Size2(DepthBuffer.Width, DepthBuffer.Height),
+                new BitmapProperties(_deviceContext.PixelFormat));
         }
     }
 }
