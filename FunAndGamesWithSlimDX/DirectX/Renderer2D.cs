@@ -1,11 +1,12 @@
-﻿using FunAndGamesWithSharpDX.DirectX;
+﻿using System;
+using FunAndGamesWithSharpDX.DirectX;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
 using SharpDX.DXGI;
 
 namespace DungeonHack.DirectX
 {
-    public class Renderer2D
+    public class Renderer2D : IDisposable
     {
         private RenderTarget _renderTarget;
 
@@ -22,6 +23,8 @@ namespace DungeonHack.DirectX
 
         private bool _beginDrawCalled = false;
         private bool _endDrawCalled = false;
+
+        private TextFormat _textFormat;
 
         public void Initialize(Renderer renderer)
         {
@@ -46,6 +49,11 @@ namespace DungeonHack.DirectX
             _redBrush = new SolidColorBrush(_deviceContext, new SharpDX.Mathematics.Interop.RawColor4(10, 0, 0, 10));
 
             _factoryDW = new SharpDX.DirectWrite.Factory();
+
+            string fontFamily = "Arial";
+            float fontSize = 10;
+
+            _textFormat = new TextFormat(_factoryDW, fontFamily, fontSize);
         }
 
         public void BeginDraw()
@@ -72,19 +80,27 @@ namespace DungeonHack.DirectX
 
         public void RenderText(string text, float posX, float posY)
         {
-            string fontFamily = "Arial";
-            float fontSize = 10;
-
-            //MEMORY LEAK
-            _deviceContext.DrawTextLayout(
-                new SharpDX.Mathematics.Interop.RawVector2(posX, posY),
-                new TextLayout(_factoryDW, text,
-                new TextFormat(_factoryDW, fontFamily, fontSize), 1000, 500), _redBrush);
+            using (var textLayout = new TextLayout(_factoryDW, text, _textFormat, 1000, 500))
+            {
+                _deviceContext.DrawTextLayout(
+                    new SharpDX.Mathematics.Interop.RawVector2(posX, posY),
+                    textLayout, _redBrush);
+            }
         }
 
         public void RenderBitmap(Bitmap bitmap)
         {
             _deviceContext.DrawBitmap(bitmap, 1.0f, BitmapInterpolationMode.Linear);
+        }
+
+        public void Dispose()
+        {
+            _textFormat?.Dispose();
+            _redBrush?.Dispose();
+            _target?.Dispose();
+            _surface?.Dispose();
+            _deviceContext?.Dispose();
+            _device?.Dispose();
         }
     }
 }
