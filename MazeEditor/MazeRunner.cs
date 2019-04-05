@@ -15,6 +15,7 @@ using SharpDX;
 using SharpDX.Direct3D11;
 using System;
 using System.Collections.Generic;
+using SharpDX.Diagnostics;
 
 namespace MazeEditor
 {
@@ -36,6 +37,7 @@ namespace MazeEditor
         private RenderedItems _renderedItems;
         private Matrix _viewProjectionMatrix;
         private ItemRegistry _itemRegistry;
+        private ObjectTrackerToFile _objectTracker = new ObjectTrackerToFile("C:\\temp");
 
         public QuadTreeNode QuadTreeNode { get; internal set; }
         public IEnumerable<QuadTreeNode> QuadTreeLeafNodes { get; internal set; }
@@ -100,6 +102,9 @@ namespace MazeEditor
             }
 
             LightEngine.RenderLights(base.Shader);
+
+            //Track Liveobjects per frame.
+            // _objectTracker.TrackLiveObjects();
         }
 
         public override void UpdateScene()

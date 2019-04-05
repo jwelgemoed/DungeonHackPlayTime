@@ -142,6 +142,7 @@ namespace DungeonHack.DirectX
             _layout?.Dispose();
             _samplerState?.Dispose();
             _samplerState?.Dispose();
+            _deferredInfoConstantBuffer?.Dispose();
             _directionalLightConstantBuffer?.Dispose();
             _vertexShader?.Dispose();
             _pixelShader?.Dispose();

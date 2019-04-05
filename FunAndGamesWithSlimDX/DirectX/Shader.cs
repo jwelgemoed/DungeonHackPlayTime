@@ -113,7 +113,7 @@ namespace DungeonHack.DirectX
 
             _pointLightShader.SwitchShader();
             _pointLightShader.RenderLights(pointLight);
-            
+
             TurnOffAlphaBlending();
 
             //_currentShader.RenderLights(directionalLight, pointLight, spotLight);

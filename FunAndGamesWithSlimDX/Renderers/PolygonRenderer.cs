@@ -63,44 +63,41 @@ namespace DungeonHack.Renderers
 
         public void Render(int threadNumber, Polygon polygon, ref int polygonRenderedCount)
         {
-            //lock (_lock)
-            {
-                polygonRenderedCount++;
+            polygonRenderedCount++;
 
-                lock (_lock)
-                {
-                    _deferredContexts[threadNumber].InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(polygon.VertexBuffer, Vertex.SizeOf, 0));
-                    _deferredContexts[threadNumber].InputAssembler.SetIndexBuffer(polygon.IndexBuffer, Format.R16_UInt, 0);
-                }
-                _shader.Render(threadNumber,
-                                polygon.IndexData.Length,
-                                polygon.WorldMatrix,
-                                _camera.ViewMatrix,
-                                _camera.RenderViewProjectionMatrix,
-                                _textureDictionary.GetTexture(polygon.TextureIndex),
-                                _camera.GetPosition(),
-                                _materialDictionary.GetMaterial(polygon.MaterialIndex));
-            }
+            _deferredContexts[threadNumber].InputAssembler
+                .SetVertexBuffers(0, new VertexBufferBinding(polygon.VertexBuffer, Vertex.SizeOf, 0));
+            _deferredContexts[threadNumber].InputAssembler.SetIndexBuffer(polygon.IndexBuffer, Format.R16_UInt, 0);
+
+            _shader.Render(threadNumber,
+                polygon.IndexData.Length,
+                polygon.WorldMatrix,
+                _camera.ViewMatrix,
+                _camera.RenderViewProjectionMatrix,
+                _textureDictionary.GetTexture(polygon.TextureIndex),
+                _camera.GetPosition(),
+                _materialDictionary.GetMaterial(polygon.MaterialIndex));
+
         }
 
-        public void RenderBoundingBox(int threadNumber, AABoundingBox boundingBox, Matrix worldMatrix, Matrix viewProjectionMatrix, int textureIndex, int materialIndex)
+        public void RenderBoundingBox(int threadNumber, AABoundingBox boundingBox, Matrix worldMatrix,
+            Matrix viewProjectionMatrix, int textureIndex, int materialIndex)
         {
-            lock (_lock)
-            {
-                _deferredContexts[threadNumber].InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(boundingBox.BoundingBoxVertexBuffer, Vertex.SizeOf, 0));
-                _deferredContexts[threadNumber].InputAssembler.SetIndexBuffer(boundingBox.BoundingBoxIndexBuffer, Format.R16_UInt, 0);
+            _deferredContexts[threadNumber].InputAssembler.SetVertexBuffers(0,
+                new VertexBufferBinding(boundingBox.BoundingBoxVertexBuffer, Vertex.SizeOf, 0));
+            _deferredContexts[threadNumber].InputAssembler
+                .SetIndexBuffer(boundingBox.BoundingBoxIndexBuffer, Format.R16_UInt, 0);
 
-                _shader.Render(threadNumber,
-                                boundingBox.Indexes.Length,
-                                worldMatrix,
-                                _camera.ViewMatrix,
-                                viewProjectionMatrix,
-                                _textureDictionary.GetTexture(textureIndex),
-                                _camera.GetPosition(),
-                                _materialDictionary.GetMaterial(materialIndex));
-            }
+            _shader.Render(threadNumber,
+                boundingBox.Indexes.Length,
+                worldMatrix,
+                _camera.ViewMatrix,
+                viewProjectionMatrix,
+                _textureDictionary.GetTexture(textureIndex),
+                _camera.GetPosition(),
+                _materialDictionary.GetMaterial(materialIndex));
         }
-
+        
         public void ItemRenderer(Item item)
         {
 

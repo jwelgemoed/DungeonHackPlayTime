@@ -1,12 +1,8 @@
-﻿using FunAndGamesWithSharpDX.DirectX;
-using FunAndGamesWithSharpDX.Engine;
-using SharpDX.Direct3D11;
+﻿using DungeonHack.DirectX;
+using FunAndGamesWithSharpDX.DirectX;
 using SharpDX.Direct2D1;
-
-using System;
 using SharpDX.DXGI;
-using SharpDX.DirectWrite;
-using DungeonHack.DirectX;
+using System;
 
 namespace DungeonHack.OcclusionCulling
 {

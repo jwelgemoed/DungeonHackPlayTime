@@ -3,6 +3,8 @@ using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
 using System;
+using SharpDX;
+using SharpDX.Diagnostics;
 using Device = SharpDX.Direct3D11.Device;
 using Resource = SharpDX.Direct3D11.Resource;
 
@@ -83,6 +85,8 @@ namespace FunAndGamesWithSharpDX.DirectX
             _numberOfRenderingThreads = numberOfRenderingThreads;
 
             CreateSwapChainDevice(formHandle);
+
+           // SharpDX.Configuration.EnableObjectTracking = true;
 
             OnResize();
 
@@ -309,6 +313,10 @@ namespace FunAndGamesWithSharpDX.DirectX
 
         public void Dispose()
         {
+            
+            //Console.WriteLine("Live objects: ");
+            //Console.WriteLine(ObjectTracker.ReportActiveObjects());
+
             _depthStencilBuffer?.Dispose();
             _depthStencilDisabledState?.Dispose();
             

@@ -225,9 +225,10 @@ namespace DungeonHack.DirectX
             _constantBufferPerFrame.CameraPosition = camera.EyeAt;
             _frameConstantBuffer.UpdateValue(_immediateContext, _constantBufferPerFrame);
 
-            for (int i=0; i<_deferredContexts.Length; i++)
+            for (int i = 0; i < _deferredContexts.Length; i++)
             {
-                _frameConstantBuffer.UpdateValue(_deferredContexts[i], _constantBufferPerFrame);
+                //WHHYYYYYHYHYH!!!!!?!?!?!!?!?! DOES THIS CAUSE MEMORY LEAK?
+               _frameConstantBuffer.UpdateValue(_deferredContexts[i], _constantBufferPerFrame);
             }
         }
         

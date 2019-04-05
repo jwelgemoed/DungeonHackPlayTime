@@ -75,6 +75,7 @@
     </ApplicationDefinition>
     <Compile Include="GridPolygonBuilder.cs" />
     <Compile Include="MazeRunner.cs" />
+    <Compile Include="ObjectTrackerToFile.cs" />
     <Compile Include="SelectionMethodType.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

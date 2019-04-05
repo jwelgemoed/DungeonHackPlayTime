@@ -196,44 +196,25 @@ namespace DungeonHack.Engine
                     return;
 
                 case ApplicationStateEnum.Normal:
-                    //Timer.Tick();
-                    //_frameCount++;
-                    //_frameRateStats = CalculateFrameRateStats();
-
-                    //Task updateTask = new Task(() => UpdateScene());
-
-                    //Task drawSceneTask = new Task(() =>
-                    {
                         Timer.Tick();
                         _frameCount++;
                         _frameRateStats = CalculateFrameRateStats();
 
                         UpdateScene();
 
-                      //  Renderer.ImmediateContext.ClearRenderTargetView(Renderer.RenderTarget, Colors.Black);
-                      //  Renderer.ImmediateContext.ClearDepthStencilView(Renderer.DepthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
-
                         _stopwatch.Restart();
 
                         DrawScene();
 
                         DisplayConsoleInformation();
+
                         DepthBufferRenderer.RenderToScreen(Renderer2D);
                         Renderer.SwapChain.Present(ConfigManager.VSync, PresentFlags.None);
-                        // DepthBufferRenderer.RenderToScreen(Renderer2D);
-                        // Renderer.SwapChain.Present(ConfigManager.VSync, PresentFlags.None);
 
                         _stopwatch.Stop();
-                    }
-                   // );
 
-                    //updateTask.Start();
-                    //drawSceneTask.Start();
-
-                    //Task.WaitAll(drawSceneTask);//updateTask, drawSceneTask);
-
-                    _updateTime = _stopwatch.ElapsedMilliseconds;
-                    break;
+                        _updateTime = _stopwatch.ElapsedMilliseconds;
+                        break;
 
                 case ApplicationStateEnum.OpenSettings:
                     ShowOptionsMenu();
@@ -343,6 +324,7 @@ namespace DungeonHack.Engine
             SpriteRenderer.Dispose();
             Renderer.Dispose();
             Shader.Dispose();
+            Renderer2D.Dispose();
         }
     }
 }
