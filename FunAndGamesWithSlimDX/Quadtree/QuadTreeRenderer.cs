@@ -1,10 +1,8 @@
 ﻿using DungeonHack.Engine;
-using DungeonHack.Entities;
 using DungeonHack.OcclusionCulling;
 using DungeonHack.Renderers;
 using FunAndGamesWithSharpDX.Engine;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,39 +11,26 @@ namespace DungeonHack.QuadTree
     public class QuadTreeRenderer
     {
         private PolygonRenderer _renderer;
-        private BoundingBoxRenderer _boundingBoxRenderer;
-        private Polygon[][] _renderList;
         private Stack<QuadTreeNode>[] _nodeStack;
-        private int[] _endOfList;
         private int _threadCount;
-        private int _threadCountPerThread;
-        private Task[] _tasks;
         private Task[] _renderTasks;
-        private Stopwatch _stopwatch;
         private DepthBuffer _depthBuffer;
         private RenderedItems _renderedItems;
 
         public int MeshesRendered;
 
-        public QuadTreeRenderer(PolygonRenderer renderer, BoundingBoxRenderer boundingBoxRenderer, Camera camera, DepthBuffer depthBuffer,
-            RenderedItems renderedItems)
+        public QuadTreeRenderer(PolygonRenderer renderer, DepthBuffer depthBuffer,
+            RenderedItems renderedItems, int numberOfThreads)
         {
-            _threadCount = 4;
-            _threadCountPerThread = 4;
+            _threadCount = numberOfThreads;
             _renderedItems = renderedItems;
             _renderer = renderer;
-            _renderList = new Polygon[_threadCount * _threadCountPerThread][];
-            _endOfList = new int[_threadCount * _threadCountPerThread];
-            _tasks = new Task[_threadCount];
             _renderTasks = new Task[_threadCount];
-            _nodeStack = new Stack<QuadTreeNode>[_threadCount * _threadCountPerThread];
-            _stopwatch = new Stopwatch();
+            _nodeStack = new Stack<QuadTreeNode>[_threadCount];
             _depthBuffer = depthBuffer;
-            _boundingBoxRenderer = boundingBoxRenderer;
 
-            for (int i = 0; i < (_threadCount * _threadCountPerThread); i++)
+            for (int i = 0; i < _threadCount; i++)
             {
-                _renderList[i] = new Polygon[5000];
                 _nodeStack[i] = new Stack<QuadTreeNode>();
             }
         }
@@ -58,39 +43,39 @@ namespace DungeonHack.QuadTree
 
             _depthBuffer.LockShadowBuffer();
 
-            DrawQuadTreeIterative(0, node, camera, frustrum);
+            // DrawQuadTreeIterative(0, node, camera, frustrum);
 
             //_depthBuffer.UnlockShadowBuffer();
 
-            //for (int i = 0; i < _threadCountPerThread; i++)
-            //{
-            //    int j = i;
-            //    _renderTasks[i] = new Task(() =>
-            //    {
-            //        switch (j)
-            //        {
-            //            case 0:
-            //                DrawQuadTreeIterative(0, node.Octant1, camera, frustrum);
-            //                break;
-            //            case 1:
-            //                DrawQuadTreeIterative(1, node.Octant2, camera, frustrum);
-            //                break;
-            //            case 2:
-            //                DrawQuadTreeIterative(2, node.Octant3, camera, frustrum);
-            //                break;
-            //            case 3:
-            //                DrawQuadTreeIterative(3, node.Octant4, camera, frustrum);
-            //                break;
-            //            default:
-            //                DrawQuadTreeIterative(0, node, camera, frustrum);
-            //                break;
-            //        }
-            //    });
+            for (int i = 0; i < _threadCount; i++)
+            {
+                int j = i;
+                _renderTasks[i] = new Task(() =>
+                {
+                    switch (j)
+                    {
+                        case 0:
+                            DrawQuadTreeIterative(0, node.Octant1, camera, frustrum);
+                            break;
+                        case 1:
+                            DrawQuadTreeIterative(1, node.Octant2, camera, frustrum);
+                            break;
+                        case 2:
+                            DrawQuadTreeIterative(2, node.Octant3, camera, frustrum);
+                            break;
+                        case 3:
+                            DrawQuadTreeIterative(3, node.Octant4, camera, frustrum);
+                            break;
+                        default:
+                            DrawQuadTreeIterative(0, node, camera, frustrum);
+                            break;
+                    }
+                });
 
-            //    _renderTasks[i].Start();
-            //}
+                _renderTasks[i].Start();
+            }
 
-            //Task.WaitAll(_renderTasks);
+            Task.WaitAll(_renderTasks);
 
             _depthBuffer.UnlockShadowBuffer();
             _renderer.RenderAll();

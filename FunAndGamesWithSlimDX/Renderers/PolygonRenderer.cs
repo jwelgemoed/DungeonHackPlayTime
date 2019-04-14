@@ -49,9 +49,12 @@ namespace DungeonHack.Renderers
 
         public void RenderAll()
         {
-            for (int i = 0; i < 1; i++)// _deferredContexts.Length; i++)
+            for (int i = 0; i < _deferredContexts.Length; i++)
             {
                 var commandList = _commandLists[i];
+                if (commandList == null)
+                    continue;
+
                 // Execute the deferred command list on the immediate context
                 _immediateContext.ExecuteCommandList(commandList, false);
 

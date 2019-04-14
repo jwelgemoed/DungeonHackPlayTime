@@ -10,6 +10,7 @@ namespace DungeonHack.DirectX.ConstantBuffer
         private readonly Device _device;
         private readonly SharpDX.Direct3D11.Buffer _buffer;
         private readonly DataStream _dataStream;
+        private readonly int _size;
 
         public SharpDX.Direct3D11.Buffer Buffer { get { return _buffer; } }
 
@@ -17,26 +18,26 @@ namespace DungeonHack.DirectX.ConstantBuffer
         {
             _device = device;
 
-            int size = Marshal.SizeOf(typeof(T));
+            _size = Marshal.SizeOf(typeof(T));
 
             _buffer = new SharpDX.Direct3D11.Buffer(device, new BufferDescription
             {
                 Usage = ResourceUsage.Default,
                 BindFlags = BindFlags.ConstantBuffer,
-                SizeInBytes = size,
+                SizeInBytes = _size,
                 CpuAccessFlags = CpuAccessFlags.None,
                 OptionFlags = ResourceOptionFlags.None,
                 StructureByteStride = 0
             });
 
-            _dataStream = new DataStream(size, true, true);
+            _dataStream = new DataStream(_size, true, true);
         }
 
         public void UpdateValue(DeviceContext context, T value)
         {
             // If no specific marshalling is needed, can use 
             // dataStream.Write(value) for better performance.
-            Marshal.StructureToPtr(value, _dataStream.DataPointer, false);
+            Marshal.StructureToPtr(value, _dataStream.DataPointer, true);
 
             var dataBox = new DataBox(_dataStream.DataPointer, 0, 0);
 

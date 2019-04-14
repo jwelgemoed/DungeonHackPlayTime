@@ -15,8 +15,16 @@ namespace DungeonHack.OcclusionCulling
 
     public class DepthBuffer
     {
-        public int Width { get; set; }
-        public int Height { get; set; }
+        public int Width
+        {
+            get { return _width;}
+            set { _width = value; }
+        }
+        public int Height
+        {
+            get { return _height;}
+            set { _height = value; }
+        }
 
         public int MaxDepth { get; set; }
 
@@ -34,6 +42,8 @@ namespace DungeonHack.OcclusionCulling
         private float halfHeight;
         private bool _shadowBufferLock;
         private int _bufferSize;
+        private int _width;
+        private int _height;
 
         public DepthBuffer(Camera camera, int numberOfThreads)
         {
@@ -105,8 +115,8 @@ namespace DungeonHack.OcclusionCulling
                 Vector3[] rasterVecs = new Vector3[3];
                 int minx, maxx, miny, maxy;
                 maxx = maxy = 0;
-                miny = Height;
-                minx = Width;
+                miny = _height;
+                minx = _width;
 
                 for (int j = 0; j < 3; j++)
                 {
@@ -134,7 +144,7 @@ namespace DungeonHack.OcclusionCulling
                     {
                         maxx = (int)rasterVecs[j].X;
 
-                        if (maxx >= Width)
+                        if (maxx >= _width)
                         {
                             // maxx = Width;
                             return false;
@@ -156,7 +166,7 @@ namespace DungeonHack.OcclusionCulling
                     {
                         maxy = (int)rasterVecs[j].Y;
 
-                        if (maxy > Height)
+                        if (maxy > _height)
                         {
                             //   maxy = Height;
                             return false;
@@ -184,10 +194,10 @@ namespace DungeonHack.OcclusionCulling
                 //    break;
                 //}
 
-                minx = MathUtil.Clamp(minx, 0, Width - 1);
-                maxx = MathUtil.Clamp(maxx, 0, Width - 1);
-                miny = MathUtil.Clamp(miny, 0, Height - 1);
-                maxy = MathUtil.Clamp(maxy, 0, Height - 1);
+                minx = MathUtil.Clamp(minx, 0, _width - 1);
+                maxx = MathUtil.Clamp(maxx, 0, _width - 1);
+                miny = MathUtil.Clamp(miny, 0, _height - 1);
+                maxy = MathUtil.Clamp(maxy, 0, _height - 1);
 
                 triangle.Vectors = rasterVecs;
                 triangle.minX = minx;
@@ -225,7 +235,7 @@ namespace DungeonHack.OcclusionCulling
                             // linearly interpolate sample depth
                             //float interZ = triangle.Vectors[0].Z * w0area + triangle.Vectors[1].Z * w1area + triangle.Vectors[2].Z * w2area;
                             float interZ = (triangle.Vectors[0].Z * w0 + triangle.Vectors[1].Z * w1 + triangle.Vectors[2].Z * w2) / area;
-                            int bufLocation = (y * Width) + x;
+                            int bufLocation = (y * _width) + x;
 
                             if (interZ < ShadowBuffer[bufLocation])
                             {
@@ -253,8 +263,8 @@ namespace DungeonHack.OcclusionCulling
             Vector3[] rasterVectors = new Vector3[vectors.Length];
             int maxy;
             var maxx = maxy = 0;
-            var miny = Height;
-            var minx = Width;
+            var miny = _height;
+            var minx = _width;
 
             for (int i=0; i<vectors.Length; i++)
             {
@@ -271,9 +281,9 @@ namespace DungeonHack.OcclusionCulling
                 {
                     maxx = (int)rasterVectors[i].X;
 
-                    if (maxx >= Width)
+                    if (maxx >= _width)
                     {
-                        maxx = Width;
+                        maxx = _width;
                     }
                 }
 
@@ -291,9 +301,9 @@ namespace DungeonHack.OcclusionCulling
                 {
                     maxy = (int)rasterVectors[i].Y;
 
-                    if (maxy > Height)
+                    if (maxy > _height)
                     {
-                        maxy = Height;
+                        maxy = _height;
                     }
                 }
 
@@ -349,6 +359,8 @@ namespace DungeonHack.OcclusionCulling
                 if (area <= 0)
                     continue;
 
+                float areaInverse = 1 / area;
+
                 int w0_row = Orient2d(v1, v2, p);
                 int w1_row = Orient2d(v2, v0, p);
                 int w2_row = Orient2d(v0, v1, p);
@@ -361,15 +373,16 @@ namespace DungeonHack.OcclusionCulling
                     
                     for (int x = triangle.minX; x < triangle.maxX; x++)
                     {
-                        if ((w0 >= 0 && w1 >= 0 && w2 >= 0) && (area > 0))
+                        if ((w0 & w1 & w2) >= 0)
+                            //((w0 >= 0 && w1 >= 0 && w2 >= 0))
                         {
                             //float w0area = (float) w0 / area;
                             //float w1area = (float) w1 / area;
                             //float w2area = (float) w2 / area;
                             // linearly interpolate sample depth
                             //float interZ = triangle.Vectors[0].Z * w0area + triangle.Vectors[1].Z * w1area + triangle.Vectors[2].Z * w2area;
-                            float interZ = (triangle.Vectors[0].Z * w0 + triangle.Vectors[1].Z * w1 + triangle.Vectors[2].Z * w2) / area;
-                            int bufLocation = y * Width + x;
+                            float interZ = (triangle.Vectors[0].Z * w0 + triangle.Vectors[1].Z * w1 + triangle.Vectors[2].Z * w2) * areaInverse;
+                            int bufLocation = y * _width + x;
 
                             if (interZ < Buffer[bufLocation])
                             {

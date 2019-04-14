@@ -22,12 +22,10 @@ namespace MazeEditor
     public class MazeRunner : CameraEngine, IDisposable
     {
         public List<Polygon> Meshes;
-        private Vector3 _startingPosition;
         private Material _wallMaterial;
         private PointLight _pointLight;
         private PointLight _pointLight2;
         private DirectionalLight _directionalLight;
-        private Spotlight _spotlight;
         private QuadTreeRenderer _quadTreeRenderer;
         private QuadTreeCollisionDetector _quadTreeCollisionDetector;
         private QuadTreeTraverser _quadTreeTraverser;
@@ -202,15 +200,12 @@ namespace MazeEditor
             _polygonRenderer = new PolygonRenderer(materialDictionary, textureDictionary,
                 Renderer.ImmediateContext, Renderer.DeferredContexts, Renderer.CommandLists, Camera, base.Shader);
 
-            _boundingBoxRenderer = new BoundingBoxRenderer(materialDictionary, textureDictionary, 
-                Renderer.ImmediateContext, Renderer.DeferredContexts, Camera, base.Shader);
+            int _threadCount = NumberOfThreads;
 
-            int _threadCount = 4;
-            int _threadCountPerThread = 4;
             _renderedItems = new RenderedItems(_threadCount);
-            DepthBuffer depthBuffer = new DepthBuffer(Camera, _threadCount * _threadCountPerThread);
+            DepthBuffer depthBuffer = new DepthBuffer(Camera, _threadCount);
             DepthBufferRenderer.DepthBuffer = depthBuffer;
-            _quadTreeRenderer = new QuadTreeRenderer(_polygonRenderer, _boundingBoxRenderer, Camera, depthBuffer, _renderedItems);
+            _quadTreeRenderer = new QuadTreeRenderer(_polygonRenderer, depthBuffer, _renderedItems, _threadCount);
             _quadTreeDepthRenderer = new QuadTreeDepthRenderer(Camera, depthBuffer);
 
             _quadTreeTraverser = new QuadTreeTraverser(QuadTreeNode);

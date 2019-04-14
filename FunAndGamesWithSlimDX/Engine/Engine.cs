@@ -36,6 +36,7 @@ namespace DungeonHack.Engine
         protected FunAndGamesWithSharpDX.Entities.Console _console;
         protected Frustrum _frustrum;
         protected int _meshRenderedCount = 0;
+        protected int NumberOfThreads = 4;
 
         static private int _frameCount = 0;
         static private float _timeElapsedForStats = 0.0f;
@@ -102,7 +103,7 @@ namespace DungeonHack.Engine
             Renderer.Height = ConfigManager.ScreenHeight;
             Renderer.Use4XMSAA = ConfigManager.Use4XMSAA;
             Renderer.FullScreen = ConfigManager.FullScreen;
-            Renderer.Initialize(Form.Handle, 4);
+            Renderer.Initialize(Form.Handle, NumberOfThreads);
 
             Renderer2D.Initialize(Renderer);
 
@@ -208,7 +209,7 @@ namespace DungeonHack.Engine
 
                         DisplayConsoleInformation();
 
-                        DepthBufferRenderer.RenderToScreen(Renderer2D);
+                       // DepthBufferRenderer.RenderToScreen(Renderer2D);
                         Renderer.SwapChain.Present(ConfigManager.VSync, PresentFlags.None);
 
                         _stopwatch.Stop();
