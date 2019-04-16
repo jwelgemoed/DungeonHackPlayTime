@@ -26,3 +26,4 @@ C:\git\DungeonHackPlayTime\MeshCreator\obj\Debug\MeshCreator.csproj.CoreCompileI
 C:\git\DungeonHackPlayTime\MeshCreator\obj\Debug\MeshCreator.csproj.CopyComplete
 C:\git\DungeonHackPlayTime\MeshCreator\obj\Debug\MeshCreator.exe
 C:\git\DungeonHackPlayTime\MeshCreator\obj\Debug\MeshCreator.pdb
+C:\git\DungeonHackPlayTime\MeshCreator\obj\Debug\MeshCreator.csprojAssemblyReference.cache

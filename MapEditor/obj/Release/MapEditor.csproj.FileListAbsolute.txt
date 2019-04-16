@@ -86,13 +86,9 @@ C:\git\DungeonHackPlayTime\MapEditor\bin\Release\Shaders\DeferredHS.hlsl
 C:\git\DungeonHackPlayTime\MapEditor\bin\Release\Shaders\DeferredPS.hlsl
 C:\git\DungeonHackPlayTime\MapEditor\bin\Release\Shaders\AmbientLightPS.hlsl
 C:\git\DungeonHackPlayTime\MapEditor\bin\Release\Shaders\AmbientLightVS.hlsl
-C:\git\DungeonHackPlayTime\MapEditor\bin\Release\Shaders\LightTextureHS.hlsl
 C:\git\DungeonHackPlayTime\MapEditor\bin\Release\Shaders\DirectionalLightPS.hlsl
-C:\git\DungeonHackPlayTime\MapEditor\bin\Release\Shaders\LightTexturePS.hlsl
 C:\git\DungeonHackPlayTime\MapEditor\bin\Release\Shaders\DeferredVS.hlsl
-C:\git\DungeonHackPlayTime\MapEditor\bin\Release\Shaders\LightTextureDS.hlsl
 C:\git\DungeonHackPlayTime\MapEditor\bin\Release\Shaders\DirectionalLightVS.hlsl
-C:\git\DungeonHackPlayTime\MapEditor\bin\Release\Shaders\LightTextureVS.hlsl
 C:\git\DungeonHackPlayTime\MapEditor\bin\Release\Shaders\DeferredUtilities.hlsl
 C:\git\DungeonHackPlayTime\MapEditor\bin\Release\Shaders\Utilities.hlsl
 C:\git\DungeonHackPlayTime\MapEditor\bin\Release\sharpdx_direct3d11_1_effects_x64.dll
@@ -106,3 +102,7 @@ C:\git\DungeonHackPlayTime\MapEditor\bin\Release\SharpDX.Mathematics.pdb
 C:\git\DungeonHackPlayTime\MapEditor\bin\Release\SharpDX.Direct2D1.pdb
 C:\git\DungeonHackPlayTime\MapEditor\bin\Release\SharpDX.RawInput.pdb
 C:\git\DungeonHackPlayTime\MapEditor\bin\Release\SharpDX.Desktop.pdb
+C:\git\DungeonHackPlayTime\MapEditor\bin\Release\Shaders\PointLightHS.hlsl
+C:\git\DungeonHackPlayTime\MapEditor\bin\Release\Shaders\PointLightPS.hlsl
+C:\git\DungeonHackPlayTime\MapEditor\bin\Release\Shaders\PointLightDS.hlsl
+C:\git\DungeonHackPlayTime\MapEditor\bin\Release\Shaders\PointLightVS.hlsl

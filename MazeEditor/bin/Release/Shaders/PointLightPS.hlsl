@@ -7,6 +7,11 @@ Texture2D ColorSpecIntTexture : register(t1);
 Texture2D NormalTexture : register(t2);
 Texture2D SpecPowerTexture : register(t3);
 
+cbuffer cbPointLight : register(b1)
+{
+	PointLight gPointLight;
+}
+
 SURFACE_DATA UnpackGBuffer(int2 location)
 {
 	SURFACE_DATA output;
@@ -41,49 +46,25 @@ float3 CalcWorldPosition(float2 csPos, float linearDepth)
 	return position.xyz;
 }
 
-float3 CalcAmbient(float3 normal, float3 color)
-{
-	float up = normal.y * 0.5 + 0.5;
-	float3 ambient = gAmbientLight.AmbientDown + up * gAmbientLight.AmbientUp;
-
-	return ambient * color;
-}
-
-float3 CalcDirectional(float3 position, Material material)
-{
-	// Phong diffuse
-	float NDotL = dot(gDirLight[0].Direction, material.normal);
-	float3 finalColor = gDirLight[0].Color.rgb * saturate(NDotL);
-
-	// Blinn specular
-	float3 ToEye = EyePosition - position;
-	ToEye = normalize(ToEye);
-	float3 HalfWay = normalize(ToEye + gDirLight[0].Direction);
-	float NDotH = saturate(dot(HalfWay, material.normal));
-	finalColor += gDirLight[0].Color.rgb * pow(NDotH, material.specPower) * material.specIntensity;
-
-	return finalColor * material.diffuseColor.rgb;
-}
-
 float3 CalcPoint(float3 position, Material material)
 {
-	float3 toLight = gPointLight[0].Position - position;
+	float3 toLight = gPointLight.Position - position;
 	float3 toEye = EyePosition - position;
 	float distToLight = length(toLight);
 
 	//Phong diffuse
 	toLight /= distToLight;
 	float NDotL = saturate(dot(toLight, material.normal));
-	float3 finalColor = gPointLight[0].Color.rgb * NDotL;
+	float3 finalColor = gPointLight.Color.rgb * NDotL;
 
 	//Blinn specular
 	toEye = normalize(toEye);
 	float3 halfway = normalize(toEye + toLight);
 	float NDotH = saturate(dot(halfway, material.normal));
-	finalColor += gPointLight[0].Color.rgb * pow(NDotH, material.specPower)*material.specIntensity;
+	finalColor += gPointLight.Color.rgb * pow(NDotH, material.specPower)*material.specIntensity;
 
 	//Attentuation	
-	float distToLightNorm = 1.0 - saturate(distToLight * gPointLight[0].Range);
+	float distToLightNorm = 1.0 - saturate(distToLight * gPointLight.Range);
 	float attn = distToLightNorm * distToLightNorm;
 	finalColor *= material.diffuseColor.rgb * attn;
 
@@ -93,7 +74,7 @@ float3 CalcPoint(float3 position, Material material)
 ////////////////////////////////////////////////////////////////////////////////
 // Pixel Shader
 ////////////////////////////////////////////////////////////////////////////////
-float4 LightPixelShader(VS_OUTPUT input) : SV_TARGET
+float4 PointLightPS(VS_OUTPUT input) : SV_TARGET
 {
 	SURFACE_DATA gbd = UnpackGBuffer(input.Position.xy);
 
@@ -107,11 +88,8 @@ float4 LightPixelShader(VS_OUTPUT input) : SV_TARGET
 	float3 position = CalcWorldPosition(input.cpPosition, gbd.LinearDepth);
 
 	float4 finalColor;
-	finalColor.xyz = CalcAmbient(mat.normal, mat.diffuseColor.xyz);
-	finalColor.xyz += CalcDirectional(position, mat);
-	finalColor.xyz += CalcPoint(position, mat);
+	finalColor.xyz = CalcPoint(position, mat);
 	finalColor.w = 1.0;
 
-	//finalColor.xyz = gbd.Color;
 	return finalColor;
 }

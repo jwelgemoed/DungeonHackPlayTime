@@ -1,5 +1,10 @@
 ﻿#include "DeferredUtilities.hlsl"
 
+cbuffer cbPointLight : register(b1)
+{
+	PointLight gPointLight;
+}
+
 struct DS_OUTPUT 
 {
 	float4 Position : SV_POSITION;
@@ -23,7 +28,7 @@ DS_OUTPUT PointLightDS(HS_CONSTANT_DATA_OUTPUT input, float2 UV : SV_DomainLocat
 
 	// Transform all the way to projected space and generate the UV coordinates
 	DS_OUTPUT Output;
-	Output.Position = mul(posLS, gPointLight[0].LightCalculations);
+	Output.Position = mul(posLS, gPointLight.LightCalculations);
 
 	// Store the clip space position
 	Output.cpPos = Output.Position.xy / Output.Position.w;

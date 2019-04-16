@@ -4,16 +4,27 @@ using SharpDX;
 using System.Collections.Generic;
 using DungeonHack.Engine;
 using System;
+using System.Numerics;
+using Vector3 = SharpDX.Vector3;
+using Vector4 = SharpDX.Vector4;
 
 namespace DungeonHack.OcclusionCulling
 {
-    public struct Triangle
+    public struct TriangleSSE2
     {
         public Vector3[] Vectors;
         public int minX, maxX, minY, maxY;
     }
 
-    public class DepthBuffer
+    public struct Edge
+    {
+        public const int StepSizeX = 4;
+        public const int StepSizeY = 1;
+
+      
+    }
+
+    public class DepthBufferSSE2
     {
         public int Width
         {
@@ -45,7 +56,7 @@ namespace DungeonHack.OcclusionCulling
         private int _width;
         private int _height;
 
-        public DepthBuffer(Camera camera, int numberOfThreads)
+        public DepthBufferSSE2(Camera camera, int numberOfThreads)
         {
             _nearClipPane = ConfigManager.ScreenNear;
             _camera = camera;
