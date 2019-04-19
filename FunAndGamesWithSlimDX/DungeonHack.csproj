@@ -157,11 +157,12 @@
     <Compile Include="DirectX\ConstantBuffer\ConstantBufferPointLight.cs" />
     <Compile Include="DirectX\DeferredShader.cs" />
     <Compile Include="DirectX\DeferredShadingRenderer.cs" />
-    <Compile Include="DirectX\AmbientLightShader.cs" />
-    <Compile Include="DirectX\DirectionalLightShader.cs" />
+    <Compile Include="DirectX\LightShaders\AmbientLightShader.cs" />
+    <Compile Include="DirectX\LightShaders\DirectionalLightShader.cs" />
     <Compile Include="DirectX\FileIncludeHandler.cs" />
     <Compile Include="DirectX\IShader.cs" />
-    <Compile Include="DirectX\PointLightShader.cs" />
+    <Compile Include="DirectX\LightShaders\PointLightShader.cs" />
+    <Compile Include="DirectX\LightShaders\SharedBuffers.cs" />
     <Compile Include="DirectX\Renderer2D.cs" />
     <Compile Include="DirectX\Shader.cs" />
     <Compile Include="DirectX\SpriteShader.cs" />

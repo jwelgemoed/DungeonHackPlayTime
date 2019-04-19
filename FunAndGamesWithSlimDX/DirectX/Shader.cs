@@ -1,4 +1,5 @@
-﻿using DungeonHack.Engine;
+﻿using DungeonHack.DirectX.LightShaders;
+using DungeonHack.Engine;
 using DungeonHack.Lights;
 using FunAndGamesWithSharpDX.DirectX;
 using FunAndGamesWithSharpDX.Engine;
@@ -13,6 +14,7 @@ namespace DungeonHack.DirectX
     {
         private DeferredShadingRenderer _deferredShadingRenderer;
         private Renderer _renderer;
+        private SharedBuffers _sharedBuffers;
         private DeferredShader _deferredShader;
         private AmbientLightShader _ambientLightShader;
         private DirectionalLightShader _directionalLightShader;
@@ -36,6 +38,8 @@ namespace DungeonHack.DirectX
             _ambientLightShader?.Dispose();
 
             _blendState?.Dispose();
+
+            _sharedBuffers?.Dispose();
         }
 
         public Shader(Renderer renderer, DeferredShadingRenderer deferredRenderer, Camera camera)
@@ -43,13 +47,15 @@ namespace DungeonHack.DirectX
             _renderer = renderer;
             _deferredShadingRenderer = deferredRenderer;
             _textureShader = new TextureShader(renderer);
-            _pointLightShader = new PointLightShader(renderer, camera, deferredRenderer);
+            _sharedBuffers = new SharedBuffers(renderer, camera);
+            _pointLightShader = new PointLightShader(renderer, camera, deferredRenderer, _sharedBuffers);
             _deferredShader = new DeferredShader(renderer);
-            _ambientLightShader = new AmbientLightShader(renderer, camera, deferredRenderer);
-            _directionalLightShader = new DirectionalLightShader(renderer, camera, deferredRenderer);
+            _ambientLightShader = new AmbientLightShader(renderer, camera, deferredRenderer, _sharedBuffers);
+            _directionalLightShader = new DirectionalLightShader(renderer, camera, deferredRenderer, _sharedBuffers);
 
             _numberOfDeferredContexts = _renderer.DeferredContexts.Length;
 
+            _sharedBuffers.Initialize();
             _deferredShader.Initialize();
             _ambientLightShader.Initialize();
             _directionalLightShader.Initialize();
@@ -104,6 +110,8 @@ namespace DungeonHack.DirectX
             //Do render fullscreen quad?
 
             TurnOnAlphaBlending();
+
+            _sharedBuffers.UpdateBuffersPerFrame();
 
             _ambientLightShader.SwitchShader();
             _ambientLightShader.RenderLights(ambientLight);

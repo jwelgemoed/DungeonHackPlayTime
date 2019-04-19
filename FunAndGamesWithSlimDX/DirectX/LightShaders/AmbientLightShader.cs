@@ -9,9 +9,9 @@ using SharpDX.D3DCompiler;
 using SharpDX.Direct3D11;
 using Device = SharpDX.Direct3D11.Device;
 
-namespace DungeonHack.DirectX
+namespace DungeonHack.DirectX.LightShaders
 {
-    public class DirectionalLightShader
+    public class AmbientLightShader
     {
         private Device _device;
         private DeviceContext _immediateContext;
@@ -24,18 +24,18 @@ namespace DungeonHack.DirectX
         private PixelShader _pixelShader;
         private Camera _camera;
 
-        private ConstantBuffer<ConstantBufferDirectionalLight> _directionalLightConstantBuffer;
-        private ConstantBuffer<ConstantBufferDeferredInfo> _deferredInfoConstantBuffer;
+        private SharedBuffers _sharedBuffers;
+        private ConstantBuffer<ConstantBufferAmbientLight> _ambientLightConstantBuffer;
 
-        private ConstantBufferDirectionalLight _constantBufferDirectionalLight;
-        private ConstantBufferDeferredInfo _constantBufferDeferredInfo;
+        private ConstantBufferAmbientLight _constantBufferAmbientLight;
 
-        public DirectionalLightShader(Renderer renderer, Camera camera, DeferredShadingRenderer deferredShadingRenderer)
+        public AmbientLightShader(Renderer renderer, Camera camera, DeferredShadingRenderer deferredShadingRenderer, SharedBuffers sharedBuffers)
         {
             _camera = camera;
             _device = renderer.Device;
             _immediateContext = renderer.ImmediateContext;
             _deferredShadingRenderer = deferredShadingRenderer;
+            _sharedBuffers = sharedBuffers;
         }
 
         public void Initialize()
@@ -44,10 +44,10 @@ namespace DungeonHack.DirectX
 
             var basePath = ConfigManager.ResourcePath;
 
-            var vsShaderName = basePath + @"\Shaders\DirectionalLightVS.hlsl";
-            var psShaderName = basePath + @"\Shaders\DirectionalLightPS.hlsl";
+            var vsShaderName = basePath + @"\Shaders\AmbientLightVS.hlsl";
+            var psShaderName = basePath + @"\Shaders\AmbientLightPS.hlsl";
 
-            var bytecode = ShaderBytecode.CompileFromFile(vsShaderName, "DirectionalLightVS", "vs_5_0", ShaderFlags.Debug | ShaderFlags.SkipOptimization,
+            var bytecode = ShaderBytecode.CompileFromFile(vsShaderName, "AmbientLightVS", "vs_5_0", ShaderFlags.Debug | ShaderFlags.SkipOptimization,
                 include: FileIncludeHandler.Default);
 
             _vertexShader = new VertexShader(_device, bytecode);
@@ -55,28 +55,19 @@ namespace DungeonHack.DirectX
             _layout = new InputLayout(_device, bytecode, _elements);
             bytecode.Dispose();
 
-            bytecode = ShaderBytecode.CompileFromFile(psShaderName, "DirectionalLightPS", "ps_5_0", ShaderFlags.Debug | ShaderFlags.SkipOptimization,
+            bytecode = ShaderBytecode.CompileFromFile(psShaderName, "AmbientLightPS", "ps_5_0", ShaderFlags.Debug | ShaderFlags.SkipOptimization,
                 include: FileIncludeHandler.Default);
 
             _pixelShader = new PixelShader(_device, bytecode);
             bytecode.Dispose();
 
-            _directionalLightConstantBuffer = new ConstantBuffer<ConstantBufferDirectionalLight>(_device);
+            _ambientLightConstantBuffer = new ConstantBuffer<ConstantBufferAmbientLight>(_device);
 
-            _constantBufferDirectionalLight = new ConstantBufferDirectionalLight();
-
-            _deferredInfoConstantBuffer = new ConstantBuffer<ConstantBufferDeferredInfo>(_device);
-            _constantBufferDeferredInfo = new ConstantBufferDeferredInfo();
-            _constantBufferDeferredInfo.PerspectiveValues = new Vector4();
+            _constantBufferAmbientLight = new ConstantBufferAmbientLight();
 
             SamplerStateDescription samplerDesc = CreateSamplerStateDescription();
 
             _samplerState = new SamplerState(_device, samplerDesc);
-
-            _constantBufferDeferredInfo.PerspectiveValues.X = 1 / _camera.ProjectionMatrix.M11;
-            _constantBufferDeferredInfo.PerspectiveValues.Y = 1 / _camera.ProjectionMatrix.M22;
-            _constantBufferDeferredInfo.PerspectiveValues.Z = _camera.ProjectionMatrix.M32;
-            _constantBufferDeferredInfo.PerspectiveValues.W = _camera.ProjectionMatrix.M22;
 
             BindImmediateContext(_vertexShader, _pixelShader);
         }
@@ -108,30 +99,25 @@ namespace DungeonHack.DirectX
             _immediateContext.InputAssembler.InputLayout = _layout;
             _immediateContext.InputAssembler.PrimitiveTopology = SharpDX.Direct3D.PrimitiveTopology.TriangleList;
 
-            _immediateContext.PixelShader.SetConstantBuffer(0, _deferredInfoConstantBuffer.Buffer);
-            _immediateContext.PixelShader.SetConstantBuffer(1, _directionalLightConstantBuffer.Buffer);
+            _immediateContext.PixelShader.SetConstantBuffer(0, _sharedBuffers.DeferredInfoConstantBuffer.Buffer);
+            _immediateContext.PixelShader.SetConstantBuffer(1, _ambientLightConstantBuffer.Buffer);
 
             _immediateContext.VertexShader.Set(vertexShader);
             _immediateContext.PixelShader.Set(pixelShader);
         }
 
-        public void RenderLights(DirectionalLight[] directionalLights)
+        public void RenderLights(AmbientLight[] ambientLights)
         {
             _immediateContext.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(null, 0, 0));
             _immediateContext.InputAssembler.SetIndexBuffer(null, SharpDX.DXGI.Format.R32_UInt, 0);
-
-            _constantBufferDeferredInfo.ViewInv = Matrix.Invert(_camera.ViewMatrix);
-
-            _deferredInfoConstantBuffer.UpdateValue(_immediateContext, _constantBufferDeferredInfo);
-
             _immediateContext.PixelShader.SetShaderResource(0, _deferredShadingRenderer.DepthShaderResourceView);
             _immediateContext.PixelShader.SetShaderResources(1, _deferredShadingRenderer.ShaderResourceViews);
-
-            for (int i = 0; i < directionalLights.Length; i++)
+            
+            for (int i=0; i<ambientLights.Length; i++)
             {
-                _constantBufferDirectionalLight.DirectionalLight = directionalLights[i];
+                _constantBufferAmbientLight.AmbientLight = ambientLights[i];
 
-                _directionalLightConstantBuffer.UpdateValue(_immediateContext, _constantBufferDirectionalLight);
+                _ambientLightConstantBuffer.UpdateValue(_immediateContext, _constantBufferAmbientLight);
 
                 _immediateContext.Draw(4, 0);
             }
@@ -142,8 +128,7 @@ namespace DungeonHack.DirectX
             _layout?.Dispose();
             _samplerState?.Dispose();
             _samplerState?.Dispose();
-            _deferredInfoConstantBuffer?.Dispose();
-            _directionalLightConstantBuffer?.Dispose();
+            _ambientLightConstantBuffer?.Dispose();
             _vertexShader?.Dispose();
             _pixelShader?.Dispose();
         }

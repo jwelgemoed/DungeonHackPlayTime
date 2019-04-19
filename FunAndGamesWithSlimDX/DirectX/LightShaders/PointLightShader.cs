@@ -11,7 +11,7 @@ using SharpDX.DXGI;
 using System;
 using Device = SharpDX.Direct3D11.Device;
 
-namespace DungeonHack.DirectX
+namespace DungeonHack.DirectX.LightShaders
 {
     public class PointLightShader : IDisposable
     {
@@ -29,11 +29,11 @@ namespace DungeonHack.DirectX
         private HullShader _hullShader;
         private Camera _camera;
 
+        private SharedBuffers _sharedBuffers;
         private ConstantBuffer<ConstantBufferPointLight> _pointLightConstantBuffer;
-        private ConstantBuffer<ConstantBufferDeferredInfo> _deferredInfoConstantBuffer;
 
         private ConstantBufferPointLight _constantBufferPointLight;
-        private ConstantBufferDeferredInfo _constantBufferDeferredInfo;
+
         private DepthStencilState DepthStencilState;
         private Texture2D _depthStencilBuffer;
         private DepthStencilViewDescription _depthStencilViewDesc;
@@ -42,13 +42,14 @@ namespace DungeonHack.DirectX
         private int Height;
         public DepthStencilView DepthStencilLightShader;
 
-        public PointLightShader(Renderer renderer, Camera camera, DeferredShadingRenderer deferredShadingRenderer)
+        public PointLightShader(Renderer renderer, Camera camera, DeferredShadingRenderer deferredShadingRenderer, SharedBuffers sharedBuffers)
         {
             _renderer = renderer;
             _camera = camera;
             _device = renderer.Device;
             _immediateContext = renderer.ImmediateContext;
             _deferredShadingRenderer = deferredShadingRenderer;
+            _sharedBuffers = sharedBuffers;
         }
 
         public void Initialize()
@@ -94,18 +95,9 @@ namespace DungeonHack.DirectX
 
             _constantBufferPointLight = new ConstantBufferPointLight();
 
-            _deferredInfoConstantBuffer = new ConstantBuffer<ConstantBufferDeferredInfo>(_device);
-            _constantBufferDeferredInfo = new ConstantBufferDeferredInfo();
-            _constantBufferDeferredInfo.PerspectiveValues = new Vector4();
-
             SamplerStateDescription samplerDesc = CreateSamplerStateDescription();
 
             _samplerState = new SamplerState(_device, samplerDesc);
-
-            _constantBufferDeferredInfo.PerspectiveValues.X = 1 / _camera.ProjectionMatrix.M11;
-            _constantBufferDeferredInfo.PerspectiveValues.Y = 1 / _camera.ProjectionMatrix.M22;
-            _constantBufferDeferredInfo.PerspectiveValues.Z = _camera.ProjectionMatrix.M32;
-            _constantBufferDeferredInfo.PerspectiveValues.W = _camera.ProjectionMatrix.M22;
 
             DepthStencilLightShader = CreateDepthStencil();
 
@@ -143,10 +135,10 @@ namespace DungeonHack.DirectX
             _immediateContext.InputAssembler.InputLayout = _layout;
             _immediateContext.InputAssembler.PrimitiveTopology = SharpDX.Direct3D.PrimitiveTopology.PatchListWith1ControlPoints;
 
-            _immediateContext.PixelShader.SetConstantBuffer(0, _deferredInfoConstantBuffer.Buffer);
+            _immediateContext.PixelShader.SetConstantBuffer(0, _sharedBuffers.DeferredInfoConstantBuffer.Buffer);
             _immediateContext.PixelShader.SetConstantBuffer(1, _pointLightConstantBuffer.Buffer);
 
-            _immediateContext.DomainShader.SetConstantBuffer(0, _deferredInfoConstantBuffer.Buffer);
+            _immediateContext.DomainShader.SetConstantBuffer(0, _sharedBuffers.DeferredInfoConstantBuffer.Buffer);
             _immediateContext.DomainShader.SetConstantBuffer(1, _pointLightConstantBuffer.Buffer);
 
             //_immediateContext.HullShader.SetConstantBuffer(0, _deferredInfoConstantBuffer.Buffer);
@@ -163,8 +155,6 @@ namespace DungeonHack.DirectX
         {
             _immediateContext.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(null, 0, 0));
             _immediateContext.InputAssembler.SetIndexBuffer(null, SharpDX.DXGI.Format.R32_UInt, 0);
-
-            _deferredInfoConstantBuffer.UpdateValue(_immediateContext, _constantBufferDeferredInfo);
 
             _immediateContext.PixelShader.SetShaderResource(0, _deferredShadingRenderer.DepthShaderResourceView);
             _immediateContext.PixelShader.SetShaderResources(1, _deferredShadingRenderer.ShaderResourceViews);
@@ -206,8 +196,6 @@ namespace DungeonHack.DirectX
                 _constantBufferPointLight.PointLight = pointLight[i];
 
                 _pointLightConstantBuffer.UpdateValue(_immediateContext, _constantBufferPointLight);
-
-                _constantBufferDeferredInfo.ViewInv = Matrix.Invert(_camera.ViewMatrix);
 
                 _immediateContext.Draw(4, 0);
             }
