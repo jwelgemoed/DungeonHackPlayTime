@@ -47,7 +47,7 @@ namespace DungeonHack.DirectX
             _renderer = renderer;
             _deferredShadingRenderer = deferredRenderer;
             _textureShader = new TextureShader(renderer);
-            _sharedBuffers = new SharedBuffers(renderer, camera);
+            _sharedBuffers = new SharedBuffers(renderer, camera, _deferredShadingRenderer);
             _pointLightShader = new PointLightShader(renderer, camera, deferredRenderer, _sharedBuffers);
             _deferredShader = new DeferredShader(renderer);
             _ambientLightShader = new AmbientLightShader(renderer, camera, deferredRenderer, _sharedBuffers);
@@ -112,6 +112,7 @@ namespace DungeonHack.DirectX
             TurnOnAlphaBlending();
 
             _sharedBuffers.UpdateBuffersPerFrame();
+            _sharedBuffers.BindImmediateContext();
 
             _ambientLightShader.SwitchShader();
             _ambientLightShader.RenderLights(ambientLight);

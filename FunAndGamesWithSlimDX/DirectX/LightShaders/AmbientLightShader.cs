@@ -99,7 +99,6 @@ namespace DungeonHack.DirectX.LightShaders
             _immediateContext.InputAssembler.InputLayout = _layout;
             _immediateContext.InputAssembler.PrimitiveTopology = SharpDX.Direct3D.PrimitiveTopology.TriangleList;
 
-            _immediateContext.PixelShader.SetConstantBuffer(0, _sharedBuffers.DeferredInfoConstantBuffer.Buffer);
             _immediateContext.PixelShader.SetConstantBuffer(1, _ambientLightConstantBuffer.Buffer);
 
             _immediateContext.VertexShader.Set(vertexShader);
@@ -108,11 +107,6 @@ namespace DungeonHack.DirectX.LightShaders
 
         public void RenderLights(AmbientLight[] ambientLights)
         {
-            _immediateContext.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(null, 0, 0));
-            _immediateContext.InputAssembler.SetIndexBuffer(null, SharpDX.DXGI.Format.R32_UInt, 0);
-            _immediateContext.PixelShader.SetShaderResource(0, _deferredShadingRenderer.DepthShaderResourceView);
-            _immediateContext.PixelShader.SetShaderResources(1, _deferredShadingRenderer.ShaderResourceViews);
-            
             for (int i=0; i<ambientLights.Length; i++)
             {
                 _constantBufferAmbientLight.AmbientLight = ambientLights[i];

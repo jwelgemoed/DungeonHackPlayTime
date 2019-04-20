@@ -12,15 +12,17 @@ namespace DungeonHack.DirectX.LightShaders
         private Device _device;
         private Camera _camera;
         private DeviceContext _immediateContext;
+        private DeferredShadingRenderer _deferredShadingRenderer;
 
         public ConstantBuffer<ConstantBufferDeferredInfo> DeferredInfoConstantBuffer;
         public ConstantBufferDeferredInfo ConstantBufferDeferredInfo;
 
-        public SharedBuffers(Renderer renderer, Camera camera)
+        public SharedBuffers(Renderer renderer, Camera camera, DeferredShadingRenderer deferredShadingRenderer)
         {
             _device = renderer.Device;
             _immediateContext = renderer.ImmediateContext;
             _camera = camera;
+            _deferredShadingRenderer = deferredShadingRenderer;
         }
 
         public void Initialize()
@@ -40,6 +42,15 @@ namespace DungeonHack.DirectX.LightShaders
             ConstantBufferDeferredInfo.ViewInv = Matrix.Invert(_camera.ViewMatrix);
 
             DeferredInfoConstantBuffer.UpdateValue(_immediateContext, ConstantBufferDeferredInfo);
+        }
+
+        public void BindImmediateContext()
+        {
+            _immediateContext.PixelShader.SetConstantBuffer(0, DeferredInfoConstantBuffer.Buffer);
+            _immediateContext.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(null, 0, 0));
+            _immediateContext.InputAssembler.SetIndexBuffer(null, SharpDX.DXGI.Format.R32_UInt, 0);
+            _immediateContext.PixelShader.SetShaderResource(0, _deferredShadingRenderer.DepthShaderResourceView);
+            _immediateContext.PixelShader.SetShaderResources(1, _deferredShadingRenderer.ShaderResourceViews);
         }
 
         public void Dispose()
