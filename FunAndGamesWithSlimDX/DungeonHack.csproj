@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\..\nugetrepositories\NUnit.3.10.1\build\NUnit.props" Condition="Exists('..\..\..\nugetrepositories\NUnit.3.10.1\build\NUnit.props')" />
+  <Import Project="..\..\nugetrepositories\NUnit.3.10.1\build\NUnit.props" Condition="Exists('..\..\nugetrepositories\NUnit.3.10.1\build\NUnit.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -77,47 +77,48 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AssimpNet, Version=3.3.2.0, Culture=neutral, PublicKeyToken=3edc10cb77b1bca2, processorArchitecture=MSIL">
-      <HintPath>..\..\..\nugetrepositories\AssimpNet.3.3.2\lib\net45\AssimpNet.dll</HintPath>
+      <HintPath>..\packages\AssimpNet.3.3.2\lib\net45\AssimpNet.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="AutoMapper, Version=7.0.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <HintPath>..\..\..\nugetrepositories\AutoMapper.7.0.1\lib\net45\AutoMapper.dll</HintPath>
+      <HintPath>..\..\nugetrepositories\AutoMapper.7.0.1\lib\net45\AutoMapper.dll</HintPath>
     </Reference>
     <Reference Include="CustomMarshalers" />
     <Reference Include="nunit.framework, Version=3.10.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\..\..\nugetrepositories\NUnit.3.10.1\lib\net45\nunit.framework.dll</HintPath>
+      <HintPath>..\..\nugetrepositories\NUnit.3.10.1\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\..\..\nugetrepositories\SharpDX.4.2.0\lib\net45\SharpDX.dll</HintPath>
+      <HintPath>..\..\nugetrepositories\SharpDX.4.2.0\lib\net45\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.D3DCompiler, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\..\..\nugetrepositories\SharpDX.D3DCompiler.4.2.0\lib\net45\SharpDX.D3DCompiler.dll</HintPath>
+      <HintPath>..\..\nugetrepositories\SharpDX.D3DCompiler.4.2.0\lib\net45\SharpDX.D3DCompiler.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Desktop, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\..\..\nugetrepositories\SharpDX.Desktop.4.2.0\lib\net45\SharpDX.Desktop.dll</HintPath>
+      <HintPath>..\..\nugetrepositories\SharpDX.Desktop.4.2.0\lib\net45\SharpDX.Desktop.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct2D1, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\..\..\nugetrepositories\SharpDX.Direct2D1.4.2.0\lib\net45\SharpDX.Direct2D1.dll</HintPath>
+      <HintPath>..\..\nugetrepositories\SharpDX.Direct2D1.4.2.0\lib\net45\SharpDX.Direct2D1.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D11, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\..\..\nugetrepositories\SharpDX.Direct3D11.4.2.0\lib\net45\SharpDX.Direct3D11.dll</HintPath>
+      <HintPath>..\..\nugetrepositories\SharpDX.Direct3D11.4.2.0\lib\net45\SharpDX.Direct3D11.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D11.Effects, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\..\..\nugetrepositories\SharpDX.Direct3D11.Effects.4.2.0\lib\net45\SharpDX.Direct3D11.Effects.dll</HintPath>
+      <HintPath>..\..\nugetrepositories\SharpDX.Direct3D11.Effects.4.2.0\lib\net45\SharpDX.Direct3D11.Effects.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.DirectSound, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\..\..\nugetrepositories\SharpDX.DirectSound.4.2.0\lib\net45\SharpDX.DirectSound.dll</HintPath>
+      <HintPath>..\..\nugetrepositories\SharpDX.DirectSound.4.2.0\lib\net45\SharpDX.DirectSound.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.DXGI, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\..\..\nugetrepositories\SharpDX.DXGI.4.2.0\lib\net45\SharpDX.DXGI.dll</HintPath>
+      <HintPath>..\..\nugetrepositories\SharpDX.DXGI.4.2.0\lib\net45\SharpDX.DXGI.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Mathematics, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\..\..\nugetrepositories\SharpDX.Mathematics.4.2.0\lib\net45\SharpDX.Mathematics.dll</HintPath>
+      <HintPath>..\..\nugetrepositories\SharpDX.Mathematics.4.2.0\lib\net45\SharpDX.Mathematics.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.RawInput, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\..\..\nugetrepositories\SharpDX.RawInput.4.2.0\lib\net45\SharpDX.RawInput.dll</HintPath>
+      <HintPath>..\..\nugetrepositories\SharpDX.RawInput.4.2.0\lib\net45\SharpDX.RawInput.dll</HintPath>
     </Reference>
     <Reference Include="SimpleInjector, Version=4.3.0.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
-      <HintPath>..\..\..\nugetrepositories\SimpleInjector.4.3.0\lib\net45\SimpleInjector.dll</HintPath>
+      <HintPath>..\..\nugetrepositories\SimpleInjector.4.3.0\lib\net45\SimpleInjector.dll</HintPath>
     </Reference>
     <Reference Include="SpriteTextRenderer">
       <HintPath>..\Refs\SpriteRenderer\SpriteTextRenderer.dll</HintPath>
@@ -133,7 +134,7 @@
     <Reference Include="System.Numerics" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\..\nugetrepositories\System.ValueTuple.4.5.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+      <HintPath>..\..\nugetrepositories\System.ValueTuple.4.5.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -416,14 +417,16 @@
     </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\..\..\nugetrepositories\AssimpNet.3.3.2\build\AssimpNet.targets" Condition="Exists('..\..\..\nugetrepositories\AssimpNet.3.3.2\build\AssimpNet.targets')" />
+  <Import Project="..\..\nugetrepositories\AssimpNet.3.3.2\build\AssimpNet.targets" Condition="Exists('..\..\nugetrepositories\AssimpNet.3.3.2\build\AssimpNet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\..\nugetrepositories\AssimpNet.3.3.2\build\AssimpNet.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\nugetrepositories\AssimpNet.3.3.2\build\AssimpNet.targets'))" />
-    <Error Condition="!Exists('..\..\..\nugetrepositories\NUnit.3.10.1\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\nugetrepositories\NUnit.3.10.1\build\NUnit.props'))" />
+    <Error Condition="!Exists('..\..\nugetrepositories\AssimpNet.3.3.2\build\AssimpNet.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\nugetrepositories\AssimpNet.3.3.2\build\AssimpNet.targets'))" />
+    <Error Condition="!Exists('..\..\nugetrepositories\NUnit.3.10.1\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\nugetrepositories\NUnit.3.10.1\build\NUnit.props'))" />
+    <Error Condition="!Exists('..\packages\AssimpNet.3.3.2\build\AssimpNet.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AssimpNet.3.3.2\build\AssimpNet.targets'))" />
   </Target>
+  <Import Project="..\packages\AssimpNet.3.3.2\build\AssimpNet.targets" Condition="Exists('..\packages\AssimpNet.3.3.2\build\AssimpNet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

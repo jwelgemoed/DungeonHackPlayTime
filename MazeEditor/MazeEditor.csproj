@@ -39,19 +39,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="SharpDX, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\..\..\nugetrepositories\SharpDX.4.2.0\lib\net45\SharpDX.dll</HintPath>
+      <HintPath>..\..\nugetrepositories\SharpDX.4.2.0\lib\net45\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D11, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\..\..\nugetrepositories\SharpDX.Direct3D11.4.2.0\lib\net45\SharpDX.Direct3D11.dll</HintPath>
+      <HintPath>..\..\nugetrepositories\SharpDX.Direct3D11.4.2.0\lib\net45\SharpDX.Direct3D11.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.DirectSound, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\..\..\nugetrepositories\SharpDX.DirectSound.4.2.0\lib\net45\SharpDX.DirectSound.dll</HintPath>
+      <HintPath>..\..\nugetrepositories\SharpDX.DirectSound.4.2.0\lib\net45\SharpDX.DirectSound.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.DXGI, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\..\..\nugetrepositories\SharpDX.DXGI.4.2.0\lib\net45\SharpDX.DXGI.dll</HintPath>
+      <HintPath>..\..\nugetrepositories\SharpDX.DXGI.4.2.0\lib\net45\SharpDX.DXGI.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Mathematics, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\..\..\nugetrepositories\SharpDX.Mathematics.4.2.0\lib\net45\SharpDX.Mathematics.dll</HintPath>
+      <HintPath>..\..\nugetrepositories\SharpDX.Mathematics.4.2.0\lib\net45\SharpDX.Mathematics.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />

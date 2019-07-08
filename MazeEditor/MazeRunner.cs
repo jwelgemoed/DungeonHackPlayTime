@@ -282,18 +282,18 @@ namespace MazeEditor
             var itemFactory = new ItemFactory(polygonBuilder, textureDictionary, materialDictionary);
             _itemRegistry = new ItemRegistry();
 
-            var itemLocation = Dungeon.GetItemLocation();
+            //var itemLocation = Dungeon.GetItemLocation();
 
-            _catItem = itemFactory.CreateItem("cat.obj-model.txt", "cat_diff.png",
-                null,
-                new Vector3(itemLocation.Item1 * 64, 0, itemLocation.Item2 * 64));
+            //_catItem = itemFactory.CreateItem("cat.obj-model.txt", "cat_diff.png",
+            //    null,
+            //    new Vector3(itemLocation.Item1 * 64, 0, itemLocation.Item2 * 64));
 
-            _itemRegistry.AddItem(_catItem);
+            //_itemRegistry.AddItem(_catItem);
 
-            foreach (var item in _itemRegistry.GetItems())
-            {
-                _quadTreeTraverser.PlaceItemInLeafNode(item);
-            }
+            //foreach (var item in _itemRegistry.GetItems())
+            //{
+            //    _quadTreeTraverser.PlaceItemInLeafNode(item);
+            //}
         }
 
         public new void Dispose()
