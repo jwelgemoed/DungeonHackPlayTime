@@ -24,3 +24,4 @@
 *.opendb
 *.force
 /MazeEditor/bin/Debug/Shaders
+/.vs/DungeonHackPlayTime/v16

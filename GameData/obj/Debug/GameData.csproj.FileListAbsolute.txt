@@ -144,7 +144,6 @@ C:\git\DungeonHackPlayTime\GameData\bin\Debug\SharpDX.Direct2D1.xml
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\SharpDX.Direct3D11.pdb
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\SharpDX.Direct3D11.xml
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\SharpDX.pdb
-C:\git\DungeonHackPlayTime\GameData\bin\Debug\SharpDX.xml
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\SharpDX.Mathematics.pdb
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\SharpDX.Mathematics.xml
 C:\git\DungeonHackPlayTime\GameData\bin\Debug\SharpDX.RawInput.pdb
