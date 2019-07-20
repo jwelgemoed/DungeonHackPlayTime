@@ -109,6 +109,7 @@ namespace DungeonHack.DirectX.LightShaders
             BindImmediateContext(_vertexShader, _pixelShader);
 
             _renderer.SetBackBufferRenderTarget(DepthStencilLightShader, _immediateContext);
+            _renderer.SetRasterizerState(FillMode.Solid, CullMode.Front);
 
             _renderer.ImmediateContext.ClearDepthStencilView(DepthStencilLightShader, DepthStencilClearFlags.Depth, 1.0f, 0);
         }
@@ -132,7 +133,8 @@ namespace DungeonHack.DirectX.LightShaders
 
         private void BindImmediateContext(VertexShader vertexShader, PixelShader pixelShader)
         {
-            _immediateContext.InputAssembler.InputLayout = _layout;
+            _immediateContext.InputAssembler.InputLayout = null;
+
             _immediateContext.InputAssembler.PrimitiveTopology = SharpDX.Direct3D.PrimitiveTopology.PatchListWith1ControlPoints;
 
             _immediateContext.PixelShader.SetConstantBuffer(1, _pointLightConstantBuffer.Buffer);
@@ -152,45 +154,24 @@ namespace DungeonHack.DirectX.LightShaders
 
         public void RenderLights(PointLight[] pointLight)
         {
-            var translationViewMatrix = new Matrix()
-            {
-                M11 = 1.0f,
-                M22 = 1.0f,
-                M33 = 1.0f,
-                M44 = 1.0f,
-                M41 = _camera.ViewMatrix.M41,
-                M42 = _camera.ViewMatrix.M42,
-                M43 = _camera.ViewMatrix.M43
-            };
-
             for (int i = 0; i < pointLight.Length; i++)
             {
-                var rangeMatrix = new Matrix()
-                {
-                    M11 = pointLight[i].Range * 1.1f,
-                    M22 = pointLight[i].Range * 1.1f,
-                    M33 = pointLight[i].Range * 1.1f,
-                    M44 = 1.0f
-                };
+                Matrix lightWorldScale;
+                Matrix.Scaling(pointLight[i].Range, out lightWorldScale);
 
-                var translationMatrix = new Matrix()
-                {
-                    M11 = 1.0f,
-                    M22 = 1.0f,
-                    M33 = 1.0f,
-                    M44 = 1.0f,
-                    M41 = pointLight[i].Position.X,
-                    M42 = pointLight[i].Position.Y,
-                    M43 = pointLight[i].Position.Z
-                };
+                Matrix lightWorldTranslation;
+                Matrix.Translation(pointLight[i].Position.X, pointLight[i].Position.Y, pointLight[i].Position.Z, out lightWorldTranslation);
 
-                pointLight[i].LightCalculations = rangeMatrix * translationMatrix * translationViewMatrix * _camera.ProjectionMatrix;
+                pointLight[i].LightCalculations = (lightWorldScale * 
+                    lightWorldTranslation * _camera.ViewMatrix * _camera.ProjectionMatrix);
+
+                pointLight[i].LightCalculations.Transpose();
 
                 _constantBufferPointLight.PointLight = pointLight[i];
 
                 _pointLightConstantBuffer.UpdateValue(_immediateContext, _constantBufferPointLight);
 
-                _immediateContext.Draw(4, 0);
+                _immediateContext.Draw(2, 0);
             }
         }
 

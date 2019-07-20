@@ -126,7 +126,7 @@ namespace DungeonHack.DirectX
             TurnOffAlphaBlending();
 
             //_currentShader.RenderLights(directionalLight, pointLight, spotLight);
-
+            _renderer.SetRasterizerState(FillMode.Solid, CullMode.Back);
             _renderer.TurnZBufferOn();
 
             //Present
@@ -195,6 +195,7 @@ namespace DungeonHack.DirectX
             //_directionalLightShader.SwitchShader();
             _renderer.SetBackBufferRenderTarget(_renderer.DepthStencilView, _renderer.ImmediateContext);
             _renderer.ResetViewport(_renderer.ImmediateContext);
+            _renderer.SetRasterizerState(FillMode.Solid, CullMode.Back);
 
             //DeviceContext context;
 

@@ -61,12 +61,14 @@ float3 CalcPoint(float3 position, Material material)
 	toEye = normalize(toEye);
 	float3 halfway = normalize(toEye + toLight);
 	float NDotH = saturate(dot(halfway, material.normal));
-	finalColor += gPointLight.Color.rgb * pow(NDotH, material.specPower)*material.specIntensity;
+	//finalColor += gPointLight.Color.rgb * pow(NDotH, material.specPower)*material.specIntensity;
+	finalColor += pow(NDotH, material.specPower)*material.specIntensity;
 
 	//Attentuation	
 	float distToLightNorm = 1.0 - saturate(distToLight * gPointLight.Range);
 	float attn = distToLightNorm * distToLightNorm;
-	finalColor *= material.diffuseColor.rgb * attn;
+	finalColor *= gPointLight.Color.rgb * attn;
+	//finalColor *= material.diffuseColor.rgb * attn;
 
 	return finalColor;
 }
@@ -87,9 +89,7 @@ float4 PointLightPS(VS_OUTPUT input) : SV_TARGET
 
 	float3 position = CalcWorldPosition(input.cpPosition, gbd.LinearDepth);
 
-	float4 finalColor;
-	finalColor.xyz = CalcPoint(position, mat);
-	finalColor.w = 1.0;
+	float3 finalColor = finalColor.xyz = CalcPoint(position, mat);
 
-	return finalColor;
+	return float4(finalColor, 1.0);
 }

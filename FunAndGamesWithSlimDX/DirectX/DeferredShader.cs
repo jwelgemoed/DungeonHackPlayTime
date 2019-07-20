@@ -227,7 +227,6 @@ namespace DungeonHack.DirectX
 
             for (int i = 0; i < _deferredContexts.Length; i++)
             {
-                //WHHYYYYYHYHYH!!!!!?!?!?!!?!?! DOES THIS CAUSE MEMORY LEAK?
                _frameConstantBuffer.UpdateValue(_deferredContexts[i], _constantBufferPerFrame);
             }
         }

@@ -114,7 +114,7 @@ namespace FunAndGamesWithSharpDX.DirectX
 
             var adapters = f.Adapters;
 
-            Device.CreateWithSwapChain(adapters[1], DeviceCreationFlags.Debug | DeviceCreationFlags.BgraSupport
+            Device.CreateWithSwapChain(adapters[0], DeviceCreationFlags.Debug | DeviceCreationFlags.BgraSupport
                 , description, out Device, out SwapChain);
         }
 
