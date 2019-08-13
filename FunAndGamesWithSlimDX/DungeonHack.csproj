@@ -147,6 +147,7 @@
   <ItemGroup>
     <Compile Include="Builders\MeshBuilder.cs" />
     <Compile Include="CollisionDetection\ICollisionDetector.cs" />
+    <Compile Include="Managers\ProjectileManager.cs" />
     <Compile Include="DirectX\BufferFactory.cs" />
     <Compile Include="DirectX\ConstantBuffer\ConstantBuffer.cs" />
     <Compile Include="DirectX\ConstantBuffer\ConstantBufferPerFrame.cs" />
@@ -166,6 +167,8 @@
     <Compile Include="Entities\ItemFactory.cs" />
     <Compile Include="Entities\ItemRegistry.cs" />
     <Compile Include="Entities\PolygonType.cs" />
+    <Compile Include="Entities\Projectiles\BallOfLight.cs" />
+    <Compile Include="Entities\Projectiles\Projectile.cs" />
     <Compile Include="Factories\ModelFactory.cs" />
     <Compile Include="DirectX\ShaderTechnique.cs" />
     <Compile Include="DirectX\Util.cs" />
@@ -173,7 +176,6 @@
     <Compile Include="Engine\CollissionEventArgs.cs" />
     <Compile Include="Engine\FontRenderer.cs" />
     <Compile Include="Engine\Frustrum.cs" />
-    <Compile Include="Engine\Input.cs" />
     <Compile Include="Engine\SpriteRenderer.cs" />
     <Compile Include="Entities\Console.cs" />
     <Compile Include="Entities\EditorEnum.cs" />
@@ -364,6 +366,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\nugetrepositories\AssimpNet.3.3.2\build\AssimpNet.targets" Condition="Exists('..\..\nugetrepositories\AssimpNet.3.3.2\build\AssimpNet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -10,7 +10,7 @@ namespace DungeonHack.Lights
 
         //MUST BE THE SAME VALUE AS DEFINED IN HLSL
         private const int NumberOfDirectionalLights = 1;
-        private const int NumberOfPointLights = 2;
+        private const int NumberOfPointLights = 3;
         private const int NumberOfSpotLights = 1;
 
         private static int _currentDirectionalLight;

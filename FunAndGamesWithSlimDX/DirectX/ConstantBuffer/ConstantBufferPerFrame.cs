@@ -11,7 +11,7 @@ namespace DungeonHack.DirectX.ConstantBuffer
         public DirectionalLight[] DirectionalLight;
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 1)]
         public Spotlight[] SpotLight;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
         public PointLight[] PointLight;
         public Vector3 CameraPosition;
         public float FogStart;

@@ -171,5 +171,10 @@ namespace MapEditor
         {
             throw new NotImplementedException();
         }
+
+        protected override void OnFirePrimary()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

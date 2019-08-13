@@ -4,6 +4,7 @@ using DungeonHack.DataDictionaries;
 using DungeonHack.DirectX;
 using DungeonHack.Engine;
 using DungeonHack.Entities;
+using DungeonHack.Entities.Projectiles;
 using DungeonHack.Lights;
 using DungeonHack.OcclusionCulling;
 using DungeonHack.Quadtree;
@@ -25,12 +26,14 @@ namespace MazeEditor
         private Material _wallMaterial;
         private PointLight _pointLight;
         private PointLight _pointLight2;
+        private PointLight _pointLight3;
         private DirectionalLight _directionalLight;
         private Spotlight _spotlight;
         private QuadTreeRenderer _quadTreeRenderer;
         private QuadTreeCollisionDetector _quadTreeCollisionDetector;
         private QuadTreeTraverser _quadTreeTraverser;
         private QuadTreeDepthRenderer _quadTreeDepthRenderer;
+        private ProjectileManager _projectileManager;
         private PolygonRenderer _polygonRenderer;
         private BoundingBoxRenderer _boundingBoxRenderer;
         private RenderedItems _renderedItems;
@@ -87,6 +90,7 @@ namespace MazeEditor
                 _frustrum.ConstructFrustrum(Camera.ViewProjectionMatrix);
 
             //Do the light rendering
+            _projectileManager.RenderProjectiles();
             LightEngine.RenderLights(base.Shader);
 
             _meshRenderedCount = 0;
@@ -97,6 +101,7 @@ namespace MazeEditor
             _meshRenderedCount = _quadTreeRenderer.MeshesRendered;
 
             //Draw items in world;
+
             foreach (var item in _itemRegistry.GetItems())
             {
                 //_polygonRenderer.Render(item.Polygon, ref _meshRenderedCount);
@@ -107,6 +112,7 @@ namespace MazeEditor
         {
            // _quadTreeCollisionDetector.Camera = Camera;
             _quadTreeCollisionDetector.CurrentNode = _quadTreeTraverser.FindCurrentCameraLeafNode(Camera);
+            _projectileManager.UpdateProjectiles();
 
             base.UpdateScene();
 
@@ -173,8 +179,19 @@ namespace MazeEditor
                 Attentuation = new Vector3(0.0f, 0.1f, 0.0f)
             };
 
+            _pointLight3 = new PointLight
+            {
+                Diffuse = new Color4(0.0f, 15.0f, 0.0f, 1.0f),
+                Ambient = new Color(),
+                Specular = new Color4(0.1f, 5.1f, 0.1f, 0.1f),
+                Position = Camera.GetPosition(),
+                Range = 256.0f,
+                Attentuation = new Vector3(0.0f, 0.1f, 0.0f)
+            };
+
             LightEngine.AddPointLight(_pointLight);
             LightEngine.AddPointLight(_pointLight2);
+            //LightEngine.AddPointLight(_pointLight3);
         }
 
         public override List<Polygon> GetSceneMeshes()
@@ -217,6 +234,8 @@ namespace MazeEditor
             _quadTreeCollisionDetector = new QuadTreeCollisionDetector();
             Camera.CollisionDetector = _quadTreeCollisionDetector;
             _quadTreeCollisionDetector.Camera = Camera;
+
+            _projectileManager = new ProjectileManager(_quadTreeTraverser);
 
             Shader.Initialize();
 
@@ -290,6 +309,15 @@ namespace MazeEditor
             base.Shader.Dispose();
 
             base.Dispose();
+        }
+
+        protected override void OnFirePrimary()
+        {
+            if (_projectileManager.CanAddMoreProjectiles())
+            {
+                var ballOfLight = new BallOfLight(Camera.GetPosition(), Vector3.Normalize(Camera.LookAt - Camera.EyeAt), 5.0f, 5.0f, _console);
+                _projectileManager.RegisterProjectile(ballOfLight);
+            }
         }
     }
 }

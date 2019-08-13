@@ -2,6 +2,8 @@
 using DungeonHack.Entities;
 using FunAndGamesWithSharpDX.Engine;
 using System.Collections.Generic;
+using DungeonHack.Entities.Projectiles;
+using SharpDX;
 
 namespace DungeonHack.Quadtree
 {
@@ -68,6 +70,51 @@ namespace DungeonHack.Quadtree
         public void RemoveItemFromLeafNode(Item item)
         {
 
+        }
+
+        public QuadTreeNode FindCurrentLeafNodeForBoundingSphere(BoundingSphere boundingSphere)
+        {
+            QuadTreeNode node;
+            _nodeStack.Clear();
+            _nodeStack.Push(_rootNode);
+            int depth = 1;
+
+            while (_nodeStack.Count > 0)
+            {
+                depth--;
+                node = _nodeStack.Pop();
+
+                if (node.IsLeaf)
+                {
+                    //We've arrived at the leaf.
+                    return node;
+                }
+                else
+                {
+                    if ((node.Octant1 != null) && (node.Octant1.BoundingBox.ContainsOrIntersectsBoundingSphere(boundingSphere)))
+                    {
+                        _nodeStack.Push(node.Octant1);
+                        depth++;
+                    }
+                    if ((node.Octant2 != null) && (node.Octant2.BoundingBox.ContainsOrIntersectsBoundingSphere(boundingSphere)))
+                    {
+                        _nodeStack.Push(node.Octant2);
+                        depth++;
+                    }
+                    if ((node.Octant3 != null) && (node.Octant3.BoundingBox.ContainsOrIntersectsBoundingSphere(boundingSphere)))
+                    {
+                        _nodeStack.Push(node.Octant3);
+                        depth++;
+                    }
+                    if ((node.Octant4 != null) && (node.Octant4.BoundingBox.ContainsOrIntersectsBoundingSphere(boundingSphere)))
+                    {
+                        _nodeStack.Push(node.Octant4);
+                        depth++;
+                    }
+                }
+            }
+
+            return null;
         }
 
         public QuadTreeNode FindCurrentCameraLeafNode(Camera camera)

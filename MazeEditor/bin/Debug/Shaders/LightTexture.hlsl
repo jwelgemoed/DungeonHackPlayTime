@@ -1,6 +1,6 @@
 ﻿//Frank Luna 
 #define NUM_DIRECTIONAL_LIGHTS 1
-#define NUM_POINT_LIGHTS 2
+#define NUM_POINT_LIGHTS 3
 #define NUM_SPOT_LIGHTS 1
 
 struct DirectionalLight {

@@ -33,6 +33,11 @@ namespace DungeonHack.Entities
             return BoundingBox.Contains(boundingBox.BoundingBox) != ContainmentType.Disjoint;
         }
 
+        public bool ContainsOrIntersectsBoundingSphere(BoundingSphere boundingSphere)
+        {
+            return BoundingBox.Contains(boundingSphere) != ContainmentType.Disjoint;
+        }
+
         public bool ContainsOrIntersectsCamera(Camera camera)
         {
             return BoundingBox.Contains(camera.EyeAt) != ContainmentType.Disjoint;

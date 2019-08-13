@@ -260,7 +260,14 @@ namespace FunAndGamesWithSharpDX.Engine
 
             //Player.Rotate();
             Camera.Rotate(Camera.RelativeX, Camera.RelativeY);
+
+            if (e.ButtonFlags == MouseButtonFlags.Button1Down)
+            {
+                OnFirePrimary();
+            }
         }
+
+        protected abstract void OnFirePrimary();
 
         protected void MoveMouseInteractive(object sender, MouseInputEventArgs e)
         {
