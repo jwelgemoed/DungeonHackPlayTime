@@ -36,6 +36,7 @@ namespace MazeEditor
         private ProjectileManager _projectileManager;
         private PolygonRenderer _polygonRenderer;
         private BoundingBoxRenderer _boundingBoxRenderer;
+        private PolygonBuilder _polygonBuilder;
         private RenderedItems _renderedItems;
         private Matrix _viewProjectionMatrix;
         private ItemRegistry _itemRegistry;
@@ -222,6 +223,8 @@ namespace MazeEditor
             _boundingBoxRenderer = new BoundingBoxRenderer(materialDictionary, textureDictionary, 
                 Renderer.ImmediateContext, Renderer.DeferredContexts, Camera, base.Shader);
 
+            _polygonBuilder = new PolygonBuilder(Device, Shader, new BufferFactory(Device));
+
             int _threadCount = 4;
             int _threadCountPerThread = 4;
             _renderedItems = new RenderedItems(_threadCount);
@@ -273,7 +276,7 @@ namespace MazeEditor
             // _spotlight = new Spotlight(
             //    new Color4(2.0f, 2.0f, 2.0f, 2.0f),
             //    new Color4(2.0f, 2.0f, 2.0f, 2.0f),
-            //    new Color4(2.0f, 2.0f, 2.0f, 2.0f),
+            //    new Color4(2.0f, 2.0f, 2.0f, 2.0f),only_quad_sphere.obj-model.txt
             //    Camera.EyeAt,
             //    1000.0f,
             //    Vector3.Normalize(Camera.LookAt - Camera.EyeAt),
@@ -315,7 +318,7 @@ namespace MazeEditor
         {
             if (_projectileManager.CanAddMoreProjectiles())
             {
-                var ballOfLight = new BallOfLight(Camera.GetPosition(), Vector3.Normalize(Camera.LookAt - Camera.EyeAt), 5.0f, 5.0f, _console);
+                var ballOfLight = new BallOfLight(_polygonBuilder, _polygonRenderer, Camera.GetPosition(), Vector3.Normalize(Camera.LookAt - Camera.EyeAt), 10.0f, 5.0f, _console);
                 _projectileManager.RegisterProjectile(ballOfLight);
             }
         }

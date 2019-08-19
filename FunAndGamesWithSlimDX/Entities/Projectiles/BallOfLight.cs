@@ -1,4 +1,6 @@
-﻿using DungeonHack.Lights;
+﻿using DungeonHack.Builders;
+using DungeonHack.Lights;
+using DungeonHack.Renderers;
 using SharpDX;
 using System;
 
@@ -7,12 +9,26 @@ namespace DungeonHack.Entities.Projectiles
     public class BallOfLight : Projectile, IDisposable
     {
         private PointLight _pointLight;
+        private Polygon _polygon;
+        private PolygonRenderer _renderer;
         private FunAndGamesWithSharpDX.Entities.Console _console;
 
-        public BallOfLight(Vector3 initialPosition, Vector3 direction, float speed, float radius, FunAndGamesWithSharpDX.Entities.Console console) : base(initialPosition,
+        public BallOfLight(PolygonBuilder _builder, PolygonRenderer renderer, Vector3 initialPosition, Vector3 direction, float speed, float radius, FunAndGamesWithSharpDX.Entities.Console console) : base(initialPosition,
             direction, speed, radius)
         {
+            _polygon = _builder.New()
+                            .CreateFromModel("cat2.obj-model.txt")
+                            //.CreateFromModel("only_quad_sphere.obj-model.txt")
+                            .SetPosition(initialPosition.X, initialPosition.Y, initialPosition.Z)
+                            .SetType(PolygonType.Other)
+                            .SetTextureIndex(1)
+                            .SetMaterialIndex(0)
+                            .SetScaling(0.0001f, 0.0001f, 0.0001f)
+                            .WithTransformToWorld()
+                            .Build();
+
             _console = console;
+            _renderer = renderer;
         }
 
         public override void OnCollision(Polygon collidedPolygon)
@@ -31,6 +47,13 @@ namespace DungeonHack.Entities.Projectiles
                 Range = 256.0f,
                 Attentuation = new Vector3(0.0f, 0.1f, 0.0f)
             };
+
+            _polygon.TranslationMatrix = Matrix.Translation(_position);
+            _polygon.WorldMatrix = _polygon.ScaleMatrix * _polygon.RotationMatrix;
+            _polygon.WorldMatrix = _polygon.WorldMatrix * _polygon.TranslationMatrix;
+
+            int counter = 0;
+            _renderer.Render(0, _polygon, ref counter);
 
             LightEngine.AddPointLight(_pointLight);
         }
