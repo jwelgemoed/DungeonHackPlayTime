@@ -155,10 +155,8 @@
     <Compile Include="DirectX\IShader.cs" />
     <Compile Include="DirectX\LightShader.cs" />
     <Compile Include="DirectX\Renderer2D.cs" />
-    <Compile Include="DirectX\Shader.cs" />
     <Compile Include="DirectX\SpriteShader.cs" />
     <Compile Include="DirectX\TextRenderer.cs" />
-    <Compile Include="DirectX\TextureShader.cs" />
     <Compile Include="DirectX\TextureLoader.cs" />
     <Compile Include="Engine\InteractiveEngine.cs" />
     <Compile Include="Engine\RenderedItems.cs" />

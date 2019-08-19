@@ -12,9 +12,9 @@ namespace DungeonHack.Factories
     public class ModelFactory
     {
         private Device _device;
-        private Shader _shader;
+        private LightShader _shader;
 
-        public ModelFactory(Device device, Shader shader)
+        public ModelFactory(Device device, LightShader shader)
         {
             _device = device;
             _shader = shader;

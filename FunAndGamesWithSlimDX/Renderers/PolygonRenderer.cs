@@ -17,7 +17,7 @@ namespace DungeonHack.Renderers
         private readonly DeviceContext[] _deferredContexts;
         private CommandList[] _commandLists;
         private readonly Camera _camera;
-        private readonly Shader _shader;
+        private readonly LightShader _shader;
         private readonly object _lock = new object() ;
 
         public PolygonRenderer(MaterialDictionary materialDictionary,
@@ -26,7 +26,7 @@ namespace DungeonHack.Renderers
                             DeviceContext[] deferredContexts,
                             CommandList[] commandLists,
                             Camera camera,
-                            Shader shader)
+                            LightShader shader)
         {
             _materialDictionary = materialDictionary;
             _textureDictionary = textureDictionary;

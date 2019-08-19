@@ -37,7 +37,7 @@ namespace DungeonHack.Entities
 
         public PolygonType PolygonType { get; set; }
 
-        public Polygon(Device device, Shader shader)
+        public Polygon(Device device, LightShader shader)
         {
             ScaleMatrix = Matrix.Identity;
             TranslationMatrix = Matrix.Identity;

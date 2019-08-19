@@ -44,7 +44,7 @@ namespace MapEditor
             }
         }
 
-        public Shader GetShader
+        public LightShader GetShader
         {
             get
             {

@@ -47,7 +47,7 @@ namespace MapEditor
         private List<Tuple<Line, GameData.LineSegment>> lineList = new List<Tuple<Line, GameData.LineSegment>>();
         private List<Tuple<Shape, Polygon>> meshList = new List<Tuple<Shape, Polygon>>();
         private Device _device;
-        private Shader _shader;
+        private LightShader _shader;
         private float _midWidth;
         private float _midHeight;
         private float _gridSize;
@@ -71,7 +71,7 @@ namespace MapEditor
             }
         }
 
-        public WallSegmentEditor(Canvas canvas, Device device, Shader shader, float midWidth, float midHeight, float gridSize, GameData.MapData mapData)
+        public WallSegmentEditor(Canvas canvas, Device device, LightShader shader, float midWidth, float midHeight, float gridSize, GameData.MapData mapData)
         {
             _lineBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0, 128, 128));
             _selectedLineBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(128, 0, 0));
@@ -84,7 +84,7 @@ namespace MapEditor
             MapData = mapData;
         }
 
-        public WallSegmentEditor(Canvas canvas, Device device, Shader shader, float midWidth, float midHeight, float gridSize)
+        public WallSegmentEditor(Canvas canvas, Device device, LightShader shader, float midWidth, float midHeight, float gridSize)
         {
             _lineBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0, 128, 128));
             _selectedLineBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(128, 0, 0));

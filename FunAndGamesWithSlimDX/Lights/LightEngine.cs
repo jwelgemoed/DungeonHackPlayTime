@@ -35,7 +35,7 @@ namespace DungeonHack.Lights
             _currentSpotLight = (_currentSpotLight + 1) % NumberOfSpotLights;
         }
 
-        public static void RenderLights(Shader shader)
+        public static void RenderLights(IShader shader)
         {
             shader.RenderLights(DirectionalLights, PointLights, SpotLight);
         }

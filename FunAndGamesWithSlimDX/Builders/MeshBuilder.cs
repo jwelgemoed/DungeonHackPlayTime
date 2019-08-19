@@ -17,12 +17,12 @@ namespace DungeonHack.Builders
     {
         protected Polygon _mesh;
         protected readonly Device _device;
-        protected readonly Shader _shader;
+        protected readonly LightShader _shader;
         protected readonly BufferFactory _bufferFactory;
 
         private bool _withTransformToWorld;
 
-        public PolygonBuilder(Device device, Shader shader, BufferFactory bufferFactory)
+        public PolygonBuilder(Device device, LightShader shader, BufferFactory bufferFactory)
         {
             _device = device;
             _shader = shader;

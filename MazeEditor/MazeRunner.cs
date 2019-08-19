@@ -68,7 +68,7 @@ namespace MazeEditor
             }
         }
 
-        public new Shader Shader 
+        public new LightShader Shader 
         {
             get
             {
@@ -93,7 +93,7 @@ namespace MazeEditor
             //Do the light rendering
             _projectileManager.RenderProjectiles();
             LightEngine.RenderLights(base.Shader);
-
+            
             _meshRenderedCount = 0;
             base._stopwatch.Restart();
 

@@ -103,7 +103,6 @@ namespace FunAndGamesWithSharpDX.Engine
                 else
                 {
                     Renderer.SetRasterizerState(FillMode.Solid, CullMode.Back);
-                    Shader.SetShader((DirectX.ShaderTechnique) currentTechId);
                 }
             }
             else if (e.KeyCode == Keys.F2)

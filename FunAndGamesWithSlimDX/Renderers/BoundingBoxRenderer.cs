@@ -16,7 +16,7 @@ namespace DungeonHack.Renderers
         private readonly DeviceContext _immediateContext;
         private readonly DeviceContext[] _deferredContexts;
         private readonly Camera _camera;
-        private readonly Shader _shader;
+        private readonly LightShader _shader;
         private readonly object _lock = new object();
 
         public BoundingBoxRenderer(MaterialDictionary materialDictionary,
@@ -24,7 +24,7 @@ namespace DungeonHack.Renderers
                             DeviceContext immediateContext,
                             DeviceContext[] deferredContexts,
                             Camera camera,
-                            Shader shader)
+                            LightShader shader)
         {
             _materialDictionary = materialDictionary;
             _textureDictionary = textureDictionary;

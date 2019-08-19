@@ -24,7 +24,7 @@ namespace MapEditor
     {
         private Canvas _canvas;
         private Device _device;
-        private Shader _shader;
+        private LightShader _shader;
         private float _midWidth;
         private float _midHeight;
         private float _gridSize;
@@ -37,7 +37,7 @@ namespace MapEditor
 
         private List<Tuple<Shape, Polygon>> _meshList = new List<Tuple<Shape, Polygon>>();
 
-        public ObstacleSegmentEditor(Canvas canvase, Device device, Shader shader, float midWidth, float midHeight, float gridSize)
+        public ObstacleSegmentEditor(Canvas canvase, Device device, LightShader shader, float midWidth, float midHeight, float gridSize)
         {
             _squareBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(128, 0, 128));
             _selectedSquareBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(128, 128, 0));

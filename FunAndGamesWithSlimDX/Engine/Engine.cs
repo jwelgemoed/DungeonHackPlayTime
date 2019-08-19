@@ -27,7 +27,7 @@ namespace DungeonHack.Engine
         protected Renderer Renderer = new Renderer();
         protected Renderer2D Renderer2D = new Renderer2D();
         protected InteractiveEngine InteractiveEngine = new InteractiveEngine();
-        protected Shader Shader;
+        protected LightShader Shader;
         protected readonly GameTimer Timer = new GameTimer();
         protected Camera Camera;
         private bool _hasInitialized = false;
@@ -109,7 +109,7 @@ namespace DungeonHack.Engine
 
             _frustrum = new Frustrum();
 
-            Shader = new Shader(Renderer);
+            Shader = new LightShader(Renderer);
             Shader.Initialize();
 
             SpriteRenderer.Initialize(Renderer.Device);

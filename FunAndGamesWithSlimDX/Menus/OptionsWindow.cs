@@ -12,9 +12,9 @@ namespace FunAndGamesWithSharpDX.Menus
     {
         private readonly Renderer _renderer;
         private readonly Camera _camera;
-        private readonly Shader _shader;
+        private readonly LightShader _shader;
 
-        public OptionsWindow(Renderer renderer, Shader shader, DungeonHack.Engine.Engine.FrameRateStats frameRateStats, Camera camera, int MouseSensitivity)
+        public OptionsWindow(Renderer renderer, LightShader shader, DungeonHack.Engine.Engine.FrameRateStats frameRateStats, Camera camera, int MouseSensitivity)
         {
             InitializeComponent();
             _renderer = renderer;

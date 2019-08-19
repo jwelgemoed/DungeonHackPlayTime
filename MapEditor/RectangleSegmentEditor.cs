@@ -26,7 +26,7 @@ namespace MapEditor
     {
         private List<Polygon> _meshList = new List<Polygon>();
         private Device _device;
-        private Shader _shader;
+        private LightShader _shader;
 
         public float CeilingHeight { get; set; }
         public float FloorHeight { get; set; }
@@ -39,7 +39,7 @@ namespace MapEditor
 
         private float _x1,_y1,_x2,_y2;
 
-        public RectangleSegment(Device device, Shader shader)
+        public RectangleSegment(Device device, LightShader shader)
         {
             _device = device;
             _shader = shader;
@@ -293,7 +293,7 @@ namespace MapEditor
     {
         private Canvas _canvas;
         private Device _device;
-        private Shader _shader;
+        private LightShader _shader;
         private float _midWidth;
         private float _midHeight;
         private float _gridSize;
@@ -314,7 +314,7 @@ namespace MapEditor
 
         public event MouseButtonEventHandler RectangleClicked; 
 
-        public RectangleSegmentEditor(Canvas canvase, Device device, Shader shader, float midWidth, float midHeight, float gridSize)
+        public RectangleSegmentEditor(Canvas canvase, Device device, LightShader shader, float midWidth, float midHeight, float gridSize)
         {
             _squareBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(128, 0, 128));
             _selectedSquareBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(128, 128, 0));

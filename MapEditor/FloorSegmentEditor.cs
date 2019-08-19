@@ -21,7 +21,7 @@ namespace MapEditor
     {
         private readonly Canvas _canvas;
         private readonly Device _device;
-        private readonly Shader _shader;
+        private readonly LightShader _shader;
         private readonly float _midWidth;
         private readonly float _midHeight;
         private readonly float _gridSize;
@@ -33,7 +33,7 @@ namespace MapEditor
 
         private readonly List<Tuple<Shape, Polygon>> _meshList = new List<Tuple<Shape, Polygon>>();
 
-        public FloorSegmentEditor(Canvas canvase, Device device, Shader shader, float midWidth, float midHeight, float gridSize)
+        public FloorSegmentEditor(Canvas canvase, Device device, LightShader shader, float midWidth, float midHeight, float gridSize)
         {
             _squareBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(128, 0, 128));
             _selectedSquareBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(128, 128, 0));
