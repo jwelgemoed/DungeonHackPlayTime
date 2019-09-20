@@ -1,4 +1,5 @@
-﻿using DungeonHack.Builders;
+﻿using DungeonHack;
+using DungeonHack.Builders;
 using DungeonHack.DirectX;
 using DungeonHack.QuadTree;
 using System;
@@ -116,8 +117,8 @@ namespace MazeEditor
         {
             BufferFactory bufferFactory = new BufferFactory(_mazeRunner.Device);
             PolygonBuilder polygonBuilder = new PolygonBuilder(_mazeRunner.Device, _mazeRunner.Shader, bufferFactory);
-
-            GridPolygonBuilder builder = new GridPolygonBuilder(_dungeon.GridBoard, polygonBuilder);
+            GlobalVertexList globalVertexList = new GlobalVertexList();
+            GridPolygonBuilder builder = new GridPolygonBuilder(_dungeon.GridBoard, polygonBuilder, globalVertexList);
             var meshList = builder.GeneratePolygons();
 
             _mazeRunner.Meshes = meshList.ToList();
@@ -140,7 +141,8 @@ namespace MazeEditor
         {
             BufferFactory bufferFactory = new BufferFactory(_mazeRunner.Device);
             PolygonBuilder polygonBuilder = new PolygonBuilder(_mazeRunner.Device, _mazeRunner.Shader, bufferFactory);
-            GridPolygonBuilder builder = new GridPolygonBuilder(_dungeon.GridBoard, polygonBuilder);
+            GlobalVertexList globalVertexList = new GlobalVertexList();
+            GridPolygonBuilder builder = new GridPolygonBuilder(_dungeon.GridBoard, polygonBuilder, globalVertexList);
             var meshList = builder.GeneratePolygons();
 
             _mazeRunner.Meshes = meshList.ToList();

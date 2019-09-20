@@ -10,6 +10,7 @@ using DungeonHack.OcclusionCulling;
 using DungeonHack.Quadtree;
 using DungeonHack.QuadTree;
 using DungeonHack.Renderers;
+using DungeonHack.Sound;
 using FunAndGamesWithSharpDX.Engine;
 using FunAndGamesWithSharpDX.Entities;
 using SharpDX;
@@ -38,6 +39,7 @@ namespace MazeEditor
         private BoundingBoxRenderer _boundingBoxRenderer;
         private PolygonBuilder _polygonBuilder;
         private RenderedItems _renderedItems;
+        private SoundManager _soundManager;
         private Matrix _viewProjectionMatrix;
         private ItemRegistry _itemRegistry;
 
@@ -56,7 +58,7 @@ namespace MazeEditor
             {
                 Ambient = new Color4(1.0f, 1.0f, 1.0f, 1.0f),
                 Diffuse = new Color4(1.0f, 1.0f, 1.0f, 1.0f),
-                Specular = new Color4(0.1f, 0.1f, 0.1f, 0.1f)
+                Specular = new Color4(0.15f, 0.15f, 0.15f, 0.1f)
             };
         }
 
@@ -248,12 +250,12 @@ namespace MazeEditor
             ConfigManager.SpotLightFactor = 96.0f;
             ConfigManager.SpotLightRange = 1000;
             ConfigManager.FogStart = 50;
-            ConfigManager.FogEnd = 1000;
+            ConfigManager.FogEnd = 500;
             ConfigManager.UseNormalMap = 1;
 
             _directionalLight = new DirectionalLight()
             {
-                Ambient = new Color4(0.5f, 0.5f, 0.35f, 0.1f),
+                Ambient = new Color4(0.5f, 0.5f, 0.5f, 0.1f),
                 Diffuse = new Color4(0.0f, 0.0f, 0.0f, 0.0f),
                 Specular = new Color4(0.0f, 0.0f, 0.0f, 0.0f),
                 Direction = new Vector3(1.0f, 1.0f, 1.0f)
@@ -289,6 +291,8 @@ namespace MazeEditor
             var polygonBuilder = new PolygonBuilder(Device, Shader, new BufferFactory(Device));
             var itemFactory = new ItemFactory(polygonBuilder, textureDictionary, materialDictionary);
             _itemRegistry = new ItemRegistry();
+
+            _soundManager = new SoundManager();
 
             var itemLocation = Dungeon.GetItemLocation();
 

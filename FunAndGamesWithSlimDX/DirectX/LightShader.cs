@@ -201,7 +201,7 @@ namespace DungeonHack.DirectX
             _deferredContexts[threadNumber].DrawIndexed(indexCount, 0, 0);
         }
 
-        public void RenderFrame(Camera camera)
+        public void UpdateFrameConstantBuffers(Camera camera)
         {
             _constantBufferPerFrame.CameraPosition = camera.EyeAt;
             _frameConstantBuffer.UpdateValue(_immediateContext, _constantBufferPerFrame);
@@ -212,7 +212,7 @@ namespace DungeonHack.DirectX
             }
         }
 
-        public void RenderLights(DirectionalLight[] directionalLight, PointLight[] pointLight, Spotlight[] spotLight)
+        public void UpdateLightsFrameConstantBuffers(DirectionalLight[] directionalLight, PointLight[] pointLight, Spotlight[] spotLight)
         {
             _constantBufferPerFrame.DirectionalLight = directionalLight;
             _constantBufferPerFrame.PointLight = pointLight;

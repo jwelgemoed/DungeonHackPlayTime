@@ -1,4 +1,5 @@
-﻿using DungeonHack.OcclusionCulling;
+﻿using DungeonHack.Engine;
+using DungeonHack.OcclusionCulling;
 using DungeonHack.QuadTree;
 using FunAndGamesWithSharpDX.Engine;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace DungeonHack.Quadtree
         private Task[] _tasks;
         private Stopwatch _stopwatch;
         private DepthBuffer _depthBuffer;
+        private float _maxDistance;
 
         public QuadTreeDepthRenderer(Camera camera, DepthBuffer depthBuffer)
         {
@@ -24,6 +26,7 @@ namespace DungeonHack.Quadtree
             _nodeStack = new Stack<QuadTreeNode>[_threadCount * _threadCountPerThread];
             _stopwatch = new Stopwatch();
             _depthBuffer = depthBuffer;
+            _maxDistance = ConfigManager.ScreenFar;
             //_depthBuffer = new DepthBuffer(camera, _threadCount * _threadCountPerThread);
 
             for (int i = 0; i < (_threadCount * _threadCountPerThread); i++)
@@ -121,7 +124,7 @@ namespace DungeonHack.Quadtree
 
                 if (!node.BoundingBox.ContainsOrIntersectsCamera(camera) &&
                     (frustrum.CheckBoundingBox(node.BoundingBox.BoundingBox) == 0
-                    || node.BoundingBox.DistanceToCamera(camera) >= 2500
+                    || node.BoundingBox.DistanceToCamera(camera) >= _maxDistance
                     || _depthBuffer.IsBoundingBoxOccluded(node.BoundingBox)))
                 {
                     continue;

@@ -12,5 +12,7 @@ namespace FunAndGamesWithSharpDX.Entities
         public float tx, ty;
 
         public float nx, ny, nz;
+
+        public int VertexIndex;
     }
 }

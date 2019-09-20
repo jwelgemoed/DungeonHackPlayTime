@@ -161,18 +161,22 @@ namespace FunAndGamesWithSharpDX.Engine
             else if (e.KeyCode == Keys.V)
             {
                 ConfigManager.FogStart -=5;
+                _console.WriteLine($"Fog Start: {ConfigManager.FogStart}");
             }
             else if (e.KeyCode == Keys.B)
             {
                 ConfigManager.FogStart +=5;
+                _console.WriteLine($"Fog Start: {ConfigManager.FogStart}");
             }
             else if (e.KeyCode == Keys.N)
             {
                 ConfigManager.FogEnd -= 5;
+                _console.WriteLine($"Fog End: {ConfigManager.FogEnd}");
             }
             else if (e.KeyCode == Keys.M)
             {
                 ConfigManager.FogEnd += 5;
+                _console.WriteLine($"Fog End: {ConfigManager.FogEnd}");
             }
             else if (e.KeyCode == Keys.D1)
             {

@@ -42,7 +42,7 @@ namespace DungeonHack.Entities
                             .SetTextureIndex(textureId)
                             .SetScaling(10, 10, 10)
                             .WithTransformToWorld()
-                            .Build(),
+                            .Build(null),
 
                 Location = initialWorldLocation
             };

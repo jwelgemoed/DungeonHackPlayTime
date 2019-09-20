@@ -181,6 +181,7 @@ C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SharpDX.Mathematics.dll
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SharpDX.Direct2D1.dll
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SharpDX.RawInput.dll
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SpriteTextRenderer.SharpDX.dll
+C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SharpDX.DirectSound.dll
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SharpDX.Desktop.dll
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SpriteTextRenderer.dll
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\NBidi.dll
@@ -208,6 +209,8 @@ C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SharpDX.Direct2D1.pdb
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SharpDX.Direct2D1.xml
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SharpDX.RawInput.pdb
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SharpDX.RawInput.xml
+C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SharpDX.DirectSound.pdb
+C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SharpDX.DirectSound.xml
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SharpDX.Desktop.pdb
 C:\git\DungeonHackPlayTime\MapEditor\bin\Debug\SharpDX.Desktop.xml
 C:\git\DungeonHackPlayTime\MapEditor\obj\Debug\MapEditor.csprojAssemblyReference.cache

@@ -49,6 +49,20 @@ namespace DungeonHack.Builders
             return _mesh;
         }
 
+        public Polygon Build(GlobalVertexList globalVertexList)
+        {
+            LoadVectorsFromModel(null, null, globalVertexList);
+            if (_withTransformToWorld)
+            {
+                TransformToWorld();
+            }
+            GenerateTangentVectors();
+            _mesh.VertexBuffer = _bufferFactory.GetVertexBuffer(_mesh.VertexData);
+            _mesh.IndexBuffer = _bufferFactory.GetIndexBuffer(_mesh.IndexData);
+            SetIndexAndBoundingBoxDataFromVertexData();
+            return _mesh;
+        }
+
         public PolygonBuilder SetPosition(float x, float y, float z)
         {
             _mesh.TranslationMatrix = Matrix.Translation(x, y, z);
@@ -266,6 +280,38 @@ namespace DungeonHack.Builders
                 };
 
                 positions[i] = new Vector3(_mesh.Model[i].x, _mesh.Model[i].y, _mesh.Model[i].z);
+
+                if (indexes == null)
+                    _mesh.IndexData[i] = (short)i;
+            }
+
+            _mesh.BoundingBox = new AABoundingBox(BoundingBox.FromPoints(positions), new BufferFactory(_device));
+        }
+
+        protected void LoadVectorsFromModel(Model[] model, short[] indexes, GlobalVertexList globalVertexList)
+        {
+            if (_mesh.VertexData != null)
+            {
+                SetIndexAndBoundingBoxDataFromVertexData();
+                return;
+            }
+
+            _mesh.VertexData = new Vertex[_mesh.Model.Length];
+            _mesh.IndexData = new short[_mesh.Model.Length];
+            Vector3[] positions = new Vector3[_mesh.VertexData.Length];
+
+            for (int i = 0; i < _mesh.Model.Length; i++)
+            {
+                var globalVector = globalVertexList.GetVector(_mesh.Model[i].VertexIndex);
+
+                _mesh.VertexData[i] = new Vertex()
+                {
+                    Position = new Vector4(globalVector, 1.0f),
+                    Texture = new Vector2(_mesh.Model[i].tx, _mesh.Model[i].ty),
+                    Normal = new Vector3(_mesh.Model[i].nx, _mesh.Model[i].ny, _mesh.Model[i].nz)
+                };
+
+                positions[i] = globalVector;
 
                 if (indexes == null)
                     _mesh.IndexData[i] = (short)i;

@@ -37,9 +37,9 @@ namespace DungeonHack.Renderers
             _shader = shader;
         }
 
-        public void RenderFrame(Camera camera)
+        public void UpdateFrameConstantBuffers(Camera camera)
         {
-            _shader.RenderFrame(camera);
+            _shader.UpdateFrameConstantBuffers(camera);
         }
 
         public void FinalizeRender(int threadNumber)

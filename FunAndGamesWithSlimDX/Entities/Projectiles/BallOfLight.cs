@@ -41,7 +41,7 @@ namespace DungeonHack.Entities.Projectiles
             _pointLight = new PointLight
             {
                 Diffuse = new Color4(0.0f, 15.0f, 0.0f, 1.0f),
-                Ambient = new Color(),
+                Ambient = new Color(0.0f, 0.1f, 0.0f, 0.1f),
                 Specular = new Color4(0.1f, 5.1f, 0.1f, 0.1f),
                 Position = _position,
                 Range = 256.0f,

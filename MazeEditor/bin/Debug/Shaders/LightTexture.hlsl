@@ -1,6 +1,6 @@
 ﻿//Frank Luna 
 #define NUM_DIRECTIONAL_LIGHTS 1
-#define NUM_POINT_LIGHTS 3
+#define NUM_POINT_LIGHTS 10
 #define NUM_SPOT_LIGHTS 1
 
 struct DirectionalLight {
@@ -415,7 +415,7 @@ DomainOut DS(PatchTess patchTess,
 	float h = displacementMap.SampleLevel(samLinear, dout.tex, mipLevel).r; 
 	
 	// Offset vertex along normal. 
-	float heightScale = 1.0;
+	float heightScale = 1.1f;
 
 	dout.worldPosition += float4((heightScale*(h-1))*dout.normal, 1.0f); 
 	dout.worldPosition.w = 1.0f;
@@ -497,7 +497,7 @@ float4 LightPixelShader(DomainOut input) : SV_TARGET
 	// Add the specular component last to the output color.
 	color = saturate(color + specular);
 
-	// Set the color of the fog to grey.
+	// Set the color of the fog to grey
 	fogColor = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	//The fog color equation then does a linear interpolation between the texture color and the fog color based on the fog factor.
 

@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using DungeonHack.DirectX;
 using DungeonHack.Entities;
 using DungeonHack.OcclusionCulling;
+using DungeonHack.Sound;
 using FunAndGamesWithSharpDX.DirectX;
 using FunAndGamesWithSharpDX.Engine;
 using FunAndGamesWithSharpDX.Entities;
@@ -30,6 +31,7 @@ namespace DungeonHack.Engine
         protected LightShader Shader;
         protected readonly GameTimer Timer = new GameTimer();
         protected Camera Camera;
+        protected SoundManager SoundManager;
         private bool _hasInitialized = false;
         protected int MouseSensitivity;
         protected FunAndGamesWithSharpDX.Entities.Console _console;
@@ -122,6 +124,9 @@ namespace DungeonHack.Engine
             _hasInitialized = true;
 
             sprite = new Sprite(Renderer.Device, "crate2_diffuse.bmp", 0, 0, 100, 100);
+
+            SoundManager = new SoundManager();
+            SoundManager.Initialize(Form.Handle);
         }
 
         public virtual void Run()
@@ -139,6 +144,8 @@ namespace DungeonHack.Engine
             Task UpdateSceneTask = new Task(UpdateSceneLoop);
 
             PreRenderTask.Start();
+
+            SoundManager.PlayAmbient();
 
             RenderLoop.Run(Form, MainLoop);
 

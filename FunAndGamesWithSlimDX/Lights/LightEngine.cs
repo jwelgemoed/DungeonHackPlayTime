@@ -1,4 +1,6 @@
-﻿using DungeonHack.DirectX;
+﻿using System.Collections;
+using System.Collections.Generic;
+using DungeonHack.DirectX;
 
 namespace DungeonHack.Lights
 {
@@ -10,7 +12,7 @@ namespace DungeonHack.Lights
 
         //MUST BE THE SAME VALUE AS DEFINED IN HLSL
         private const int NumberOfDirectionalLights = 1;
-        private const int NumberOfPointLights = 3;
+        private const int NumberOfPointLights = 10;
         private const int NumberOfSpotLights = 1;
 
         private static int _currentDirectionalLight;
@@ -37,7 +39,7 @@ namespace DungeonHack.Lights
 
         public static void RenderLights(IShader shader)
         {
-            shader.RenderLights(DirectionalLights, PointLights, SpotLight);
+            shader.UpdateLightsFrameConstantBuffers(DirectionalLights, PointLights, SpotLight);
         }
     }
 }

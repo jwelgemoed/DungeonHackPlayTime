@@ -24,6 +24,7 @@ namespace DungeonHack.QuadTree
         private Stopwatch _stopwatch;
         private DepthBuffer _depthBuffer;
         private RenderedItems _renderedItems;
+        private float _maxDistance;
 
         public int MeshesRendered;
 
@@ -41,7 +42,8 @@ namespace DungeonHack.QuadTree
             _stopwatch = new Stopwatch();
             _depthBuffer = depthBuffer;
             _boundingBoxRenderer = boundingBoxRenderer;
-
+            _maxDistance = ConfigManager.ScreenFar;
+            
             for (int i = 0; i < (_threadCount * _threadCountPerThread); i++)
             {
                 _renderList[i] = new Polygon[5000];
@@ -53,7 +55,7 @@ namespace DungeonHack.QuadTree
         {
             MeshesRendered = 0;
 
-            _renderer.RenderFrame(camera);
+            _renderer.UpdateFrameConstantBuffers(camera);
 
             _depthBuffer.LockShadowBuffer();
 
@@ -146,7 +148,7 @@ namespace DungeonHack.QuadTree
 
                 if (!node.BoundingBox.ContainsOrIntersectsCamera(camera) &&
                     (frustrum.CheckBoundingBox(node.BoundingBox.BoundingBox) == 0
-                        || node.BoundingBox.DistanceToCamera(camera) >= 2500
+                        || node.BoundingBox.DistanceToCamera(camera) >= _maxDistance
                         || _depthBuffer.IsBoundingBoxOccluded(node.BoundingBox)))
                 {
                     continue;
