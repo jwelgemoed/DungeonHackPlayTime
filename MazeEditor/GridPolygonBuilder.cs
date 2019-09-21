@@ -5,6 +5,7 @@ using SharpDX;
 using System.Collections.Generic;
 using DungeonHack.DirectX;
 using DungeonHack;
+using SharpDX.Direct3D11;
 
 namespace MazeEditor
 {
@@ -15,14 +16,19 @@ namespace MazeEditor
         private int _floorTextureIndex = 1;//1;
         private int _ceilingTextureIndex = 1;//2;//1;//2;
         private int _wallTextureIndex = 1;//1;//9;
-        private readonly PolygonBuilder _meshBuilder;
         private GlobalVertexList _globalVertexList;
+        private Device _device;
+        private LightShader _lightShader;
+        private BufferFactory _bufferFactory;
 
-        public GridPolygonBuilder(GridBoard gridboard, PolygonBuilder meshBuilder, GlobalVertexList globalVertexList)
+        public GridPolygonBuilder(GridBoard gridboard, 
+            Device device, LightShader shader, BufferFactory bufferFactory, GlobalVertexList globalVertexList)
         {
             _gridBoard = gridboard;
-            _meshBuilder = meshBuilder;
             _globalVertexList = globalVertexList;
+            _device = device;
+            _lightShader = shader;
+            _bufferFactory = bufferFactory;
         }
 
         public IEnumerable<Polygon> GeneratePolygons()
@@ -151,7 +157,8 @@ namespace MazeEditor
             model[5].tx = 0.0f;
             model[5].ty = 1.0f;
 
-            return _meshBuilder
+            var meshBuilder = new PolygonBuilder(_device, _lightShader, _bufferFactory);
+            return meshBuilder
                             .New()
                             .SetModel(model)
                             .SetScaling(1, 1, 1)
@@ -239,7 +246,8 @@ namespace MazeEditor
             model[5].tx = 0.0f;
             model[5].ty = 1.0f;
 
-            return _meshBuilder
+            var meshBuilder = new PolygonBuilder(_device, _lightShader, _bufferFactory);
+            return meshBuilder
                             .New()
                             .SetModel(model)
                             .SetScaling(1, 1, 1)
@@ -335,7 +343,8 @@ namespace MazeEditor
             model[5].tx = 0.0f;
             model[5].ty = 1.0f;
 
-            return _meshBuilder
+            var meshBuilder = new PolygonBuilder(_device, _lightShader, _bufferFactory);
+            return meshBuilder
                             .New()
                             .SetModel(model)
                             .SetScaling(1, 1, 1)

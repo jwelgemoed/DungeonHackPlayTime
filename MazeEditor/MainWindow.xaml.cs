@@ -116,9 +116,9 @@ namespace MazeEditor
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             BufferFactory bufferFactory = new BufferFactory(_mazeRunner.Device);
-            PolygonBuilder polygonBuilder = new PolygonBuilder(_mazeRunner.Device, _mazeRunner.Shader, bufferFactory);
             GlobalVertexList globalVertexList = new GlobalVertexList();
-            GridPolygonBuilder builder = new GridPolygonBuilder(_dungeon.GridBoard, polygonBuilder, globalVertexList);
+            GridPolygonBuilder builder = new GridPolygonBuilder(_dungeon.GridBoard, 
+                _mazeRunner.Device, _mazeRunner.Shader, bufferFactory, globalVertexList);
             var meshList = builder.GeneratePolygons();
 
             _mazeRunner.Meshes = meshList.ToList();
@@ -140,9 +140,9 @@ namespace MazeEditor
         private void btnQuadTree_Click(object sender, RoutedEventArgs e)
         {
             BufferFactory bufferFactory = new BufferFactory(_mazeRunner.Device);
-            PolygonBuilder polygonBuilder = new PolygonBuilder(_mazeRunner.Device, _mazeRunner.Shader, bufferFactory);
             GlobalVertexList globalVertexList = new GlobalVertexList();
-            GridPolygonBuilder builder = new GridPolygonBuilder(_dungeon.GridBoard, polygonBuilder, globalVertexList);
+            GridPolygonBuilder builder = new GridPolygonBuilder(_dungeon.GridBoard, 
+                _mazeRunner.Device, _mazeRunner.Shader, bufferFactory, globalVertexList);
             var meshList = builder.GeneratePolygons();
 
             _mazeRunner.Meshes = meshList.ToList();
